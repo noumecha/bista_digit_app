@@ -43,7 +43,7 @@ class LoginController extends Controller
 
 
         return back()->withErrors([
-            'message' => 'L\'adresse email ou le nom d\'utilisateur ne correspond pas',
+            'message' => 'Adresse email ou nom d\'utilisateur incorrect',
         ])->withInput($request->only('email'));
     }
 

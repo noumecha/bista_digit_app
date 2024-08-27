@@ -1,0 +1,73 @@
+footer{
+	padding:50px 0px 0px;
+	position: relative;
+	background:$color-main;
+	overflow:hidden;
+
+	._kl_de_w{
+		margin:20px 0px;
+		padding:10px 0px;
+		position:relative;
+
+		@media screen and (max-width:576px){
+			margin:10px 0 0 0;
+		}
+		.form-group{
+			a{
+				text-align: left;
+				padding:6px 18px;
+				border-radius:1px;
+				color:$color-main;
+				background:$sup-color;
+				font-size:15px;
+				display:inline-block;
+			}
+		}
+		ol{
+			li{
+				display:block;
+				margin:0 25px 0 0;
+				padding:10px 0px;
+				border-top:1px solid #2b2b2b;
+				color:$color-use;
+				font-size:15px;
+				i{
+					margin-right:12px;
+					color:$sup-color;
+				}
+				@media screen and(max-width:768px){
+					margin:0px;
+				}
+			}
+		}
+		p{
+			font-size:15px;
+			line-height:26px;
+			color:$color-use;
+		}
+		h3{
+			font-size:20px;
+			margin:0 0 20px 0;
+			color:$sup-color;
+		}
+	}
+
+	.copy-right{
+		position: relative;
+		padding:15px 0px;
+		border-top:solid 1px #3b3b3b;
+
+
+		p{
+			font-size:15px;
+			color:#ddd;
+			text-align:center;
+			a{
+				color:$sup-color;
+				font-weight:600;
+				text-transform:uppercase;
+				padding-left: 15px;
+			}
+		}
+	}
+}
