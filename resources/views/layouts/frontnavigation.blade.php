@@ -11,11 +11,11 @@
                         <div class="menu">
                             <ul>
                                 <li><a href="{{ route ('home.index') }}">Acceuil</a></li>
-                                <li><a href="#">A propos</a></li>
+                                <li><a href="{{ route ('home.about') }}">A propos</a></li>
                                 <li><a href="#">Actualités</a></li>
                                 <li><a href="#">Programmes</a></li>
                                 <li><a href="#">Activités</a></li>
-                                <li><a href="#">Connexion</a></li>
+                                <li><a href="{{ route('sign-in') }}">Connexion</a></li>
                             </ul>
                         </div>
                     </div>
