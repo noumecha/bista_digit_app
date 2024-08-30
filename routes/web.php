@@ -8,6 +8,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\BullettinController;
+use App\Http\Controllers\DevoirController;
+use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\HomeController;
 
 /*
@@ -23,6 +26,7 @@ use App\Http\Controllers\HomeController;
 
 // primary routes for the front-website :
 Route::get('/home', [HomeController::class, 'index'])->name('home.index');
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/about', [AboutController::class, 'index'])->name('home.about');
 
 // Authentication routes :
@@ -44,7 +48,7 @@ Route::get('/signup', function () {
 
 // routes for the dashboard
 #Route::middleware(['auth','admin'])->group(function() {
-    Route::get('/', function () {
+    Route::get('/admin', function () {
         return redirect('/dashboard');
     })->middleware('auth');
 
@@ -55,6 +59,10 @@ Route::get('/signup', function () {
     Route::get('/tables', function () {
         return view('tables');
     })->name('tables')->middleware('auth');
+
+    Route::get('/acceuil', function () {
+        return view('acceuil');
+    })->name('acceuil')->middleware('auth');
 
     Route::get('/wallet', function () {
         return view('wallet');
@@ -69,6 +77,16 @@ Route::get('/signup', function () {
     })->name('profile')->middleware('auth');
 
 #});
+
+# education routes
+Route::get('/education/devoir', [DevoirController::class, 'index'])->name('education.devoir')->middleware('auth');
+Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuves')->middleware('auth');
+Route::get('/education/bulletin', [BullettinController::class, 'index'])->name('education.bulletin')->middleware('auth');
+# evaluation routes
+
+# actualites routes
+
+# programme routes
 
 Route::get('/laravel-examples/user-profile', [ProfileController::class, 'index'])->name('users.profile')->middleware('auth');
 Route::put('/laravel-examples/user-profile/update', [ProfileController::class, 'update'])->name('users.update')->middleware('auth');
