@@ -35,11 +35,13 @@ class RegisterController extends Controller
         $request->validate([
 
             'name' => 'required|min:3|max:255',
+            'surname' => 'required|min:3|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:7|max:255',
             'terms' => 'accepted',
         ], [
             'name.required' => 'Entrez votre nom',
+            'surname.required' => 'Entrez votre prenom',
             'email.required' => 'Entrez l\'adresse email',
             'password.required' => 'Entrez un mot de passe',
             'terms.accepted' => 'You must accept the terms and conditions'
@@ -49,6 +51,7 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'surname' => $request->surname,
         ]);
 
 

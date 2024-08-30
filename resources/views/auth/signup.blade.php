@@ -31,7 +31,7 @@
                                     <p class="mb-0">Ravi de vous retrouvez ! remplissez vos informations</p>
                                 </div>
                                 <div class="card-body">
-                                    <form role="form" method="POST" action="sign-up">
+                                    <form role="form" method="POST" action="{{ route('sign-up') }}">
                                         @csrf
                                         <label>Nom</label>
                                         <div class="mb-3">
@@ -39,6 +39,15 @@
                                                 placeholder="Entrez votre nom" value="{{old("name")}}" aria-label="Name"
                                                 aria-describedby="name-addon">
                                             @error('name')
+                                                <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <label>Prenom</label>
+                                        <div class="mb-3">
+                                            <input type="text" id="surname" name="surname" class="form-control"
+                                                placeholder="Entrez votre prenom" value="{{old("surname")}}" aria-label="Name"
+                                                aria-describedby="name-addon">
+                                            @error('surname')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -60,6 +69,17 @@
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
+                                        <div class="form-check form-check-info text-left mb-0">
+                                            <input class="form-check-input" type="checkbox" name="terms"
+                                                id="terms" required>
+                                            <label class="font-weight-normal text-dark mb-0" for="terms">
+                                                J'acceptes <a href="javascript:;"
+                                                    class="text-dark font-weight-bold">Les termes & Conditions d'utilisation</a>.
+                                            </label>
+                                            @error('terms')
+                                                <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-dark w-100 mt-4 mb-3">S'inscrire</button>
                                             <button type="button" class="btn btn-white btn-icon w-100 mb-3">
@@ -72,6 +92,15 @@
                                                 </span>
                                             </button>
                                         </div>
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
                                     </form>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">

@@ -6,15 +6,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EducationController extends Controller
+class EvaluationController extends Controller
 {
     /**
-     * Education controller implmentation
+     *
      */
     public function index()
     {
         $user = User::find(Auth::id());
 
-        return view('education.education-devoir', compact('user'));
+        return view('evaluation.evaluation-notes', compact('user'));
     }
 }

@@ -11,7 +11,9 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BullettinController;
 use App\Http\Controllers\DevoirController;
 use App\Http\Controllers\EpreuveController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProgrammeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,13 +82,21 @@ Route::get('/signup', function () {
 
 # education routes
 Route::get('/education/devoir', [DevoirController::class, 'index'])->name('education.devoir')->middleware('auth');
-Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuves')->middleware('auth');
+Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuve')->middleware('auth');
+Route::get('/education/discipline', [EpreuveController::class, 'index'])->name('education.discipline')->middleware('auth');
 Route::get('/education/bulletin', [BullettinController::class, 'index'])->name('education.bulletin')->middleware('auth');
+
 # evaluation routes
+Route::get('/evaluation/trimestres', [EvaluationController::class, 'index'])->name('evaluation.trimestres')->middleware('auth');
+Route::get('/evaluation/notes', [EvaluationController::class, 'index'])->name('evaluation.notes')->middleware('auth');
+Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->name('evaluation.bulletins')->middleware('auth');
 
 # actualites routes
 
 # programme routes
+Route::get('/programme/booster', [ProgrammeController::class, 'index'])->name('programme.booster')->middleware('auth');
+Route::get('/programme/leader', [ProgrammeController::class, 'index'])->name('programme.leader')->middleware('auth');
+
 
 Route::get('/laravel-examples/user-profile', [ProfileController::class, 'index'])->name('users.profile')->middleware('auth');
 Route::put('/laravel-examples/user-profile/update', [ProfileController::class, 'update'])->name('users.update')->middleware('auth');

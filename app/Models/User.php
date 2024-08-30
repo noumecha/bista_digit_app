@@ -20,6 +20,33 @@ class User extends Authenticatable
     protected $guarded = [];
 
     /**
+     * @var array
+     */
+    protected $fillables = [
+        'surname',
+        'numCni',
+        'sex',
+        'role',
+        'profile',
+        'dateNaiss',
+        'lieuNaiss',
+        'diplome1',
+        'diplome2',
+        'matricule',
+        'statutRedoublanc',
+        'typeUser',
+        'fonction',
+        'profile',
+        'name',
+        'email',
+        'password',
+        'phone',
+        'location',
+        'about'
+    ];
+
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
@@ -38,4 +65,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     *
+     */
+    public function anneeScolaire() {
+        return $this->belongsToMany(AnneeScolaire::class);
+    }
+
+    /**
+     *
+     */
+    public function isPersonnel() {
+        return $this->typeUser === 'personnel';
+    }
 }

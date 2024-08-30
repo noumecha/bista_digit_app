@@ -71,7 +71,7 @@
                                     <p class="mb-4 text-xs mx-auto">
                                         Pas encore de compte ?
                                         <!-- {#{ route('sign-up') }} -->
-                                        <a href="#" class="text-dark font-weight-bold">
+                                        <a href="{{ route('sign-up') }}" class="text-dark font-weight-bold">
                                             Créer en un
                                         </a>
                                     </p>
