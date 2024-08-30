@@ -6,7 +6,7 @@
                     <div class="menu-toggle"></div>
                     <div class="logo text-white">
                         <h2>
-                            <a class="decoration-none" href={{ route('home.index') }}>BISTA</a>
+                            <a class="text-white" href={{ route('home.index') }}>BISTA</a>
                         </h2>
                         <!--img src="../assets/front/images/logo-01.png"-->
                     </div>

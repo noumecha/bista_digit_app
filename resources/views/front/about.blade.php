@@ -25,7 +25,7 @@
 
                     <div class="col-lg-6 col-md-6 col-12">
                         <div class="_Ol_er_qw yu">
-                            <img src="../assets/front//images/slider/2.png">
+                            <img src="../assets/front//images/slider/about-test.jpeg">
                         </div>
                     </div>
                 </div>

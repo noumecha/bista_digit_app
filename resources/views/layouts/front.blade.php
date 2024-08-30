@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>BISTA WEBSITE</title>
+        <title>{{ env('APP_NAME')}}</title>
         <link rel="stylesheet" href="../assets/front/css/bootstrap.min.css">
         <link rel="stylesheet" href="../assets/front/css/all.min.css">
         <link rel="stylesheet" href="../assets/front/css/owl.carousel.min.css">
