@@ -8,7 +8,6 @@
                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
                     <div class="button-01">
                         <ul>
-                            <li><a href="#">Get Started Now</a></li>
                             <li><a href="#">View Courses</a></li>
                         </ul>
                     </div>
@@ -21,7 +20,6 @@
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
                 <div class="button-01">
                     <ul>
-                        <li><a href="#">Get Started Now</a></li>
                         <li><a href="#">View Courses</a></li>
                     </ul>
                 </div>
@@ -34,7 +32,6 @@
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
                 <div class="button-01">
                     <ul>
-                        <li><a href="#">Get Started Now</a></li>
                         <li><a href="#">View Courses</a></li>
                     </ul>
                 </div>

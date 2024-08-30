@@ -69,8 +69,8 @@ a:hover {
           max-width: 100%;
           flex: 1 1 100%; } }
     .my-nav .nav-items .menu-items {
-      width: 70%;
-      max-width: 70%;
+      width: 80%;
+      max-width: 80%;
       flex: 1 1 70%;
       position: relative; }
       @media screen and (max-width: 767.98px) {
@@ -97,7 +97,22 @@ a:hover {
           @media screen and (max-width: 767.98px) {
             .my-nav .nav-items .menu-items .menu ul li {
               display: block;
+              position: relative;
               padding: 10px 0px; } }
+              .my-nav .nav-items .menu-items .menu ul li .submenu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 10;
+                justify-content: left;
+              }
+              .my-nav .nav-items .menu-items .menu ul li .submenu li {
+                margin-left: 0;
+                padding-left: 0;
+              }
+              .my-nav .nav-items .menu-items .menu ul li:hover .submenu {
+                display: flex;
+              }
           @media (max-width: 992px) and (min-width: 768px) {
             .my-nav .nav-items .menu-items .menu ul li {
               padding: 10px 2px; } }
@@ -176,7 +191,7 @@ a:hover {
   .slider .carousel-inner .carousel-item::before {
     position: absolute;
     content: "";
-    background: rgba(3, 7, 53, 0.8);
+    background: rgba(3, 7, 53, 0.5);
     height: 100%;
     width: 100%; }
   .slider .carousel-inner .carousel-item .carousel-caption {

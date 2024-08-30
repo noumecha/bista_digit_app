@@ -27,4 +27,5 @@
     <script src="../assets/front/js/owl.carousel.min.js"></script>
     <script src="../assets/front/js/owl.carousel.js"></script>
     <script src="../assets/front/js/script.js"></script>
+    <script src="https://kit.fontawesome.com/349ee9c857.js" crossorigin="anonymous"></script>
 </html>
