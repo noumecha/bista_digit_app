@@ -15,6 +15,6 @@ class EvaluationController extends Controller
     {
         $user = User::find(Auth::id());
 
-        return view('evaluation.evaluation-notes', compact('user'));
+        return view('evaluation.notes', compact('user'));
     }
 }

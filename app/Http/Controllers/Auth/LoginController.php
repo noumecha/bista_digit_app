@@ -40,8 +40,6 @@ class LoginController extends Controller
             return redirect()->intended('/dashboard');
         }
 
-
-
         return back()->withErrors([
             'message' => 'Adresse email ou nom d\'utilisateur incorrect',
         ])->withInput($request->only('email'));

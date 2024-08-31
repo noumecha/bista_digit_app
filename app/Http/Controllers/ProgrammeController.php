@@ -15,6 +15,6 @@ class ProgrammeController extends Controller
     {
         $user = User::find(Auth::id());
 
-        return view('programme.programme-booster', compact('user'));
+        return view('programme.booster', compact('user'));
     }
 }

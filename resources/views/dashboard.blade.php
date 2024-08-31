@@ -7,7 +7,7 @@
                 <div class="col-md-12">
                     <div class="d-md-flex align-items-center mb-3 mx-2">
                         <div class="mb-md-0 mb-3">
-                            <h3 class="font-weight-bold mb-0">Bonjour , {{ Auth::user()->name }}</h3>
+                            <h3 class="font-weight-bold mb-0"> {{ Date('H') >= 00 && Date('H') <= 15 ? 'Bonjour' : 'Bonsoir'  }}, {{ Auth::user()->name }}</h3>
                             <p class="mb-0">Ravie de vous revoir</p>
                         </div>
                         <button type="button"

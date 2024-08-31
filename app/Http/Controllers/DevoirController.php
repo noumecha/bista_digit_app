@@ -16,6 +16,6 @@ class DevoirController extends Controller
     {
         $user = User::find(Auth::id());
 
-        return view('education.education-devoir', compact('user'));
+        return view('education.devoir', compact('user'));
     }
 }

@@ -33,7 +33,6 @@
                             </g>
                         </svg>
                     </div>
-                    <i class="fas fa-heart"></i>
                     <span class="nav-link-text ms-1">Acceuil</span>
                 </a>
             </li>
@@ -45,19 +44,25 @@
                             d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
                             clip-rule="evenodd" />
                     </svg>
-                    <span class="font-weight-normal text-md ms-2">Personnel</span>
+                    <span class="font-weight-normal text-md ms-2">Utilisateurs</span>
                 </div>
             </li>
             <li class="nav-item border-start my-0 pt-2">
-                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('users.profile') ? 'active' : '' }}"
-                    href="{{ route('users.profile') }}">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('utilisateur.administrators') ? 'active' : '' }}"
+                    href="{{ route('utilisateur.administrators') }}">
                     <span class="nav-link-text ms-1">Personnel Administratif</span>
                 </a>
             </li>
             <li class="nav-item border-start my-0 pt-2">
-                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('users-management') ? 'active' : '' }}"
-                    href="{{ route('users-management') }}">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('utilisateur.teachers') ? 'active' : '' }}"
+                    href="{{ route('utilisateur.teachers') }}">
                     <span class="nav-link-text ms-1">Personnel Enseignant</span>
+                </a>
+            </li>
+            <li class="nav-item border-start my-0 pt-2">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('utilisateur.students') ? 'active' : '' }}"
+                    href="{{ route('utilisateur.students') }}">
+                    <span class="nav-link-text ms-1">Elèves</span>
                 </a>
             </li>
             <!-- Education on Dashboard -->

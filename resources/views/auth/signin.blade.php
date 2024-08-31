@@ -4,13 +4,13 @@
             <div class="page-header min-vh-100">
                 <div class="container">
                     <div class="row">
-                        <div class="col-xl-4 col-md-6 d-flex flex-column mx-auto">
-                            <div class="logo w-32 h-32 rounded-full overflow-hidden">
-                                <img src="../assets/logo/logo-bista.jpg" alt="logo" class="w-full h-full object-cover"/>
+                        <div class="col-xl-4 col-md-6 d-flex pt-20 pb-20 flex-column mx-auto">
+                            <div class="logo d-flex justify-content-center align-items-center rounded-full w-100 h-100 overflow-hidden">
+                                <img src="../assets/logo/logo-bista.png" alt="logo" class=""/>
                             </div>
                             <div class="card card-plain mt-6">
-                                <div class="card-header pb-0 text-left bg-transparent text-center">
-                                    <h3 class="font-weight-black text-dark display-6">Bienvenue</h3>
+                                <div class="card-header pb-0 bg-transparent text-center">
+                                    <h3 class="font-weight-black text-dark display-6">Portail Administratif</h3>
                                 </div>
                                 <div class="text-center">
                                     @if (session('status'))

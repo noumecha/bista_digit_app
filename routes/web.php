@@ -13,7 +13,10 @@ use App\Http\Controllers\DevoirController;
 use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\ProgrammeController;
+use App\Http\Controllers\UtilisateurController;
+use App\Models\Personnel;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +93,13 @@ Route::get('/education/bulletin', [BullettinController::class, 'index'])->name('
 Route::get('/evaluation/trimestres', [EvaluationController::class, 'index'])->name('evaluation.trimestres')->middleware('auth');
 Route::get('/evaluation/notes', [EvaluationController::class, 'index'])->name('evaluation.notes')->middleware('auth');
 Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->name('evaluation.bulletins')->middleware('auth');
+
+# personnel routes
+Route::get('/utilisateur/administrators', [UtilisateurController::class, 'administrators'])->name('utilisateur.administrators')->middleware('auth');
+Route::get('/utilisateur/teachers', [UtilisateurController::class, 'teachers'])->name('utilisateur.teachers')->middleware('auth');
+Route::get('/utilisateur/students', [UtilisateurController::class, 'students'])->name('utilisateur.students')->middleware('auth');
+Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('personnel.store')->middleware('auth');
+
 
 # actualites routes
 

@@ -15,6 +15,6 @@ class EpreuveController extends Controller
     {
         $user = User::find(Auth::id());
 
-        return view('education.education-epreuves', compact('user'));
+        return view('education.epreuves', compact('user'));
     }
 }

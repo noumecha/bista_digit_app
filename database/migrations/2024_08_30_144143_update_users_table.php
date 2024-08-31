@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('diplome2')->nullable();
             $table->string('matricule')->nullable();
             $table->enum('statutRedoublance', ['oui','non'])->nullable();
-            $table->enum('typeUser',['eleve','enseignant','administration'])->nullable();
+            $table->string('typeUser')->nullable();
             $table->enum('fonction', ['SG', 'DE','Principale','DET','DEC'])->nullable();
         });
 

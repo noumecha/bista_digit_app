@@ -3,9 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Sex;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Request;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -36,7 +39,6 @@ class User extends Authenticatable
         'statutRedoublanc',
         'typeUser',
         'fonction',
-        'profile',
         'name',
         'email',
         'password',
@@ -64,7 +66,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'sex' => Sex::class,
     ];
+
+    /**
+     *
+     */
+    public function newPersonnelBuilder($attributes = [], $connection = null) {
+        $instance = parent::newPersonnelBuilder($attributes, $connection);
+        if ($this->typeUser == 'administration') {
+            $instance = $instance->replicate([], Personnel::class);
+        }
+        return $instance;
+    }
 
     /**
      *

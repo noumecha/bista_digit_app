@@ -3,11 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class Personnel extends User
 {
     use HasFactory;
+
+    /**
+     * Define default value for user type
+     */
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->typeUser = 'administration';
+        });
+    }
 
     /**
      *

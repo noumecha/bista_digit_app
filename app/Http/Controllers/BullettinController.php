@@ -15,6 +15,6 @@ class BullettinController extends Controller
     {
         $user = User::find(Auth::id());
 
-        return view('education.education-bulletin', compact('user'));
+        return view('education.bulletin', compact('user'));
     }
 }
