@@ -61,6 +61,7 @@ class PersonnelController extends Controller
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
             'profile' => $imagePath,
+            'fonction' => $request->fonction,
             'typeUser' => 'personnel',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
