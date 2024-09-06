@@ -69,4 +69,18 @@ class PersonnelController extends Controller
 
         return view('dashboard');
     }
+
+    /**
+     *
+     */
+    public function edit() {
+
+    }
+
+    /**
+     *
+     */
+    public function delete() {
+
+    }
 }
