@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
-class PersonnelController extends Controller
+class EnseignantController extends Controller
 {
      /**
      * saving administrators members
@@ -27,7 +27,7 @@ class PersonnelController extends Controller
             'location' => 'required|min:3|max:255',
             'numCni' => 'required|max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'fonction' => ['required', Rule::in(['SG','DE','Principale','DET','DEC'])],
+            #'fonction' => ['required', Rule::in(['SG','DE','Principale','DET','DEC'])],
             'profile' => 'required|image|mimes:jpeg,png,gif|max:4096',
         ], [
                 'name.required' => 'Entrez votre nom',
@@ -59,8 +59,8 @@ class PersonnelController extends Controller
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
             'profile' => $imagePath,
-            'fonction' => $request->fonction,
-            'typeUser' => 'personnel',
+            #'fonction' => $request->fonction,
+            'typeUser' => 'enseignant',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
         ]);

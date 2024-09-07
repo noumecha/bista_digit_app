@@ -8,7 +8,6 @@ use App\Sex;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Request;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -25,7 +24,7 @@ class User extends Authenticatable
     /**
      * @var array
      */
-    protected $fillables = [
+    protected $fillable = [
         'surname',
         'numCni',
         'sex',

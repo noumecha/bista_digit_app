@@ -8,7 +8,7 @@
                         <div class="pb-0 card-header">
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste du personnle Administratif</h5>
+                                    <h5 class="">Liste du personnel Administratif</h5>
                                     <p class="text-sm">
                                         D'ici vous pouvez gérer le personnel (Ajouter, Supprimer, Mettre à jour ...etc)
                                     </p>

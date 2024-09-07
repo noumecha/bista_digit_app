@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\AnneeScolaireController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -99,6 +100,10 @@ Route::get('/utilisateur/administrators', [UtilisateurController::class, 'admini
 Route::get('/utilisateur/teachers', [UtilisateurController::class, 'teachers'])->name('utilisateur.teachers')->middleware('auth');
 Route::get('/utilisateur/students', [UtilisateurController::class, 'students'])->name('utilisateur.students')->middleware('auth');
 Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('personnel.store')->middleware('auth');
+
+# annee_scolaire routes
+Route::get('/annee_scolaire/list', [AnneeScolaireController::class, 'show'])->name('annee_scolaire.show')->middleware('auth');
+Route::post('/annee_scolaire/save', [AnneeScolaireController::class, 'store'])->name('annee_scolaire.store')->middleware('auth');
 
 
 # actualites routes

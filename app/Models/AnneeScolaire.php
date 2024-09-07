@@ -9,6 +9,13 @@ class AnneeScolaire extends Model
 {
     use HasFactory;
     /**
+     * @var array
+     */
+    protected $fillable = [
+        'libelleAnneeScolaire',
+    ];
+
+    /**
      *
      */
     public function users() {
