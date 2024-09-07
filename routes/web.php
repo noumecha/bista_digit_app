@@ -10,10 +10,14 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BullettinController;
+use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\DevoirController;
+use App\Http\Controllers\EleveController;
+use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\UtilisateurController;
@@ -88,7 +92,10 @@ Route::get('/signup', function () {
 Route::get('/education/devoir', [DevoirController::class, 'index'])->name('education.devoir')->middleware('auth');
 Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuve')->middleware('auth');
 Route::get('/education/discipline', [EpreuveController::class, 'index'])->name('education.discipline')->middleware('auth');
-Route::get('/education/bulletin', [BullettinController::class, 'index'])->name('education.bulletin')->middleware('auth');
+Route::get('/education/matieres', [MatiereController::class, 'index'])->name('education.matiere')->middleware('auth');
+Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.matiere')->middleware('auth');
+Route::post('/matieres/save', [ClasseController::class, 'store'])->name('matiere.store')->middleware('auth');
+Route::post('/classe/save', [ClasseController::class, 'store'])->name('classe.store')->middleware('auth');
 
 # evaluation routes
 Route::get('/evaluation/trimestres', [EvaluationController::class, 'index'])->name('evaluation.trimestres')->middleware('auth');
@@ -100,6 +107,8 @@ Route::get('/utilisateur/administrators', [UtilisateurController::class, 'admini
 Route::get('/utilisateur/teachers', [UtilisateurController::class, 'teachers'])->name('utilisateur.teachers')->middleware('auth');
 Route::get('/utilisateur/students', [UtilisateurController::class, 'students'])->name('utilisateur.students')->middleware('auth');
 Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('personnel.store')->middleware('auth');
+Route::post('/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');
+Route::post('/student/save', [EleveController::class, 'store'])->name('student.store')->middleware('auth');
 
 # annee_scolaire routes
 Route::get('/annee_scolaire/list', [AnneeScolaireController::class, 'show'])->name('annee_scolaire.show')->middleware('auth');

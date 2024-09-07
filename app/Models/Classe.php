@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Classe extends Model
 {
     use HasFactory;
+
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'libelleClasse ',
+        'effectifClasse',
+        'cycleClasse',
+        'serieClasse',
+    ];
+
 }

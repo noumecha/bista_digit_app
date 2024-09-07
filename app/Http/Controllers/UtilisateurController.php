@@ -23,7 +23,7 @@ class UtilisateurController extends Controller
     public function teachers () {
         $user = User::find(Auth::id());
         $teachers = User::all()->where('typeUser', '=', 'enseignant');
-        return view('personnel.teachers', compact('user'));
+        return view('personnel.teachers', ['teachers'=> $teachers], compact('user'));
     }
     /**
      *
@@ -31,6 +31,6 @@ class UtilisateurController extends Controller
     public function students () {
         $user = User::find(Auth::id());
         $students = User::all()->where('typeUser', '=', 'eleve');
-        return view('personnel.students', compact('user'));
+        return view('personnel.students', ['students'=> $students], compact('user'));
     }
 }
