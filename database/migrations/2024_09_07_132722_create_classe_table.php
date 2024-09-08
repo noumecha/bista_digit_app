@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('classe', function (Blueprint $table) {
+        Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->string('libelleClasse');
             $table->integer('effectifClasse');
             $table->enum('cycleClasse', ['2nd Cycle','1er Cycle'])->nullable();
-            $table->enum('serieClasse', ['C','D','A','TI','B'])->nullable();
             $table->timestamps();
         });
     }

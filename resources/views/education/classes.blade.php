@@ -10,7 +10,7 @@
                                 <div class="col-md-12 col-lg-6">
                                     <h5 class="">Liste des Matières</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer les matières (Ajouter, Supprimer, Mettre à jour ...etc)
+                                        D'ici vous pouvez gérer les classes (Ajouter, Supprimer, Mettre à jour ...etc)
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -18,20 +18,6 @@
                                         <i class="fas fa-user-plus me-2"></i> Ajouter
                                     </a>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="">
-                                @if (session('success'))
-                                    <div class="alert alert-success" role="alert" id="alert">
-                                        {{ session('success') }}
-                                    </div>
-                                @endif
-                                @if (session('error'))
-                                    <div class="alert alert-danger" role="alert" id="alert">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -73,9 +59,6 @@
                                             <td class="align-middle bg-transparent borer-bottom">
                                                 {{ $class->cycleClasse }}
                                             </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                {{ $class->serieClasse }}
-                                            </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
                                                 <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
@@ -95,12 +78,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
+                            @if (session('success'))
+                                <div class="row alert alert-success text-center" id="success-message">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-6">
                                     <h5 class="">Ajouter une nouvelle Classe </h5>
                                 </div>
                             </div>
-                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ route('mat.store') }}">
+                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ route('classe.store') }}">
                                 @csrf
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -131,25 +119,10 @@
                                         <label for="cycleClasse" class="form-control-label">
                                             Cycle :
                                         </label>
-                                        <input type="text" id="cycleClasse" name="cycleClasse" class="form-control"
-                                            placeholder="Entrez le nom du personnel" value="{{old("cycleClasse")}}" aria-label="Name"
-                                            aria-describedby="name-addon">
-                                        @error('cycleClasse')
-                                            <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="serieClasse" class="form-control-label">
-                                            Serie :
-                                        </label>
-                                        <input type="text" id="serieClasse" name="serieClasse" class="form-control"
-                                            placeholder="Entrez le nom du personnel" value="{{old("serieClasse")}}" aria-label="Name"
-                                            aria-describedby="name-addon">
-                                        @error('serieClasse')
-                                            <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
+                                        <select name="cycleClasse" id="cycleClasse" class="form-control">
+                                            <option value="2nd Cycle">2<sup>nd</sup> Cycle</option>
+                                            <option value="1er Cycle">1<sup>er</sup> Cycle</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-16">

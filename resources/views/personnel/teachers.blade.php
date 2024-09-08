@@ -20,20 +20,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row justify-content-center">
-                            <div class="">
-                                @if (session('success'))
-                                    <div class="alert alert-success" role="alert" id="alert">
-                                        {{ session('success') }}
-                                    </div>
-                                @endif
-                                @if (session('error'))
-                                    <div class="alert alert-danger" role="alert" id="alert">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
                         <div class="table-responsive">
                             <table class="table text-secondary text-center">
                                 <thead>
@@ -105,6 +91,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
+                            @if (session('success'))
+                                <div class="row alert alert-success text-center" id="success-message">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-6">
                                     <h5 class="">Ajouter un nouvel enseignant </h5>
@@ -268,18 +259,6 @@
                                         @error('location')
                                             <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="fonction" class="form-control-label">
-                                            Fonction :
-                                        </label>
-                                        <select name="fonction" id="fonction" class="form-control">
-                                            @foreach (\App\Fonction::cases() as $f)
-                                                <option value="{{ $f->value }}">{{ $f->name }}</option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

@@ -16,7 +16,6 @@ class Classe extends Model
         'libelleClasse ',
         'effectifClasse',
         'cycleClasse',
-        'serieClasse',
     ];
 
 }

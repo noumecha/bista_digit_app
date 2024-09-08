@@ -93,8 +93,8 @@ Route::get('/education/devoir', [DevoirController::class, 'index'])->name('educa
 Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuve')->middleware('auth');
 Route::get('/education/discipline', [EpreuveController::class, 'index'])->name('education.discipline')->middleware('auth');
 Route::get('/education/matieres', [MatiereController::class, 'index'])->name('education.matiere')->middleware('auth');
-Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.matiere')->middleware('auth');
-Route::post('/matieres/save', [ClasseController::class, 'store'])->name('matiere.store')->middleware('auth');
+Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
+Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matiere.store')->middleware('auth');
 Route::post('/classe/save', [ClasseController::class, 'store'])->name('classe.store')->middleware('auth');
 
 # evaluation routes

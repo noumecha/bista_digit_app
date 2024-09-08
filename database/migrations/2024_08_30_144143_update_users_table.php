@@ -12,23 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dateTime('dateNaiss')->nullable();
-            $table->string('lieuNaiss')->nullable();
-            $table->string('diplome1')->nullable();
-            $table->string('diplome2')->nullable();
-            $table->string('matricule')->nullable();
-            $table->enum('statutRedoublance', ['oui','non'])->nullable();
-            $table->string('typeUser')->nullable();
-            $table->enum('fonction', ['SG', 'DE','Principale','DET','DEC'])->nullable();
-        });
-
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
+            $table->dateTime('dateNaiss')->nullable()->change();
+            $table->string('lieuNaiss')->nullable()->change();
+            $table->string('diplome1')->nullable()->change();
+            $table->string('diplome2')->nullable()->change();
+            $table->string('matricule')->nullable()->change();
+            $table->enum('statutRedoublance', ['oui','non'])->nullable()->change();
+            $table->string('typeUser')->nullable()->change();
+            $table->enum('fonction', ['SG', 'DE','Principale','DET','DEC'])->nullable()->change();
         });
     }
 

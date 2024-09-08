@@ -65,7 +65,7 @@ class PersonnelController extends Controller
             'sex' => $request->sex,
         ]);
 
-        return view('dashboard');
+        return redirect()->route('utilisateur.administrators')->with('success', 'Personnel ajouté avec succès!');
     }
 
     /**

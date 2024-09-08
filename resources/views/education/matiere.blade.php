@@ -20,20 +20,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row justify-content-center">
-                            <div class="">
-                                @if (session('success'))
-                                    <div class="alert alert-success" role="alert" id="alert">
-                                        {{ session('success') }}
-                                    </div>
-                                @endif
-                                @if (session('error'))
-                                    <div class="alert alert-danger" role="alert" id="alert">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
                         <div class="table-responsive">
                             <table class="table text-secondary text-center">
                                 <thead>
@@ -43,10 +29,10 @@
                                             ID</th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Code</th>
+                                            Libellé</th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Libellé
+                                            Code
                                         </th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -58,13 +44,13 @@
                                     @foreach ($matieres as $mat)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $mat>id }}
+                                                {{ $mat->id }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $mat>libelleMatiere }}
+                                                {{ $mat->libelleMatiere }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $mat>codeMatiere }}
+                                                {{ $mat->codeMatiere }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
@@ -85,12 +71,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
+                            @if (session('success'))
+                                <div class="row alert alert-success text-center" id="success-message">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-6">
                                     <h5 class="">Ajouter une nouvelle Matière </h5>
                                 </div>
                             </div>
-                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ route('mat.store') }}">
+                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ route('matiere.store') }}">
                                 @csrf
                                 <div class="col-md-6">
                                     <div class="form-group">

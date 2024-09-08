@@ -26,9 +26,8 @@ class ClasseController extends Controller
     public function store(Request $request) {
         $request->validate([
             'libelleClasse' => 'required|min:3|max:255',
-            'effectifClasse' => 'required|min:3|max:255',
+            'effectifClasse' => 'required',
             'cycleClasse' => 'required|min:3|max:255',
-            'serieClasse' => 'min:3|max:255',
         ], [
                 'libelleClasse.required' => 'Entrez le libellé de la classe',
                 'effectifClasse.required' => 'Entrez l\'effectif de la classe',
@@ -39,10 +38,9 @@ class ClasseController extends Controller
             'libelleClasse' => $request->libelleClasse,
             'effectifClasse' => $request->effectifClasse,
             'cycleClasse' => $request->cycleClasse,
-            'serieClasse' => $request->serieClasse
         ]);
 
-        return view('dashboard');
+        return redirect()->route('education.classes')->with('success', 'Classe créée avec succès !');
     }
 
     /**

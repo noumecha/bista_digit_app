@@ -26,7 +26,7 @@ class MatiereController extends Controller
     public function store(Request $request) {
         $request->validate([
             'libelleMatiere' => 'required|min:3|max:255',
-            'codeMatiere' => 'required|email|max:255|unique:users',
+            'codeMatiere' => 'required|max:255|unique:matieres',
         ], [
                 'libelleMatiere.required' => 'Entrez le libellé de la matière',
                 'codeMatiere.required' => 'Entrez le code de la matière',
@@ -37,7 +37,7 @@ class MatiereController extends Controller
             'codeMatiere' => $request->codeMatiere,
         ]);
 
-        return view('dashboard');
+        return redirect()->route('education.matiere')->with('success', 'Matière ajoutée avec succès !');
     }
 
     /**
