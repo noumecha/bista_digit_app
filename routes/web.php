@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BullettinController;
 use App\Http\Controllers\ClasseController;
+use App\Http\Controllers\CoefficientController;
 use App\Http\Controllers\DevoirController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EnseignantController;
@@ -94,8 +95,13 @@ Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('ed
 Route::get('/education/discipline', [EpreuveController::class, 'index'])->name('education.discipline')->middleware('auth');
 Route::get('/education/matieres', [MatiereController::class, 'index'])->name('education.matiere')->middleware('auth');
 Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
+Route::get('/education/coefficients', [CoefficientController::class, 'index'])->name('education.coefficients')->middleware('auth');
 Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matiere.store')->middleware('auth');
 Route::post('/classe/save', [ClasseController::class, 'store'])->name('classe.store')->middleware('auth');
+Route::post('/coefficient/save', [CoefficientController::class, 'store'])->name('coefficient.store')->middleware('auth');
+Route::put('/coefficient/{id}', [CoefficientController::class, 'update'])->name('coefficient.update')->middleware('auth');
+Route::get('/coefficient/{id}/edit', [CoefficientController::class, 'edit'])->name('coefficient.edit')->middleware('auth');
+Route::delete('/coefficient/{id}', [CoefficientController::class, 'destroy'])->name('coefficient.destroy')->middleware('auth');
 
 # evaluation routes
 Route::get('/evaluation/trimestres', [EvaluationController::class, 'index'])->name('evaluation.trimestres')->middleware('auth');

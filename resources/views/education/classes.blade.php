@@ -90,43 +90,47 @@
                             </div>
                             <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ route('classe.store') }}">
                                 @csrf
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="libelleClasse" class="form-control-label">
-                                            Libellé :
-                                        </label>
-                                        <input type="text" id="libelleClasse" name="libelleClasse" class="form-control"
-                                            placeholder="Entrez le libellé de la classe" value="{{ old("libelleClasse") }}">
-                                        @error('libelleClasse')
-                                            <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="libelleClasse" class="form-control-label">
+                                                Libellé :
+                                            </label>
+                                            <input type="text" id="libelleClasse" name="libelleClasse" class="form-control"
+                                                placeholder="Entrez le libellé de la classe" value="{{ old("libelleClasse") }}">
+                                            @error('libelleClasse')
+                                                <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="effectifClasse" class="form-control-label">
+                                                Effectif :
+                                            </label>
+                                            <input type="number" id="effectifClasse" name="effectifClasse" class="form-control" value="{{old("effectifClasse")}}" aria-label="Name"
+                                                aria-describedby="name-addon">
+                                            @error('effectifClasse')
+                                                <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="cycleClasse" class="form-control-label">
+                                                Cycle :
+                                            </label>
+                                            <select name="cycleClasse" id="cycleClasse" class="form-control">
+                                                <option value="2nd Cycle">2<sup>nd</sup> Cycle</option>
+                                                <option value="1er Cycle">1<sup>er</sup> Cycle</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="effectifClasse" class="form-control-label">
-                                            Effectif :
-                                        </label>
-                                        <input type="number" id="effectifClasse" name="effectifClasse" class="form-control" value="{{old("effectifClasse")}}" aria-label="Name"
-                                            aria-describedby="name-addon">
-                                        @error('effectifClasse')
-                                            <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-16">
+                                        <input type="submit" value="Enregistrer" class="btn btn-lg btn-primary">
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="cycleClasse" class="form-control-label">
-                                            Cycle :
-                                        </label>
-                                        <select name="cycleClasse" id="cycleClasse" class="form-control">
-                                            <option value="2nd Cycle">2<sup>nd</sup> Cycle</option>
-                                            <option value="1er Cycle">1<sup>er</sup> Cycle</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-16">
-                                    <input type="submit" value="Enregistrer" class="btn btn-lg btn-primary">
                                 </div>
                                 @if ($errors->any())
                                     <div class="alert alert-danger">

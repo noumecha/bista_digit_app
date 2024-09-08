@@ -37,7 +37,7 @@ class AnneeScolaireController extends Controller
 
         $years = AnneeScolaire::all();
 
-        return view('annee_scolaire.show', ['years'=> $years]);
+        return redirect()->route('annee_scolaire.show')->with('success', 'Année scolaire définie avec succès!');
     }
 
     /**

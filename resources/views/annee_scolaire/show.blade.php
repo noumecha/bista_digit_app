@@ -80,6 +80,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
+                            @if (session('success'))
+                                <div class="row alert alert-success text-center" id="success-message">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-6">
                                     <h5 class="">Ajouter une nouvelle année scolaire</h5>

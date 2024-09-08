@@ -29,10 +29,14 @@
                                             ID</th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Libellé</th>
+                                            Classe</th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Code
+                                            Matière
+                                        </th>
+                                        <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            Coefficient
                                         </th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -41,20 +45,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($matieres as $mat)
+                                    @foreach ($coefficients as $coef)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $mat->id }}
+                                                {{ $coef->id }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $mat->libelleMatiere }}
+                                                {{ $coef->classe->libelleClasse }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $mat->codeMatiere }}
+                                                {{ $coef->matiere->libelleMatiere }}
+                                            </td>
+                                            <td class="align-middle bg-transparent border-bottom">
+                                                {{ $coef->coefficient }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
-                                                <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                                <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ route('coefficient.edit', $coef->id) }}"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item"  href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -78,33 +95,47 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5 class="">Ajouter une nouvelle Matière </h5>
+                                    <h5 class="">Définir le Coefficient</h5>
                                 </div>
                             </div>
-                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ route('matiere.store') }}">
+                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ isset($coefficient) ? route('coefficient.update', $coefficient->id) : route('coefficient.store') }}">
                                 @csrf
+                                @if (isset($coefficient))
+                                    @method('PUT')
+                                @endif
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="libelleMatiere" class="form-control-label">
-                                                Libellé :
+                                            <label for="matiere_id" class="form-control-label">
+                                                Matiere :
                                             </label>
-                                            <input type="text" id="libelleMatiere" name="libelleMatiere" class="form-control"
-                                                placeholder="Entrez le libellé de la matière" value="{{ old("libelleMatiere") }}">
-                                            @error('libelleMatiere')
-                                                <span class="text-danger text-sm">{{ $message }}</span>
-                                            @enderror
+                                            <select name="matiere_id" id="matiere_id" class="form-control">
+                                            @foreach ($matieres as $mat)
+                                                <option value="{{ $mat->id }}" {{ isset($coefficient) && $coefficient->matiere_id == $mat->id ? 'selected' : '' }} class="">{{ $mat->libelleMatiere }}</option>
+                                            @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="codeMatiere" class="form-control-label">
-                                                Code :
+                                            <label for="classe_id" class="form-control-label">
+                                                Classe :
                                             </label>
-                                            <input type="text" id="codeMatiere" name="codeMatiere" class="form-control"
-                                                placeholder="Entrez le nom du personnel" value="{{old("codeMatiere")}}" aria-label="Name"
+                                            <select name="classe_id" id="classe_id" class="form-control">
+                                            @foreach ($classes as $classe)
+                                                <option value="{{ $classe->id }}" {{ isset($coefficient) && $coefficient->classe_id == $classe->id ? 'selected' : ''}} class="">{{ $classe->libelleClasse }}</option>
+                                            @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="coefficient" class="form-control-label">
+                                                valeur :
+                                            </label>
+                                            <input type="number" id="coefficient" name="coefficient" class="form-control" value="{{ isset($coefficient) ? $coefficient->$coefficient : old("coefficient") }}" aria-label="Name"
                                                 aria-describedby="name-addon">
-                                            @error('codeMatiere')
+                                            @error('coefficient')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -112,7 +143,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="Enregistrer" class="btn btn-lg btn-primary">
+                                        <input type="submit" value="{{ isset($coefficient) ? 'Mettre à jour' : 'Enregistrer' }}" class="btn btn-lg {{ isset($coefficient) ? 'btn-success' : 'btn-primary' }}">
                                     </div>
                                 </div>
                                 @if ($errors->any())
