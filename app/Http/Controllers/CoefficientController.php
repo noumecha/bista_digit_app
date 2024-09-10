@@ -65,6 +65,6 @@ class CoefficientController extends Controller
         $coefficient->delete();
         //Coefficient::destroy($id);
 
-        return redirect()->route('education.coefficients')->with('success', 'Coefficient mis à jour avec succès');
+        return redirect()->route('education.coefficients')->with('deleteSuccess', 'Coefficient supprimer avec succès');
     }
 }

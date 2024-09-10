@@ -6,6 +6,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
+                            @if (session('deleteSuccess'))
+                            <div class="row alert alert-success text-center" id="success-message">
+                                {{ session('deleteSuccess') }}
+                            </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
                                     <h5 class="">Liste des Matières</h5>
@@ -60,15 +65,36 @@
                                                 {{ $coef->coefficient }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
+                                                <!--div class="dropdown">
+                                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item primary" href="#">
+                                                            <i class="bx bx-edit-alt me-1"></i>Modifier
+                                                        </a>
+                                                        <a href="#" class="dropdown-item btn-success" data-toggle="modal" data-target="#exampleModal">
+                                                            <i class="bx bx-trash me-1"></i>Supprimer
+                                                        </a>
+                                                    </div>
+                                                </div-->
                                                 <div class="dropdown">
                                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                     </button>
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ route('coefficient.edit', $coef->id) }}"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
+                                                            <a class="dropdown-item" href="{{ route('coefficient.edit', $coef->id) }}">
+                                                                <i class="fas fa-user-edit" aria-hidden="true"></i>
+                                                                modifier
+                                                            </a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item"  href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
+                                                            <div class="dropdown-item">
+                                                                <i class="fas fa-trash" aria-hidden="true"></i>
+                                                                <form role="form" class="form" method="POST" action="{{ route('coefficient.destroy', $coef->id) }}">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <input type="submit" value="Supprimer">
+                                                                </form>
+                                                            </div>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -95,7 +121,13 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5 class="">Définir le Coefficient</h5>
+                                    <h5 class="">
+                                        @if (isset($coefficient))
+                                            Modifier le coefficient de {{ $coefficient->matiere->libelleMatiere }} en {{ $coefficient->classe->libelleClasse }}
+                                        @else
+                                            Définir le Coefficient
+                                        @endif
+                                    </h5>
                                 </div>
                             </div>
                             <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ isset($coefficient) ? route('coefficient.update', $coefficient->id) : route('coefficient.store') }}">
@@ -133,7 +165,7 @@
                                             <label for="coefficient" class="form-control-label">
                                                 valeur :
                                             </label>
-                                            <input type="number" id="coefficient" name="coefficient" class="form-control" value="{{ isset($coefficient) ? $coefficient->$coefficient : old("coefficient") }}" aria-label="Name"
+                                            <input type="number" id="coefficient" name="coefficient" class="form-control" value="{{ isset($coefficient) && $coefficient->coefficient ? $coefficient->coefficient : old("coefficient") }}" aria-label="Name"
                                                 aria-describedby="name-addon">
                                             @error('coefficient')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
