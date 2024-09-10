@@ -25,7 +25,7 @@
 
                     <div class="col-lg-6 col-md-6 col-12">
                         <div class="_Ol_er_qw yu">
-                            <img src="../assets/front//images/slider/about-test.jpeg">
+                            <img src="{{ asset('front/images/slider/about-test.jpeg') }}">
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                          <div class="featured-box">
                              <div class="feature-card">
                                  <a href="#"><i class="far fa-link"></i></a>
-                                 <img src="../assets/front//images/featured/1.jpg">
+                                 <img src="{{ asset('front/images/featured/1.jpg') }}">
                              </div>
                              <div class="content">
                                <h3>MBA</h3>
@@ -122,7 +122,7 @@
                        <div class="featured-box">
                            <div class="feature-card">
                                <a href="#"><i class="far fa-link"></i></a>
-                               <img src="../assets/front//images/featured/2.jpg">
+                               <img src="{{ asset('front/images/featured/2.jpg') }}">
                            </div>
                            <div class="content">
                              <h3>BE</h3>
@@ -140,7 +140,7 @@
                        <div class="featured-box">
                            <div class="feature-card">
                                <a href="#"><i class="far fa-link"></i></a>
-                               <img src="../assets/front//images/featured/3.jpg">
+                               <img src="{{ asset('front/images/featured/3.jpg') }}">
                            </div>
                            <div class="content">
                              <h3>ME</h3>
@@ -158,7 +158,7 @@
                        <div class="featured-box">
                            <div class="feature-card">
                                <a href="#"><i class="far fa-link"></i></a>
-                               <img src="../assets/front//images/featured/4.jpg">
+                               <img src="{{ asset('front/images/featured/4.jpg')}}">
                            </div>
                            <div class="content">
                              <h3>MBBS</h3>
@@ -176,7 +176,7 @@
                        <div class="featured-box">
                            <div class="feature-card">
                                <a href="#"><i class="far fa-link"></i></a>
-                               <img src="../assets/front//images/featured/5.jpg">
+                               <img src="{{ asset('front/images/featured/5.jpg') }}">
                            </div>
                            <div class="content">
                              <h3>MSC</h3>
@@ -194,7 +194,7 @@
                        <div class="featured-box">
                            <div class="feature-card">
                                <a href="#"><i class="far fa-link"></i></a>
-                               <img src="../assets/front//images/featured/6.jpg">
+                               <img src="{{ asset('front/images/featured/6.jpg') }}">
                            </div>
                            <div class="content">
                              <h3>MA</h3>
@@ -266,7 +266,7 @@
                            <div class="item">
                                <div class="team-card">
                                    <div class="image-team">
-                                       <img src="../assets/front//images/team/1.jpg">
+                                       <img src="{{ asset('front/images/team/1.jpg') }}">
                                    </div>
                                    <div class="team-content">
                                        <h3>John</h3>
@@ -284,7 +284,7 @@
                            <div class="item">
                                <div class="team-card">
                                    <div class="image-team">
-                                       <img src="../assets/front//images/team/2.jpg">
+                                       <img src="{{ asset('front/images/team/2.jpg') }}">
                                    </div>
                                    <div class="team-content">
                                        <h3>Anderson john</h3>
@@ -302,7 +302,7 @@
                            <div class="item">
                                <div class="team-card">
                                    <div class="image-team">
-                                       <img src="../assets/front//images/team/3.jpg">
+                                       <img src="{{ asset('front/images/team/3.jpg') }}">
                                    </div>
                                    <div class="team-content">
                                        <h3>Sarah Se</h3>
@@ -320,7 +320,7 @@
                            <div class="item">
                                <div class="team-card">
                                    <div class="image-team">
-                                       <img src="../assets/front//images/team/4.jpg">
+                                       <img src="{{ asset('front/images/team/4.jpg') }}">
                                    </div>
                                    <div class="team-content">
                                        <h3>Williams</h3>

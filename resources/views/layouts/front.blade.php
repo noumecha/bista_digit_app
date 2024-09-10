@@ -13,7 +13,7 @@
     </head>
 
     <body>
-        @include('layouts.frontnavigation')../assets
+        @include('layouts.frontnavigation')
         <main>
             {{ $slot }}
         </main>

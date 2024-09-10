@@ -7,7 +7,7 @@
                         <div class="col-md-6">
                             <div class="position-absolute w-40 top-0 start-0 h-100 d-md-block d-none">
                                 <div class="oblique-image position-absolute d-flex fixed-top ms-auto h-100 z-index-0 bg-cover me-n8"
-                                    style="background-image:url('../assets/img/image-sign-up.jpg')">
+                                    style="background-image:url('{{ asset('img/image-sign-in.jpg') }}')">
                                     <div class="my-auto text-start max-width-350 ms-7">
                                         <h1 class="mt-3 text-white font-weight-bolder">
                                             Une application Web
@@ -84,7 +84,7 @@
                                             <button type="submit" class="btn btn-dark w-100 mt-4 mb-3">S'inscrire</button>
                                             <button type="button" class="btn btn-white btn-icon w-100 mb-3">
                                                 <span class="btn-inner--icon me-1">
-                                                    <img class="w-5" src="../assets/img/logos/google-logo.svg"
+                                                    <img class="w-5" src="{{ asset('img/logos/google-logo.svg') }}"
                                                         alt="google-logo" />
                                                 </span>
                                                 <span class="btn-inner--text">

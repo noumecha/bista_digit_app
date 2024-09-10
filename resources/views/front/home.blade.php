@@ -2,7 +2,7 @@
     <section id="carouselExampleFade" class="carousel slide carousel-fade slider" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="../assets/front/images/slider/1.jpg" class="d-block" alt="...">
+                <img src="{{ asset('front/images/slider/1.jpg') }}" class="d-block" alt="...">
                 <div class="carousel-caption">
                     <h2>Best Education For Diploma</h2>
                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-            <img src="../assets/front/images/slider/2.jpg" class="d-block" alt="...">
+            <img src="{{ asset('front/images/slider/2.jpg') }}" class="d-block" alt="...">
             <div class="carousel-caption">
                 <h2>Best Education For Diploma</h2>
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-            <img src="../assets/front/images/slider/3.jpg" class="d-block" alt="...">
+            <img src="{{ asset('front/images/slider/3.jpg') }}" class="d-block" alt="...">
             <div class="carousel-caption">
                 <h2>Best Education For Diploma</h2>
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
@@ -120,7 +120,7 @@
                       <div class="featured-box">
                           <div class="feature-card">
                               <a href="#"><i class="far fa-link"></i></a>
-                              <img src="../assets/front/images/featured/1.jpg">
+                              <img src="{{ asset('front/images/featured/1.jpg') }}">
                           </div>
                           <div class="content">
                             <h3>MBA</h3>
@@ -138,7 +138,7 @@
                     <div class="featured-box">
                         <div class="feature-card">
                             <a href="#"><i class="far fa-link"></i></a>
-                            <img src="../assets/front/images/featured/2.jpg">
+                            <img src="{{ asset('front/images/featured/2.jpg') }}">
                         </div>
                         <div class="content">
                           <h3>BE</h3>
@@ -156,7 +156,7 @@
                     <div class="featured-box">
                         <div class="feature-card">
                             <a href="#"><i class="far fa-link"></i></a>
-                            <img src="../assets/front/images/featured/3.jpg">
+                            <img src="{{ asset('front/images/featured/3.jpg') }}">
                         </div>
                         <div class="content">
                           <h3>ME</h3>
@@ -174,7 +174,7 @@
                     <div class="featured-box">
                         <div class="feature-card">
                             <a href="#"><i class="far fa-link"></i></a>
-                            <img src="../assets/front/images/featured/4.jpg">
+                            <img src="{{ asset('front/images/featured/4.jpg') }}">
                         </div>
                         <div class="content">
                           <h3>MBBS</h3>
@@ -192,7 +192,7 @@
                     <div class="featured-box">
                         <div class="feature-card">
                             <a href="#"><i class="far fa-link"></i></a>
-                            <img src="../assets/front/images/featured/5.jpg">
+                            <img src="{{ asset('front/images/featured/5.jpg') }}">
                         </div>
                         <div class="content">
                           <h3>MSC</h3>
@@ -210,7 +210,7 @@
                     <div class="featured-box">
                         <div class="feature-card">
                             <a href="#"><i class="far fa-link"></i></a>
-                            <img src="../assets/front/images/featured/6.jpg">
+                            <img src="{{ asset('front/images/featured/6.jpg') }}">
                         </div>
                         <div class="content">
                           <h3>MA</h3>
@@ -282,7 +282,7 @@
                         <div class="item">
                             <div class="team-card">
                                 <div class="image-team">
-                                    <img src="../assets/front/images/team/1.jpg">
+                                    <img src="{{ asset('front/images/team/1.jpg') }}">
                                 </div>
                                 <div class="team-content">
                                     <h3>John</h3>
@@ -300,7 +300,7 @@
                         <div class="item">
                             <div class="team-card">
                                 <div class="image-team">
-                                    <img src="../assets/front/images/team/2.jpg">
+                                    <img src="{{ asset('front/images/team/2.jpg') }}">
                                 </div>
                                 <div class="team-content">
                                     <h3>Anderson john</h3>
@@ -318,7 +318,7 @@
                         <div class="item">
                             <div class="team-card">
                                 <div class="image-team">
-                                    <img src="../assets/front/images/team/3.jpg">
+                                    <img src="{{ asset('front/images/team/3.jpg') }}">
                                 </div>
                                 <div class="team-content">
                                     <h3>Sarah Se</h3>
@@ -336,7 +336,7 @@
                         <div class="item">
                             <div class="team-card">
                                 <div class="image-team">
-                                    <img src="../assets/front/images/team/4.jpg">
+                                    <img src="{{ asset('front/images/team/4.jpg') }}">
                                 </div>
                                 <div class="team-content">
                                     <h3>Williams</h3>
@@ -387,7 +387,7 @@
 
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <article class="_lk_bg_sd_we">
-                      <div class="_bv_xs_we" style="background:url(../assets/front/images/blog/img-01.jpg"></div>
+                      <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-01.jpg') }}"></div>
                       <div class="_xs_we_er">
                         <div class="_he_w">
                           <h3>Summer Course Start From 1st June</h3>
@@ -402,7 +402,7 @@
 
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <article class="_lk_bg_sd_we">
-                        <div class="_bv_xs_we" style="background:url(../assets/front/images/blog/img-03.jpg"></div>
+                        <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-03.jpg') }}"></div>
                       <div class="_xs_we_er">
                         <div class="_he_w">
                           <h3>Guest Interview will Occur Soon</h3>

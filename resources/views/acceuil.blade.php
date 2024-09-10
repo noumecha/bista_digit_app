@@ -85,7 +85,7 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex align-items-center">
-                                                        <img src="../assets/img/team-2.jpg"
+                                                        <img src="{{ asset('img/team-2.jpg') }}"
                                                             class="avatar avatar-sm rounded-circle me-2"
                                                             alt="user1">
                                                     </div>
@@ -123,7 +123,7 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex align-items-center">
-                                                        <img src="../assets/img/team-3.jpg"
+                                                        <img src="{{ asset('img/team-3.jpg') }}"
                                                             class="avatar avatar-sm rounded-circle me-2"
                                                             alt="user2">
                                                     </div>
@@ -161,7 +161,7 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex align-items-center">
-                                                        <img src="../assets/img/team-1.jpg"
+                                                        <img src="{{ asset('img/team-1.jpg') }}"
                                                             class="avatar avatar-sm rounded-circle me-2"
                                                             alt="user3">
                                                     </div>
@@ -200,7 +200,7 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex align-items-center">
-                                                        <img src="../assets/img/marie.jpg"
+                                                        <img src="{{ asset('img/marie.jpg') }}"
                                                             class="avatar avatar-sm rounded-circle me-2"
                                                             alt="user4">
                                                     </div>
@@ -238,7 +238,7 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex align-items-center">
-                                                        <img src="../assets/img/team-5.jpg"
+                                                        <img src="{{ asset('img/team-5.jpg') }}"
                                                             class="avatar avatar-sm rounded-circle me-2"
                                                             alt="user5">
                                                     </div>
@@ -276,7 +276,7 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="d-flex align-items-center">
-                                                        <img src="../assets/img/team-6.jpg"
+                                                        <img src="{{ asset('img/team-6.jpg') }}"
                                                             class="avatar avatar-sm rounded-circle me-2"
                                                             alt="user6">
                                                     </div>

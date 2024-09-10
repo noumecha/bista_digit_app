@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col-xl-4 col-md-6 d-flex pt-20 pb-20 flex-column mx-auto">
                             <div class="logo d-flex justify-content-center align-items-center rounded-full w-100 h-100 overflow-hidden">
-                                <img src="../assets/logo/logo-bista.png" alt="logo" class=""/>
+                                <img src="{{ asset('logo/logo-bista.png') }}" alt="logo" class=""/>
                             </div>
                             <div class="card card-plain mt-6">
                                 <div class="card-header pb-0 bg-transparent text-center">
@@ -59,7 +59,7 @@
                                             <button type="submit" class="btn btn-dark w-100 mt-4 mb-3">Connexion</button>
                                             <button type="button" class="btn btn-white btn-icon w-100 mb-3">
                                                 <span class="btn-inner--icon me-1">
-                                                    <img class="w-5" src="../assets/img/logos/google-logo.svg"
+                                                    <img class="w-5" src="{{ asset('img/logos/google-logo.svg') }}"
                                                         alt="google-logo" />
                                                 </span>
                                                 <span class="btn-inner--text">Se connecter avec Google</span>
@@ -84,7 +84,7 @@
                         <div class="col-md-6">
                             <div class="position-absolute w-40 top-0 end-0 h-100 d-md-block d-none">
                                 <div class="oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 bg-cover ms-n8"
-                                    style="background-image:url('../assets/img/image-sign-in.jpg')">
+                                    style="background-image:url('{{ asset('img/image-sign-in.jpg') }}')">
                                 </div>
                             </div>
                         </div>

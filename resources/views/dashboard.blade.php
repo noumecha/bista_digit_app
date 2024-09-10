@@ -42,7 +42,7 @@
                                     <div
                                         class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
                                         <div class="full-background bg-cover"
-                                            style="background-image: url('../assets/img/img-2.jpg')"></div>
+                                            style="background-image: url('{{ asset('img/img-2.jpg') }}"></div>
                                         <div class="card-body text-start px-3 py-0 w-100">
                                             <div class="row mt-12">
                                                 <div class="col-sm-3 mt-auto">
@@ -65,7 +65,7 @@
                                 <div
                                     class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
                                     <div class="full-background bg-cover"
-                                        style="background-image: url('../assets/img/img-1.jpg')"></div>
+                                        style="background-image: url('{{ asset('img/img-1.jpg') }}"></div>
                                     <div class="card-body text-start px-3 py-0 w-100">
                                         <div class="row mt-12">
                                             <div class="col-sm-3 mt-auto">
@@ -86,7 +86,7 @@
                                 <div
                                     class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
                                     <div class="full-background bg-cover"
-                                        style="background-image: url('../assets/img/img-3.jpg')"></div>
+                                        style="background-image: url('{{ asset('img/img-3.jpg') }}"></div>
                                     <div class="card-body text-start px-3 py-0 w-100">
                                         <div class="row mt-12">
                                             <div class="col-sm-3 mt-auto">
@@ -107,7 +107,7 @@
                                 <div
                                     class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
                                     <div class="full-background bg-cover"
-                                        style="background-image: url('../assets/img/img-4.jpg')"></div>
+                                        style="background-image: url('{{ asset('img/img-4.jpg')}}"></div>
                                     <div class="card-body text-start px-3 py-0 w-100">
                                         <div class="row mt-12">
                                             <div class="col-sm-3 mt-auto">
@@ -128,7 +128,7 @@
                                 <div
                                     class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
                                     <div class="full-background bg-cover"
-                                        style="background-image: url('../assets/img/img-5.jpg')"></div>
+                                        style="background-image: url('{{ asset('img/img-5.jpg') }}"></div>
                                     <div class="card-body text-start px-3 py-0 w-100">
                                         <div class="row mt-12">
                                             <div class="col-sm-3 mt-auto">
@@ -149,7 +149,7 @@
                                 <div
                                     class="card card-background shadow-none border-radius-xl card-background-after-none align-items-start mb-0">
                                     <div class="full-background bg-cover"
-                                        style="background-image: url('../assets/img/img-1.jpg')"></div>
+                                        style="background-image: url('{{ asset('img/img-1.jpg') }}"></div>
                                     <div class="card-body text-start px-3 py-0 w-100">
                                         <div class="row mt-12">
                                             <div class="col-sm-3 mt-auto">
@@ -273,7 +273,7 @@
                                             <td>
                                                 <div class="d-flex px-2">
                                                     <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-spotify.svg"
+                                                        <img src="{{ asset('img/small-logos/logo-spotify.svg') }}"
                                                             class="w-80" alt="spotify">
                                                     </div>
                                                     <div class="my-auto">
@@ -291,7 +291,7 @@
                                                 <div class="d-flex">
                                                     <div
                                                         class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/visa.png" class="w-90 mx-auto"
+                                                        <img src="{{ asset('img/logos/visa.png" class="w-90 mx-auto') }}"
                                                             alt="visa">
                                                     </div>
                                                     <div class="ms-2">
@@ -316,7 +316,7 @@
                                             <td>
                                                 <div class="d-flex px-2">
                                                     <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-invision.svg"
+                                                        <img src="{{ asset('img/small-logos/logo-invision.svg') }}"
                                                             class="w-80" alt="invision">
                                                     </div>
                                                     <div class="my-auto">
@@ -334,7 +334,7 @@
                                                 <div class="d-flex">
                                                     <div
                                                         class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/mastercard.png"
+                                                        <img src="{{ asset('img/logos/mastercard.png') }}"
                                                             class="w-90 mx-auto" alt="mastercard">
                                                     </div>
                                                     <div class="ms-2">
@@ -359,7 +359,7 @@
                                             <td>
                                                 <div class="d-flex px-2">
                                                     <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-jira.svg"
+                                                        <img src="{{ asset('img/small-logos/logo-jira.svg') }}"
                                                             class="w-80" alt="jira">
                                                     </div>
                                                     <div class="my-auto">
@@ -377,7 +377,7 @@
                                                 <div class="d-flex">
                                                     <div
                                                         class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/mastercard.png"
+                                                        <img src="{{ asset('img/logos/mastercard.png') }}"
                                                             class="w-90 mx-auto" alt="mastercard">
                                                     </div>
                                                     <div class="ms-2">
@@ -402,7 +402,7 @@
                                             <td>
                                                 <div class="d-flex px-2">
                                                     <div class="avatar avatar-sm rounded-circle bg-gray-100 me-2 my-2">
-                                                        <img src="../assets/img/small-logos/logo-slack.svg"
+                                                        <img src="{{ asset('img/small-logos/logo-slack.svg') }}"
                                                             class="w-80" alt="slack">
                                                     </div>
                                                     <div class="my-auto">
@@ -420,7 +420,7 @@
                                                 <div class="d-flex">
                                                     <div
                                                         class="border px-1 py-1 text-center d-flex align-items-center border-radius-sm my-auto">
-                                                        <img src="../assets/img/logos/visa.png" class="w-90 mx-auto"
+                                                        <img src="{{ asset('img/logos/visa.png') }}" class="w-90 mx-auto"
                                                             alt="visa">
                                                     </div>
                                                     <div class="ms-2">
