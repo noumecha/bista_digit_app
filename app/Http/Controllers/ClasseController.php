@@ -43,17 +43,44 @@ class ClasseController extends Controller
         return redirect()->route('education.classes')->with('success', 'Classe créée avec succès !');
     }
 
+
     /**
      *
      */
-    public function edit() {
+    public function edit($id) {
+        $classe = Classe::findOrFail($id);
+        $matieres = Classe::all();
 
+        return view('education.classes', compact('matieres', 'classe'));
     }
 
     /**
      *
      */
-    public function delete() {
+    public function update(Request $request, $id) {
+        $request->validate([
+            'libelleClasse' => 'required|min:3|max:255',
+            'effectifClasse' => 'required',
+            'cycleClasse' => 'required|min:3|max:255',
+        ], [
+                'libelleClasse.required' => 'Entrez le libellé de la classe',
+                'effectifClasse.required' => 'Entrez l\'effectif de la classe',
+                'cycleClasse.required' => 'Choisissez le cycle de la classe',
+         ]);
 
+        $classe = Classe::findOrFail($id);
+        $classe->update($request->all());
+
+        return redirect()->route('education.classes')->with('success', 'Classe mise à jour avec succès');
+    }
+
+    /**
+     *
+     */
+    public function destroy($id) {
+        $classe = Classe::findOrFail($id);
+        $classe->delete();
+
+        return redirect()->route('education.classes')->with('deleteSuccess', 'Classe supprimée avec succès');
     }
 }

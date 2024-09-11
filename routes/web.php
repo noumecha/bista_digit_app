@@ -96,8 +96,17 @@ Route::get('/education/discipline', [EpreuveController::class, 'index'])->name('
 Route::get('/education/matieres', [MatiereController::class, 'index'])->name('education.matiere')->middleware('auth');
 Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
 Route::get('/education/coefficients', [CoefficientController::class, 'index'])->name('education.coefficients')->middleware('auth');
+## education -> course routes
 Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matiere.store')->middleware('auth');
+Route::put('/matieres/{id}', [MatiereController::class, 'update'])->name('matiere.update')->middleware('auth');
+Route::get('/matieres/{id}/edit', [MatiereController::class, 'edit'])->name('matiere.edit')->middleware('auth');
+Route::delete('/matieres/{id}', [MatiereController::class, 'destroy'])->name('matiere.destroy')->middleware('auth');
+## education -> class routes
 Route::post('/classe/save', [ClasseController::class, 'store'])->name('classe.store')->middleware('auth');
+Route::put('/classe/{id}', [ClasseController::class, 'update'])->name('classe.update')->middleware('auth');
+Route::get('/classe/{id}/edit', [ClasseController::class, 'edit'])->name('classe.edit')->middleware('auth');
+Route::delete('/classe/{id}', [ClasseController::class, 'destroy'])->name('classe.destroy')->middleware('auth');
+## education -> coefficient routes
 Route::post('/coefficient/save', [CoefficientController::class, 'store'])->name('coefficient.store')->middleware('auth');
 Route::put('/coefficient/{id}', [CoefficientController::class, 'update'])->name('coefficient.update')->middleware('auth');
 Route::get('/coefficient/{id}/edit', [CoefficientController::class, 'edit'])->name('coefficient.edit')->middleware('auth');
