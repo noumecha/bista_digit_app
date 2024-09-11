@@ -54,4 +54,10 @@ class Enseignant extends User
         return $this->attributes['fonction'];
     }
 
+    /**
+     *
+     */
+    public function getMatiereId() {
+        return $this->attributes['matiere_id'];
+    }
 }

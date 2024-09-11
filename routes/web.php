@@ -15,6 +15,7 @@ use App\Http\Controllers\CoefficientController;
 use App\Http\Controllers\DevoirController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EnseignantController;
+use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\HomeController;
@@ -96,6 +97,7 @@ Route::get('/education/discipline', [EpreuveController::class, 'index'])->name('
 Route::get('/education/matieres', [MatiereController::class, 'index'])->name('education.matiere')->middleware('auth');
 Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
 Route::get('/education/coefficients', [CoefficientController::class, 'index'])->name('education.coefficients')->middleware('auth');
+Route::get('/education/enseignement', [EnseignementController::class, 'index'])->name('education.enseignement')->middleware('auth');
 ## education -> course routes
 Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matiere.store')->middleware('auth');
 Route::put('/matieres/{id}', [MatiereController::class, 'update'])->name('matiere.update')->middleware('auth');
@@ -111,6 +113,11 @@ Route::post('/coefficient/save', [CoefficientController::class, 'store'])->name(
 Route::put('/coefficient/{id}', [CoefficientController::class, 'update'])->name('coefficient.update')->middleware('auth');
 Route::get('/coefficient/{id}/edit', [CoefficientController::class, 'edit'])->name('coefficient.edit')->middleware('auth');
 Route::delete('/coefficient/{id}', [CoefficientController::class, 'destroy'])->name('coefficient.destroy')->middleware('auth');
+## education -> enseignement routes
+Route::post('/enseignement/save', [EnseignementController::class, 'store'])->name('enseignement.store')->middleware('auth');
+Route::put('/enseignement/{id}', [EnseignementController::class, 'update'])->name('enseignement.update')->middleware('auth');
+Route::get('/enseignement/{id}/edit', [EnseignementController::class, 'edit'])->name('enseignement.edit')->middleware('auth');
+Route::delete('/enseignement/{id}', [EnseignementController::class, 'destroy'])->name('enseignement.destroy')->middleware('auth');
 
 # evaluation routes
 Route::get('/evaluation/trimestres', [EvaluationController::class, 'index'])->name('evaluation.trimestres')->middleware('auth');
@@ -119,7 +126,7 @@ Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->nam
 
 # personnel routes
 Route::get('/utilisateur/administrators', [UtilisateurController::class, 'administrators'])->name('utilisateur.administrators')->middleware('auth');
-Route::get('/utilisateur/teachers', [UtilisateurController::class, 'teachers'])->name('utilisateur.teachers')->middleware('auth');
+Route::get('/utilisateur/teachers', [EnseignantController::class, 'index'])->name('utilisateur.teachers')->middleware('auth');
 Route::get('/utilisateur/students', [UtilisateurController::class, 'students'])->name('utilisateur.students')->middleware('auth');
 Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('personnel.store')->middleware('auth');
 Route::post('/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');

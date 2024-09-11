@@ -2,13 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Matiere;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class EnseignantController extends Controller
 {
+    /**
+     *
+     */
+    public function index() {
+        $user = User::find(Auth::id());
+        $matieres = Matiere::all();
+        $teachers = User::all()->where('typeUser', '=', 'enseignant');
+
+        return view('personnel.teachers', compact('matieres','teachers','user'));
+    }
+
      /**
      * saving administrators members
      * @param  \Illuminate\Http\Request  $request
@@ -16,6 +29,7 @@ class EnseignantController extends Controller
     public function store(Request $request) {
         $request->validate([
             'name' => 'required|min:3|max:255',
+            'matricule' => 'required|max:255',
             'surname' => 'required|min:3|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:8|max:255',
@@ -27,10 +41,11 @@ class EnseignantController extends Controller
             'location' => 'required|min:3|max:255',
             'numCni' => 'required|max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            #'fonction' => ['required', Rule::in(['SG','DE','Principale','DET','DEC'])],
+            'matiere_id' => 'required',
             'profile' => 'required|image|mimes:jpeg,png,gif|max:4096',
         ], [
                 'name.required' => 'Entrez votre nom',
+                'matricule.required' => 'Entrez le matricule',
                 'surname.required' => 'Entrez votre prenom',
                 'email.required' => 'Entrez l\'adresse email',
                 'phone.required' => 'Entrez le numero de téléphone',
@@ -41,6 +56,7 @@ class EnseignantController extends Controller
                 'diplome2.required' => 'Entrez l\'intitulté du diplome 2',
                 'numCni.required' => 'Entrez le numero de la CNI',
                 'sex.required' => 'Choisissez le sexe',
+                'matiere_id' => 'Selectionnez la matière',
                 'fonction.required' => 'Choisisssez la fonction',
                 'profile.required' => 'Selectionner une image',
          ]);
@@ -49,23 +65,24 @@ class EnseignantController extends Controller
 
         User::create([
             'name' => $request->name,
+            'matricule' => $request->matricule,
             'email' => $request->email,
             'surname' => $request->surname,
             'phone' => $request->phone,
             'location' => $request->location,
             'lieuNaiss' => $request->lieuNaiss,
             'dateNaiss' => $request->dateNaiss,
-            'diplome1' => $request->diplone1,
+            'diplome1' => $request->diplome1,
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
             'profile' => $imagePath,
-            #'fonction' => $request->fonction,
+            'matiere_id' => $request->matiere_id,
             'typeUser' => 'enseignant',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
         ]);
 
-        return view('dashboard');
+        return redirect()->route('personnel.teacher')->with('success', 'Enseignant ajouté avec succès');
     }
 
     /**

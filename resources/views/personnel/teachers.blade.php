@@ -38,7 +38,7 @@
                                             Email</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Fonction</th>
+                                            Telephone</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Numero CNI</th>
@@ -52,25 +52,25 @@
                                     @foreach ($teachers as $teacher)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $teacher>id }}
+                                                {{ $teacher->id }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <div class="d-flex justify-content-center align-items-center">
-                                                    <img src="{{ asset('storage/' . $teacher>profile) }}" class="rounded-circle mr-2"
+                                                    <img src="{{ asset('storage/' . $teacher->profile) }}" class="rounded-circle mr-2"
                                                         alt="user1" style="height: 36px; width: 36px;">
                                                 </div>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $teacher>name }}
+                                                {{ $teacher->name }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $teacher>email }}
+                                                {{ $teacher->email }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
-                                                {{ $teacher>fonction }}
+                                                {{ $teacher->phone }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
-                                                {{ $teacher>numCni }}
+                                                {{ $teacher->numCni }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
@@ -168,6 +168,18 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="matiere_id" class="form-control-label">
+                                                Matiere :
+                                            </label>
+                                            <select name="matiere_id" id="matiere_id" class="form-control">
+                                                @foreach ($matieres as $matiere)
+                                                    <option value="{{ $matiere->id }}">{{ $matiere->libelleMatiere }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="email" class="form-control-label">
                                                 Email :
                                             </label>
@@ -208,8 +220,8 @@
                                                 Diplome 1 :
                                             </label>
                                             <input type="text" id="diplome1" name="diplome1" class="form-control"
-                                                placeholder="Entrez le Diplôme 1" value="{{old("diplome1")}}">
-                                            @error('diplome1')
+                                                placeholder="Entrez le Diplôme 1 " value="{{old("diplome1")}}">
+                                            @error('diplome2')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>

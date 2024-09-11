@@ -17,14 +17,7 @@ class UtilisateurController extends Controller
         //dd($administrators);
         return view('personnel.administrators',['personnels'=> $personnels] ,compact('user'));
     }
-    /**
-     *
-     */
-    public function teachers () {
-        $user = User::find(Auth::id());
-        $teachers = User::all()->where('typeUser', '=', 'enseignant');
-        return view('personnel.teachers', ['teachers'=> $teachers], compact('user'));
-    }
+
     /**
      *
      */
