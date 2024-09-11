@@ -121,7 +121,7 @@
                                     </h5>
                                 </div>
                             </div>
-                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="">
+                            <form role="form" id="" class="form row" method="POST" action="{{ route('enseignement.store') }}">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-6">

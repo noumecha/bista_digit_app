@@ -32,6 +32,14 @@
                                         <li><a href="#">I Am A Leader</a></li>
                                     </ul>
                                 </li>
+                                <li>
+                                    <a href="#">Clubs</a>
+                                    <ul class="submenu">
+                                        <li><a href="#">Club Santé</a></li>
+                                        <li><a href="#">Club Journal</a></li>
+                                        <li><a href="#">Club Musique</a></li>
+                                    </ul>
+                                </li>
                                 <li><a href="{{ route('sign-in') }}">Connexion</a></li>
                             </ul>
                         </div>

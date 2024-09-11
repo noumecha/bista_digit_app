@@ -4,7 +4,7 @@
             <div class="carousel-item active">
                 <img src="{{ asset('front/images/slider/1.jpg') }}" class="d-block" alt="...">
                 <div class="carousel-caption">
-                    <h2>Best Education For Diploma</h2>
+                    <h2>Pour une meilleure éducation</h2>
                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
                     <div class="button-01">
                         <ul>
@@ -16,7 +16,7 @@
             <div class="carousel-item">
             <img src="{{ asset('front/images/slider/2.jpg') }}" class="d-block" alt="...">
             <div class="carousel-caption">
-                <h2>Best Education For Diploma</h2>
+                <h2>Pour une meilleure éducation</h2>
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
                 <div class="button-01">
                     <ul>
@@ -28,7 +28,7 @@
             <div class="carousel-item">
             <img src="{{ asset('front/images/slider/3.jpg') }}" class="d-block" alt="...">
             <div class="carousel-caption">
-                <h2>Best Education For Diploma</h2>
+                <h2>Pour une meilleure éducation</h2>
                 <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
                 <div class="button-01">
                     <ul>
@@ -59,8 +59,10 @@
                             <i class="fal fa-chalkboard-teacher"></i>
                          </div>
                          <div class="content">
-                             <h3>Professional Teachers</h3>
-                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                             <h3>Enseignants Professionnels</h3>
+                             <p>
+                                Une équipe d’enseignants qualifiés, fiable, disponibles pour l’encadrement des élèves.
+                             </p>
                          </div>
                      </div>
                  </div>
@@ -71,8 +73,8 @@
                             <i class="fal fa-globe-americas"></i>
                         </div>
                         <div class="content">
-                            <h3>Learn Anywhere Online</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                            <h3>Apprentissage en ligne</h3>
+                            <p>nous donnons la possibilité à nos apprenants de s’exercer sur notre plateforme</p>
                         </div>
                     </div>
                 </div>
@@ -83,7 +85,7 @@
                             <i class="fal fa-graduation-cap"></i>
                         </div>
                         <div class="content">
-                            <h3>Graduation Certificate</h3>
+                            <h3>Des Laboratoires à la pointe</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
                         </div>
                     </div>
@@ -95,7 +97,7 @@
                             <i class="fal fa-backpack"></i>
                         </div>
                         <div class="content">
-                            <h3>Over 1000 Scholarship</h3>
+                            <h3>Bourses d'études et programmes de soutien</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
                         </div>
                     </div>
@@ -111,115 +113,67 @@
               <div class="row">
                   <div class="col-12">
                       <div class="heading">
-                          <h2>Featured courses</h2>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime totam quo, ducimus aliquid quisquam minima perspiciatis repellendus, minus tenetur reiciendis quis? Consequatur perferendis deleniti, rerum delectus consectetur modi praesentium deserunt.</p>
+                          <h2>PARTICULARITE DU COLLEGE BISTA</h2>
+                          <p class="text-justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime totam quo, ducimus aliquid quisquam minima perspiciatis repellendus, minus tenetur reiciendis quis? Consequatur perferendis deleniti, rerum delectus consectetur modi praesentium deserunt.</p>
                       </div>
                   </div>
 
-                  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                       <div class="featured-box">
                           <div class="feature-card">
                               <a href="#"><i class="far fa-link"></i></a>
                               <img src="{{ asset('front/images/featured/1.jpg') }}">
                           </div>
                           <div class="content">
-                            <h3>MBA</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa dolor</p>
-                            <ol>
-                                <li>3 Year Course</li>
-                                <li>100 Clasess</li>
-                                <li>10 am - 1 pm</li>
-                            </ol>
+                            <h3>PROGRAMME BOOSTER</h3>
+                            <p class="text-justify">
+                                Un programme de renforcement des capacités de nos apprenants dans les Mathématiques, en Anglais et en Mathématiques avec pour objectif la préparation efficace des élèves
+                                aux examens officiels accompagnés d’une bonne maîtrise de la langue.
+                            </p>
                           </div>
                       </div>
                   </div>
 
-                  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <div class="featured-box">
                         <div class="feature-card">
                             <a href="#"><i class="far fa-link"></i></a>
                             <img src="{{ asset('front/images/featured/2.jpg') }}">
                         </div>
                         <div class="content">
-                          <h3>BE</h3>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa dolor</p>
-                          <ol>
-                              <li>3 Year Course</li>
-                              <li>100 Clasess</li>
-                              <li>10 am - 1 pm</li>
-                          </ol>
+                          <h3>PROGRAMME I'AM A LEADER</h3>
+                          <p class="text-justify">
+                            Le Programme I’M A LEADER, qui éveille le génie de l’enfant et fera de lui un grand leader de demain
+                          </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <div class="featured-box">
                         <div class="feature-card">
                             <a href="#"><i class="far fa-link"></i></a>
                             <img src="{{ asset('front/images/featured/3.jpg') }}">
                         </div>
                         <div class="content">
-                          <h3>ME</h3>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa dolor</p>
-                          <ol>
-                              <li>3 Year Course</li>
-                              <li>100 Clasess</li>
-                              <li>10 am - 1 pm</li>
-                          </ol>
+                            <h3>LABORATOIRE DU COLLEGE BISTA</h3>
+                            <p class="text-justify">
+                                Des laboratoire de Sciences équipés de matériels récents pour nos apprenants des séries scientifiques pour les expérimentations et Travaux,
+                                et un Laboratoire Multimédia pour les élèves de la Série TI
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <div class="featured-box">
                         <div class="feature-card">
                             <a href="#"><i class="far fa-link"></i></a>
                             <img src="{{ asset('front/images/featured/4.jpg') }}">
                         </div>
                         <div class="content">
-                          <h3>MBBS</h3>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa dolor</p>
-                          <ol>
-                              <li>3 Year Course</li>
-                              <li>100 Clasess</li>
-                              <li>10 am - 1 pm</li>
-                          </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <div class="featured-box">
-                        <div class="feature-card">
-                            <a href="#"><i class="far fa-link"></i></a>
-                            <img src="{{ asset('front/images/featured/5.jpg') }}">
-                        </div>
-                        <div class="content">
-                          <h3>MSC</h3>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa dolor</p>
-                          <ol>
-                              <li>3 Year Course</li>
-                              <li>100 Clasess</li>
-                              <li>10 am - 1 pm</li>
-                          </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <div class="featured-box">
-                        <div class="feature-card">
-                            <a href="#"><i class="far fa-link"></i></a>
-                            <img src="{{ asset('front/images/featured/6.jpg') }}">
-                        </div>
-                        <div class="content">
-                          <h3>MA</h3>
-                          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa dolor</p>
-                          <ol>
-                              <li>3 Year Course</li>
-                              <li>100 Clasess</li>
-                              <li>10 am - 1 pm</li>
-                          </ol>
+                          <h3>CLUB DU COLLEGE BISTA</h3>
+                          <p class="text-justify">Club sport, Club Santé, Club danse, Club Informatique, Club Journal, Club art</p>
                         </div>
                     </div>
                 </div>
@@ -233,32 +187,32 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-history"></i>
-                      <div class="counting" data-count="967">100</div>
-                      <h5>YEAR OF HISTORY</h5>
+                      <div class="counting" data-count="0">0</div>
+                      <h5>ANNEES D'EXPERIENCE</h5>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-graduation-cap"></i>
-                      <div class="counting" data-count="967">100</div>
-                      <h5>ACTIVE STUDENTS</h5>
+                      <div class="counting" data-count="0">0</div>
+                      <h5>ELEVES</h5>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-globe"></i>
-                      <div class="counting" data-count="967">100</div>
-                      <h5>ONLINE COURSES</h5>
+                      <div class="counting" data-count="0">0</div>
+                      <h5>COURS EN LIGNE</h5>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-registered"></i>
-                      <div class="counting" data-count="967">100</div>
-                      <h5>REGISTERED STUDENTS</h5>
+                      <div class="counting" data-count="0">0</div>
+                      <h5>ENSEIGNANTS QUALIFIES</h5>
                     </div>
                 </div>
               </div>
@@ -272,7 +226,7 @@
               <div class="row">
                 <div class="col-12">
                     <div class="heading">
-                        <h2>OUR TEAM</h2>
+                        <h2>NOTRE EQUIPE</h2>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime totam quo, ducimus aliquid quisquam minima perspiciatis repellendus, minus tenetur reiciendis quis? Consequatur perferendis deleniti, rerum delectus consectetur modi praesentium deserunt.</p>
                     </div>
                 </div>
@@ -363,7 +317,7 @@
             <div class="row">
                <div class="col-12">
                     <div class="heading">
-                        <h2>Latest News</h2>
+                        <h2>Nos dernières actualités</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                         tempor incididunt</p>
                     </div>
