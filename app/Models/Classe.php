@@ -13,11 +13,7 @@ class Classe extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'libelleClasse ',
-        'effectifClasse',
-        'cycleClasse',
-    ];
+    protected $fillable = ['libelleClasse ','effectifClasse','cycleClasse'];
 
     /**
      *
