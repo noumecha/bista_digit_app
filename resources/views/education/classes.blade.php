@@ -8,7 +8,7 @@
                         <div class="pb-0 card-header">
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Matières</h5>
+                                    <h5 class="">Liste des Classes</h5>
                                     <p class="text-sm">
                                         D'ici vous pouvez gérer les classes (Ajouter, Supprimer, Mettre à jour ...etc)
                                     </p>
@@ -45,23 +45,43 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($classes as $class)
+                                    @foreach ($classes as $classe)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $class->id }}
+                                                {{ $classe->id }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $class->libelleClasse }}
+                                                {{ $classe->libelleClasse }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $class->effectifClasse }}
+                                                {{ $classe->effectifClasse }}
                                             </td>
                                             <td class="align-middle bg-transparent borer-bottom">
-                                                {{ $class->cycleClasse }}
+                                                {{ $classe->cycleClasse }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
-                                                <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                                <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ route('classe.edit', $classe->id) }}">
+                                                                <i class="fas fa-user-edit" aria-hidden="true"></i>
+                                                                modifier
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <div class="dropdown-item">
+                                                                <i class="fas fa-trash" aria-hidden="true"></i>
+                                                                <form role="form" class="form" method="POST" action="{{ route('classe.destroy', $classe->id) }}">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <input type="submit" value="Supprimer">
+                                                                </form>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -85,11 +105,18 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5 class="">Ajouter une nouvelle Classe </h5>
+                                    @if (isset($classToEdit))
+                                        <h5 class="">Modifier la classe de {{ $classToEdit->libelleClasse }} </h5>
+                                    @else
+                                        <h5 class="">Ajouter une nouvelle Classe </h5>
+                                    @endif
                                 </div>
                             </div>
-                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ route('classe.store') }}">
+                            <form  role="form" id="personnelform" class="form row" method="POST" action="{{ isset($classToEdit) ? route('classe.update', $classToEdit->id) : route('classe.store') }}">
                                 @csrf
+                                @if (isset($classToEdit))
+                                    @method('PUT')
+                                @endif
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -97,7 +124,7 @@
                                                 Libellé :
                                             </label>
                                             <input type="text" id="libelleClasse" name="libelleClasse" class="form-control"
-                                                placeholder="Entrez le libellé de la classe" value="{{ old("libelleClasse") }}">
+                                                placeholder="Entrez le libellé de la classe" value="{{ isset($classToEdit) && $classToEdit->libelleClasse ? $classToEdit->libelleClasse : old("libelleClasse") }}">
                                             @error('libelleClasse')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -108,7 +135,7 @@
                                             <label for="effectifClasse" class="form-control-label">
                                                 Effectif :
                                             </label>
-                                            <input type="number" id="effectifClasse" name="effectifClasse" class="form-control" value="{{old("effectifClasse")}}" aria-label="Name"
+                                            <input type="number" id="effectifClasse" name="effectifClasse" class="form-control" value="{{ isset($classToEdit) && $classToEdit->effectifClasse ? $classToEdit->effectifClasse : old("effectifClasse") }}"
                                                 aria-describedby="name-addon">
                                             @error('effectifClasse')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
@@ -121,15 +148,15 @@
                                                 Cycle :
                                             </label>
                                             <select name="cycleClasse" id="cycleClasse" class="form-control">
-                                                <option value="2nd Cycle">2<sup>nd</sup> Cycle</option>
-                                                <option value="1er Cycle">1<sup>er</sup> Cycle</option>
+                                                <option value="2nd Cycle" {{ isset($classToEdit) && $classToEdit->cycleClasse == '2nd Cycle' ? 'selected' : '' }}>2<sup>nd</sup> Cycle</option>
+                                                <option value="1er Cycle" {{ isset($classToEdit) && $classToEdit->cycleClasse == '1er Cycle' ? 'selected' : '' }}>1<sup>er</sup> Cycle</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="Enregistrer" class="btn btn-lg btn-primary">
+                                        <input type="submit" value="{{ isset($classToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($classToEdit) ? 'btn-success' :  'btn-primary'}}">
                                     </div>
                                 </div>
                                 @if ($errors->any())

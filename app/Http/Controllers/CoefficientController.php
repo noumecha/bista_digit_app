@@ -54,7 +54,6 @@ class CoefficientController extends Controller
         ]);
 
         $coefficient = Coefficient::findOrFail($id);
-        //Coefficient::updating($id, $coefficient);
         $coefficient->update($request->all());
 
         return redirect()->route('education.coefficients')->with('success', 'Coefficient mis à jour avec succès');

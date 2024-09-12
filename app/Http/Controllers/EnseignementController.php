@@ -19,15 +19,23 @@ class EnseignementController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'classe_id' => 'required|exists:classes,id',
+            'classes' => 'required|array',
             'enseignant_id' => 'required|exists:users,id',
             'classes.*' => 'exists:classes,id'
         ], [
-            'classe_id.required' => 'Selectionnez la classe',
-            'enseignant_id' => 'Selectionnez l\'enseignant',
+            'classes.required' => 'Selectionnez au moins une classe',
+            'enseignant_id.required' => 'Selectionnez l\'enseignant',
         ]);
 
-        Enseignement::create($request->all());
+        $enseignant = User::findOrFail($request->user_id)->where('typeUser','=','enseignant');
+        foreach($request->classes as $classe_id) {
+            $alreadyAssigned = Enseignement::where('classe_id', $classe_id)->where('matiere_id',$enseignant->matiere_id)->exists();
+            if ($alreadyAssigned) {
+                return redirect()->back()->withErrors(['error' => 'La classe ID $clase_id est déja attribué' ]);
+            }
+
+            Enseignement::create($request->all());
+        }
 
         return redirect()->route('education.enseignement')->with('success', 'Classes attribuées avec succès');
     }

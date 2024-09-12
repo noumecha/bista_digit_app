@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('classes', function (Blueprint $table) {
-            $table->string('libelleClasse')->nullable(false)->change();
-            $table->integer('effectifClasse')->nullable(false)->change();
-            $table->enum('cycleClasse', ['2nd Cycle','1er Cycle'])->nullable(false)->change();
+            $table->string('libelleClasse')->nullable()->change();
+            $table->integer('effectifClasse')->nullable()->change();
+            $table->enum('cycleClasse', ['2nd Cycle','1er Cycle'])->nullable()->change();
         });
         Schema::table('matieres', function (Blueprint $table) {
-            $table->string('libelleMatiere')->nullable(false)->change();
-            $table->string('codeMatiere')->nullable(false)->change();
+            $table->string('libelleMatiere')->nullable()->change();
+            $table->string('codeMatiere')->nullable()->change();
         });
     }
 

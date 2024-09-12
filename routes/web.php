@@ -103,7 +103,7 @@ Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matier
 Route::put('/matieres/{id}', [MatiereController::class, 'update'])->name('matiere.update')->middleware('auth');
 Route::get('/matieres/{id}/edit', [MatiereController::class, 'edit'])->name('matiere.edit')->middleware('auth');
 Route::delete('/matieres/{id}', [MatiereController::class, 'destroy'])->name('matiere.destroy')->middleware('auth');
-## education -> class routes
+## education -> classes routes
 Route::post('/classe/save', [ClasseController::class, 'store'])->name('classe.store')->middleware('auth');
 Route::put('/classe/{id}', [ClasseController::class, 'update'])->name('classe.update')->middleware('auth');
 Route::get('/classe/{id}/edit', [ClasseController::class, 'edit'])->name('classe.edit')->middleware('auth');

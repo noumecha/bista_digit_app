@@ -25,13 +25,14 @@ class ClasseController extends Controller
      */
     public function store(Request $request) {
         $request->validate([
-            'libelleClasse' => 'required|min:3|max:255',
+            'libelleClasse' => 'required|min:4|max:255|unique:classes',
             'effectifClasse' => 'required',
             'cycleClasse' => 'required|min:3|max:255',
         ], [
                 'libelleClasse.required' => 'Entrez le libellé de la classe',
                 'effectifClasse.required' => 'Entrez l\'effectif de la classe',
                 'cycleClasse.required' => 'Choisissez le cycle de la classe',
+                'libelleClasse.unique' => 'Ce libellé de classe existe déjà'
          ]);
 
         Classe::create([
@@ -48,10 +49,10 @@ class ClasseController extends Controller
      *
      */
     public function edit($id) {
-        $classe = Classe::findOrFail($id);
-        $matieres = Classe::all();
+        $classToEdit = Classe::findOrFail($id);
+        $classes = Classe::all();
 
-        return view('education.classes', compact('matieres', 'classe'));
+        return view('education.classes', compact('classes', 'classToEdit'));
     }
 
     /**
@@ -59,17 +60,22 @@ class ClasseController extends Controller
      */
     public function update(Request $request, $id) {
         $request->validate([
-            'libelleClasse' => 'required|min:3|max:255',
+            'libelleClasse' => 'required|min:3|max:255|unique:classes',
             'effectifClasse' => 'required',
             'cycleClasse' => 'required|min:3|max:255',
         ], [
                 'libelleClasse.required' => 'Entrez le libellé de la classe',
                 'effectifClasse.required' => 'Entrez l\'effectif de la classe',
                 'cycleClasse.required' => 'Choisissez le cycle de la classe',
+                'libelleClasse.unique' => 'Ce libellé de classe existe déjà'
          ]);
 
         $classe = Classe::findOrFail($id);
-        $classe->update($request->all());
+        $classe->update([
+            'libelleClasse' => $request->libelleClasse,
+            'effectifClasse' => $request->effectifClasse,
+            'cycleClasse' => $request->cycleClasse,
+        ]);
 
         return redirect()->route('education.classes')->with('success', 'Classe mise à jour avec succès');
     }
