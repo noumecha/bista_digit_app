@@ -65,7 +65,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                         <li>
-                                                            <a class="dropdown-item" href="#">
+                                                            <a class="dropdown-item" href="{{ route('enseignement.edit', $enseignement->id) }}">
                                                                 <i class="fas fa-user-edit" aria-hidden="true"></i>
                                                                 modifier
                                                             </a>
@@ -73,7 +73,7 @@
                                                         <li>
                                                             <div class="dropdown-item">
                                                                 <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="">
+                                                                <form role="form" class="form" method="POST" action="{{ route('enseignement.destroy', $enseignement->id) }}" action="">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <input type="submit" value="Supprimer">
@@ -105,13 +105,23 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5 class="">
-                                        Attribution des classes aux enseignants
-                                    </h5>
+                                    @if (isset($enseignementToEdit))
+                                        <h5 class="">
+                                            Modifier l'attributation de la classe de {{ $enseignementToEdit->classe->libClasse }}
+                                            pour la matière {{ $enseignementToEdit->matiere->libelleMatiere }}
+                                        </h5>
+                                    @else
+                                        <h5 class="">
+                                            Attribution des classes aux enseignants
+                                        </h5>
+                                    @endif
                                 </div>
                             </div>
-                            <form role="form" id="" class="form row" method="POST" action="{{ route('enseignement.store') }}">
+                            <form role="form" id="" class="form row" method="POST" action="{{ isset($enseignementToEdit) ? route('enseignement.update', $enseignementToEdit->id) : route('enseignement.store') }}">
                                 @csrf
+                                @if (isset($enseignementToEdit))
+                                    @method('PUT')
+                                @endif
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -120,7 +130,7 @@
                                             </label>
                                             <select name="user_id" id="user_id" class="form-control">
                                             @foreach ($enseignants as $enseignant)
-                                                <option value="{{ $enseignant->id }}" class="">{{ $enseignant->name }}</option>
+                                                <option value="{{ $enseignant->id }}" {{ isset($enseignementToEdit) && $enseignementToEdit->user_id == $enseignant->id ? 'selected' : '' }}>{{ $enseignant->name }}</option>
                                             @endforeach
                                             </select>
                                         </div>
@@ -132,7 +142,7 @@
                                             </label>
                                             <select name="classe_id" id="classe_id" class="form-control">
                                                 @foreach ($classes as $classe)
-                                                    <option value="{{ $classe->id }}" class="">{{ $classe->libClasse}}</option>
+                                                    <option value="{{ $classe->id }}" {{ isset($enseignementToEdit) && $enseignementToEdit->classe_id == $classe->id ? 'selected' : '' }}>{{ $classe->libClasse }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -140,7 +150,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="Enregistrer" class="btn btn-lg btn-primary">
+                                        <input type="submit" value="{{ isset($enseignementToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($enseignementToEdit) ? 'btn-success' :  'btn-primary'}}">
                                     </div
                                 </div>
                                 @if ($errors->any())

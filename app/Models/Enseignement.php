@@ -19,4 +19,8 @@ class Enseignement extends Model
     public function enseignant() {
         return $this->belongsTo(User::class);
     }
+
+    public function matiere() {
+        return $this->belongsTo(Matiere::class);
+    }
 }

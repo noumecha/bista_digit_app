@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 
 class EnseignementController extends Controller
 {
+    /**
+     *
+     */
     public function index() {
         $classes = Classe::all();
         $enseignants = User::all()->where('typeUser','=','enseignant');
@@ -44,12 +47,16 @@ class EnseignementController extends Controller
         return redirect()->route('education.enseignement')->with('success', 'Classes attribuées avec succès');
     }
 
+    /**
+     *
+     */
     public function edit($id) {
-        $enseignement = Enseignement::findOrFail($id);
+        $enseignementToEdit = Enseignement::findOrFail($id);
+        $enseignements = Enseignement::all();
         $classes = Classe::all();
-        $enseignants = Enseignant::all()->where('matiere_id', '!=', '');
+        $enseignants = User::all()->where('matiere_id', '!=', '');
 
-        return view('education.enseignement', compact('classes', 'enseignants','enseignement'));
+        return view('education.enseignement', compact('classes','enseignements','enseignants','enseignementToEdit'));
     }
 
     public function update(Request $request, $id) {
@@ -62,8 +69,8 @@ class EnseignementController extends Controller
         ]);
 
 
-        $enseignant = Enseignant::find($request->user_id);
-        $exists = Enseignement::all()->where('classe_id', '=', $request->classe_id)->where('matiere_id', '=', $enseignant->matiere_id)->where('id', '!=', $id);
+        $enseignant = User::find($request->user_id);
+        $exists = Enseignement::where('classe_id', '=', $request->classe_id)->where('matiere_id', '=', $enseignant->matiere_id)->where('id', '!=', $id)->exists();
 
         if($exists)
             return redirect()->back()->withErrors(['error' => 'Un enseignant enseigne déjà cette matière dans cette classe']);
