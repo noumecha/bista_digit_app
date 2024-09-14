@@ -51,7 +51,7 @@
                                                 {{ $classe->id }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $classe->libelleClasse }}
+                                                {{ $classe->libClasse }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 {{ $classe->effectifClasse }}
@@ -106,7 +106,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     @if (isset($classToEdit))
-                                        <h5 class="">Modifier la classe de {{ $classToEdit->libelleClasse }} </h5>
+                                        <h5 class="">Modifier la classe de {{ $classToEdit->libClasse }} </h5>
                                     @else
                                         <h5 class="">Ajouter une nouvelle Classe </h5>
                                     @endif
@@ -120,12 +120,18 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="libelleClasse" class="form-control-label">
+                                            <label for="libClasse" class="form-control-label">
                                                 Libellé :
                                             </label>
-                                            <input type="text" id="libelleClasse" name="libelleClasse" class="form-control"
-                                                placeholder="Entrez le libellé de la classe" value="{{ isset($classToEdit) && $classToEdit->libelleClasse ? $classToEdit->libelleClasse : old("libelleClasse") }}">
-                                            @error('libelleClasse')
+                                            <input
+                                                type="text"
+                                                id="libClasse"
+                                                name="libClasse"
+                                                class="form-control"
+                                                placeholder="Entrez le libellé de la classe"
+                                                value="{{ isset($classToEdit) ? $classToEdit->libClasse : old("libClasse") }}"
+                                            />
+                                            @error('libClasse')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -136,7 +142,7 @@
                                                 Effectif :
                                             </label>
                                             <input type="number" id="effectifClasse" name="effectifClasse" class="form-control" value="{{ isset($classToEdit) && $classToEdit->effectifClasse ? $classToEdit->effectifClasse : old("effectifClasse") }}"
-                                                aria-describedby="name-addon">
+                                            >
                                             @error('effectifClasse')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror

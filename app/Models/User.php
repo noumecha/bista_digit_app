@@ -101,7 +101,7 @@ class User extends Authenticatable
      */
     public function classes() : BelongsToMany
     {
-        return $this->belongsToMany(Classe::class, 'enseignement');
+        return $this->belongsToMany(Classe::class, 'enseignement')->withPivot('matiere_id');
     }
 
     /**

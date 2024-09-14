@@ -11,11 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('classes', function (Blueprint $table) {
-            $table->string('libelleClasse')->nullable()->change();
-            $table->integer('effectifClasse')->nullable()->change();
-            $table->enum('cycleClasse', ['2nd Cycle','1er Cycle'])->nullable()->change();
-        });
         Schema::table('matieres', function (Blueprint $table) {
             $table->string('libelleMatiere')->nullable()->change();
             $table->string('codeMatiere')->nullable()->change();

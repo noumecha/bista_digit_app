@@ -25,18 +25,19 @@ class ClasseController extends Controller
      */
     public function store(Request $request) {
         $request->validate([
-            'libelleClasse' => 'required|min:4|max:255|unique:classes',
+            'libClasse' => 'required|unique:classes',
             'effectifClasse' => 'required',
-            'cycleClasse' => 'required|min:3|max:255',
+            'cycleClasse' => 'required',
         ], [
-                'libelleClasse.required' => 'Entrez le libellé de la classe',
+                'libClasse.required' => 'Entrez le libellé de la classe',
                 'effectifClasse.required' => 'Entrez l\'effectif de la classe',
                 'cycleClasse.required' => 'Choisissez le cycle de la classe',
-                'libelleClasse.unique' => 'Ce libellé de classe existe déjà'
+                'libClasse.unique' => 'Ce libellé de classe existe déjà'
          ]);
 
+        //dd($request->libClasse);
         Classe::create([
-            'libelleClasse' => $request->libelleClasse,
+            'libClasse' => $request->libClasse,
             'effectifClasse' => $request->effectifClasse,
             'cycleClasse' => $request->cycleClasse,
         ]);
@@ -60,19 +61,18 @@ class ClasseController extends Controller
      */
     public function update(Request $request, $id) {
         $request->validate([
-            'libelleClasse' => 'required|min:3|max:255|unique:classes',
+            'libClasse' => 'required',
             'effectifClasse' => 'required',
-            'cycleClasse' => 'required|min:3|max:255',
+            'cycleClasse' => 'required',
         ], [
-                'libelleClasse.required' => 'Entrez le libellé de la classe',
+                'libClasse.required' => 'Entrez le libellé de la classe',
                 'effectifClasse.required' => 'Entrez l\'effectif de la classe',
                 'cycleClasse.required' => 'Choisissez le cycle de la classe',
-                'libelleClasse.unique' => 'Ce libellé de classe existe déjà'
          ]);
 
         $classe = Classe::findOrFail($id);
         $classe->update([
-            'libelleClasse' => $request->libelleClasse,
+            'libClasse' => $request->libClasse,
             'effectifClasse' => $request->effectifClasse,
             'cycleClasse' => $request->cycleClasse,
         ]);

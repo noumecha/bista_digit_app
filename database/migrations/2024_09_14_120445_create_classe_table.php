@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
-            $table->string('libelleClasse');
+            $table->string('libClasse');
             $table->integer('effectifClasse');
             $table->enum('cycleClasse', ['2nd Cycle','1er Cycle'])->nullable();
             $table->timestamps();
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('classe');
+        Schema::dropIfExists('classes');
     }
 };

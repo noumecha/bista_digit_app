@@ -56,7 +56,7 @@
                                                 {{ $coef->id }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $coef->classe->libelleClasse }}
+                                                {{ $coef->classe->libClasse }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 {{ $coef->matiere->libelleMatiere }}
@@ -112,7 +112,7 @@
                                 <div class="col-md-6">
                                     <h5 class="">
                                         @if (isset($coefficient))
-                                            Modifier le coefficient de {{ $coefficient->matiere->libelleMatiere }} en {{ $coefficient->classe->libelleClasse }}
+                                            Modifier le coefficient de {{ $coefficient->matiere->libelleMatiere }} en {{ $coefficient->classe->libClasse }}
                                         @else
                                             Définir le Coefficient
                                         @endif
@@ -144,7 +144,7 @@
                                             </label>
                                             <select name="classe_id" id="classe_id" class="form-control">
                                             @foreach ($classes as $classe)
-                                                <option value="{{ $classe->id }}" {{ isset($coefficient) && $coefficient->classe_id == $classe->id ? 'selected' : ''}} class="">{{ $classe->libelleClasse }}</option>
+                                                <option value="{{ $classe->id }}" {{ isset($coefficient) && $coefficient->classe_id == $classe->id ? 'selected' : ''}} class="">{{ $classe->libClasse }}</option>
                                             @endforeach
                                             </select>
                                         </div>

@@ -13,51 +13,67 @@ class EnseignementController extends Controller
     public function index() {
         $classes = Classe::all();
         $enseignants = User::all()->where('typeUser','=','enseignant');
+        $enseignements = Enseignement::all();
 
-        return view('education.enseignement', compact('classes', 'enseignants'));
+        return view('education.enseignement', compact('classes', 'enseignants', 'enseignements'));
     }
 
     public function store(Request $request) {
         $request->validate([
-            'classes' => 'required|array',
-            'enseignant_id' => 'required|exists:users,id',
-            'classes.*' => 'exists:classes,id'
+            'classe_id' => 'required|exists:classes,id',
+            'user_id' => 'required|exists:users,id',
+            //'classes.*' => 'exists:classes,id'
         ], [
-            'classes.required' => 'Selectionnez au moins une classe',
-            'enseignant_id.required' => 'Selectionnez l\'enseignant',
+            'classe_id.required' => 'Selectionnez la classe',
+            'user_id.required' => 'Selectionnez l\'enseignant',
         ]);
 
-        $enseignant = User::findOrFail($request->user_id)->where('typeUser','=','enseignant');
-        foreach($request->classes as $classe_id) {
-            $alreadyAssigned = Enseignement::where('classe_id', $classe_id)->where('matiere_id',$enseignant->matiere_id)->exists();
-            if ($alreadyAssigned) {
-                return redirect()->back()->withErrors(['error' => 'La classe ID $clase_id est déja attribué' ]);
-            }
-
-            Enseignement::create($request->all());
+        $enseignant = User::find($request->user_id);
+        $exists = Enseignement::where('classe_id', '=', $request->classe_id)->where('matiere_id','=',$enseignant->matiere_id)->exists();
+        //dd($exists);
+        if($exists) {
+            return redirect()->back()->withErrors(['error'=>'Un enseignant enseigne déja cette matière dans cette classe']);
         }
+
+        Enseignement::create([
+            'classe_id' => $request->classe_id,
+            'user_id' => $request->user_id,
+            'matiere_id' => $enseignant->matiere_id
+        ]);
 
         return redirect()->route('education.enseignement')->with('success', 'Classes attribuées avec succès');
     }
 
     public function edit($id) {
+        $enseignement = Enseignement::findOrFail($id);
         $classes = Classe::all();
-        $enseignants = Enseignant::all();
+        $enseignants = Enseignant::all()->where('matiere_id', '!=', '');
 
-        return view('education.enseignement', compact('classes', 'enseignants'));
+        return view('education.enseignement', compact('classes', 'enseignants','enseignement'));
     }
 
     public function update(Request $request, $id) {
         $request->validate([
             'classe_id' => 'required|exists:classes,id',
-            'enseignant_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,id',
         ], [
             'classe_id.required' => 'Selectionnez la classe',
-            'enseignant_id' => 'Selectionnez l\'enseignant',
+            'user_id.required' => 'Selectionnez l\'enseignant',
         ]);
 
+
+        $enseignant = Enseignant::find($request->user_id);
+        $exists = Enseignement::all()->where('classe_id', '=', $request->classe_id)->where('matiere_id', '=', $enseignant->matiere_id)->where('id', '!=', $id);
+
+        if($exists)
+            return redirect()->back()->withErrors(['error' => 'Un enseignant enseigne déjà cette matière dans cette classe']);
+
         $enseignement = Enseignement::findOrFail($id);
-        $enseignement->update($request->all());
+        $enseignement->update([
+            'classe_id' => $request->classe_id,
+            'user_id' => $request->user_id,
+            'matiere_id' => $enseignant->matiere_id,
+        ]);
 
         return redirect()->route('education.enseignement')->with('success', 'Attributation de classe mise à jour avec succès');
     }

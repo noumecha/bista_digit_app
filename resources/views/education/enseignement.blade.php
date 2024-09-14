@@ -46,18 +46,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($enseignants as $enseignant)
+                                    @foreach ($enseignements as $enseignement)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $enseignant->id }}
+                                                {{ $enseignement->id }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $enseignant->name }}
-                                            </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                @foreach ($enseignant->classes as $classes)
-                                                    {{ $classe->libelleClasse }},
+                                                @foreach ($enseignants as $enseignant)
+                                                    {{ $enseignement->user_id === $enseignant->id ? $enseignant->name : ''}}
                                                 @endforeach
+                                            </td>
+                                            <td class="align-middle bg-transparent border-bottom">
+                                                {{ $enseignement->classe->libClasse }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -115,10 +115,10 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="enseignant_id" class="form-control-label">
+                                            <label for="user_id" class="form-control-label">
                                                 Selectionner l'enseignant :
                                             </label>
-                                            <select name="enseignant_id" id="enseignant_id" class="form-control">
+                                            <select name="user_id" id="user_id" class="form-control">
                                             @foreach ($enseignants as $enseignant)
                                                 <option value="{{ $enseignant->id }}" class="">{{ $enseignant->name }}</option>
                                             @endforeach
@@ -127,13 +127,13 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="classes" class="form-control-label">
-                                                Selectionner les classes :
+                                            <label for="classe_id" class="form-control-label">
+                                                Selectionner la classe :
                                             </label>
-                                            <select name="classes[]" id="classes" class="form-control" multiple>
-                                            @foreach ($classes as $classe)
-                                                <option value="{{ $classe->id }}" class="">{{ $classe->libelleClasse }}</option>
-                                            @endforeach
+                                            <select name="classe_id" id="classe_id" class="form-control">
+                                                @foreach ($classes as $classe)
+                                                    <option value="{{ $classe->id }}" class="">{{ $classe->libClasse}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>

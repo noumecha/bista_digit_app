@@ -13,14 +13,19 @@ class Classe extends Model
     /**
      * @var array
      */
-    protected $fillable = ['libelleClasse ','effectifClasse','cycleClasse'];
+    protected $fillable = ['libClasse','effectifClasse','cycleClasse'];
+
+    /**
+     * @var array
+     */
+    protected $casts = [];
 
     /**
      *
      */
     public function enseignant(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'enseignement');
+        return $this->belongsToMany(User::class, 'enseignement')->withPivot('matiere_id');
     }
 
 }

@@ -25,7 +25,7 @@ class MatiereController extends Controller
      */
     public function store(Request $request) {
         $request->validate([
-            'libelleMatiere' => 'required|min:3|max:255|unique:matieres',
+            'libelleMatiere' => 'required|max:255|unique:matieres',
             'codeMatiere' => 'required|max:255|unique:matieres',
         ], [
                 'libelleMatiere.required' => 'Entrez le libellé de la matière',
