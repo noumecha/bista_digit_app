@@ -73,8 +73,28 @@
                                                 {{ $teacher->numCni }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
-                                                <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                                <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ route('teacher.edit', $teacher->id) }}">
+                                                                <i class="fas fa-user-edit" aria-hidden="true"></i>
+                                                                modifier
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <div class="dropdown-item">
+                                                                <i class="fas fa-trash" aria-hidden="true"></i>
+                                                                <form role="form" class="form" method="POST" action="{{ route('teacher.destroy', $teacher->id) }}">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <input type="submit" value="Supprimer">
+                                                                </form>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -98,11 +118,18 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h5 class="">Ajouter un nouvel enseignant </h5>
+                                    @if (isset($teacherToEdit))
+                                        <h5 class="">Modifier les informations de l'enseignant {{ $teacherToEdit->name }} </h5>
+                                    @else
+                                        <h5 class="">Ajouter un nouvel enseignant </h5>
+                                    @endif
                                 </div>
                             </div>
-                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ route('teacher.store') }}">
+                            <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ isset($teacherToEdit) ? route('teacher.update', $teacherToEdit->id) : route('teacher.store') }}">
                                 @csrf
+                                @if (isset($teacherToEdit))
+                                    @method('PUT')
+                                @endif
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -110,7 +137,7 @@
                                                 Matricule :
                                             </label>
                                             <input type="text" id="matricule" name="matricule" class="form-control"
-                                                placeholder="Entrez le matricule" value="{{ old("matricule") }}">
+                                                placeholder="Entrez le matricule" value="{{ isset($teacherToEdit) ? $teacherToEdit->matricule : old("matricule") }}">
                                             @error('matricule')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -122,7 +149,7 @@
                                                 Nom :
                                             </label>
                                             <input type="text" id="name" name="name" class="form-control"
-                                                placeholder="Entrez le nom du personnel" value="{{old("name")}}" aria-label="Name"
+                                                placeholder="Entrez le nom du personnel" value="{{ isset($teacherToEdit) ? $teacherToEdit->name : old("name")}}" aria-label="Name"
                                                 aria-describedby="name-addon">
                                             @error('name')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
@@ -135,7 +162,7 @@
                                                 Prenom :
                                             </label>
                                             <input type="text" id="surname" name="surname" class="form-control"
-                                                placeholder="Entrez le prénom du personnel" value="{{old("surname")}}" aria-label="Name"
+                                                placeholder="Entrez le prénom du personnel" value="{{ isset($teacherToEdit) ? $teacherToEdit->surname :  old("surname") }}" aria-label="Name"
                                                 aria-describedby="name-addon">
                                             @error('surname')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
@@ -148,7 +175,7 @@
                                                 Téléphone :
                                             </label>
                                             <input type="tel" id="phone" name="phone" class="form-control"
-                                                placeholder="Entrez le numero de téléphone" value="{{old("phone")}}">
+                                                placeholder="Entrez le numero de téléphone" value="{{ isset($teacherToEdit) ? $teacherToEdit->phone : old("phone") }}">
                                             @error('phone')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -161,7 +188,7 @@
                                             </label>
                                             <select name="sex" id="sex" class="form-control">
                                                 @foreach (\App\Sex::cases() as $sex)
-                                                    <option value="{{ $sex->value }}">{{ $sex->name }}</option>
+                                                    <option value="{{ $sex->value }}" {{ isset($teacherToEdit) && $teacherToEdit->sex === $sex->value ? 'selected' : '' }}>{{ $sex->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -173,7 +200,7 @@
                                             </label>
                                             <select name="matiere_id" id="matiere_id" class="form-control">
                                                 @foreach ($matieres as $matiere)
-                                                    <option value="{{ $matiere->id }}">{{ $matiere->libelleMatiere }}</option>
+                                                    <option value="{{ $matiere->id }}" {{ isset($teacherToEdit) && $teacherToEdit->matiere_id === $matiere->id ? 'selected' : '' }}>{{ $matiere->libelleMatiere }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -184,7 +211,7 @@
                                                 Email :
                                             </label>
                                             <input type="email" id="email" name="email" class="form-control"
-                                                placeholder="Entrez l'adresse email" value="{{old("email")}}">
+                                                placeholder="Entrez l'adresse email" value="{{ isset($teacherToEdit) ? $teacherToEdit->email : old("email") }}">
                                             @error('email')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -196,7 +223,7 @@
                                                 Lieu de naissance :
                                             </label>
                                             <input type="text" id="lieuNaiss" name="lieuNaiss" class="form-control"
-                                                placeholder="Entrez le lieu de naissance" value="{{old("lieuNaiss")}}">
+                                                placeholder="Entrez le lieu de naissance" value="{{ isset($teacherToEdit) ? $teacherToEdit->lieuNaiss : old("lieuNaiss") }}">
                                             @error('lieuNaiss')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -208,7 +235,7 @@
                                                 Date de naissance :
                                             </label>
                                             <input type="date" id="dateNaiss" name="dateNaiss" class="form-control"
-                                                placeholder="Entrez la date de naissance" value="{{old("dateNaiss")}}">
+                                                placeholder="Entrez la date de naissance" value="{{ old("dateNaiss" , isset($teacherToEdit) ? \Carbon\Carbon::parse($teacherToEdit->dateNaiss)->format('Y-m-d') : '') }}">
                                             @error('dateNaiss')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -220,7 +247,7 @@
                                                 Diplome 1 :
                                             </label>
                                             <input type="text" id="diplome1" name="diplome1" class="form-control"
-                                                placeholder="Entrez le Diplôme 1 " value="{{old("diplome1")}}">
+                                                placeholder="Entrez le Diplôme 1 " value="{{ isset($teacherToEdit) ? $teacherToEdit->diplome1 : old("diplome1") }}">
                                             @error('diplome2')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -232,7 +259,7 @@
                                                 Diplome 2 :
                                             </label>
                                             <input type="text" id="diplome2" name="diplome2" class="form-control"
-                                                placeholder="Entrez le Diplôme 2 " value="{{old("diplome2")}}">
+                                                placeholder="Entrez le Diplôme 2 " value="{{ isset($teacherToEdit) ? $teacherToEdit->diplome2 : old("diplome2") }}">
                                             @error('diplome2')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -244,7 +271,7 @@
                                                 Numero CNI :
                                             </label>
                                             <input type="text" id="numCni" name="numCni" class="form-control"
-                                                placeholder="Entrez le lieu de résidence" value="{{old("numCni")}}">
+                                                placeholder="Entrez le lieu de résidence" value="{{ isset($teacherToEdit) ? $teacherToEdit->numCni : old("numCni") }}">
                                             @error('numCni')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -252,11 +279,17 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            @if(isset($teacherToEdit) && $teacherToEdit->profile)
+                                                <div>
+                                                    <img src="{{ asset('storage/' . $teacherToEdit->profile) }}" alt="Profile Image"
+                                                        style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
+                                                </div>
+                                            @endif
                                             <label for="profile" class="form-control-label">
                                                 Photo :
                                             </label>
                                             <input type="file" id="profile" name="profile" class="form-control"
-                                                placeholder="Entrez le lieu de résidence" value="{{old("profile")}}">
+                                                placeholder="Entrez le lieu de résidence" value="{{ isset($teacherToEdit) ? $teacherToEdit->profile : old("profile") }}">
                                             @error('profile')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -268,7 +301,7 @@
                                                 Lieu de résidence :
                                             </label>
                                             <input type="text" id="location" name="location" class="form-control"
-                                                placeholder="Entrez le lieu de résidence" value="{{old("location")}}">
+                                                placeholder="Entrez le lieu de résidence" value="{{ isset($teacherToEdit) ? $teacherToEdit->location : old("location") }}">
                                             @error('location')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -288,7 +321,12 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="Enregistrer" class="btn btn-lg btn-primary">
+                                        <input type="submit" value="{{ isset($teacherToEdit) ? 'Mettre à jour' : 'Enregistrer' }}" class="btn btn-lg {{ isset($teacherToEdit) ? 'btn-success' : 'btn-primary' }}">
+                                    </div>
+                                    <div class="col-md-6 col-lg-16">
+                                        <a href="{{ route('utilisateur.teachers') }}" class="btn btn-danger btn-lg">
+                                            Annuler
+                                        </a>
                                     </div>
                                 </div>
                                 @if ($errors->any())

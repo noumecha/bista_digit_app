@@ -127,10 +127,24 @@ Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->nam
 # personnel routes
 Route::get('/utilisateur/administrators', [UtilisateurController::class, 'administrators'])->name('utilisateur.administrators')->middleware('auth');
 Route::get('/utilisateur/teachers', [EnseignantController::class, 'index'])->name('utilisateur.teachers')->middleware('auth');
-Route::get('/utilisateur/students', [UtilisateurController::class, 'students'])->name('utilisateur.students')->middleware('auth');
+Route::get('/utilisateur/students', [EleveController::class, 'index'])->name('utilisateur.students')->middleware('auth');
 Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('personnel.store')->middleware('auth');
+## personnel -> teacher routes
 Route::post('/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');
+Route::put('/teacher/{id}', [EnseignantController::class, 'update'])->name('teacher.update')->middleware('auth');
+Route::get('/teacher/{id}/edit', [EnseignantController::class, 'edit'])->name('teacher.edit')->middleware('auth');
+Route::delete('/teacher/{id}', [EnseignantController::class, 'destroy'])->name('teacher.destroy')->middleware('auth');
+## personnel -> student routes
 Route::post('/student/save', [EleveController::class, 'store'])->name('student.store')->middleware('auth');
+Route::put('/student/{id}', [EleveController::class, 'update'])->name('student.update')->middleware('auth');
+Route::get('/student/{id}/edit', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
+Route::delete('/student/{id}', [EleveController::class, 'destroy'])->name('student.destroy')->middleware('auth');
+## personnel -> student routes
+Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('student.store')->middleware('auth');
+Route::put('/personnel/{id}', [PersonnelController::class, 'update'])->name('student.update')->middleware('auth');
+Route::get('/personnel/{id}/edit', [PersonnelController::class, 'edit'])->name('student.edit')->middleware('auth');
+Route::delete('/personnel/{id}', [PersonnelController::class, 'destroy'])->name('student.destroy')->middleware('auth');
+
 
 # annee_scolaire routes
 Route::get('/annee_scolaire/list', [AnneeScolaireController::class, 'show'])->name('annee_scolaire.show')->middleware('auth');

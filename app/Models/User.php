@@ -46,7 +46,8 @@ class User extends Authenticatable
         'phone',
         'location',
         'about',
-        'matiere_id'
+        'matiere_id',
+        'classe_id',
     ];
 
 
@@ -110,5 +111,13 @@ class User extends Authenticatable
     public function matiere() : BelongsTo
     {
         return $this->belongsTo(Matiere::class);
+    }
+
+    /**
+     *
+     */
+    public function classe() : BelongsTo
+    {
+        return $this->belongsTo(Classe::class);
     }
 }
