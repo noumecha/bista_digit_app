@@ -44,6 +44,7 @@ class PersonnelController extends Controller
                 'name.required' => 'Entrez votre nom',
                 'surname.required' => 'Entrez votre prenom',
                 'email' => 'Entrez l\'adresse email',
+                'email.unique' => 'L\'adresse email est déjà prise',
                 'phone.required' => 'Entrez le numero de téléphone',
                 'location.required' => 'Entrez le lieu de résidence',
                 'lieuNaiss.required' => 'Entrez le lieu de naissance',

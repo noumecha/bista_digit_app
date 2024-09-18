@@ -30,9 +30,9 @@ class EnseignantController extends Controller
     public function store(Request $request) {
         $request->validate([
             'name' => 'required|min:3|max:255',
-            'matricule' => 'required|max:255',
+            'matricule' => 'required|max:255|unique:users,id',
             'surname' => 'required|min:3|max:255',
-            'email' => 'email|max:255|unique:users',
+            'email' => 'email|max:255|unique:users,id',
             'password' => 'required|min:8|max:255',
             'phone' => 'required|min:9|max:255',
             'diplome1' => 'required|min:3|max:255',
@@ -46,6 +46,7 @@ class EnseignantController extends Controller
         ], [
                 'name.required' => 'Entrez votre nom',
                 'matricule.required' => 'Entrez le matricule',
+                'matricule.unique' => 'Le matricule existe déja dans la base de données',
                 'surname.required' => 'Entrez votre prenom',
                 'phone.required' => 'Entrez le numero de téléphone',
                 'location.required' => 'Entrez le lieu de résidence',

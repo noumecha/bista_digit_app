@@ -27,12 +27,12 @@
                                 <div class="card-body">
                                     <form role="form" class="text-start" method="POST" action="sign-in">
                                         @csrf
-                                        <label>Adresse email</label>
+                                        <label>Adresse Email ou Matricule</label>
                                         <div class="mb-3">
-                                            <input type="email" id="email" name="email" class="form-control"
-                                                placeholder="Entrez votre adresse email"
-                                                value="{{ old('email') ? old('email') : 'admin@corporateui.com' }}"
-                                                aria-label="Email" aria-describedby="email-addon">
+                                            <input type="text" id="login" name="login" class="form-control"
+                                                placeholder="Entrez votre email ou votre matricule"
+                                                value="{{ old('login') ? old('login') : 'admin@bista.com' }}"
+                                                aria-label="login" aria-describedby="login-addon">
                                         </div>
                                         <label>Mot de passe</label>
                                         <div class="mb-3">

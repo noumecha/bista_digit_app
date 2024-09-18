@@ -53,6 +53,7 @@ class EleveController extends Controller
             'lieuNaiss.required' => 'Entrez le lieu de naissance',
             'dateNaiss.required' => 'Entrez la date de naissance',
             'matricule.required' => 'Entrez le matricule de l\'élève',
+            'matricule.unique' => 'Ce matricule existe déja dans la base de données',
             'classe_id.required' => 'Veuillez selectionnez une classe',
             'sex.required' => 'Choisissez le sexe',
             'classe_id.required' => 'Veuillez chosir une classe',
@@ -124,7 +125,7 @@ class EleveController extends Controller
             }
             $student->profile = $imagePath;
         }
-        dd($imagePath);
+        //dd($imagePath);
         $student->update($request->except('profile'));
 
         return redirect()->route('utilisateur.students')->with('success', 'Eleve mis à jour avec succès');
