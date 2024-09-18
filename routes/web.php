@@ -132,10 +132,9 @@ Route::get('/evaluation/notes', [EvaluationController::class, 'index'])->name('e
 Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->name('evaluation.bulletins')->middleware('auth');
 
 # personnel routes
-Route::get('/utilisateur/administrators', [UtilisateurController::class, 'administrators'])->name('utilisateur.administrators')->middleware('auth');
+Route::get('/utilisateur/administrators', [PersonnelController::class, 'index'])->name('utilisateur.administrators')->middleware('auth');
 Route::get('/utilisateur/teachers', [EnseignantController::class, 'index'])->name('utilisateur.teachers')->middleware('auth');
 Route::get('/utilisateur/students', [EleveController::class, 'index'])->name('utilisateur.students')->middleware('auth');
-Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('personnel.store')->middleware('auth');
 ## personnel -> teacher routes
 Route::post('/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');
 Route::put('/teacher/{id}', [EnseignantController::class, 'update'])->name('teacher.update')->middleware('auth');

@@ -109,8 +109,14 @@
                                 <div class="col-md-6">
                                     @if (isset($enseignantMatiereToEdit))
                                         <h5 class="">
-                                            Modifier l'attributation de la matiere de {{ $enseignantMatiereToEdit->matiere->libelleMatiere }}
-                                            pour la matière {{ $enseignantMatiereToEdit->matiere->libelleMatiere }}
+                                            Modifier l'attributation de la matiere de
+                                            @foreach ($matieres as $matiere)
+                                                {{ $enseignantMatiereToEdit->matiere_id === $matiere->id ? $matiere->libelleMatiere : '' }}
+                                            @endforeach
+                                            à l'enseignant
+                                            @foreach ($enseignants as $enseignant)
+                                                {{ $enseignantMatiereToEdit->user_id === $enseignant->id ? $enseignant->name : ''}}
+                                            @endforeach
                                         </h5>
                                     @else
                                         <h5 class="">

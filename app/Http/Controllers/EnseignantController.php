@@ -102,7 +102,6 @@ class EnseignantController extends Controller
             'location' => 'required|min:3|max:255',
             'numCni' => 'required|max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'matiere_id' => 'required',
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
                 'name.required' => 'Entrez votre nom',
@@ -117,8 +116,6 @@ class EnseignantController extends Controller
                 'diplome2.required' => 'Entrez l\'intitulté du diplome 2',
                 'numCni.required' => 'Entrez le numero de la CNI',
                 'sex.required' => 'Choisissez le sexe',
-                'matiere_id' => 'Selectionnez la matière',
-                //'fonction.required' => 'Choisisssez la fonction',
          ]);
 
         $teacher = User::findOrFail($id);
@@ -130,7 +127,7 @@ class EnseignantController extends Controller
             }
             $teacher->profile = $imagePath;
         }
-        $teacher->update($request->all());
+        $teacher->update($request->except('profile'));
 
         return redirect()->route('utilisateur.teachers')->with('success', 'Enseignant mis à jour avec succès');
     }

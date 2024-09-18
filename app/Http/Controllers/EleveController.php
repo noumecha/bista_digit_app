@@ -124,7 +124,8 @@ class EleveController extends Controller
             }
             $student->profile = $imagePath;
         }
-        $student->update($request->all());
+        dd($imagePath);
+        $student->update($request->except('profile'));
 
         return redirect()->route('utilisateur.students')->with('success', 'Eleve mis à jour avec succès');
     }

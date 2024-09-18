@@ -6,9 +6,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PersonnelController extends Controller
 {
+        /**
+     *
+     */
+    public function index() {
+        $user = User::find(Auth::id());
+        $personnels = User::all()->where('typeUser', '=', 'personnel');
+        return view('personnel.administrators',['personnels'=> $personnels] ,compact('user'));
+    }
+
      /**
      * saving administrators members
      * @param  \Illuminate\Http\Request  $request
@@ -17,7 +28,7 @@ class PersonnelController extends Controller
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'email|max:255|unique:users',
             'password' => 'required|min:8|max:255',
             'phone' => 'required|min:9|max:255',
             'diplome1' => 'required|min:3|max:255',
@@ -28,11 +39,11 @@ class PersonnelController extends Controller
             'numCni' => 'required|max:255',
             'sex' => ['required', Rule::in(['M','F'])],
             'fonction' => ['required', Rule::in(['SG','DE','Principale','DET','DEC'])],
-            'profile' => 'required|image|mimes:jpeg,png,gif|max:4096',
+            'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
                 'name.required' => 'Entrez votre nom',
                 'surname.required' => 'Entrez votre prenom',
-                'email.required' => 'Entrez l\'adresse email',
+                'email' => 'Entrez l\'adresse email',
                 'phone.required' => 'Entrez le numero de téléphone',
                 'location.required' => 'Entrez le lieu de résidence',
                 'lieuNaiss.required' => 'Entrez le lieu de naissance',
@@ -42,7 +53,6 @@ class PersonnelController extends Controller
                 'numCni.required' => 'Entrez le numero de la CNI',
                 'sex.required' => 'Choisissez le sexe',
                 'fonction.required' => 'Choisisssez la fonction',
-                'profile.required' => 'Selectionner une image',
          ]);
 
         $imagePath = $request->file('profile')->store('profiles', 'public');
@@ -71,14 +81,67 @@ class PersonnelController extends Controller
     /**
      *
      */
-    public function edit() {
+    public function edit($id) {
+        $personnels = User::all()->where('typeUser', '=', 'personnel');
+        $personnelToEdit = User::findOrFail($id);
 
+        return view('personnel.administrators', compact('personnels','personnelToEdit'));
     }
 
     /**
      *
      */
-    public function delete() {
+    public function update(Request $request, $id) {
+        $request->validate([
+            'name' => 'required|min:3|max:255',
+            'surname' => 'required|min:3|max:255',
+            'email' => 'email|max:255',
+            'password' => 'required|min:8|max:255',
+            'phone' => 'required|min:9|max:255',
+            'diplome1' => 'required|min:3|max:255',
+            'diplome2' => 'min:3|max:255',
+            'lieuNaiss' => 'required|min:3|max:255',
+            'dateNaiss' => 'required|max:255',
+            'location' => 'required|min:3|max:255',
+            'numCni' => 'required|max:255',
+            'sex' => ['required', Rule::in(['M','F'])],
+            'fonction' => ['required', Rule::in(['SG','DE','Principale','DET','DEC'])],
+            'profile' => 'image|mimes:jpeg,png,gif|max:4096',
+        ], [
+                'name.required' => 'Entrez votre nom',
+                'surname.required' => 'Entrez votre prenom',
+                'phone.required' => 'Entrez le numero de téléphone',
+                'location.required' => 'Entrez le lieu de résidence',
+                'lieuNaiss.required' => 'Entrez le lieu de naissance',
+                'dateNaiss.required' => 'Entrez la date de naissance',
+                'diplome1.required' => 'Entrez l\'intitulté du diplome 1',
+                'numCni.required' => 'Entrez le numero de la CNI',
+                'sex.required' => 'Choisissez le sexe',
+                'fonction.required' => 'Choisisssez la fonction',
+        ]);
 
+        $personnel = User::findOrFail($id);
+
+        if($request->hasFile('profile')) {
+            $imagePath = $request->file('profile')->store('profiles', 'public');
+            if ($personnel->profile) {
+                Storage::disk('public')->delete($personnel->profile);
+            }
+            $personnel->profile = $imagePath;
+        }
+        //dd($request);
+        $personnel->update($request->except('profile'));
+
+        return redirect()->route('utilisateur.administrators')->with('success', 'Personnel mis à jour avec succès');
+    }
+
+    /**
+     *
+     */
+    public function destroy($id) {
+        $personnel = User::findOrFail($id);
+        $personnel->delete();
+
+        return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel supprimé avec succès');
     }
 }
