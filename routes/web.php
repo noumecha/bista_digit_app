@@ -15,6 +15,7 @@ use App\Http\Controllers\CoefficientController;
 use App\Http\Controllers\DevoirController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EnseignantController;
+use App\Http\Controllers\EnseignantMatiereModelController;
 use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\EvaluationController;
@@ -98,6 +99,12 @@ Route::get('/education/matieres', [MatiereController::class, 'index'])->name('ed
 Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
 Route::get('/education/coefficients', [CoefficientController::class, 'index'])->name('education.coefficients')->middleware('auth');
 Route::get('/education/enseignement', [EnseignementController::class, 'index'])->name('education.enseignement')->middleware('auth');
+Route::get('/education/enseignantMatiere', [EnseignantMatiereModelController::class, 'index'])->name('education.enseignantMatiere')->middleware('auth');
+## education -> attribution_matieres routes
+Route::post('/enseignantMatiere/save', [EnseignantMatiereModelController::class, 'store'])->name('enseignantMatiere.store')->middleware('auth');
+Route::put('/enseignantMatiere/{id}', [EnseignantMatiereModelController::class, 'update'])->name('enseignantMatiere.update')->middleware('auth');
+Route::get('/enseignantMatiere/{id}/edit', [EnseignantMatiereModelController::class, 'edit'])->name('enseignantMatiere.edit')->middleware('auth');
+Route::delete('/enseignantMatiere/{id}', [EnseignantMatiereModelController::class, 'destroy'])->name('enseignantMatiere.destroy')->middleware('auth');
 ## education -> course routes
 Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matiere.store')->middleware('auth');
 Route::put('/matieres/{id}', [MatiereController::class, 'update'])->name('matiere.update')->middleware('auth');
@@ -140,10 +147,10 @@ Route::put('/student/{id}', [EleveController::class, 'update'])->name('student.u
 Route::get('/student/{id}/edit', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
 Route::delete('/student/{id}', [EleveController::class, 'destroy'])->name('student.destroy')->middleware('auth');
 ## personnel -> student routes
-Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('student.store')->middleware('auth');
-Route::put('/personnel/{id}', [PersonnelController::class, 'update'])->name('student.update')->middleware('auth');
-Route::get('/personnel/{id}/edit', [PersonnelController::class, 'edit'])->name('student.edit')->middleware('auth');
-Route::delete('/personnel/{id}', [PersonnelController::class, 'destroy'])->name('student.destroy')->middleware('auth');
+Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('personnel.store')->middleware('auth');
+Route::put('/personnel/{id}', [PersonnelController::class, 'update'])->name('personnel.update')->middleware('auth');
+Route::get('/personnel/{id}/edit', [PersonnelController::class, 'edit'])->name('personnel.edit')->middleware('auth');
+Route::delete('/personnel/{id}', [PersonnelController::class, 'destroy'])->name('personnel.destroy')->middleware('auth');
 
 
 # annee_scolaire routes

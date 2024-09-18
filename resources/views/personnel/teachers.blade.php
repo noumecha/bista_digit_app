@@ -195,18 +195,6 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="matiere_id" class="form-control-label">
-                                                Matiere :
-                                            </label>
-                                            <select name="matiere_id" id="matiere_id" class="form-control">
-                                                @foreach ($matieres as $matiere)
-                                                    <option value="{{ $matiere->id }}" {{ isset($teacherToEdit) && $teacherToEdit->matiere_id === $matiere->id ? 'selected' : '' }}>{{ $matiere->libelleMatiere }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
                                             <label for="email" class="form-control-label">
                                                 Email :
                                             </label>

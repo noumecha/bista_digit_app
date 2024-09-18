@@ -32,7 +32,7 @@ class EnseignantController extends Controller
             'name' => 'required|min:3|max:255',
             'matricule' => 'required|max:255',
             'surname' => 'required|min:3|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'email|max:255|unique:users',
             'password' => 'required|min:8|max:255',
             'phone' => 'required|min:9|max:255',
             'diplome1' => 'required|min:3|max:255',
@@ -42,13 +42,11 @@ class EnseignantController extends Controller
             'location' => 'required|min:3|max:255',
             'numCni' => 'required|max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'matiere_id' => 'required',
-            'profile' => 'required|image|mimes:jpeg,png,gif|max:4096',
+            'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
                 'name.required' => 'Entrez votre nom',
                 'matricule.required' => 'Entrez le matricule',
                 'surname.required' => 'Entrez votre prenom',
-                'email.required' => 'Entrez l\'adresse email',
                 'phone.required' => 'Entrez le numero de téléphone',
                 'location.required' => 'Entrez le lieu de résidence',
                 'lieuNaiss.required' => 'Entrez le lieu de naissance',
@@ -57,12 +55,7 @@ class EnseignantController extends Controller
                 'diplome2.required' => 'Entrez l\'intitulté du diplome 2',
                 'numCni.required' => 'Entrez le numero de la CNI',
                 'sex.required' => 'Choisissez le sexe',
-                'matiere_id' => 'Selectionnez la matière',
-                'fonction.required' => 'Choisisssez la fonction',
-                'profile.required' => 'Selectionner une image',
          ]);
-
-        $imagePath = $request->file('profile')->store('profiles', 'public');
 
         User::create([
             'name' => $request->name,
@@ -76,8 +69,7 @@ class EnseignantController extends Controller
             'diplome1' => $request->diplome1,
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
-            'profile' => $imagePath,
-            'matiere_id' => $request->matiere_id,
+            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : '',
             'typeUser' => 'enseignant',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
@@ -126,7 +118,7 @@ class EnseignantController extends Controller
                 'numCni.required' => 'Entrez le numero de la CNI',
                 'sex.required' => 'Choisissez le sexe',
                 'matiere_id' => 'Selectionnez la matière',
-                'fonction.required' => 'Choisisssez la fonction',
+                //'fonction.required' => 'Choisisssez la fonction',
          ]);
 
         $teacher = User::findOrFail($id);

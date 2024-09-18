@@ -21,7 +21,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected $guarded = ['classe_id'];
 
     /**
      * @var array
@@ -46,8 +46,6 @@ class User extends Authenticatable
         'phone',
         'location',
         'about',
-        'matiere_id',
-        'classe_id',
     ];
 
 
@@ -75,12 +73,8 @@ class User extends Authenticatable
     /**
      *
      */
-    public function newPersonnelBuilder($attributes = [], $connection = null) {
-        $instance = parent::newPersonnelBuilder($attributes, $connection);
-        if ($this->typeUser == 'administration') {
-            $instance = $instance->replicate([], Personnel::class);
-        }
-        return $instance;
+    public function getName() {
+        return $this->name;
     }
 
     /**
@@ -93,24 +87,22 @@ class User extends Authenticatable
     /**
      *
      */
-    public function isPersonnel() {
-        return $this->typeUser === 'personnel';
-    }
-
-     /**
-     *
-     */
-    public function classes() : BelongsToMany
-    {
-        return $this->belongsToMany(Classe::class, 'enseignement')->withPivot('matiere_id');
+    public function isEleve() {
+        return $this->typeUser === 'eleve';
     }
 
     /**
      *
      */
-    public function matiere() : BelongsTo
-    {
-        return $this->belongsTo(Matiere::class);
+    public function isEnseignant() {
+        return $this->typeUser === 'enseignant';
+    }
+
+    /**
+     *
+     */
+    public function isPersonnel() {
+        return $this->typeUser === 'personnel';
     }
 
     /**
@@ -119,5 +111,13 @@ class User extends Authenticatable
     public function classe() : BelongsTo
     {
         return $this->belongsTo(Classe::class);
+    }
+
+    /**
+     *
+     */
+    public function matieres() : BelongsToMany
+    {
+        return $this->belongsToMany(Matiere::class, 'enseignant_matiere', 'user_id', 'matiere_id');
     }
 }

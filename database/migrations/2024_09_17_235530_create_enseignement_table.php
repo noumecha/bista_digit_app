@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('enseignements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('classe_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('matiere_id')->constrained()->onDelete('cascade');
+            $table->foreignId('enseignant_matiere_id')->constrained()->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique(['classe_id', 'matiere_id'], 'classe_matiere_unique');
+            $table->unique(['classe_id', 'enseignant_matiere_id'], 'classe_enseignantmatiere_unique');
         });
     }
 

@@ -23,9 +23,9 @@ class Classe extends Model
     /**
      *
      */
-    public function enseignant(): BelongsToMany
+    public function enseignantMatiere(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'enseignement')->withPivot('matiere_id');
+        return $this->belongsToMany(EnseignantMatiereModel::class, 'enseignement');
     }
 
 }

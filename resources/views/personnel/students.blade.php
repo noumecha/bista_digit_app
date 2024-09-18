@@ -41,7 +41,7 @@
                                             Telephone</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Numero CNI</th>
+                                            Classe</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Action
@@ -70,7 +70,7 @@
                                                 {{ $student->phone }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
-                                                {{ $student->numCni }}
+                                                {{ $student->classe->libClasse }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -89,7 +89,7 @@
                                                                 <form role="form" class="form" method="POST" action="{{ route('student.destroy', $student->id) }}">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <input type="submit" value="Supprimer">
+                                                                    <input type="submit" class="btn" value="Supprimer">
                                                                 </form>
                                                             </div>
                                                         </li>
@@ -175,7 +175,7 @@
                                                 Téléphone :
                                             </label>
                                             <input type="tel" id="phone" name="phone" class="form-control"
-                                                placeholder="Entrez le numero de téléphone" value="{{ isset($studentToEdit) ? $studentToEdit->phone : old("phone") }}">
+                                                placeholder="Entrez le contact du parent" value="{{ isset($studentToEdit) ? $studentToEdit->phone : old("phone") }}">
                                             @error('phone')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -195,10 +195,10 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="matiere_id" class="form-control-label">
+                                            <label for="classe_id" class="form-control-label">
                                                 Classe :
                                             </label>
-                                            <select name="matiere_id" id="matiere_id" class="form-control">
+                                            <select name="classe_id" id="classe_id" class="form-control">
                                                 @foreach ($classes as $classe)
                                                     <option value="{{ $classe->id }}" {{ isset($studentToEdit) && $studentToEdit->classe_id === $classe->id ? 'selected' : '' }}>{{ $classe->libClasse }}</option>
                                                 @endforeach

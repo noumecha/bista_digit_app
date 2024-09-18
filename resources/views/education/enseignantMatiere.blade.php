@@ -13,9 +13,9 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Enseignants et leur classes</h5>
+                                    <h5 class="">Liste des Enseignants et leurs matieres</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer l'attribution des classes aux enseignant
+                                        D'ici vous pouvez gérer l'attribution des matieres aux enseignants
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -37,7 +37,7 @@
                                             Enseignants</th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Classes
+                                            Matieres
                                         </th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -46,27 +46,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($enseignements as $enseignement)
+                                    @foreach ($enseignantsMatieres as $enseignantMatiere)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $enseignement->id }}
+                                                {{ $enseignantMatiere->id }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                @foreach ($enseignantsMatieres as $enseignantMatiere)
-                                                    @if ($enseignement->enseignant_matiere_id === $enseignantMatiere->id)
-                                                        @foreach ($enseignants as $enseignant)
-                                                            {{ $enseignantMatiere->user_id === $enseignant->id ? $enseignant->name : '' }}
-                                                        @endforeach
-                                                        @foreach ($matieres as $matiere)
-                                                            {{ $enseignantMatiere->matiere_id === $matiere->id ? '('. $matiere->libelleMatiere .')' : '' }}
-                                                        @endforeach
-                                                    @else
-                                                        {{ '' }}
-                                                    @endif
+                                                @foreach ($enseignants as $enseignant)
+                                                    {{ $enseignantMatiere->user_id === $enseignant->id ? $enseignant->name : ''}}
                                                 @endforeach
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $enseignement->classe->libClasse }}
+                                                @foreach ($matieres as $matiere)
+                                                    {{ $enseignantMatiere->matiere_id === $matiere->id ? $matiere->libelleMatiere : '' }}
+                                                @endforeach
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -74,7 +67,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ route('enseignement.edit', $enseignement->id) }}">
+                                                            <a class="dropdown-item" href="{{ route('enseignantMatiere.edit', $enseignantMatiere->id) }}">
                                                                 <i class="fas fa-user-edit" aria-hidden="true"></i>
                                                                 modifier
                                                             </a>
@@ -82,7 +75,7 @@
                                                         <li>
                                                             <div class="dropdown-item">
                                                                 <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="{{ route('enseignement.destroy', $enseignement->id) }}" action="">
+                                                                <form role="form" class="form" method="POST" action="{{ route('enseignantMatiere.destroy', $enseignantMatiere->id) }}" action="">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <input type="submit" value="Supprimer">
@@ -114,51 +107,44 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-6">
-                                    @if (isset($enseignementToEdit))
+                                    @if (isset($enseignantMatiereToEdit))
                                         <h5 class="">
-                                            Modifier l'attributation de la classe de {{ $enseignementToEdit->classe->libClasse }}
+                                            Modifier l'attributation de la matiere de {{ $enseignantMatiereToEdit->matiere->libelleMatiere }}
+                                            pour la matière {{ $enseignantMatiereToEdit->matiere->libelleMatiere }}
                                         </h5>
                                     @else
                                         <h5 class="">
-                                            Attribution des classes aux enseignants
+                                            Attribution des matieres aux enseignants
                                         </h5>
                                     @endif
                                 </div>
                             </div>
-                            <form role="form" id="" class="form row" method="POST" action="{{ isset($enseignementToEdit) ? route('enseignement.update', $enseignementToEdit->id) : route('enseignement.store') }}">
+                            <form role="form" id="" class="form row" method="POST" action="{{ isset($enseignantMatiereToEdit) ? route('enseignantMatiere.update', $enseignantMatiereToEdit->id) : route('enseignantMatiere.store') }}">
                                 @csrf
-                                @if (isset($enseignementToEdit))
+                                @if (isset($enseignantMatiereToEdit))
                                     @method('PUT')
                                 @endif
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="enseignant_matiere_id" class="form-control-label">
+                                            <label for="user_id" class="form-control-label">
                                                 Selectionner l'enseignant :
                                             </label>
-                                            <select name="enseignant_matiere_id" id="enseignant_matiere_id" class="form-control">
-                                            @foreach ($enseignantsMatieres as $enseignantMatiere)
-                                                <option value="{{ $enseignantMatiere->id }}" {{ isset($enseignementToEdit)
-                                                    && $enseignementToEdit->enseignant_matiere_id == $enseignantMatiere->id ? 'selected' : '' }}>
-                                                    @foreach ($enseignants as $enseignant)
-                                                        {{ $enseignantMatiere->user_id === $enseignant->id ? $enseignant->name : '' }}
-                                                    @endforeach
-                                                    @foreach ($matieres as $matiere)
-                                                        {{ $enseignantMatiere->matiere_id === $matiere->id ? '('. $matiere->libelleMatiere .')' : '' }}
-                                                    @endforeach
-                                                </option>
+                                            <select name="user_id" id="user_id" class="form-control">
+                                            @foreach ($enseignants as $enseignant)
+                                                <option value="{{ $enseignant->id }}" {{ isset($enseignantMatiereToEdit) && $enseignantMatiereToEdit->user_id == $enseignant->id ? 'selected' : '' }}>{{ $enseignant->name }}</option>
                                             @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="classe_id" class="form-control-label">
-                                                Selectionner la classe :
+                                            <label for="matiere_id" class="form-control-label">
+                                                Selectionner la matiere :
                                             </label>
-                                            <select name="classe_id" id="classe_id" class="form-control">
-                                                @foreach ($classes as $classe)
-                                                    <option value="{{ $classe->id }}" {{ isset($enseignementToEdit) && $enseignementToEdit->classe_id == $classe->id ? 'selected' : '' }}>{{ $classe->libClasse }}</option>
+                                            <select name="matiere_id" id="matiere_id" class="form-control">
+                                                @foreach ($matieres as $matiere)
+                                                    <option value="{{ $matiere->id }}" {{ isset($enseignantMatiereToEdit) && $enseignantMatiereToEdit->matiere_id == $matiere->id ? 'selected' : '' }}>{{ $matiere->libelleMatiere }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -166,7 +152,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="{{ isset($enseignementToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($enseignementToEdit) ? 'btn-success' :  'btn-primary'}}">
+                                        <input type="submit" value="{{ isset($enseignantMatiereToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($enseignantMatiereToEdit) ? 'btn-success' :  'btn-primary'}}">
                                     </div
                                 </div>
                                 @if ($errors->any())
