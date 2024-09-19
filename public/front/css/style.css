@@ -59,8 +59,8 @@ a:hover {
       .my-nav .nav-items {
         align-items: center; } }
     .my-nav .nav-items .logo {
-      width: 30%;
-      max-width: 30%;
+      width: 20%;
+      max-width: 20%;
       flex: 1 1 30%;
       padding: 10px 15px; }
       @media screen and (max-width: 767.98px) {

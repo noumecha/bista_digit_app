@@ -195,8 +195,14 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-graduation-cap"></i>
-                      <div class="counting" data-count="0">0</div>
-                      <h5>ELEVES</h5>
+                        <div class="counting" data-count="{{ $students }}">0</div>
+                        <h5>
+                            @if($students < 2)
+                                ELEVE
+                            @else
+                                ELEVES
+                            @endif
+                        </h5>
                     </div>
                 </div>
 
@@ -211,8 +217,14 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-registered"></i>
-                      <div class="counting" data-count="0">0</div>
-                      <h5>ENSEIGNANTS QUALIFIES</h5>
+                        <div class="counting" data-count="{{ $teachers }}">0</div>
+                        <h5>
+                            @if($teachers < 2)
+                                ENSEIGNANT QUALIFIE
+                            @else
+                                ENSEIGNANTS QUALIFIES
+                            @endif
+                        </h5>
                     </div>
                 </div>
               </div>

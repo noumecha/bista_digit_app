@@ -16,7 +16,7 @@
                                 <li><a href="{{ route ('home.index') }}">Acceuil</a></li>
                                 <li><a href="{{ route ('home.about') }}">A propos</a></li>
                                 <li>
-                                    <a href="#">Actualités</a>
+                                    <a href="{{ route ('home.actus') }}">Actualités</a>
                                     <ul class="submenu">
                                         <li><a href="#">Activités pédagogiques</a></li>
                                         <li><a href="#">Activités Sportives</a></li>
@@ -26,20 +26,21 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="#">Programmes</a>
+                                    <a href="{{ route ('home.programmes') }}">Programmes</a>
                                     <ul class="submenu">
                                         <li><a href="#">Booster</a></li>
                                         <li><a href="#">I Am A Leader</a></li>
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="#">Clubs</a>
+                                    <a href="{{ route ('home.clubs') }}">Clubs</a>
                                     <ul class="submenu">
                                         <li><a href="#">Club Santé</a></li>
                                         <li><a href="#">Club Journal</a></li>
                                         <li><a href="#">Club Musique</a></li>
                                     </ul>
                                 </li>
+                                <li><a href="{{ route('home.epreuves') }}">Epreuves</a></li>
                                 <li><a href="{{ route('sign-in') }}">Connexion</a></li>
                             </ul>
                         </div>

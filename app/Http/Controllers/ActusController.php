@@ -10,6 +10,6 @@ class ActusController extends Controller
      * index function
      */
     public function index () {
-        return view('front.actus.show');
+        return view('front.actus');
     }
 }

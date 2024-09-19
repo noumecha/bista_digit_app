@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ActusController;
 use App\Http\Controllers\AnneeScolaireController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -38,9 +39,13 @@ use App\Models\Personnel;
 */
 
 // primary routes for the front-website :
-Route::get('/home', [HomeController::class, 'index'])->name('home.index');
+Route::get('/acceuil', [HomeController::class, 'index'])->name('home.index');
+Route::get('/programmes', [HomeController::class, 'programmes'])->name('home.programmes');
+Route::get('/clubs', [HomeController::class, 'clubs'])->name('home.clubs');
+Route::get('/epreuves', [HomeController::class, 'epreuves'])->name('home.epreuves');
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
-Route::get('/about', [AboutController::class, 'index'])->name('home.about');
+Route::get('/apropos', [AboutController::class, 'index'])->name('home.about');
+Route::get('/actualites', [ActusController::class, 'index'])->name('home.actus');
 
 // Authentication routes :
 Route::get('/sign-up', [RegisterController::class, 'create'])->middleware('guest')->name('sign-up');
