@@ -26,14 +26,16 @@ class ActusController extends Controller
             'image' => 'required|image|mimes:jpg,jpeg,png,gif|max:4096',
         ], [
             'titre.required' => 'Veuillez entrez un titre',
+            'titre.unique' => 'Ce titre existe déja',
             'contenu.required' => 'Veuillez remplire le contenu de l\'actualité',
             'image.required' => 'Veuillez selectionner une image de mise en avant',
         ]);
 
         Actualite::create([
             'name' => $request->name,
-            'matricule' => $request->contenu,
-            'image' => $request->hasFile('image') ? $request->file('images')->store('actualites', 'public') : '',
+            'contenu' => $request->contenu,
+            'categorie_actualites_id' => 1,
+            'image' => $request->hasFile('image') ? $request->file('image')->store('actualites', 'public') : '',
         ]);
 
         return redirect()->route('actualites.index')->with('success', 'Actualites ajouté avec succès');

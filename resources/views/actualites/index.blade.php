@@ -45,7 +45,7 @@
                                     @foreach ($actualites as $actualite)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $actualite->titre}}
+                                                {{ $actualite->titre }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <div class="d-flex justify-content-center align-items-center">
@@ -109,7 +109,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <form  role="form" id="personnelform" class="form row" method="POST" action="{{ isset($actualiteToEdit) ? route('actualite.update', $actualiteToEdit->id) : route('actualite.store') }}">
+                            <form enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ isset($actualiteToEdit) ? route('actualite.update', $actualiteToEdit->id) : route('actualite.store') }}">
                                 @csrf
                                 @if (isset($actualiteToEdit))
                                     @method('PUT')
@@ -161,7 +161,7 @@
                                             name="contenu"
                                             id="content"
                                             placeholder="Entrez le contenu de l'actualité"
-                                            value="{{ isset($actualiteToEdit) ? $actualiteToEdit->contenu : ''}}"
+                                            value="{{ isset($actualiteToEdit) ? $actualiteToEdit->contenu : old("contenu") }}"
                                             rows="5">
                                         </textarea>
                                         @error('contenu')

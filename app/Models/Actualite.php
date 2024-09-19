@@ -13,7 +13,7 @@ class Actualite extends Model
     /**
      * @mixed Array
      */
-    protected $fillable = ['titre','image','contenu'];
+    protected $fillable = ['titre','image','contenu','categorie_actualites_id'];
 
     /**
      *
