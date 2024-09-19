@@ -22,6 +22,7 @@
     </title>
     <!-- css -->
     <link rel="stylesheet" href="{{ asset('css/add.css') }}" />
+    <link rel="stylesheet" href="{{ asset('vendor/ckeditor5.css') }}" />
     <!--     Fonts and icons     -->
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700"
@@ -405,6 +406,41 @@
             }
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
+    </script>
+    <!-- CKEDITOR -->
+    <script src="{{ asset('vendor/ckeditor5/ckeditor5.js') }}"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "../../../vendor/ckeditor5.js",
+                "ckeditor5/": "../../../vendor/"
+            }
+        }
+    </script>
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Paragraph,
+            Bold,
+            Italic,
+            Font
+        } from 'ckeditor5';
+
+        ClassicEditor
+            .create( document.querySelector( '#content' ), {
+                plugins: [ Essentials, Paragraph, Bold, Italic, Font ],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            } )
+            .then( editor => {
+                window.editor = editor;
+            } )
+            .catch( error => {
+                console.error( error );
+            } );
     </script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>

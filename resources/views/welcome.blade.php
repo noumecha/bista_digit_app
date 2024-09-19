@@ -137,4 +137,37 @@
             </div>
         </div>
     </body>
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "../../assets/vendor/ckeditor5.js",
+                "ckeditor5/": "../../assets/vendor/"
+            }
+        }
+    </script>
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Paragraph,
+            Bold,
+            Italic,
+            Font
+        } from 'ckeditor5';
+
+        ClassicEditor
+            .create( document.querySelector( '#content' ), {
+                plugins: [ Essentials, Paragraph, Bold, Italic, Font ],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+                ]
+            } )
+            .then( editor => {
+                window.editor = editor;
+            } )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
 </html>

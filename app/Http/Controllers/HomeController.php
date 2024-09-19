@@ -36,4 +36,11 @@ class HomeController extends Controller
     public function epreuves () {
         return view('front.epreuves');
     }
+
+    /**
+     * index function
+     */
+    public function actualites () {
+        return view('front.actus');
+    }
 }
