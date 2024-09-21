@@ -16,102 +16,35 @@
             <div class="row">
                <div class="col-12">
                     <div class="heading">
-                        <h2>Latest News</h2>
+                        <h2>Les dernières actualités du collège</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                         tempor incididunt</p>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                      <div class="_bv_xs_we"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Easy English Learning Way</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </article>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                      <div class="_bv_xs_we" style="{{ asset('front/images/blog/img-01.jpg') }}"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Summer Course Start From 1st June</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </article>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                        <div class="_bv_xs_we" style="{{ asset('front/images/blog/img-03.jpg') }}"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Guest Interview will Occur Soon</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </article>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                        <div class="_bv_xs_we" style="{{ asset('front/images/blog/img-04.jpg') }}"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Guest Interview will Occur Soon</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </article>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                        <div class="_bv_xs_we" style="{{ asset('front/images/blog/img-05.jpg') }}"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Guest Interview will Occur Soon</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </article>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                        <div class="_bv_xs_we" style="{{ asset('front/images/blog/img-06.jpg') }}"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Guest Interview will Occur Soon</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </article>
-                </div>
+                @foreach ($epreuves as $epreuve)
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <article class="_lk_bg_sd_we">
+                            <div class="_bv_xs_we" style="background:url({{ asset('storage/' . $epreuve->fichier) }})"></div>
+                            <div class="_xs_we_er">
+                                <div class="_he_w">
+                                    <h5>
+                                        <a class="title h5 text-uppercase" href="{{ route('home.showepreuve', $epreuve->id) }}">
+                                            {{ $epreuve->matiere->libelleMatiere }} : {{ $epreuve->libelleEpreuve }}
+                                        </a>
+                                    </h5>
+                                    <ol class="mt-3">
+                                        <li><span>Par</span>{{ $epreuve->user->name }}<span class="_mn_cd_xs"><i>le {{ date('d M Y', strtotime($epreuve->created_at)) }}</i></span></li>
+                                    </ol>
+                                    <a class="mt-3 btn btn-primary text-white" href="{{ asset('storage/' . $epreuve->fichier) }}">
+                                        Télécharger
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>

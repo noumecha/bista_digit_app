@@ -109,8 +109,14 @@
                 </a>
             </li>
             <li class="nav-item border-start my-0 pt-2">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.type_epreuves') ? 'active' : '' }}"
+                    href="{{ route('education.type_epreuves') }}">
+                    <span class="nav-link-text ms-1">Type d'Epreuve</span>
+                </a>
+            </li>
+            <li class="nav-item border-start my-0 pt-2">
                 <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.epreuve') ? 'active' : '' }}"
-                    href="{{ route('education.epreuve') }}">
+                    href="{{ route('education.epreuves') }}">
                     <span class="nav-link-text ms-1">Epreuves</span>
                 </a>
             </li>

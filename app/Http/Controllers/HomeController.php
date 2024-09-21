@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actualite;
+use App\Models\Epreuve;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -35,7 +36,16 @@ class HomeController extends Controller
      * index function
      */
     public function epreuves () {
-        return view('front.epreuves');
+        $epreuves = Epreuve::all();
+        return view('front.epreuves', compact('epreuves'));
+    }
+
+    /**
+     * index function
+     */
+    public function showEpreuve($id) {
+        $epreuve = Epreuve::findOrFail($id);
+        return view('front.showepreuve')->with('epreuve', $epreuve);
     }
 
     /**

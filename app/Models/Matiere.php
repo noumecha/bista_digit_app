@@ -34,4 +34,11 @@ class Matiere extends Model
     {
         return $this->belongsToMany(User::class, 'enseignant_matiere','matiere_id','user_id');
     }
+
+    /**
+     *
+     */
+    public function epreuves(): HasMany {
+        return $this->hasMany(Epreuve::class);
+    }
 }

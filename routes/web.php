@@ -15,6 +15,7 @@ use App\Http\Controllers\CategorieActualiteController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\CoefficientController;
 use App\Http\Controllers\DevoirController;
+use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\EnseignantMatiereModelController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\ProgrammeController;
+use App\Http\Controllers\TypeEpreuveController;
 use App\Http\Controllers\UtilisateurController;
 use App\Models\CategorieActualite;
 use App\Models\Personnel;
@@ -49,6 +51,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/apropos', [AboutController::class, 'index'])->name('home.about');
 Route::get('/actualites', [HomeController::class, 'actualites'])->name('home.actus');
 Route::get('/actualite/{id}/read', [HomeController::class, 'showActualite'])->name('actualites.show');
+Route::get('/epreuve/{id}/read', [HomeController::class, 'showEpreuve'])->name('home.showepreuve');
 
 // Actualites CRUD Routes :
 Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
@@ -116,13 +119,24 @@ Route::get('/signup', function () {
 
 # education routes
 Route::get('/education/devoir', [DevoirController::class, 'index'])->name('education.devoir')->middleware('auth');
-Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuve')->middleware('auth');
-Route::get('/education/discipline', [EpreuveController::class, 'index'])->name('education.discipline')->middleware('auth');
+Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuves')->middleware('auth');
+Route::get('/education/type_epreuves', [TypeEpreuveController::class, 'index'])->name('education.type_epreuves')->middleware('auth');
+Route::get('/education/discipline', [DisciplineController::class, 'index'])->name('education.discipline')->middleware('auth');
 Route::get('/education/matieres', [MatiereController::class, 'index'])->name('education.matiere')->middleware('auth');
 Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
 Route::get('/education/coefficients', [CoefficientController::class, 'index'])->name('education.coefficients')->middleware('auth');
 Route::get('/education/enseignement', [EnseignementController::class, 'index'])->name('education.enseignement')->middleware('auth');
 Route::get('/education/enseignantMatiere', [EnseignantMatiereModelController::class, 'index'])->name('education.enseignantMatiere')->middleware('auth');
+## education -> type epreuves CRUD routes
+Route::post('/typeEpreuve/save', [TypeEpreuveController::class, 'store'])->name('typeEpreuve.store')->middleware('auth');
+Route::put('/typeEpreuve/{id}', [TypeEpreuveController::class, 'update'])->name('typeEpreuve.update')->middleware('auth');
+Route::get('/typeEpreuve/{id}/edit', [TypeEpreuveController::class, 'edit'])->name('typeEpreuve.edit')->middleware('auth');
+Route::delete('/typeEpreuve/{id}', [TypeEpreuveController::class, 'destroy'])->name('typeEpreuve.destroy')->middleware('auth');
+## education -> epreuves CRUD routes
+Route::post('/epreuve/save', [EpreuveController::class, 'store'])->name('epreuve.store')->middleware('auth');
+Route::put('/epreuve/{id}', [EpreuveController::class, 'update'])->name('epreuve.update')->middleware('auth');
+Route::get('/epreuve/{id}/edit', [EpreuveController::class, 'edit'])->name('epreuve.edit')->middleware('auth');
+Route::delete('/epreuve/{id}', [EpreuveController::class, 'destroy'])->name('epreuve.destroy')->middleware('auth');
 ## education -> attribution_matieres routes
 Route::post('/enseignantMatiere/save', [EnseignantMatiereModelController::class, 'store'])->name('enseignantMatiere.store')->middleware('auth');
 Route::put('/enseignantMatiere/{id}', [EnseignantMatiereModelController::class, 'update'])->name('enseignantMatiere.update')->middleware('auth');

@@ -6,9 +6,14 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
+                            @if (session('deleteSuccess'))
+                                <div class="row alert alert-success text-center" id="success-message">
+                                    {{ session('deleteSuccess') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Classes</h5>
+                                    <h5 class="">Liste des Actualités</h5>
                                     <p class="text-sm">
                                         D'ici vous pouvez gérer les actualites(Ajouter, Supprimer, Mettre à jour ...etc)
                                     </p>
@@ -167,7 +172,7 @@
                                             </label>
                                             <select name="categorie_actualites_id" id="categorie_actualites_id" class="form-control">
                                                 @foreach ($categories as $categorie)
-                                                    <option value="{{ isset($actualiteToEdit) && $actualiteToEdit->categorie_actualites_id === $categorie->id ? $actualiteToEdit->categorie_actualites_id : $categorie->id }}">
+                                                    <option value="{{ $categorie->id }}" {{ isset($actualiteToEdit) && $actualiteToEdit->categorie_actualites_id === $categorie->id ? 'selected' : '' }}">
                                                         {{ $categorie->libelleCategorie }}
                                                     </option>
                                                 @endforeach

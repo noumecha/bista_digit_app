@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Actualite;
 use App\Models\CategorieActualite;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ActusController extends Controller
@@ -38,6 +40,7 @@ class ActusController extends Controller
         Actualite::create([
             'titre' => $request->titre,
             'contenu' => $request->contenu,
+            'user_id' => Auth::id(),
             'categorie_actualites_id' => $request->categorie_actualites_id,
             'image' => $request->hasFile('image') ? $request->file('image')->store('actualites', 'public') : '',
         ]);
@@ -81,6 +84,7 @@ class ActusController extends Controller
             }
             $actualite->image = $imagePath;
         }
+        //$actualite->user_id = User::find(Auth::id());
         $actualite->update($request->except('image'));
 
         return redirect()->route('actualites.index')->with('success', 'Actualité mise à jour avec succès');

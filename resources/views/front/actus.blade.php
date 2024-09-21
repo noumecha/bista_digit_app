@@ -35,7 +35,7 @@
                                     </a>
                                 </h5>
                                 <ol>
-                                    <li><span>Par</span>admin<span class="_mn_cd_xs"><i>le {{ date('d M Y', strtotime($actualite->created_at)) }}</i></span></li>
+                                    <li><span>Par</span>{{ $actualite->user->name }}<span class="_mn_cd_xs"><i>le {{ date('d M Y', strtotime($actualite->created_at)) }}</i></span></li>
                                 </ol>
                                 <p>
                                     {!! Str::limit($actualite->contenu , $limit=300, $end="...") !!}

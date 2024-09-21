@@ -6,6 +6,11 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
+                            @if (session('deleteSuccess'))
+                                <div class="row alert alert-success text-center" id="success-message">
+                                    {{ session('deleteSuccess') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
                                     <h5 class="">Liste des Classes</h5>

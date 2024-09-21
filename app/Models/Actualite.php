@@ -13,7 +13,7 @@ class Actualite extends Model
     /**
      * @mixed Array
      */
-    protected $fillable = ['titre','image','contenu','categorie_actualites_id'];
+    protected $fillable = ['titre','image','contenu','categorie_actualites_id','user_id'];
 
     /**
      *
@@ -21,5 +21,13 @@ class Actualite extends Model
     public function categorie() : BelongsTo
     {
         return $this->belongsTo(CategorieActualite::class);
+    }
+
+    /**
+     *
+     */
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -11,7 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('type_epreuves', function (Blueprint $table) {
+            $table->id();
+            $table->string('libelleTypeEpreuve');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('type_epreuves');
     }
 };
