@@ -48,6 +48,7 @@ Route::get('/epreuves', [HomeController::class, 'epreuves'])->name('home.epreuve
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/apropos', [AboutController::class, 'index'])->name('home.about');
 Route::get('/actualites', [HomeController::class, 'actualites'])->name('home.actus');
+Route::get('/actualite/{id}/read', [HomeController::class, 'showActualite'])->name('actualites.show');
 
 // Actualites CRUD Routes :
 Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
@@ -56,11 +57,12 @@ Route::put('/actualites/{id}', [ActusController::class, 'update'])->name('actual
 Route::get('/actualites/{id}/edit', [ActusController::class, 'edit'])->name('actualite.edit')->middleware('auth');
 Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
 
-// Categories CRUD Routes :
-Route::post('/categories/save', [CategorieActualiteController::class, 'store'])->name('categories.store')->middleware('auth');
-Route::put('/categories/{id}', [CategorieActualiteController::class, 'update'])->name('categories.update')->middleware('auth');
-Route::get('/categories/{id}/edit', [CategorieActualiteController::class, 'edit'])->name('categories.edit')->middleware('auth');
-Route::delete('/categories/{id}', [CategorieActualiteController::class, 'destroy'])->name('categories.destroy')->middleware('auth');
+// Categories actualites CRUD Routes :
+Route::get('/categories/actualites', [CategorieActualiteController::class, 'index'])->name('actualites.categories')->middleware('auth');
+Route::post('/categories/save', [CategorieActualiteController::class, 'store'])->name('categorie.store')->middleware('auth');
+Route::put('/categories/{id}', [CategorieActualiteController::class, 'update'])->name('categorie.update')->middleware('auth');
+Route::get('/categories/{id}/edit', [CategorieActualiteController::class, 'edit'])->name('categorie.edit')->middleware('auth');
+Route::delete('/categories/{id}', [CategorieActualiteController::class, 'destroy'])->name('categorie.destroy')->middleware('auth');
 
 
 // Authentication routes :

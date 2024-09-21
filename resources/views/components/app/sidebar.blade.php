@@ -17,17 +17,28 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  {{ is_current_route('actualites.index') ? 'active' : '' }}"
-                    href="{{ route('actualites.index') }}">
-                    <i class="fa-solid fa-home fa-sm"></i>
-                    <span class="nav-link-text text-md ml-n5">Actualites</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link  {{ is_current_route('annee_scolaire.show') ? 'active' : '' }}"
                     href="{{ route('annee_scolaire.show') }}">
                     <i class="fa-solid fa-school fa-sm"></i>
                     <span class="nav-link-text text-md ml-n5">Année</span>
+                </a>
+            </li>
+            <li class="nav-item mt-2">
+                <div class="d-flex align-items-center nav-link">
+                    <i class="fa-solid fa-users fa-sm"></i>
+                    <span class="font-weight-normal text-md ml-n5">Actualités</span>
+                </div>
+            </li>
+            <li class="nav-item border-start my-0 pt-2">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('actualites.index') ? 'active' : '' }}"
+                    href="{{ route('actualites.index') }}">
+                    <span class="nav-link-text ms-1">Nouvelle actualité</span>
+                </a>
+            </li>
+            <li class="nav-item border-start my-0 pt-2">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('actualites.categories') ? 'active' : '' }}"
+                    href="{{ route('actualites.categories') }}">
+                    <span class="nav-link-text ms-1">Catégorie d'actualité</span>
                 </a>
             </li>
             <li class="nav-item mt-2">

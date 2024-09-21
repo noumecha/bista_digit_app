@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actualite;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,15 @@ class HomeController extends Controller
      * index function
      */
     public function actualites () {
-        return view('front.actus');
+        $actualites = Actualite::all();
+        return view('front.actus', compact('actualites'));
+    }
+
+    /**
+     *
+     */
+    public function showActualite($id) {
+        $actualite = Actualite::findOrFail($id);
+        return view('actualites.show')->with('actualite', $actualite);
     }
 }

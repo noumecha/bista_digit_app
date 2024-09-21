@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actualite;
+use App\Models\CategorieActualite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,7 +14,8 @@ class ActusController extends Controller
      */
     public function index () {
         $actualites = Actualite::all();
-        return view('actualites.index', compact('actualites'));
+        $categories = CategorieActualite::all();
+        return view('actualites.index', compact('actualites', 'categories'));
     }
 
     /**
@@ -24,17 +26,19 @@ class ActusController extends Controller
             'titre' => 'required|min:3|max:255|unique:actualites,titre',
             'contenu' => 'required',
             'image' => 'required|image|mimes:jpg,jpeg,png,gif|max:4096',
+            'categorie_actualites_id' => 'required'
         ], [
             'titre.required' => 'Veuillez entrez un titre',
             'titre.unique' => 'Ce titre existe déja',
             'contenu.required' => 'Veuillez remplire le contenu de l\'actualité',
             'image.required' => 'Veuillez selectionner une image de mise en avant',
+            'categorie_actualites_id.required' => 'Veuillez selectionner selectionner la catégorie',
         ]);
 
         Actualite::create([
-            'name' => $request->name,
+            'titre' => $request->titre,
             'contenu' => $request->contenu,
-            'categorie_actualites_id' => 1,
+            'categorie_actualites_id' => $request->categorie_actualites_id,
             'image' => $request->hasFile('image') ? $request->file('image')->store('actualites', 'public') : '',
         ]);
 
@@ -47,9 +51,10 @@ class ActusController extends Controller
      */
     public function edit($id) {
         $actualites = Actualite::all();
+        $categories = CategorieActualite::all();
         $actualiteToEdit = Actualite::findOrFail($id);
 
-        return view('actualites.index', compact('actualites','actualiteToEdit'));
+        return view('actualites.index', compact('actualites','actualiteToEdit','categories'));
     }
 
     /**
@@ -59,11 +64,13 @@ class ActusController extends Controller
         $request->validate([
             'titre' => 'required|min:3|max:255',
             'contenu' => 'required',
-            'image' => 'image|mimes:jpeg,png,gif|max:4096',
+            'image' => 'image|mimes:jpg,jpeg,png,gif|max:4096',
+            'categorie_actualites_id' => 'required'
         ], [
             'titre.required' => 'Veuillez entrez un titre',
-            'contenu' => 'Veuillez remplire le contenu de l\'actualité',
-            'image' => 'Veuillez selectionner une image de mise en avant',
+            'titre.unique' => 'Ce titre existe déja',
+            'contenu.required' => 'Veuillez remplire le contenu de l\'actualité',
+            'categorie_actualites_id.required' => 'Veuillez selectionner selectionner la catégorie',
         ]);
         $actualite = Actualite::findOrFail($id);
 
@@ -76,7 +83,7 @@ class ActusController extends Controller
         }
         $actualite->update($request->except('image'));
 
-        return redirect()->route('actualites.index')->with('success', 'Actualites mis à jour avec succès');
+        return redirect()->route('actualites.index')->with('success', 'Actualité mise à jour avec succès');
     }
 
     /**

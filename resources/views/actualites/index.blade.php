@@ -33,6 +33,10 @@
                                         </th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            Catégorie
+                                        </th>
+                                        <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Contenu
                                         </th>
                                         <th
@@ -45,7 +49,7 @@
                                     @foreach ($actualites as $actualite)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $actualite->titre }}
+                                                {{ Str::limit($actualite->titre , $limit=5, $end="...") }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <div class="d-flex justify-content-center align-items-center">
@@ -54,7 +58,12 @@
                                                 </div>
                                             </td>
                                             <td class="align-middle bg-transparent borer-bottom">
-                                                {{ $actualite->contenu }}
+                                                @foreach ($categories as $categorie)
+                                                    {{ $actualite->categorie_actualites_id === $categorie->id ? $categorie->libelleCategorie : '' }}
+                                                @endforeach
+                                            </td>
+                                            <td class="align-middle bg-transparent borer-bottom">
+                                                {!! Str::limit($actualite->contenu , $limit=10, $end="...") !!}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -115,10 +124,10 @@
                                     @method('PUT')
                                 @endif
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="titre" class="form-control-label">
-                                                Libellé :
+                                                Titre :
                                             </label>
                                             <input
                                                 type="text"
@@ -151,18 +160,36 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="categorie_actualites_id" class="form-control-label">
+                                                Categorie :
+                                            </label>
+                                            <select name="categorie_actualites_id" id="categorie_actualites_id" class="form-control">
+                                                @foreach ($categories as $categorie)
+                                                    <option value="{{ isset($actualiteToEdit) && $actualiteToEdit->categorie_actualites_id === $categorie->id ? $actualiteToEdit->categorie_actualites_id : $categorie->id }}">
+                                                        {{ $categorie->libelleCategorie }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('titre')
+                                                <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="contenu" class="form-control-label">
-                                            Libellé :
+                                            Contenu :
                                         </label>
                                         <textarea
                                             name="contenu"
                                             id="content"
                                             placeholder="Entrez le contenu de l'actualité"
-                                            value="{{ isset($actualiteToEdit) ? $actualiteToEdit->contenu : old("contenu") }}"
-                                            rows="5">
+                                            cols="12"
+                                            rows="30">
+                                            {{ isset($actualiteToEdit) ? $actualiteToEdit->contenu : old("contenu") }}
                                         </textarea>
                                         @error('contenu')
                                             <span class="text-danger text-sm">{{ $message }}</span>
