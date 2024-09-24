@@ -30,6 +30,7 @@ use App\Http\Controllers\TypeEpreuveController;
 use App\Http\Controllers\UtilisateurController;
 use App\Models\CategorieActualite;
 use App\Models\Personnel;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -204,3 +205,8 @@ Route::get('/programme/leader', [ProgrammeController::class, 'index'])->name('pr
 Route::get('/laravel-examples/user-profile', [ProfileController::class, 'index'])->name('users.profile')->middleware('auth');
 Route::put('/laravel-examples/user-profile/update', [ProfileController::class, 'update'])->name('users.update')->middleware('auth');
 Route::get('/laravel-examples/users-management', [UserController::class, 'index'])->name('users-management')->middleware('auth');
+
+# special for storage link
+Route::get('/linkstorage', function() {
+    Artisan::call('storage:link');
+});
