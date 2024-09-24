@@ -9,7 +9,7 @@ class Coefficient extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['classe_id', 'matiere_id', 'coefficient'];
+    protected $fillable = ['classe_id', 'matiere_id', 'coefficient','groupe_matiere'];
 
     public function classe() {
         return $this->belongsTo(Classe::class);

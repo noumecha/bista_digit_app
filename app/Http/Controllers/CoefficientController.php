@@ -22,15 +22,17 @@ class CoefficientController extends Controller
             'classe_id' => 'required|exists:classes,id',
             'matiere_id' => 'required|exists:matieres,id',
             'coefficient' => 'required|numeric',
+            'groupe_matiere' => 'required',
         ], [
             'classe_id.required' => 'Selectionnez la classe',
             'matiere_id.required' => 'Selectionnez la matière',
+            'groupe_matiere.required' => 'Selectionnez le groupe de la matière pour la classe',
             'coefficient.required' => 'Définissez la valeur du coefficient',
         ]);
 
         Coefficient::create($request->all());
 
-        return redirect()->route('education.coefficients')->with('success', 'Coefficient définit avec succès!');
+        return redirect()->route('education.coefficients')->with('success', 'Configuration de la matière pour la classe avec succès!');
     }
 
     public function edit($id) {
@@ -47,8 +49,10 @@ class CoefficientController extends Controller
             'classe_id' => 'required|exists:classes,id',
             'matiere_id' => 'required|exists:matieres,id',
             'coefficient' => 'required|numeric',
+            'groupe_matiere' => 'required',
         ], [
             'classe_id.required' => 'Selectionnez la classe',
+            'groupe_matiere.required' => 'Selectionnez le groupe de la matière pour la classe',
             'matiere_id.required' => 'Selectionnez la matière',
             'coefficient.required' => 'Définissez la valeur du coefficient',
         ]);
@@ -56,14 +60,12 @@ class CoefficientController extends Controller
         $coefficient = Coefficient::findOrFail($id);
         $coefficient->update($request->all());
 
-        return redirect()->route('education.coefficients')->with('success', 'Coefficient mis à jour avec succès');
+        return redirect()->route('education.coefficients')->with('success', 'Configuration de la matière mise à jour avec succès');
     }
 
     public function destroy($id) {
         $coefficient = Coefficient::findOrFail($id);
         $coefficient->delete();
-        //Coefficient::destroy($id);
-
-        return redirect()->route('education.coefficients')->with('deleteSuccess', 'Coefficient supprimer avec succès');
+        return redirect()->route('education.coefficients')->with('deleteSuccess', 'Configuration de la matière supprimée avec succès');
     }
 }

@@ -13,9 +13,9 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Matières</h5>
+                                    <h5 class="">Liste des matières et de leur configuration par classe</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer les matières (Ajouter, Supprimer, Mettre à jour ...etc)
+                                        D'ici vous pouvez gérer la configuration des matières (Ajouter, Supprimer, Mettre à jour ...etc)
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -44,6 +44,10 @@
                                             Coefficient
                                         </th>
                                         <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            Groupe
+                                        </th>
+                                        <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Action
                                         </th>
@@ -63,6 +67,9 @@
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 {{ $coef->coefficient }}
+                                            </td>
+                                            <td class="align-middle bg-transparent border-bottom">
+                                                {{ $coef->groupe_matiere }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -112,9 +119,9 @@
                                 <div class="col-md-6">
                                     <h5 class="">
                                         @if (isset($coefficient))
-                                            Modifier le coefficient de {{ $coefficient->matiere->libelleMatiere }} en {{ $coefficient->classe->libClasse }}
+                                            Modifier la configuration de {{ $coefficient->matiere->libelleMatiere }} en {{ $coefficient->classe->libClasse }}
                                         @else
-                                            Définir le Coefficient
+                                            Définir la configuration de la matière pour la classe
                                         @endif
                                     </h5>
                                 </div>
@@ -151,8 +158,20 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="groupe_matiere" class="form-control-label">
+                                                Groupe de la matière :
+                                            </label>
+                                            <select name="groupe_matiere" id="groupe_matiere" class="form-control">
+                                                @foreach (\App\GroupeMatiere::cases() as $groupe)
+                                                    <option value="{{ $groupe->value }}" {{ isset($coefficient) && $coefficient->groupe_matiere === $groupe->value ? 'selected' : '' }}>{{ $groupe->value }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="coefficient" class="form-control-label">
-                                                valeur :
+                                                Coefficient :
                                             </label>
                                             <input type="number" id="coefficient" name="coefficient" class="form-control" value="{{ isset($coefficient) && $coefficient->coefficient ? $coefficient->coefficient : old("coefficient") }}" aria-label="Name"
                                                 aria-describedby="name-addon">

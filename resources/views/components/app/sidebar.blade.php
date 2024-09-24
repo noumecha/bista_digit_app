@@ -99,7 +99,7 @@
             <li class="nav-item border-start my-0 pt-2">
                 <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.coefficients') ? 'active' : '' }}"
                     href="{{ route('education.coefficients') }}">
-                    <span class="nav-link-text ms-1">Coefficient</span>
+                    <span class="nav-link-text ms-1">Configuration de matière</span>
                 </a>
             </li>
             <li class="nav-item border-start my-0 pt-2">
@@ -149,6 +149,25 @@
                 <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.bulletins') ? 'active' : '' }}"
                     href="{{ route('evaluation.bulletins') }}">
                     <span class="nav-link-text ms-1">Bulletins</span>
+                </a>
+            </li>
+            <!-- Epreuve on dashboard -->
+            <li class="nav-item mt-2">
+                <div class="d-flex align-items-center nav-link">
+                    <i class="fa-solid fa-user-graduate fa-sm"></i>
+                    <span class="font-weight-normal text-md ml-n5">Epreuve</span>
+                </div>
+            </li>
+            <li class="nav-item border-start my-0 pt-2">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.type_epreuves') ? 'active' : '' }}"
+                    href="{{ route('education.type_epreuves') }}">
+                    <span class="nav-link-text ms-1">Type d'Epreuve</span>
+                </a>
+            </li>
+            <li class="nav-item border-start my-0 pt-2">
+                <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.epreuve') ? 'active' : '' }}"
+                    href="{{ route('education.epreuves') }}">
+                    <span class="nav-link-text ms-1">Ajouter des épreuves</span>
                 </a>
             </li>
             <!-- Programmes on Dashboard -->
