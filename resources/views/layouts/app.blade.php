@@ -22,6 +22,7 @@
     </title>
     <!-- css -->
     <link rel="stylesheet" href="{{ asset('css/add.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/dashboard-menu.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/ckeditor5.css') }}" />
     <!--     Fonts and icons     -->
     <link
@@ -447,6 +448,7 @@
     <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('js/corporate-ui-dashboard.min.js?v=1.0.0') }}"></script>
     <script src="{{ asset('js/functions/pwd.js') }}"></script>
+    <script src="{{ asset('js/functions/dashboard-menu.js') }}"></script>
     <script src="{{ asset('js/functions/success.js') }}"></script>
 </body>
 

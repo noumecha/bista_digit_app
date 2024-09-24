@@ -1,0 +1,14 @@
+.submenu-click-link {
+    cursor: pointer;
+}
+.submenu-click-item {
+    max-height: 0;
+    overflow: hidden;
+    display: none;
+    transition: max-height, display 0.5s ease-out;
+}
+.toggle-click-item {
+    max-height: 500px;
+    display: block;
+    transition: max-height, display 0.5s ease-in;
+}
