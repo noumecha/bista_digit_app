@@ -426,12 +426,18 @@
             Italic,
             Font,
             Image,
+            //ImageToolbar,
+            ImageCaption,
+            ImageStyle,
+            ImageResize,
+            ImageUpload,
             Link,
             Table,
             List,
             BlockQuote,
             Heading,
-            ImageToolbar
+            ImageToolbar,
+            CKFinderUploadAdapter
         } from 'ckeditor5';
        ClassicEditor
             .create( document.querySelector( '#content' ), {
@@ -443,6 +449,11 @@
                     Italic,
                     Font,
                     Image,
+                    CKFinderUploadAdapter,
+                    ImageCaption,
+                    ImageStyle,
+                    ImageResize,
+                    ImageUpload,
                     Link,
                     Table,
                     List,
@@ -454,6 +465,10 @@
                     'undo', 'redo','|','heading','|', 'bold', 'italic','bulletedList','numberedList','blockquote','|','imageUpload','link',
                     'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor','|','insertTable'
                 ],
+                image: {
+                    toolbar: ['imageTextAlternative', 'imageStyle:full', 'imageStyle:side'],
+                    styles: ['full', 'side'],
+                },
                 ckfinder: {
                     uploadUrl: `{{ route('upload.image').'?_token='.csrf_token() }}`
                 }
