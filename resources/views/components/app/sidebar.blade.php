@@ -147,21 +147,21 @@
                     </a>
                 </li>
             </ul>
-            <!-- Epreuve on dashboard -->
+            <!-- Epreuve on Dashboard -->
             <ul class="navbar-nav submenu">
-                <li data-menu="epreuves" class="submenu-click-link nav-item mt-2">
+                <li data-submenu="epreuves" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-book-open"></i>
                         <span class="font-weight-normal text-md ml-n5">Epreuves</span>
                     </div>
                 </li>
-                <li data-menu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
+                <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.type_epreuves') ? 'active' : '' }}"
                         href="{{ route('education.type_epreuves') }}">
                         <span class="nav-link-text ms-1">Type d'Epreuve</span>
                     </a>
                 </li>
-                <li data-menu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
+                <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.epreuve') ? 'active' : '' }}"
                         href="{{ route('education.epreuves') }}">
                         <span class="nav-link-text ms-1">Ajouter des épreuves</span>

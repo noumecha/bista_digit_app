@@ -13,7 +13,7 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Actualités</h5>
+                                    <h5 class="">Liste des Epreuves</h5>
                                     <p class="text-sm">
                                         D'ici vous pouvez gérer les epreuves(Ajouter, Supprimer, Mettre à jour ...etc)
                                     </p>
@@ -114,9 +114,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     @if (isset($epreuveToEdit))
-                                        <h5 class="">Modifier l'actualité de {{ $epreuveToEdit->libelleEpreuve}} </h5>
+                                        <h5 class="">Modifier l'épreuve {{ $epreuveToEdit->libelleEpreuve}} </h5>
                                     @else
-                                        <h5 class="">Ajouter une nouvelle Actualité</h5>
+                                        <h5 class="">Ajouter une nouvelle épreuve</h5>
                                     @endif
                                 </div>
                             </div>

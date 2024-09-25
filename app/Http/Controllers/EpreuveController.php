@@ -47,14 +47,15 @@ class EpreuveController extends Controller
         ]);
 
         //
-        /*$fileName = '';
+        $fileName = '';
         if ($request->hasFile('fichier')) {
             $matiere = Matiere::findOrFail($request->matiere_id);
             $classe = Classe::findOrFail($request->classe_id);
             $file = $request->file('fichier');
-            $fileName = $matiere->libelleMatiere. '_'.$request->libelleEpreuve.'_'.$classe->libClasse->$file->getClientOriginalExtension();
-        }*/
-
+            $libelle = str_replace(' ','_', trim($request->libelleEpreuve));
+            $fileName = $matiere->libelleMatiere. '_'.$libelle.'_'.$classe->libClasse.'.'.$file->getClientOriginalExtension();
+        }
+        //dd($fileName);
         Epreuve::create([
             'libelleEpreuve' => $request->libelleEpreuve,
             'anneeEpreuve' => $request->anneeEpreuve,
@@ -62,7 +63,8 @@ class EpreuveController extends Controller
             'type_epreuve_id' => $request->type_epreuve_id,
             'matiere_id' => $request->matiere_id,
             'classe_id' => $request->classe_id,
-            'fichier' => $request->hasFile('fichier') ? $request->file('fichier')->store('epreuves', 'public') : '',//$file->storeAs('epreuves', $fileName, 'public'),
+            'fichier' => $file->storeAs('epreuves', $fileName, 'public'),
+            //'fichier' => $request->hasFile('fichier') ? $request->file('fichier')->store('epreuves', 'public') : '',//$file->storeAs('epreuves', $fileName, 'public'),
         ]);
 
         return redirect()->route('education.epreuves')->with('success', 'Epreuve ajouté avec succès');
@@ -89,7 +91,7 @@ class EpreuveController extends Controller
         $request->validate([
             'libelleEpreuve' => 'required|min:3|max:255',
             'anneeEpreuve' => 'required|min:9|max:9',
-            'fichier' => 'mimes:jpg,jpeg,pdf,png|4096',
+            'fichier' => 'mimes:jpg,jpeg,pdf,png|max:4096',
             'matiere_id' => 'required',
             'classe_id' => 'required',
             'type_epreuve_id' => 'required'
@@ -102,26 +104,19 @@ class EpreuveController extends Controller
         ]);
         $epreuve = Epreuve::findOrFail($id);
 
-        /*
         $fileName = '';
         if ($request->hasFile('fichier')) {
             $matiere = Matiere::findOrFail($request->matiere_id);
             $classe = Classe::findOrFail($request->classe_id);
             $file = $request->file('fichier');
-            $fileName = $matiere->libelleMatiere. '_'.$request->libelleEpreuve.'_'.$classe->libClasse->$file->getClientOriginalExtension();
+            $libelle = str_replace(' ','_', trim($request->libelleEpreuve));
+            $fileName = $matiere->libelleMatiere. '_'.$libelle.'_'.$classe->libClasse.'.'.$file->getClientOriginalExtension();
             if ($epreuve->fichier) {
                 Storage::disk('public')->delete($epreuve->fichier);
             }
             $epreuve->fichier = $file->storeAs('epreuves', $fileName, 'public');
-        }*/
-
-        if($request->hasFile('fichier')) {
-            $imagePath = $request->file('fichier')->store('epreuves', 'public');
-            if ($epreuve->image) {
-                Storage::disk('public')->delete($epreuve->image);
-            }
-            $epreuve->image = $imagePath;
         }
+        //dd($fileName);
         $epreuve->update($request->except('fichier'));
 
         return redirect()->route('education.epreuves')->with('success', 'Epreuve mise à jour avec succès');

@@ -37,6 +37,10 @@ class HomeController extends Controller
      */
     public function epreuves () {
         $epreuves = Epreuve::all();
+        foreach ($epreuves as $epreuve) {
+            $epreuve->isImage = preg_match('/\.(jpg|jpeg|png|gif)$/i', $epreuve->fichier);
+        }
+        //dd($epreuves);
         return view('front.epreuves', compact('epreuves'));
     }
 
@@ -45,6 +49,7 @@ class HomeController extends Controller
      */
     public function showEpreuve($id) {
         $epreuve = Epreuve::findOrFail($id);
+        $epreuve->isImage = preg_match('/\.(jpg|jpeg|png|gif)$/i', $epreuve->fichier);
         return view('front.showepreuve')->with('epreuve', $epreuve);
     }
 
