@@ -7,5 +7,7 @@ function generatePassword() {
     }
     return password;
 }
-document.getElementById('password').setAttribute("value", generatePassword());
-//console.log(generatePassword());
+el = document.getElementById('password');
+if (el) {
+    el.setAttribute("value", generatePassword());
+}

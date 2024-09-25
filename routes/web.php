@@ -210,3 +210,7 @@ Route::get('/laravel-examples/users-management', [UserController::class, 'index'
 Route::get('/linkstorage', function() {
     Artisan::call('storage:link');
 });
+
+// route for uploading image from ckeditor :
+    Route::post('/upload/image', 'App\Http\Controllers\Admin\ImageUploadController@upload');//->name('upload.image');
+    Route::post('/upload', [App\Http\Controllers\ImageUploadController::class, 'storeImage'])->name('upload.image');

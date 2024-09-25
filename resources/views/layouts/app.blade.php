@@ -409,12 +409,11 @@
         }
     </script>
     <!-- CKEDITOR -->
-    <script src="{{ asset('vendor/ckeditor5/ckeditor5.js') }}"></script>
     <script type="importmap">
         {
-            "imports": {
-                "ckeditor5": "../../../vendor/ckeditor5.js",
-                "ckeditor5/": "../../../vendor/"
+            "imports" : {
+                "ckeditor5": "{{ asset('/vendor/ckeditor5.js') }}",
+                "ckeditor5/": "{{ asset('/vendor/') }}"
             }
         }
     </script>
@@ -425,16 +424,39 @@
             Paragraph,
             Bold,
             Italic,
-            Font
+            Font,
+            Image,
+            Link,
+            Table,
+            List,
+            BlockQuote,
+            Heading,
+            ImageToolbar
         } from 'ckeditor5';
-
-        ClassicEditor
+       ClassicEditor
             .create( document.querySelector( '#content' ), {
-                plugins: [ Essentials, Paragraph, Bold, Italic, Font ],
+                plugins: [
+                    ClassicEditor,
+                    Essentials,
+                    Paragraph,
+                    Bold,
+                    Italic,
+                    Font,
+                    Image,
+                    Link,
+                    Table,
+                    List,
+                    BlockQuote,
+                    Heading,
+                    ImageToolbar
+                ],
                 toolbar: [
-                    'undo', 'redo', '|', 'bold', 'italic', '|',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-                ]
+                    'undo', 'redo','|','heading','|', 'bold', 'italic','bulletedList','numberedList','blockquote','|','imageUpload','link',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor','|','insertTable'
+                ],
+                ckfinder: {
+                    uploadUrl: `{{ route('upload.image').'?_token='.csrf_token() }}`
+                }
             } )
             .then( editor => {
                 window.editor = editor;
@@ -443,6 +465,8 @@
                 console.error( error );
             } );
     </script>
+    <!-- Ckeditor Script -->
+    <!--script src="{ { asset('js/editor.js') }}"></!--script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
