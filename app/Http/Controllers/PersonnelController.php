@@ -56,7 +56,7 @@ class PersonnelController extends Controller
                 'fonction.required' => 'Choisisssez la fonction',
          ]);
 
-        $imagePath = $request->file('profile')->store('profiles', 'public');
+        //$imagePath = $request->file('profile')->store('profiles', 'public');
 
         User::create([
             'name' => $request->name,
@@ -69,8 +69,9 @@ class PersonnelController extends Controller
             'diplome1' => $request->diplone1,
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
-            'profile' => $imagePath,
+            //'profile' => $imagePath,
             'fonction' => $request->fonction,
+            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : '',
             'typeUser' => 'personnel',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
