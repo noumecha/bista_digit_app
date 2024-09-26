@@ -289,7 +289,7 @@
                                             </label>
                                             <select name="fonction" id="fonction" class="form-control">
                                                 @foreach (\App\Fonction::cases() as $f)
-                                                    <option value="{{ $f->value }}" {{ isset($personnelToEdit) && $personnelToEdit->fonction === $f->value ? 'selected' : '' }}>{{ $f->name }}</option>
+                                                    <option value="{{ $f->value }}" {{ isset($personnelToEdit) && $personnelToEdit->fonction === $f->value ? 'selected' : '' }}>{{ $f->value }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

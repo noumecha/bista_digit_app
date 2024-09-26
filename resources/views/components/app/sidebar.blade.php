@@ -2,8 +2,7 @@
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand d-flex align-items-center m-0"
-            href=" https://demos.creative-tim.com/corporate-ui-dashboard/pages/dashboard.html " target="_blank">
+        <a class="navbar-brand d-flex align-items-center m-0" href="{{ route('dashboard') }}">
             <span class="font-weight-bold text-lg">BISTA-SCHOOL</span>
         </a>
     </div>
@@ -207,6 +206,16 @@
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
                         href="{{ route('programme.leader') }}">
                         <span class="nav-link-text ms-1">Type de Notification</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Profile on Dashboard -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link  {{ is_current_route('dashboard') ? 'active' : '' }}"
+                        href="{{ route('users.profile') }}">
+                        <i class="fa-solid fa-gear fa-sm"></i>
+                        <span class="nav-link-text text-md ml-n5">Configuration du profil</span>
                     </a>
                 </li>
             </ul>

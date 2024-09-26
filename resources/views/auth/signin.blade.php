@@ -31,7 +31,7 @@
                                         <div class="mb-3">
                                             <input type="text" id="login" name="login" class="form-control"
                                                 placeholder="Entrez votre email ou votre matricule"
-                                                value="{{ old('login') ? old('login') : 'admin@bista.com' }}"
+                                                value="{{ old('login') ? old('login') : 'bista@admin.com' }}"
                                                 aria-label="login" aria-describedby="login-addon">
                                         </div>
                                         <label>Mot de passe</label>
@@ -67,15 +67,14 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                                <!--div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-4 text-xs mx-auto">
                                         Pas encore de compte ?
-                                        <!-- {#{ route('sign-up') }} -->
-                                        <a href="{{ route('sign-up') }}" class="text-dark font-weight-bold">
+                                        < !-- a href="{#{ route('sign-up') }}" class="text-dark font-weight-bold">
                                             Créer en un
                                         </a>
                                     </p>
-                                </div>
+                                </div-->
                             </div>
                             <div class="w-100 top-0 text-center mt-6 end-0 p-4 h-100 d-md-block d-none">
                                 <h6 class="text-dark text-sm">Copyright © 2024 Byt3lab</h6>
