@@ -22,6 +22,28 @@
                     </div>
                 </div>
             </div>
+            <form class="form-inline row mt-3" action="{{ route('home.actus') }}" method="get">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" name="search" value="{{ isset($search) ? $search : '' }}" id="search" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <select name="category" class="form-control" id="">
+                            <option value="">Toutes les catégorie</option>
+                            @foreach ($categories as $cat)
+                                <option value="{{$cat->id}}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                    {{ $cat->libelleCategorie }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary" type="submit">Rechercher</button>
+                </div>
+            </form>
             <div class="row">
                 @foreach ($actualites as $actualite)
                     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -45,6 +67,9 @@
                         </article>
                     </div>
                 @endforeach
+            </div>
+            <div class="d-flex justify-content-center">
+                {{ $actualites->appends(request()->query())->links() }}
             </div>
         </div>
     </section>

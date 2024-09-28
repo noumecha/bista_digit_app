@@ -21,8 +21,8 @@
         <div class="container">
             <div class="row">
                <div class="col-12">
-                    <div class="heading">
-                        <p class="text-justify">
+                    <div class="text-justify heading">
+                        <p class="">
                             {!! $actualite->contenu !!}
                         </p>
                     </div>

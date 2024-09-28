@@ -18,9 +18,9 @@ class Actualite extends Model
     /**
      *
      */
-    public function categorie() : BelongsTo
+    public function categorieActualite() : BelongsTo
     {
-        return $this->belongsTo(CategorieActualite::class);
+        return $this->belongsTo(CategorieActualite::class, 'categorie_actualites_id');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actualite;
+use App\Models\CategorieActualite;
 use App\Models\Epreuve;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -56,9 +57,22 @@ class HomeController extends Controller
     /**
      * index function
      */
-    public function actualites () {
+    public function actualites (Request $request) {
         $actualites = Actualite::all();
-        return view('front.actus', compact('actualites'));
+        $categories = CategorieActualite::all();
+        $search = $request->input('search');
+        $categoryFilter = $request->input('category');
+
+        $query = Actualite::query();
+        if($search) {
+            $query->where('titre', 'LIKE', "%{$search}%")->orWhere('contenu', 'LIKE', "%{$search}%");
+        }
+        if($categoryFilter) {
+            $query->where('categorie_actualites_id', $categoryFilter);
+        }
+
+        $actualites = $query->paginate(9);
+        return view('front.actus', compact('actualites', 'categories', 'search', 'categoryFilter'));
     }
 
     /**

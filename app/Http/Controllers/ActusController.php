@@ -14,10 +14,27 @@ class ActusController extends Controller
     /**
      * index function
      */
-    public function index () {
+    public function index (Request $request) {
         $actualites = Actualite::all();
         $categories = CategorieActualite::all();
-        return view('actualites.index', compact('actualites', 'categories'));
+        $search = $request->input('search');
+        $categoryFilter = $request->input('category');
+
+        $query = Actualite::query();
+        if(!empty($search) && !empty($categoryFilter)) {
+            $query->where('titre', 'LIKE', "%{$search}%")
+                ->orWhere('contenu', 'LIKE', "%{$search}%")
+                ->orWhere('categorie_actualites_id', $categoryFilter);
+        } elseif(!empty($categoryFilter)) {
+            $query->where('categorie_actualites_id', $categoryFilter);
+        } elseif (!empty($search)) {
+            $query->where('titre', 'LIKE', "%{$search}%")
+                ->orWhere('contenu', 'LIKE', "%{$search}%");
+        }
+
+        $actualites = $query->paginate(10);
+
+        return view('actualites.index', compact('actualites', 'categories', 'search', 'categoryFilter'));
     }
 
     /**
@@ -52,10 +69,26 @@ class ActusController extends Controller
     /**
      *
      */
-    public function edit($id) {
+    public function edit(Request $request, $id) {
         $actualites = Actualite::all();
         $categories = CategorieActualite::all();
         $actualiteToEdit = Actualite::findOrFail($id);
+        $search = $request->input('search');
+        $categoryFilter = $request->input('category');
+
+        $query = Actualite::query();
+        if(!empty($search) && !empty($categoryFilter)) {
+            $query->where('titre', 'LIKE', "%{$search}%")
+                ->orWhere('contenu', 'LIKE', "%{$search}%")
+                ->orWhere('categorie_actualites_id', $categoryFilter);
+        } elseif(!empty($categoryFilter)) {
+            $query->where('categorie_actualites_id', $categoryFilter);
+        } elseif (!empty($search)) {
+            $query->where('titre', 'LIKE', "%{$search}%")
+                ->orWhere('contenu', 'LIKE', "%{$search}%");
+        }
+
+        $actualites = $query->paginate(10);
 
         return view('actualites.index', compact('actualites','actualiteToEdit','categories'));
     }

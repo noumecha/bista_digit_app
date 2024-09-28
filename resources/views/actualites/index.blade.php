@@ -24,8 +24,31 @@
                                     </a>
                                 </div>
                             </div>
+                            <form class="form form-inline row mt-3" action="{{ route('actualites.index') }}" method="get">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" name="search" value="{{ isset($search) ? $search : '' }}" id="search" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="category" class="form-select" id="">
+                                            <option value="">Filtrer les catégorie</option>
+                                            @foreach ($categories as $cat)
+                                                <option value="{{$cat->id}}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                                    {{ $cat->libelleCategorie }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="table-responsive">
+
+                        <div class="table-responsive mt-3">
                             <table class="table text-secondary text-center">
                                 <thead>
                                     <tr>
@@ -63,12 +86,10 @@
                                                 </div>
                                             </td>
                                             <td class="align-middle bg-transparent borer-bottom">
-                                                @foreach ($categories as $categorie)
-                                                    {{ $actualite->categorie_actualites_id === $categorie->id ? $categorie->libelleCategorie : '' }}
-                                                @endforeach
+                                                {{ $actualite->categorieActualite->libelleCategorie }}
                                             </td>
                                             <td class="align-middle bg-transparent borer-bottom">
-                                                {!! Str::limit($actualite->contenu , $limit=10, $end="...") !!}
+                                                {!! Str::limit($actualite->contenu , $limit=30, $end="...") !!}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -98,7 +119,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            <div class="d-flex justify-content-center">
+                                {{ $actualites->appends(request()->query())->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -170,7 +193,7 @@
                                             <label for="categorie_actualites_id" class="form-control-label">
                                                 Categorie :
                                             </label>
-                                            <select name="categorie_actualites_id" id="categorie_actualites_id" class="form-control">
+                                            <select name="categorie_actualites_id" id="categorie_actualites_id" class="form-select">
                                                 @foreach ($categories as $categorie)
                                                     <option value="{{ $categorie->id }}" {{ isset($actualiteToEdit) && $actualiteToEdit->categorie_actualites_id === $categorie->id ? 'selected' : '' }}">
                                                         {{ $categorie->libelleCategorie }}
