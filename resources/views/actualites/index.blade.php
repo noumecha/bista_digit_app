@@ -195,7 +195,7 @@
                                             </label>
                                             <select name="categorie_actualites_id" id="categorie_actualites_id" class="form-select">
                                                 @foreach ($categories as $categorie)
-                                                    <option value="{{ $categorie->id }}" {{ isset($actualiteToEdit) && $actualiteToEdit->categorie_actualites_id === $categorie->id ? 'selected' : '' }}">
+                                                    <option value="{{ $categorie->id }}" {{ isset($actualiteToEdit) && $actualiteToEdit->categorie_actualites_id === $categorie->id ? 'selected' : '' }}>
                                                         {{ $categorie->libelleCategorie }}
                                                     </option>
                                                 @endforeach
