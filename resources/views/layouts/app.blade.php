@@ -439,46 +439,48 @@
             ImageToolbar,
             CKFinderUploadAdapter
         } from 'ckeditor5';
-       ClassicEditor
-            .create( document.querySelector( '#content' ), {
-                plugins: [
-                    ClassicEditor,
-                    Essentials,
-                    Paragraph,
-                    Bold,
-                    Italic,
-                    Font,
-                    Image,
-                    CKFinderUploadAdapter,
-                    ImageCaption,
-                    ImageStyle,
-                    ImageResize,
-                    ImageUpload,
-                    Link,
-                    Table,
-                    List,
-                    BlockQuote,
-                    Heading,
-                    ImageToolbar
-                ],
-                toolbar: [
-                    'undo', 'redo','|','heading','|', 'bold', 'italic','bulletedList','numberedList','blockquote','|','imageUpload','link',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor','|','insertTable'
-                ],
-                image: {
-                    toolbar: ['imageTextAlternative', 'imageStyle:full', 'imageStyle:side'],
-                    styles: ['full', 'side'],
-                },
-                ckfinder: {
-                    uploadUrl: `{{ route('upload.image').'?_token='.csrf_token() }}`
-                }
-            } )
-            .then( editor => {
-                window.editor = editor;
-            } )
-            .catch( error => {
-                console.error( error );
-            } );
+        if(document.querySelector( '#content' )) {
+            ClassicEditor
+                .create( document.querySelector( '#content' ), {
+                    plugins: [
+                        ClassicEditor,
+                        Essentials,
+                        Paragraph,
+                        Bold,
+                        Italic,
+                        Font,
+                        Image,
+                        CKFinderUploadAdapter,
+                        ImageCaption,
+                        ImageStyle,
+                        ImageResize,
+                        ImageUpload,
+                        Link,
+                        Table,
+                        List,
+                        BlockQuote,
+                        Heading,
+                        ImageToolbar
+                    ],
+                    toolbar: [
+                        'undo', 'redo','|','heading','|', 'bold', 'italic','bulletedList','numberedList','blockquote','|','imageUpload','link',
+                        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor','|','insertTable'
+                    ],
+                    image: {
+                        toolbar: ['imageTextAlternative', 'imageStyle:full', 'imageStyle:side'],
+                        styles: ['full', 'side'],
+                    },
+                    ckfinder: {
+                        uploadUrl: `{{ route('upload.image').'?_token='.csrf_token() }}`
+                    }
+                } )
+                .then( editor => {
+                    window.editor = editor;
+                } )
+                .catch( error => {
+                    console.error( error );
+                } );
+        }
     </script>
     <!-- Ckeditor Script -->
     <!--script src="{ { asset('js/editor.js') }}"></!--script>

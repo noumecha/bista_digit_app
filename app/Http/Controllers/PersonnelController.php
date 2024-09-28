@@ -14,10 +14,36 @@ class PersonnelController extends Controller
         /**
      *
      */
-    public function index() {
+    public function index(Request $request) {
         $user = User::find(Auth::id());
         $personnels = User::all()->where('typeUser', '=', 'personnel');
-        return view('personnel.administrators',['personnels'=> $personnels] ,compact('user'));
+        $search = $request->input('search');
+        $FonctionFilter = $request->input('funcFilter');
+
+        $query = User::query();
+        if(!empty($search) && !empty($categoryFilter)) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('surname', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%")
+                ->orWhere('phone', 'LIKE', "%{$search}%")
+                ->orWhere('fonction', $FonctionFilter)
+                ->where('typeUser', '=', 'personnel');
+        } elseif(!empty($FonctionFilter)) {
+            $query->where('fonction', $FonctionFilter)
+            ->where('typeUser', '=', 'personnel');
+        } elseif (!empty($search)) {
+            $query->where('name', 'LIKE', "%{$search}%")
+            ->where('typeUser', '=', 'personnel')
+            ->orWhere('surname', 'LIKE', "%{$search}%")
+            ->orWhere('email', 'LIKE', "%{$search}%")
+            ->orWhere('phone', 'LIKE', "%{$search}%");
+            //dd($query);
+        } else {
+            $query->where('typeUser', '=', 'personnel');
+        }
+
+        $personnels = $query->paginate(7);
+        return view('personnel.administrators',compact('user','personnels','search','FonctionFilter'));
     }
 
      /**
@@ -38,26 +64,18 @@ class PersonnelController extends Controller
             'location' => 'max:255',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'fonction' => ['required', Rule::in(['SG','DE','Principale','DET','DEC'])],
+            'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
-                'name.required' => 'Entrez votre nom',
-                'surname.required' => 'Entrez votre prenom',
-                //'email' => 'Entrez l\'adresse email',
-                'email.unique' => 'L\'adresse email est déjà prise',
-                'phone.required' => 'Entrez le numero de téléphone',
-                'phone.max' => 'Le numero de téléphone doit contenir au moins 9 caractères',
-                //'location.required' => 'Entrez le lieu de résidence',
-                //'lieuNaiss.required' => 'Entrez le lieu de naissance',
-                //'dateNaiss.required' => 'Entrez la date de naissance',
-                //'diplome1.required' => 'Entrez l\'intitulté du diplome 1',
-                //'diplome2.required' => 'Entrez l\'intitulté du diplome 2',
-                'numCni.unique' => 'Ce numéro de CNI est déjà dans le système',
-                'sex.required' => 'Choisissez le sexe',
-                'fonction.required' => 'Choisisssez la fonction',
-         ]);
-
-        //$imagePath = $request->file('profile')->store('profiles', 'public');
+            'name.required' => 'Entrez votre nom',
+            'surname.required' => 'Entrez votre prenom',
+            'email.unique' => 'L\'adresse email est déjà prise',
+            'phone.required' => 'Entrez le numero de téléphone',
+            'phone.max' => 'Le numero de téléphone doit contenir au moins 9 caractères',
+            'numCni.unique' => 'Ce numéro de CNI est déjà dans le système',
+            'sex.required' => 'Choisissez le sexe',
+            'fonction.required' => 'Choisisssez la fonction',
+        ]);
 
         User::create([
             'name' => $request->name,
@@ -67,10 +85,9 @@ class PersonnelController extends Controller
             'location' => $request->location,
             'lieuNaiss' => $request->lieuNaiss,
             'dateNaiss' => $request->dateNaiss,
-            'diplome1' => $request->diplone1,
+            'diplome1' => $request->diplome1,
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
-            //'profile' => $imagePath,
             'fonction' => $request->fonction,
             'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : '',
             'typeUser' => 'personnel',
@@ -84,11 +101,36 @@ class PersonnelController extends Controller
     /**
      *
      */
-    public function edit($id) {
+    public function edit(Request $request, $id) {
         $personnels = User::all()->where('typeUser', '=', 'personnel');
         $personnelToEdit = User::findOrFail($id);
+        $search = $request->input('search');
+        $FonctionFilter = $request->input('funcFilter');
 
-        return view('personnel.administrators', compact('personnels','personnelToEdit'));
+        $query = User::query();
+        if(!empty($search) && !empty($categoryFilter)) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('surname', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%")
+                ->orWhere('phone', 'LIKE', "%{$search}%")
+                ->orWhere('fonction', $FonctionFilter)
+                ->where('typeUser', '=', 'personnel');
+        } elseif(!empty($FonctionFilter)) {
+            $query->where('fonction', $FonctionFilter)
+            ->where('typeUser', '=', 'personnel');
+        } elseif (!empty($search)) {
+            $query->where('name', 'LIKE', "%{$search}%")
+            ->orWhere('surname', 'LIKE', "%{$search}%")
+            ->orWhere('email', 'LIKE', "%{$search}%")
+            ->orWhere('phone', 'LIKE', "%{$search}%")
+            ->where('typeUser', '=', 'personnel');
+        } else {
+            $query->where('typeUser', '=', 'personnel');
+        }
+
+        $personnels = $query->paginate(7);
+
+        return view('personnel.administrators', compact('personnels','personnelToEdit','search','FonctionFilter'));
     }
 
     /**
@@ -114,11 +156,6 @@ class PersonnelController extends Controller
                 'name.required' => 'Entrez votre nom',
                 'surname.required' => 'Entrez votre prenom',
                 'phone.required' => 'Entrez le numero de téléphone',
-                //'location.required' => 'Entrez le lieu de résidence',
-                //'lieuNaiss.required' => 'Entrez le lieu de naissance',
-                //'dateNaiss.required' => 'Entrez la date de naissance',
-                //'diplome1.required' => 'Entrez l\'intitulté du diplome 1',
-                //'numCni.required' => 'Entrez le numero de la CNI',
                 'sex.required' => 'Choisissez le sexe',
                 'fonction.required' => 'Choisisssez la fonction',
         ]);

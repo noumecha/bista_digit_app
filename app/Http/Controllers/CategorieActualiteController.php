@@ -10,10 +10,18 @@ class CategorieActualiteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $categories = CategorieActualite::all();
-        return view('actualites.categories', compact('categories'));
+        $search = $request->input('search');
+
+        $query = CategorieActualite::query();
+        if(!empty($search)) {
+            $query->where('libelleCategorie', 'LIKE', "%{$search}%");
+        }
+
+        $categories = $query->paginate(4);
+        return view('actualites.categories', compact('categories','search'));
     }
 
     /**
@@ -39,12 +47,19 @@ class CategorieActualiteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CategorieActualite $categorieActualite, $id)
+    public function edit(Request $request, CategorieActualite $categorieActualite, $id)
     {
         $categories = $categorieActualite::all();
         $categorieToEdit = $categorieActualite::findOrFail($id);
+        $search = $request->input('search');
+        $query = CategorieActualite::query();
+        if(!empty($search)) {
+            $query->where('libelleCategorie', 'LIKE', "%{$search}%");
+        }
 
-        return view('actualites.categories', compact('categorieToEdit','categories'));
+        $categories = $query->paginate(4);
+
+        return view('actualites.categories', compact('categorieToEdit','categories','search'));
     }
 
     /**

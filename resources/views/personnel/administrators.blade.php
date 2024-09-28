@@ -24,6 +24,26 @@
                                     </a>
                                 </div>
                             </div>
+                            <form class="form form-inline row mt-3" action="{{ route('utilisateur.administrators') }}" method="get">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" name="search" value="{{ isset($search) ? $search : '' }}" id="search" class="form-control" placeholder="Rechercher par (nom, prenom, téléphone, email)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="funcFilter" class="form-select" id="funcFilter">
+                                            <option value="">Toutes les fonctions</option>
+                                            @foreach (\App\Fonction::cases() as $f)
+                                                <option value="{{ $f->value }}" {{ request('funcFilter') == $f->value ? 'selected' : '' }}>{{ $f->value }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                </div>
+                            </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table text-secondary text-center">
@@ -40,13 +60,10 @@
                                             Nom</th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Email</th>
+                                            Téléphone</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Fonction</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Numero CNI</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Action
@@ -69,13 +86,10 @@
                                                 {{ $personnel->name }}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $personnel->email }}
+                                                {{ $personnel->phone }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 {{ $personnel->fonction }}
-                                            </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                {{ $personnel->numCni }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -105,7 +119,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            <div class="d-flex justify-content-center">
+                                {{ $personnels->appends(request()->query())->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -287,7 +303,7 @@
                                             <label for="fonction" class="form-control-label">
                                                 Fonction :
                                             </label>
-                                            <select name="fonction" id="fonction" class="form-control">
+                                            <select name="fonction" id="fonction" class="form-select">
                                                 @foreach (\App\Fonction::cases() as $f)
                                                     <option value="{{ $f->value }}" {{ isset($personnelToEdit) && $personnelToEdit->fonction === $f->value ? 'selected' : '' }}>{{ $f->value }}</option>
                                                 @endforeach

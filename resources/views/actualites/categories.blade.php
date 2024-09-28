@@ -24,6 +24,16 @@
                                     </a>
                                 </div>
                             </div>
+                            <form class="form form-inline row mt-3" action="{{ route('actualites.categories') }}" method="get">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" name="search" value="{{ isset($search) ? $search : '' }}" id="search" class="form-control" placeholder="Rechercher une catégorie d'actulaité"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                </div>
+                            </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table text-secondary text-center">
@@ -79,7 +89,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            <div class="d-flex justify-content-center">
+                                {{ $categories->appends(request()->query())->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
