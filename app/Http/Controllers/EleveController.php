@@ -15,33 +15,53 @@ class EleveController extends Controller
     /**
      *
      */
-    public function index() {
+    public function index(Request $request) {
         $user = User::find(Auth::id());
         $classes = Classe::all();
-        $students = User::all()->where('typeUser', '=', 'eleve');
+        $searchStudent = $request->input('searchStudent');
+        $classeFilter = $request->input('classFilter');
 
-        return view('personnel.students', compact('classes','students','user'));
+        $query = User::where('typeUser', '=', 'eleve');
+        if(!empty($searchStudent) && !empty($classeFilter)) {
+            $query->where(function ($q) use ($searchStudent) {
+                $q->where('name', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('surname', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('email', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('phone', 'LIKE', "%{$searchStudent}%");
+            })->where('classe_id', $classeFilter);
+        } elseif(!empty($classeFilter)) {
+            $query->where('classe_id', $classeFilter)
+            ->where('typeUser', '=', 'eleve');
+        } elseif (!empty($searchStudent)) {
+            $query->where(function ($q) use ($searchStudent) {
+                $q->where('name', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('surname', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('email', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('phone', 'LIKE', "%{$searchStudent}%");
+            });
+        }
+
+        $students = $query->paginate(7);
+
+        return view('personnel.students', compact('classes','students','user','searchStudent','classeFilter'));
     }
 
     /**
-    * saving administrators members
-    * @param  \Illuminate\Http\Request  $request
+    * saving students
     */
     public function store(Request $request) {
-
-        $students = User::all()->where('typeUser', '=', 'eleve');
 
         $request->validate([
             'name' => 'required|min:3|max:255',
             'matricule' => 'required|min:3|max:255|unique:users',
             'surname' => 'required|min:3|max:255',
-            'email' => 'email|max:255|unique:users',
+            'email' => 'max:255|unique:users',
             'password' => 'required|min:8|max:255',
             'phone' => 'required|min:9|max:255',
             'lieuNaiss' => 'required|min:3|max:255',
             'dateNaiss' => 'required|max:255',
             'location' => 'required|min:3|max:255',
-            'classe_id' => 'required',
+            'classe_id' => 'required|exists:classes,id',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
@@ -56,9 +76,9 @@ class EleveController extends Controller
             'matricule.unique' => 'Ce matricule existe déja dans la base de données',
             'classe_id.required' => 'Veuillez selectionnez une classe',
             'sex.required' => 'Choisissez le sexe',
-            'classe_id.required' => 'Veuillez chosir une classe',
         ]);
 
+        //dd($request);
         User::create([
             'name' => $request->name,
             'matricule' => $request->matricule,
@@ -76,15 +96,38 @@ class EleveController extends Controller
             'sex' => $request->sex,
         ]);
 
-        return view('personnel.students', compact('students'));
+        return redirect()->route('utilisateur.students')->with('success', 'Eleve ajouté avec succès');
     }
 
-    public function edit($id) {
+    public function edit(Request $request, $id) {
         $classes = Classe::all();
-        $students = User::all()->where('typeUser', '=', 'eleve');
         $studentToEdit = User::findOrFail($id);
+        $searchStudent = $request->input('searchStudent');
+        $classeFilter = $request->input('classFilter');
 
-        return view('personnel.students', compact('classes','students','studentToEdit'));
+        $query = User::where('typeUser', '=', 'eleve');
+        if(!empty($searchStudent) && !empty($classeFilter)) {
+            $query->where(function ($q) use ($searchStudent) {
+                $q->where('name', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('surname', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('email', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('phone', 'LIKE', "%{$searchStudent}%");
+            })->where('classe_id', $classeFilter);
+        } elseif(!empty($classeFilter)) {
+            $query->where('classe_id', $classeFilter)
+            ->where('typeUser', '=', 'eleve');
+        } elseif (!empty($searchStudent)) {
+            $query->where(function ($q) use ($searchStudent) {
+                $q->where('name', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('surname', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('email', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('phone', 'LIKE', "%{$searchStudent}%");
+            });
+        }
+
+        $students = $query->paginate(7);
+
+        return view('personnel.students', compact('classes','students','studentToEdit','searchStudent','classeFilter'));
     }
 
     public function update(Request $request, $id) {
@@ -92,13 +135,13 @@ class EleveController extends Controller
             'name' => 'required|min:3|max:255',
             'matricule' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
-            'email' => 'email|max:255',
+            'email' => 'max:255',
             'password' => 'required|min:8|max:255',
             'phone' => 'required|min:9|max:255',
             'lieuNaiss' => 'required|min:3|max:255',
             'dateNaiss' => 'required|max:255',
             'location' => 'required|min:3|max:255',
-            'classe_id' => 'required',
+            'classe_id' => 'required|exists:classes,id',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
@@ -125,7 +168,6 @@ class EleveController extends Controller
             }
             $student->profile = $imagePath;
         }
-        //dd($imagePath);
         $student->update($request->except('profile'));
 
         return redirect()->route('utilisateur.students')->with('success', 'Eleve mis à jour avec succès');

@@ -16,32 +16,28 @@ class PersonnelController extends Controller
      */
     public function index(Request $request) {
         $user = User::find(Auth::id());
-        $personnels = User::all()->where('typeUser', '=', 'personnel');
         $search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
 
-        $query = User::query();
-        if(!empty($search) && !empty($categoryFilter)) {
-            $query->where('name', 'LIKE', "%{$search}%")
+        $query = User::where('typeUser', '=', 'personnel');
+        if(!empty($search) && !empty($FonctionFilter)) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
                 ->orWhere('surname', 'LIKE', "%{$search}%")
                 ->orWhere('email', 'LIKE', "%{$search}%")
-                ->orWhere('phone', 'LIKE', "%{$search}%")
-                ->orWhere('fonction', $FonctionFilter)
-                ->where('typeUser', '=', 'personnel');
+                ->orWhere('phone', 'LIKE', "%{$search}%");
+            })->where('fonction', $FonctionFilter);
         } elseif(!empty($FonctionFilter)) {
             $query->where('fonction', $FonctionFilter)
             ->where('typeUser', '=', 'personnel');
         } elseif (!empty($search)) {
-            $query->where('name', 'LIKE', "%{$search}%")
-            ->where('typeUser', '=', 'personnel')
-            ->orWhere('surname', 'LIKE', "%{$search}%")
-            ->orWhere('email', 'LIKE', "%{$search}%")
-            ->orWhere('phone', 'LIKE', "%{$search}%");
-            //dd($query);
-        } else {
-            $query->where('typeUser', '=', 'personnel');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('surname', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%")
+                ->orWhere('phone', 'LIKE', "%{$search}%");
+            });
         }
-
         $personnels = $query->paginate(7);
         return view('personnel.administrators',compact('user','personnels','search','FonctionFilter'));
     }
@@ -107,25 +103,24 @@ class PersonnelController extends Controller
         $search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
 
-        $query = User::query();
-        if(!empty($search) && !empty($categoryFilter)) {
-            $query->where('name', 'LIKE', "%{$search}%")
+        $query = User::where('typeUser', '=', 'personnel');
+        if(!empty($search) && !empty($FonctionFilter)) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
                 ->orWhere('surname', 'LIKE', "%{$search}%")
                 ->orWhere('email', 'LIKE', "%{$search}%")
-                ->orWhere('phone', 'LIKE', "%{$search}%")
-                ->orWhere('fonction', $FonctionFilter)
-                ->where('typeUser', '=', 'personnel');
+                ->orWhere('phone', 'LIKE', "%{$search}%");
+            })->where('fonction', $FonctionFilter);
         } elseif(!empty($FonctionFilter)) {
             $query->where('fonction', $FonctionFilter)
             ->where('typeUser', '=', 'personnel');
         } elseif (!empty($search)) {
-            $query->where('name', 'LIKE', "%{$search}%")
-            ->orWhere('surname', 'LIKE', "%{$search}%")
-            ->orWhere('email', 'LIKE', "%{$search}%")
-            ->orWhere('phone', 'LIKE', "%{$search}%")
-            ->where('typeUser', '=', 'personnel');
-        } else {
-            $query->where('typeUser', '=', 'personnel');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('surname', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%")
+                ->orWhere('phone', 'LIKE', "%{$search}%");
+            });
         }
 
         $personnels = $query->paginate(7);

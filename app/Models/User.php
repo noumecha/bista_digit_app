@@ -22,7 +22,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $guarded = ['classe_id'];
+    protected $guarded = [];
 
     /**
      * @var array
@@ -43,6 +43,7 @@ class User extends Authenticatable
         'fonction',
         'name',
         'email',
+        'classe_id',
         'password',
         'phone',
         'location',
@@ -111,7 +112,7 @@ class User extends Authenticatable
      */
     public function classe() : BelongsTo
     {
-        return $this->belongsTo(Classe::class);
+        return $this->belongsTo(Classe::class, 'classe_id');
     }
 
     /**

@@ -24,6 +24,28 @@
                                     </a>
                                 </div>
                             </div>
+                            <form class="form form-inline row mt-3" action="{{ route('utilisateur.students') }}" method="get">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" name="searchStudent" value="{{ isset($searchStudent) ? $searchStudent : '' }}" id="searchStudent" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="classFilter" class="form-select" id="">
+                                            <option value="">Toutes les classes</option>
+                                            @foreach ($classes as $classe)
+                                                <option value="{{$classe->id}}" {{ request('classFilter') == $classe->id ? 'selected' : '' }}>
+                                                    {{ $classe->libClasse}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                </div>
+                            </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table text-secondary text-center">
@@ -105,7 +127,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            <div class="d-flex justify-content-center">
+                                {{ $students->appends(request()->query())->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -191,7 +215,7 @@
                                             <label for="sex" class="form-control-label">
                                                 Sexe :
                                             </label>
-                                            <select name="sex" id="sex" class="form-control">
+                                            <select name="sex" id="sex" class="form-select">
                                                 @foreach (\App\Sex::cases() as $sex)
                                                     <option value="{{ $sex->value }}" {{ isset($studentToEdit) && $studentToEdit->sex === $sex->value ? 'selected' : '' }}>{{ $sex->name }}</option>
                                                 @endforeach
@@ -203,7 +227,7 @@
                                             <label for="classe_id" class="form-control-label">
                                                 Classe :
                                             </label>
-                                            <select name="classe_id" id="classe_id" class="form-control">
+                                            <select name="classe_id" id="classe_id" class="form-select">
                                                 @foreach ($classes as $classe)
                                                     <option value="{{ $classe->id }}" {{ isset($studentToEdit) && $studentToEdit->classe_id === $classe->id ? 'selected' : '' }}>{{ $classe->libClasse }}</option>
                                                 @endforeach

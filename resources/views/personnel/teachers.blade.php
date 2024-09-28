@@ -24,6 +24,16 @@
                                     </a>
                                 </div>
                             </div>
+                            <form class="form form-inline row mt-3" action="{{ route('utilisateur.teachers') }}" method="get">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" name="searchTeacher" value="{{ isset($searchTeacher) ? $searchTeacher : '' }}" id="searchTeacher" class="form-control" placeholder="Rechercher un enseignant (nom,prenom,telephone,email)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                </div>
+                            </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table text-secondary text-center">
@@ -39,14 +49,8 @@
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Nom</th>
                                         <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Email</th>
-                                        <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Telephone</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Numero CNI</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             Action
@@ -68,14 +72,8 @@
                                             <td class="align-middle bg-transparent border-bottom">
                                                 {{ $teacher->name }}
                                             </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                {{ $teacher->email }}
-                                            </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 {{ $teacher->phone }}
-                                            </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                {{ $teacher->numCni }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -105,7 +103,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            <div class="d-flex justify-content-center">
+                                {{ $teachers->appends(request()->query())->links() }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -241,7 +241,7 @@
                                             </label>
                                             <input type="text" id="diplome1" name="diplome1" class="form-control"
                                                 placeholder="Entrez le Diplôme 1 " value="{{ isset($teacherToEdit) ? $teacherToEdit->diplome1 : old("diplome1") }}">
-                                            @error('diplome2')
+                                            @error('diplome1')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
