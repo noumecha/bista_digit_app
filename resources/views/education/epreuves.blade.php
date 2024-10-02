@@ -24,6 +24,64 @@
                                     </a>
                                 </div>
                             </div>
+                            <form class="form form-inline row mt-3" action="{{ route('education.epreuves') }}" method="get">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" name="search" value="{{ isset($searchEpreuves) ? $searchEpreuves : '' }}" id="search" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="classeFilter" class="form-select" id="">
+                                            <option value="">Toutes les Classes</option>
+                                            @foreach ($classes as $class)
+                                                <option value="{{$class->id}}" {{ request('classeFilter') == $class->id ? 'selected' : '' }}>
+                                                    {{ $class->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="matiereFilter" class="form-select" id="">
+                                            <option value="">Toutes les matieres</option>
+                                            @foreach ($matieres as $mat)
+                                                <option value="{{$mat->id}}" {{ request('matiereFilter') == $mat->id ? 'selected' : '' }}>
+                                                    {{ $mat->libelleMatiere }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="typeEpreuveFilter" class="form-select" id="">
+                                            <option value="">Tout les types d'épreuves</option>
+                                            @foreach ($typeEpreuves as $typeEpreuve)
+                                                <option value="{{$typeEpreuve->id}}" {{ request('typeEpreuveFilter') == $typeEpreuve->id ? 'selected' : '' }}>
+                                                    {{ $typeEpreuve->libelleTypeEpreuve }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="yearFilter" class="form-select" id="">
+                                            <option value="">Année Scolaire</option>
+                                            @foreach ($yearEpreuves as $yearEpreuve)
+                                                <option value="{{ $yearEpreuve->anneeEpreuve }}" {{ request('yearFilter') == $yearEpreuve->anneeEpreuve ? 'selected' : '' }}>
+                                                    {{ $yearEpreuve->anneeEpreuve }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                </div>
+                            </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table text-secondary text-center">

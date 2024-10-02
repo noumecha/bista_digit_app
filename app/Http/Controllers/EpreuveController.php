@@ -16,12 +16,39 @@ class EpreuveController extends Controller
     /**
      * index function
      */
-    public function index () {
+    public function index (Request $request) {
         $epreuves = Epreuve::all();
-        $matieres = Matiere::all();
         $classes = Classe::all();
+        $matieres = Matiere::all();
         $typeEpreuves = TypeEpreuve::all();
-        return view('education.epreuves', compact('epreuves', 'typeEpreuves','matieres','classes'));
+        $yearEpreuves = Epreuve::select('anneeEpreuve')->distinct()->get();
+        $searchEpreuve = $request->input('searchEpreuve');
+        $yearFilter = $request->input('yearFilter');
+        $classeFilter = $request->input('classeFilter');
+        $matiereFilter = $request->input('matiereFilter');
+        $typeEpreuveFilter = $request->input('typeEpreuveFilter');
+
+        $query = Epreuve::query();
+        if(!empty($searchEpreuve) && !empty($typeEpreuveFilter) && !empty($classeFilter) && !empty($matiereFilter)) {
+            $query->where(function ($q) use ($searchEpreuve) {
+                $q->where('titre', 'LIKE', "%{$searchEpreuve}%");
+            })->where('classe_id', $classeFilter)->where('matiere_id',$matiereFilter)
+            ->whre('type_epreuve_id', $typeEpreuveFilter)->where('anneeEpreuve', $yearFilter);
+        } elseif(!empty($matiereFilter)) {
+            $query->where('matiere_id', $matiereFilter);
+        } elseif(!empty($typeEpreuveFilter)) {
+            $query->where('type_epreuve_id', $typeEpreuveFilter);
+        } elseif(!empty($classeFilter)) {
+            $query->where('classe_id', $classeFilter);
+        }  elseif(!empty($yearFilter)) {
+            $query->where('anneeEpreuve', $yearFilter);
+        } elseif (!empty($searchEpreuve)) {
+            $query->where('titre', 'LIKE', "%{$searchEpreuve}%");
+        }
+
+        $epreuves = $query->paginate(10);
+
+        return view('education.epreuves', compact('epreuves','yearFilter','yearEpreuves','classeFilter','matiereFilter','searchEpreuve','typeEpreuveFilter','typeEpreuves','matieres','classes'));
     }
 
     /**

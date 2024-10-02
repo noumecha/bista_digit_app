@@ -50,7 +50,7 @@ class PersonnelController extends Controller
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
-            'email' => 'max:255|unique:users',
+            'email' => 'max:255',//|unique:users
             'password' => 'required|min:8|max:255',
             'phone' => 'required|min:9|max:255',
             'diplome1' => 'max:255',
@@ -65,7 +65,7 @@ class PersonnelController extends Controller
         ], [
             'name.required' => 'Entrez votre nom',
             'surname.required' => 'Entrez votre prenom',
-            'email.unique' => 'L\'adresse email est déjà prise',
+            //'email.unique' => 'L\'adresse email est déjà prise',
             'phone.required' => 'Entrez le numero de téléphone',
             'phone.max' => 'Le numero de téléphone doit contenir au moins 9 caractères',
             'numCni.unique' => 'Ce numéro de CNI est déjà dans le système',
