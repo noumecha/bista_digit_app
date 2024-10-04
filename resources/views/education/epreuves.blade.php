@@ -27,7 +27,7 @@
                             <form class="form form-inline row mt-3" action="{{ route('education.epreuves') }}" method="get">
                                 <div class="col-md-4">
                                     <div class="input-group">
-                                        <input type="text" name="search" value="{{ isset($searchEpreuves) ? $searchEpreuves : '' }}" id="search" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
+                                        <input type="text" name="searchEpreuve" value="{{ isset($searchEpreuve) ? $searchEpreuve : '' }}" id="searchEpreuve" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -238,7 +238,7 @@
                                             <label for="type_epreuve_id" class="form-control-label">
                                                 Type d'épreuve :
                                             </label>
-                                            <select name="type_epreuve_id" id="type_epreuve_id" class="form-control">
+                                            <select name="type_epreuve_id" id="type_epreuve_id" class="form-select">
                                                 @foreach ($typeEpreuves as $typeEpreuve)
                                                     <option value="{{ $typeEpreuve->id }}" {{ isset($epreuveToEdit) && $epreuveToEdit->type_epreuve_id === $typeEpreuve->id ? 'selected' : '' }}>
                                                         {{ $typeEpreuve->libelleTypeEpreuve }}
@@ -255,7 +255,7 @@
                                             <label for="matiere_id" class="form-control-label">
                                                 Matière :
                                             </label>
-                                            <select name="matiere_id" id="matiere_id" class="form-control">
+                                            <select name="matiere_id" id="matiere_id" class="form-select">
                                                 @foreach ($matieres as $matiere)
                                                     <option value="{{ $matiere->id }}" {{ isset($epreuveToEdit) && $epreuveToEdit->matiere_id === $matiere->id ? 'selected' : '' }}>
                                                         {{ $matiere->libelleMatiere }}
@@ -272,7 +272,7 @@
                                             <label for="classe_id" class="form-control-label">
                                                 Classe :
                                             </label>
-                                            <select name="classe_id" id="classe_id" class="form-control">
+                                            <select name="classe_id" id="classe_id" class="form-select">
                                                 @foreach ($classes as $classe)
                                                     <option value="{{ $classe->id }}" {{ isset($epreuveToEdit) && $epreuveToEdit->classe_id === $classe->id ? 'selected' : '' }}>
                                                         {{ $classe->libClasse }}

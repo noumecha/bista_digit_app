@@ -29,9 +29,9 @@ class EpreuveController extends Controller
         $typeEpreuveFilter = $request->input('typeEpreuveFilter');
 
         $query = Epreuve::query();
-        if(!empty($searchEpreuve) && !empty($typeEpreuveFilter) && !empty($classeFilter) && !empty($matiereFilter)) {
+        /*if(!empty($searchEpreuve) && !empty($typeEpreuveFilter) && !empty($classeFilter) && !empty($matiereFilter)) {
             $query->where(function ($q) use ($searchEpreuve) {
-                $q->where('titre', 'LIKE', "%{$searchEpreuve}%");
+                $q->where('libelleEpreuve', 'LIKE', "%{$searchEpreuve}%");
             })->where('classe_id', $classeFilter)->where('matiere_id',$matiereFilter)
             ->whre('type_epreuve_id', $typeEpreuveFilter)->where('anneeEpreuve', $yearFilter);
         } elseif(!empty($matiereFilter)) {
@@ -43,7 +43,27 @@ class EpreuveController extends Controller
         }  elseif(!empty($yearFilter)) {
             $query->where('anneeEpreuve', $yearFilter);
         } elseif (!empty($searchEpreuve)) {
-            $query->where('titre', 'LIKE', "%{$searchEpreuve}%");
+            $query->where('libelleEpreuve', 'LIKE', "%{$searchEpreuve}%");
+        }*/
+
+        if (!empty($searchEpreuve)) {
+            $query->where('libelleEpreuve', 'LIKE', "%{$searchEpreuve}%");
+        }
+
+        if (!empty($typeEpreuveFilter)) {
+            $query->where('type_epreuve_id', $typeEpreuveFilter);
+        }
+
+        if (!empty($classeFilter)) {
+            $query->where('classe_id', $classeFilter);
+        }
+
+        if (!empty($matiereFilter)) {
+            $query->where('matiere_id', $matiereFilter);
+        }
+
+        if (!empty($yearFilter)) {
+            $query->where('anneeEpreuve', $yearFilter);
         }
 
         $epreuves = $query->paginate(10);
@@ -107,8 +127,9 @@ class EpreuveController extends Controller
         $matieres = Matiere::all();
         $classes = Classe::all();
         $epreuveToEdit = Epreuve::findOrFail($id);
+        $yearEpreuves = Epreuve::select('anneeEpreuve')->distinct()->get();
 
-        return view('education.epreuves', compact('epreuves','epreuveToEdit','typeEpreuves','matieres','classes'));
+        return view('education.epreuves', compact('epreuves','yearEpreuves','epreuveToEdit','typeEpreuves','matieres','classes'));
     }
 
     /**
