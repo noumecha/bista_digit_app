@@ -45,6 +45,13 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
+// Actualites CRUD Routes :
+Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
+Route::post('/actualites/save', [ActusController::class, 'store'])->name('actualite.store')->middleware('auth');
+Route::put('/actualites/{id}', [ActusController::class, 'update'])->name('actualite.update')->middleware('auth');
+Route::get('/actualites/{id}/edit', [ActusController::class, 'edit'])->name('actualite.edit')->middleware('auth');
+Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
+
 // primary routes for the front-website :
 Route::get('/acceuil', [HomeController::class, 'index'])->name('home.index');
 Route::get('/programmes', [HomeController::class, 'programmes'])->name('home.programmes');
@@ -53,7 +60,7 @@ Route::get('/epreuves', [HomeController::class, 'epreuves'])->name('home.epreuve
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/apropos', [AboutController::class, 'index'])->name('home.about');
 Route::get('/actualites', [HomeController::class, 'actualites'])->name('home.actus');
-Route::get('/actualites/{category}', [HomeController::class, 'showCategorie'])->name('home.showCategorie');
+Route::get('/actualites/categorie/{category}', [HomeController::class, 'showCategorie'])->name('home.showCategorie');
 Route::get('/actualite/{id}/read', [HomeController::class, 'showActualite'])->name('actualites.show');
 Route::get('/epreuve/{id}/read', [HomeController::class, 'showEpreuve'])->name('home.showepreuve');
 
@@ -237,5 +244,5 @@ Route::get('/linkstorage', function() {
 });
 
 // route for uploading image from ckeditor :
-    Route::post('/upload/image', 'App\Http\Controllers\Admin\ImageUploadController@upload');//->name('upload.image');
+    #Route::post('/upload/image', 'App\Http\Controllers\Admin\ImageUploadController@upload');//->name('upload.image');
     Route::post('/upload', [App\Http\Controllers\ImageUploadController::class, 'storeImage'])->name('upload.image');
