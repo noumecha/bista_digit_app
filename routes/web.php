@@ -24,6 +24,7 @@ use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MatiereController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\RemplissageController;
@@ -52,6 +53,7 @@ Route::get('/epreuves', [HomeController::class, 'epreuves'])->name('home.epreuve
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/apropos', [AboutController::class, 'index'])->name('home.about');
 Route::get('/actualites', [HomeController::class, 'actualites'])->name('home.actus');
+Route::get('/actualites/{category}', [HomeController::class, 'showCategorie'])->name('home.showCategorie');
 Route::get('/actualite/{id}/read', [HomeController::class, 'showActualite'])->name('actualites.show');
 Route::get('/epreuve/{id}/read', [HomeController::class, 'showEpreuve'])->name('home.showepreuve');
 
@@ -171,7 +173,13 @@ Route::post('/evaluation/trimestres/save', [EvaluationController::class, 'trimes
 Route::put('/evaluation/trimestres/{id}', [EvaluationController::class, 'trimestresUpdate'])->name('evaluation.trimestresUpdate')->middleware('auth');
 Route::get('/evaluation/trimestres/{id}/edit', [EvaluationController::class, 'trimestresEdit'])->name('evaluation.trimestresEdit')->middleware('auth');
 Route::delete('/evaluation/trimestres/{id}', [EvaluationController::class, 'trimestresDestroy'])->name('evaluation.trimestresDestroy')->middleware('auth');
-Route::get('/evaluation/notes', [EvaluationController::class, 'index'])->name('evaluation.notes')->middleware('auth');
+# evaluation - notes routes
+Route::get('/evaluation/notes', [NoteController::class, 'index'])->name('evaluation.notes')->middleware('auth');
+Route::get('/evaluation/notes/{id}/edit', [NoteController::class, 'edit'])->name('evaluation.notesEdit')->middleware('auth');
+Route::put('/evaluation/notes/{id}', [NoteController::class, 'update'])->name('evaluation.notesUpdate')->middleware('auth');
+Route::delete('/evaluation/notes/{id}', [NoteController::class, 'destroy'])->name('evaluation.notesDestroy')->middleware('auth');
+Route::post('/evaluation/notes', [NoteController::class, 'store'])->name('evaluation.notesStore')->middleware('auth');
+
 Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->name('evaluation.bulletins')->middleware('auth');
 #evaluation - evaluations routes
 Route::get('/evaluation/evaluations', [EvaluationController::class, 'evaluations'])->name('evaluation.evaluations')->middleware('auth');

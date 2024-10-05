@@ -1,4 +1,4 @@
-<x-front-layout>
+<x-front-layout :categories="$categories">
     <section id="carouselExampleFade" class="carousel slide carousel-fade slider" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">

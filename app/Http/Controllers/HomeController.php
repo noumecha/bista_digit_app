@@ -16,7 +16,8 @@ class HomeController extends Controller
     public function index () {
         $students = User::all()->where('typeUser','=','eleve')->count();
         $teachers = User::all()->where('typeUser','=','enseignant')->count();
-        return view('front.home', compact('students', 'teachers'));
+        $categories = CategorieActualite::all();
+        return view('front.home', compact('students', 'teachers','categories'));
     }
 
     /**
@@ -81,5 +82,14 @@ class HomeController extends Controller
     public function showActualite($id) {
         $actualite = Actualite::findOrFail($id);
         return view('actualites.show')->with('actualite', $actualite);
+    }
+
+    /**
+     *
+     */
+    public function showCategorie(CategorieActualite $category, Request $request) {
+        $actualites = Actualite::where('categorie_actualites_id','=',$category->id)->paginate(10);
+
+        return view('front.showCategorie', compact('actualites','category'));
     }
 }

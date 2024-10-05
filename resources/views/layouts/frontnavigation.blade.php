@@ -18,11 +18,16 @@
                                 <li>
                                     <a href="{{ route ('home.actus') }}">Actualités</a>
                                     <ul class="submenu">
-                                        <li><a href="#">Activités pédagogiques</a></li>
-                                        <li><a href="#">Activités Sportives</a></li>
-                                        <li><a href="#">Activités extra-scolaire</a></li>
-                                        <li><a href="#">Fondation ISHAN</a></li>
-                                        <li><a href="#">Programme Iam A Leader</a></li>
+                                        @php
+                                            $categories = \App\Models\CategorieActualite::all();
+                                        @endphp
+                                        @foreach ($categories as $cat)
+                                            <li>
+                                                <a href="{{ route('home.showCategorie', $cat->id) }}">
+                                                    {{ $cat->libelleCategorie }}
+                                                </a>
+                                            </li>
+                                        @endforeach
                                     </ul>
                                 </li>
                                 <li>

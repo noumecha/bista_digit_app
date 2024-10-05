@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\CategorieActualite;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
