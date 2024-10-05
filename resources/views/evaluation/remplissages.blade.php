@@ -13,13 +13,13 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Trimestres</h5>
+                                    <h5 class="">Liste des Remplissages de notes configurés</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer les Trimestres(Ajouter, Supprimer, Mettre à jour)
+                                        D'ici vous pouvez gérer les configurations de remplissage de notes(Ajouter, Supprimer, Mettre à jour)
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
-                                    <a href="#trimestreForm" class="btn btn-lg btn-dark btn-primary">
+                                    <a href="#remplissageForm" class="btn btn-lg btn-dark btn-primary">
                                         <i class="fas fa-user-plus me-2"></i> Ajouter
                                     </a>
                                 </div>
@@ -32,10 +32,18 @@
                                     <tr>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Libelle</th>
+                                            Date debut
+                                        </th>
+                                        <th class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            Date fin
+                                        </th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Année Scolaire
+                                            Evaluation
+                                        </th>
+                                        <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            Statut
                                         </th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -44,13 +52,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($trimestres as $trimestre)
+                                    @foreach ($remplissages as $remplissage)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $trimestre->libelleTrimestre }}
+                                                {{ $remplissage->date_debut }}
+                                            </td>
+                                            <td class="align-middle bg-transparent border-bottom">
+                                                {{ $remplissage->date_fin }}
                                             </td>
                                             <td class="align-middle bg-transparent borer-bottom">
-                                                {{ $trimestre->anneeScolaire->libelleAnneeScolaire }}
+                                                {{ $remplissage->evaluation->libelleEvaluation }}
+                                            </td>
+                                            <td class="align-middle bg-transparent border-bottom">
+                                                {{ $remplissage->statut }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -58,7 +72,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ route('evaluation.trimestresEdit', $trimestre->id) }}">
+                                                            <a class="dropdown-item" href="{{ route('evaluation.remplissagesEdit', $remplissage->id) }}">
                                                                 <i class="fas fa-user-edit" aria-hidden="true"></i>
                                                                 modifier
                                                             </a>
@@ -66,7 +80,7 @@
                                                         <li>
                                                             <div class="dropdown-item">
                                                                 <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="{{ route('evaluation.trimestresDestroy', $trimestre->id) }}">
+                                                                <form role="form" class="form" method="POST" action="{{ route('evaluation.remplissagesDestroy', $remplissage->id) }}">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <input type="submit" value="Supprimer">
@@ -81,7 +95,7 @@
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
-                                {{ $trimestres->appends(request()->query())->links() }}
+                                {{ $remplissages->appends(request()->query())->links() }}
                             </div>
                         </div>
                     </div>
@@ -100,58 +114,75 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-6">
-                                    @if (isset($trimestreToEdit))
-                                        <h5 class="">Modifier le trimestre{{ $trimestreToEdit->libelleTrimestre}} </h5>
+                                    @if (isset($remplissageToEdit))
+                                        <h5 class="">Modifier le remplissage {{ $remplissageToEdit->id }} pour l'évaluation {{ $remplissageToEdit->evaluation->libelleEvaluation  }} </h5>
                                     @else
-                                        <h5 class="">Ajouter un nouveau Trimestre</h5>
+                                        <h5 class="">Définir une nouvelle période de remplissage des notes</h5>
                                     @endif
                                 </div>
                             </div>
-                            <form enctype="multipart/form-data" role="form" id="trimestreForm" class="form row" method="POST" action="{{ isset($trimestreToEdit) ? route('evaluation.trimestresUpdate', $trimestreToEdit->id) : route('evaluation.trimestresStore') }}">
+                            <form enctype="multipart/form-data" role="form" id="remplissageForm" class="form row" method="POST" action="{{ isset($remplissageToEdit) ? route('evaluation.remplissagesUpdate', $remplissageToEdit->id) : route('evaluation.remplissagesStore') }}">
                                 @csrf
-                                @if (isset($trimestreToEdit))
+                                @if (isset($remplissageToEdit))
                                     @method('PUT')
                                 @endif
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="titre" class="form-control-label">
-                                                Libellé :
+                                            <label for="date_debut" class="form-control-label">
+                                                Date de debut du remplissage :
                                             </label>
-                                            <input
-                                                type="text"
-                                                id="libelleTrimestre"
-                                                name="libelleTrimestre"
-                                                class="form-control"
-                                                placeholder="Entrez le libellé du trimestre"
-                                                value="{{ isset($trimestreToEdit) ? $trimestreToEdit->libelleTrimestre : old("libelleTrimestre") }}"
-                                            />
-                                            @error('libelleTrimestre')
+                                            <input type="date" id="date_debut" name="date_debut" class="form-control"
+                                                placeholder="Entrez la date de la date debut de remplissage de note" value="{{ old("date_debut" , isset($remplissageToEdit) ? \Carbon\Carbon::parse($remplissageToEdit->date_debut)->format('Y-m-d') : '') }}">
+                                            @error('date_debut')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="annee_scolaire_id" class="form-control-label">
-                                                Année Scolaire :
+                                            <label for="date_fin" class="form-control-label">
+                                                Date de fin du remplissage :
                                             </label>
-                                            <select name="annee_scolaire_id" id="annee_scolaire_id" class="form-select">
-                                                @foreach ($anneeScolaires as $anneeScolaire)
-                                                    <option value="{{ $anneeScolaire->id }}" {{ isset($trimestreToEdit) && $trimestreToEdit->annee_scolaire_id === $anneeScolaire->id ? 'selected' : '' }}>
-                                                        {{ $anneeScolaire->libelleAnneeScolaire }}
+                                            <input type="date" id="date_fin" name="date_fin" class="form-control"
+                                                placeholder="Entrez la date de la date fin de remplissage de note" value="{{ old("date_fin" , isset($remplissageToEdit) ? \Carbon\Carbon::parse($remplissageToEdit->date_fin)->format('Y-m-d') : '') }}">
+                                            @error('date_fin')
+                                                <span class="text-danger text-sm">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="evaluation_id" class="form-control-label">
+                                                Evaluation :
+                                            </label>
+                                            <select name="evaluation_id" id="evaluation_id" class="form-select">
+                                                @foreach ($evaluations as $evaluation)
+                                                    <option value="{{ $evaluation->id }}" {{ isset($remplissageToEdit) && $remplissageToEdit->evaluation_id === $evaluation->id ? 'selected' : '' }}>
+                                                        {{ $evaluation->libelleEvaluation}}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @error('annee_scolaire_id')
+                                            @error('evaluation_id')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="statut" class="form-control-label">
+                                                Statut :
+                                            </label>
+                                            <select name="statut" id="statut" class="form-select">
+                                                <option value="activé" {{ isset($remplissageToEdit) && $remplissageToEdit->statut === 'activé' ? 'selected' : '' }}>activé</option>
+                                                <option value="désactivé" {{ isset($remplissageToEdit) && $remplissageToEdit->statut === 'désactivé' ? 'selected' : '' }}>désactivé</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="{{ isset($trimestreToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($trimestreToEdit) ? 'btn-success' :  'btn-primary'}}">
+                                        <input type="submit" value="{{ isset($remplissageToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($remplissageToEdit) ? 'btn-success' :  'btn-primary'}}">
                                     </div>
                                 </div>
                                 @if ($errors->any())

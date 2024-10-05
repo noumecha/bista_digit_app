@@ -128,9 +128,21 @@
                     </div>
                 </li>
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.evaluations') ? 'active' : '' }}"
+                        href="{{ route('evaluation.evaluations') }}">
+                        <span class="nav-link-text ms-1">Nouvelle Evaluation</span>
+                    </a>
+                </li>
+                <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.trimestres') ? 'active' : '' }}"
                         href="{{ route('evaluation.trimestres') }}">
                         <span class="nav-link-text ms-1">Trimestres</span>
+                    </a>
+                </li>
+                <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.remplissages') ? 'active' : '' }}"
+                        href="{{ route('evaluation.remplissages') }}">
+                        <span class="nav-link-text ms-1">Remplissage des notes</span>
                     </a>
                 </li>
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
@@ -167,28 +179,38 @@
                     </a>
                 </li>
             </ul>
-            <!-- Programmes on Dashboard -->
-            <ul class="navbar-nav submenu">
-                <li data-submenu="programmes" class="submenu-click-link nav-item mt-2">
-                    <div class="d-flex align-items-center nav-link">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                        <span class="font-weight-normal text-md ml-n5">Programmes</span>
-                    </div>
-                </li>
-                <li data-submenu="programmes" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.booster') ? 'active' : '' }}"
-                        href="{{ route('programme.booster') }}">
-                        <span class="nav-link-text ms-1">Programme Booster</span>
-                    </a>
-                </li>
-                <li data-submenu="programmes" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+            <!-- Programme I'am a leader on Dashboard -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link {{ is_current_route('programme.leader') ? 'active' : '' }}"
                         href="{{ route('programme.leader') }}">
-                        <span class="nav-link-text ms-1">I'AM A LEADER</span>
+                        <i class="fa-solid fa-gear fa-sm"></i>
+                        <span class="nav-link-text text-md ml-n5">I'AM A LEADER</span>
                     </a>
                 </li>
             </ul>
             <!-- Programmes on Dashboard -->
+            <ul class="navbar-nav submenu">
+                <li data-submenu="programme-booster" class="submenu-click-link nav-item mt-2">
+                    <div class="d-flex align-items-center nav-link">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span class="font-weight-normal text-md ml-n5">Programme Booster</span>
+                    </div>
+                </li>
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.booster') ? 'active' : '' }}"
+                        href="{{ route('programme.booster') }}">
+                        <span class="nav-link-text ms-1">Evaluations</span>
+                    </a>
+                </li>
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Notes</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Notifications on Dashboard -->
             <ul class="navbar-nav submenu">
                 <li data-submenu="notifications" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">

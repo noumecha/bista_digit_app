@@ -13,13 +13,13 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Trimestres</h5>
+                                    <h5 class="">Liste des Evaluations</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer les Trimestres(Ajouter, Supprimer, Mettre à jour)
+                                        D'ici vous pouvez gérer les Evaluations(Ajouter, Supprimer, Mettre à jour)
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
-                                    <a href="#trimestreForm" class="btn btn-lg btn-dark btn-primary">
+                                    <a href="#evaluationform" class="btn btn-lg btn-dark btn-primary">
                                         <i class="fas fa-user-plus me-2"></i> Ajouter
                                     </a>
                                 </div>
@@ -35,7 +35,7 @@
                                             Libelle</th>
                                         <th
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Année Scolaire
+                                            Trimestre
                                         </th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -44,13 +44,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($trimestres as $trimestre)
+                                    @foreach ($evaluations as $evaluation)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{ $trimestre->libelleTrimestre }}
+                                                {{ $evaluation->libelleEvaluation }}
                                             </td>
                                             <td class="align-middle bg-transparent borer-bottom">
-                                                {{ $trimestre->anneeScolaire->libelleAnneeScolaire }}
+                                                {{ $evaluation->trimestre->libelleTrimestre }}
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 <div class="dropdown">
@@ -58,7 +58,7 @@
                                                     </button>
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ route('evaluation.trimestresEdit', $trimestre->id) }}">
+                                                            <a class="dropdown-item" href="{{ route('evaluation.evaluationsEdit', $evaluation->id) }}">
                                                                 <i class="fas fa-user-edit" aria-hidden="true"></i>
                                                                 modifier
                                                             </a>
@@ -66,7 +66,7 @@
                                                         <li>
                                                             <div class="dropdown-item">
                                                                 <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="{{ route('evaluation.trimestresDestroy', $trimestre->id) }}">
+                                                                <form role="form" class="form" method="POST" action="{{ route('evaluation.evaluationsDestroy', $evaluation->id) }}">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <input type="submit" value="Supprimer">
@@ -81,7 +81,7 @@
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
-                                {{ $trimestres->appends(request()->query())->links() }}
+                                {{ $evaluations->appends(request()->query())->links() }}
                             </div>
                         </div>
                     </div>
@@ -100,16 +100,16 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-6">
-                                    @if (isset($trimestreToEdit))
-                                        <h5 class="">Modifier le trimestre{{ $trimestreToEdit->libelleTrimestre}} </h5>
+                                    @if (isset($evaluationToEdit))
+                                        <h5 class="">Modifier l'évaluation {{ $evaluationToEdit->libelleEvaluation}} </h5>
                                     @else
-                                        <h5 class="">Ajouter un nouveau Trimestre</h5>
+                                        <h5 class="">Ajouter une nouvelle Evaluation</h5>
                                     @endif
                                 </div>
                             </div>
-                            <form enctype="multipart/form-data" role="form" id="trimestreForm" class="form row" method="POST" action="{{ isset($trimestreToEdit) ? route('evaluation.trimestresUpdate', $trimestreToEdit->id) : route('evaluation.trimestresStore') }}">
+                            <form enctype="multipart/form-data" role="form" id="evaluationform" class="form row" method="POST" action="{{ isset($evaluationToEdit) ? route('evaluation.evaluationsUpdate', $evaluationToEdit->id) : route('evaluation.evaluationsStore') }}">
                                 @csrf
-                                @if (isset($trimestreToEdit))
+                                @if (isset($evaluationToEdit))
                                     @method('PUT')
                                 @endif
                                 <div class="row">
@@ -120,30 +120,30 @@
                                             </label>
                                             <input
                                                 type="text"
-                                                id="libelleTrimestre"
-                                                name="libelleTrimestre"
+                                                id="libelleEvaluation"
+                                                name="libelleEvaluation"
                                                 class="form-control"
-                                                placeholder="Entrez le libellé du trimestre"
-                                                value="{{ isset($trimestreToEdit) ? $trimestreToEdit->libelleTrimestre : old("libelleTrimestre") }}"
+                                                placeholder="Entrez le tire de la evaluation"
+                                                value="{{ isset($evaluationToEdit) ? $evaluationToEdit->libelleEvaluation : old("libelleEvaluation") }}"
                                             />
-                                            @error('libelleTrimestre')
+                                            @error('libelleEvaluation')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="annee_scolaire_id" class="form-control-label">
-                                                Année Scolaire :
+                                            <label for="trimestre_id" class="form-control-label">
+                                                Trimestre :
                                             </label>
-                                            <select name="annee_scolaire_id" id="annee_scolaire_id" class="form-select">
-                                                @foreach ($anneeScolaires as $anneeScolaire)
-                                                    <option value="{{ $anneeScolaire->id }}" {{ isset($trimestreToEdit) && $trimestreToEdit->annee_scolaire_id === $anneeScolaire->id ? 'selected' : '' }}>
-                                                        {{ $anneeScolaire->libelleAnneeScolaire }}
+                                            <select name="trimestre_id" id="trimestre_id" class="form-select">
+                                                @foreach ($trimestres as $trimestre)
+                                                    <option value="{{ $trimestre->id }}" {{ isset($evaluationToEdit) && $evaluationToEdit->trimestre_id === $trimestre->id ? 'selected' : '' }}>
+                                                        {{ $trimestre->libelleTrimestre }}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @error('annee_scolaire_id')
+                                            @error('trimestre_id')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -151,7 +151,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="{{ isset($trimestreToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($trimestreToEdit) ? 'btn-success' :  'btn-primary'}}">
+                                        <input type="submit" value="{{ isset($evaluationToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($evaluationToEdit) ? 'btn-success' :  'btn-primary'}}">
                                     </div>
                                 </div>
                                 @if ($errors->any())

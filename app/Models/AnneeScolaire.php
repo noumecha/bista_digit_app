@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AnneeScolaire extends Model
 {
@@ -14,6 +15,13 @@ class AnneeScolaire extends Model
     protected $fillable = [
         'libelleAnneeScolaire',
     ];
+
+    /**
+     *
+     */
+    public function trimestres(): HasMany {
+        return $this->hasMany(Trimestre::class);
+    }
 
     /**
      *
