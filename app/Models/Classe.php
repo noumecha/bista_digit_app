@@ -36,4 +36,11 @@ class Classe extends Model
         return $this->hasMany(Epreuve::class);
     }
 
+    /**
+     *
+     */
+    public function notes(): HasMany {
+        return $this->hasMany(Note::class);
+    }
+
 }

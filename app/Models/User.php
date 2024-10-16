@@ -136,4 +136,11 @@ class User extends Authenticatable
     public function epreuves(): HasMany {
         return $this->hasMany(Epreuve::class);
     }
+
+    /**
+     *
+     */
+    public function notes(): HasMany {
+        return $this->hasMany(Note::class);
+    }
 }

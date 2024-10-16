@@ -41,4 +41,11 @@ class Matiere extends Model
     public function epreuves(): HasMany {
         return $this->hasMany(Epreuve::class);
     }
+
+    /**
+     *
+     */
+    public function notes(): HasMany {
+        return $this->hasMany(Note::class);
+    }
 }

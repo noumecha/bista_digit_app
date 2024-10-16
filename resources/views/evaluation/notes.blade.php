@@ -4,160 +4,72 @@
         <div class="px-5 py-4 container-fluid">
             <div class="mt-4 row">
                 <div class="col-12">
-                    <div class="alert alert-dark text-sm" role="alert">
-                        <strong>Add, Edit, Delete features are not functional!</strong> This is a
-                        <strong>PRO</strong> feature ! Click <a href="#" target="_blank" class="text-bold">here</a>
-                        to see the <strong>PRO</strong> product!
-                    </div>
                     <div class="card">
                         <div class="pb-0 card-header">
+                            @if (session('deleteSuccess'))
+                                <div class="row alert alert-success text-center" id="success-message">
+                                    {{ session('deleteSuccess') }}
+                                </div>
+                            @endif
                             <div class="row">
-                                <div class="col-6">
-                                    <h5 class="">User Management</h5>
-                                    <p class="mb-0 text-sm">
-                                        Here you can manage users.
+                                <div class="col-md-12 col-lg-6">
+                                    <h5 class="">Liste des Notes par classes</h5>
+                                    <p class="text-sm">
+                                        D'ici vous pouvez gérer les notes (par classe, par matière et par évaluation)
                                     </p>
                                 </div>
-                                <div class="col-6 text-end">
-                                    <a href="#" class="btn btn-dark btn-primary">
-                                        <i class="fas fa-user-plus me-2"></i> Add Member
+                                <div class="col-md-12 col-lg-6 text-end">
+                                    <a href="#personnelform" class="btn btn-lg btn-dark btn-primary">
+                                        <i class="fas fa-user-plus me-2"></i> Ajouter
                                     </a>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="">
-                                @if (session('success'))
-                                    <div class="alert alert-success" role="alert" id="alert">
-                                        {{ session('success') }}
+                            <form id="filterNoteForm" class="form form-inline row mt-3" action="{{ route('evaluation.notes') }}" method="get">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" name="searchNote" value="{{ isset($searchNote) ? $searchNote : '' }}" id="searchNote" class="form-control" placeholder="Rechercher une note (nom de l'élève)"/>
                                     </div>
-                                @endif
-                                @if (session('error'))
-                                    <div class="alert alert-danger" role="alert" id="alert">
-                                        {{ session('error') }}
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="matiereFilter" class="form-select" id="matiereFilter">
+                                            <option value="">Toutes les matières</option>
+                                            @foreach ($matieres as $mat)
+                                                <option value="{{$mat->id}}" {{ request('matiereFilter') == $mat->id ? 'selected' : '' }}>
+                                                    {{ $mat->libelleMatiere }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                @endif
-                            </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="classeFilter" class="form-select" id="classeFilter">
+                                            <option value="">Toutes les classes</option>
+                                            @foreach ($classes as $classe)
+                                                <option value="{{$classe->id}}" {{ request('classeFilter') == $classe->id ? 'selected' : '' }}>
+                                                    {{ $classe->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="remplissageFilter" class="form-select" id="remplissageFilter">
+                                            <option value="">Toutes les évaluations</option>
+                                            @foreach ($remplissages as $remplissage)
+                                                <option value="{{$remplissage->id}}" {{ request('remplissageFilter') == $remplissage->id ? 'selected' : '' }}>
+                                                    {{ $remplissage->evaluation->libelleEvaluation }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table text-secondary text-center">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            ID</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Photo</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Name</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Email</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Role</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Creation Date</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">1</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/team-1.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user1" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Admin</td>
-                                        <td class="align-middle bg-transparent border-bottom">admin@softui.com</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Admin</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">16/08/18</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">2</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/team-2.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user2" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Creator</td>
-                                        <td class="align-middle bg-transparent border-bottom">creator@softui.com</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Creator</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">05/05/20</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">3</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/team-3.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user3" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Member</td>
-                                        <td class="align-middle bg-transparent border-bottom">member@softui.com</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Member</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">05/05/20</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">4</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/team-4.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user4" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Peterson</td>
-                                        <td class="align-middle bg-transparent border-bottom">peterson@corporateui.com
-                                        </td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Member</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">05/05/20</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">5</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/marie.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user5" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Marie</td>
-                                        <td class="align-middle bg-transparent border-bottom">marie@corporateui.com
-                                        </td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Creator</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">05/05/20</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
 
-                                </tbody>
-                            </table>
-
+                        <div class="table-responsive mt-3" id="notesTable">
                         </div>
                     </div>
                 </div>
@@ -168,14 +80,3 @@
 
 </x-app-layout>
 
-<script src="{{ asset('js/plugins/datatables.js') }}"></script>
-<script>
-    const dataTableBasic = new simpleDatatables.DataTable("#datatable-search", {
-        searchable: true,
-        fixedHeight: true,
-        columns: [{
-            select: [2, 6],
-            sortable: false
-        }]
-    });
-</script>

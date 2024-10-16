@@ -10,7 +10,7 @@ class Note extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['note','appreciation','user_id','matiere_id','evaluation_id','remplissage_id'];
+    protected $fillable = ['note','appreciation','user_id','matiere_id','evaluation_id','remplissage_id','classe_id'];
 
     /**
      *
@@ -42,5 +42,13 @@ class Note extends Model
     public function remplissage(): BelongsTo
     {
         return $this->belongsTo(Remplissage::class, 'remplissage_id');
+    }
+
+    /**
+     *
+     */
+    public function classe(): BelongsTo
+    {
+        return $this->belongsTo(Classe::class, 'classe_id');
     }
 }

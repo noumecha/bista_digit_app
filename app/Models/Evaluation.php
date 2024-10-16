@@ -28,4 +28,12 @@ class Evaluation extends Model
     {
         return $this->hasMany(Remplissage::class);
     }
+
+
+    /**
+     *
+     */
+    public function notes(): HasMany {
+        return $this->hasMany(Note::class);
+    }
 }
