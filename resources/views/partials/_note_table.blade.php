@@ -55,7 +55,15 @@
                     @endif
                 </td>
                 <td class="text-center align-middle bg-transparent border-bottom">
-                    <input type="button" value="Enregistrer" class="btn btn-primary mb-0">
+                    <button class="btn btn-primary p-2 mb-0">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                    </button>
+                    <button class="btn btn-secondary p-2 mb-0">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="btn btn-danger p-2 mb-0">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                 </td>
             </tr>
         @endforeach

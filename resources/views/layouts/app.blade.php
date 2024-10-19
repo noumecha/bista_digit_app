@@ -31,8 +31,17 @@
     <!-- Nucleo Icons -->
     <link href="{{ asset ('css/nucleo-icons.css') }}" rel="stylesheet" />
     <link href="{{ asset ('css/nucleo-svg.css') }}" rel="stylesheet" />
+    <!-- CKEDITOR -->
+    <script type="importmap">
+        {
+            "imports" : {
+                "ckeditor5": "{{ asset('/vendor/ckeditor5.js') }}",
+                "ckeditor5/": "{{ asset('/vendor/') }}"
+            }
+        }
+    </script>
     <!-- Font Awesome Icons -->
-    <script src="https://kit.fontawesome.com/349ee9c857.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/612ac88160.js" crossorigin="anonymous"></script>
     <link href="{{ asset ('css/nucleo-svg.css') }}" rel="stylesheet" />
     <!-- vite config -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -410,15 +419,7 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
-    <!-- CKEDITOR -->
-    <script type="importmap">
-        {
-            "imports" : {
-                "ckeditor5": "{{ asset('/vendor/ckeditor5.js') }}",
-                "ckeditor5/": "{{ asset('/vendor/') }}"
-            }
-        }
-    </script>
+    <!-- CKEDITOR configuration -->
     <script type="module">
         import {
             ClassicEditor,
@@ -484,8 +485,6 @@
                 } );
         }
     </script>
-    <!-- Ckeditor Script -->
-    <!--script src="{ { asset('js/editor.js') }}"></script -->
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
@@ -493,8 +492,8 @@
     <script src="{{ asset('js/functions/pwd.js') }}"></script>
     <script src="{{ asset('js/functions/dashboard-menu.js') }}"></script>
     <script src="{{ asset('js/functions/success.js') }}"></script>
-    <script src="{{ asset('js/functions/notes.js') }}"></script>
     <script src="{{ asset('js/plugins/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('js/functions/notes.js') }}"></script>
 </body>
 
 </html>
