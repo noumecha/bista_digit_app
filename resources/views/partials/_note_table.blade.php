@@ -1,3 +1,12 @@
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <table class="table text-secondary text-center">
     <thead>
         <tr>
@@ -32,38 +41,59 @@
                     {{ $student->surname }}
                 </td>
                 <td class="align-middle bg-transparent borer-bottom">
-                    <!-- @ dd($notes)-->
-                    @if (!empty($notes->items))
-                        @foreach ($notes as $note)
-                            @if (isset($note) && $note->user_id === $student->id)
-                                <input type="number" name="note" id="note" value={{ $note->note }}>
-                            @endif
-                        @endforeach
-                    @else
-                        <input type="number" name="note" id="note" value="">
-                    @endif
+                    <!-- @ dd($notes) -->
+                    @php
+                        $studentNote = $notes->firstWhere('user_id', $student->id);
+                    @endphp
+                    <input
+                        type="number"
+                        class="note-input"
+                        name="note"
+                        max="20"
+                        step="0.25"
+                        min="0"
+                        id="note-{{ $student->id }}"
+                        value="{{ isset($studentNote) ? $studentNote->note : '' }}"
+                        data-student-id="{{ $student->id }}"
+                    >
                 </td>
                 <td class="align-middle bg-transparent borer-bottom">
-                    @if (!empty($notes->items))
-                        @foreach ($notes as $note)
-                            @if (isset($note) && $note->user_id === $student->id)
-                                <input type="text" name="appreciation" class="form-control" id="appreciation" value="{{ $note->appreciation }}" disabled>
-                            @endif
-                        @endforeach
-                    @else
-                        <input type="text" name="appreciation" class="form-control" id="appreciation" value="" disabled>
-                    @endif
+                    <input
+                        type="text"
+                        name="appreciation"
+                        class="form-control appreciation-input"
+                        id="appreciation-{{ $student->id }}"
+                        value="{{ $studentNote->appreciation ?? '' }}"
+                        disabled
+                    >
                 </td>
                 <td class="text-center align-middle bg-transparent border-bottom">
-                    <button class="btn btn-primary p-2 mb-0">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                    </button>
-                    <button class="btn btn-secondary p-2 mb-0">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                    <button class="btn btn-danger p-2 mb-0">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
+                    <form data-student-id="{{ $student->id }}" method="POST" action="{{ route('evaluation.notesEdit') }}" class="note-form">
+                        @csrf
+                        <input type="hidden" name="user_id" value="{{ $student->id }}">
+                        <input type="hidden" name="matiere_id" value="{{ $matiereFilter }}">
+                        <input
+                            type="hidden"
+                            name="evaluation_id"
+                            @php
+                                if(isset($remplissageFilter)) {
+                                    $evaluationId = $remplissages->firstWhere('id', $remplissageFilter);
+                                }
+                            @endphp
+                            value="{{ isset($evaluationId) ? $evaluationId->evaluation->id : '' }}"
+                        >
+                        <input type="hidden" name="remplissage_id" value="{{ isset($remplissageFilter) ? $remplissageFilter : '' }}">
+                        <input type="hidden" name="classe_id" value="{{ $student->classe_id }}">
+                        <button id="save-note-button" type="submit" class="btn btn-primary p-2 mb-0">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                        </button>
+                        <button type="button" class="btn btn-secondary p-2 mb-0">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button id="delete-note-button" type="button" class="delete-note btn btn-danger p-2 mb-0">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
                 </td>
             </tr>
         @endforeach

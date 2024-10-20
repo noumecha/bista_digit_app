@@ -99,29 +99,17 @@
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 {{ $student->classe->libClasse }}
                                             </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <td class="text-center d-flex justify-content-evenly align-middle bg-transparent border-bottom">
+                                                <a class="btn btn-primary mt-3 p-2" href="{{ route('student.edit', $student->id) }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
+                                                <form role="form" class="form" method="POST" action="{{ route('student.destroy', $student->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger mt-3 p-2">
+                                                        <i class="fa-solid fa-trash"></i>
                                                     </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li>
-                                                            <a class="dropdown-item" href="{{ route('student.edit', $student->id) }}">
-                                                                <i class="fas fa-user-edit" aria-hidden="true"></i>
-                                                                modifier
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <div class="dropdown-item">
-                                                                <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="{{ route('student.destroy', $student->id) }}">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <input type="submit" class="btn" value="Supprimer">
-                                                                </form>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
