@@ -68,8 +68,9 @@
                     >
                 </td>
                 <td class="text-center align-middle bg-transparent border-bottom">
-                    <form data-student-id="{{ $student->id }}" method="POST" action="{{ route('evaluation.notesEdit') }}" class="note-form">
+                    <form data-student-id="{{ $student->id }}" id="note-form">
                         @csrf
+                        <input type="hidden" id="note_id" name="note_id" value="{{ isset($studentNote) ? $studentNote->id : '' }}">
                         <input type="hidden" name="user_id" value="{{ $student->id }}">
                         <input type="hidden" name="matiere_id" value="{{ $matiereFilter }}">
                         <input

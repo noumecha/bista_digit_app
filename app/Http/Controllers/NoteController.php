@@ -84,20 +84,16 @@ class NoteController extends Controller
             'note.max' => 'La note doit etre égale au plus à 20'
         ]);
 
-        $note = Note::where('user_id', $request->user_id)
-                        ->where('matiere_id', $request->matiere_id)
-                        ->where('evaluation_id', $request->matiere_id)
-                        ->where('remplissage_id', $request->matiere_id);
-        if ($note) {
-            $note->update([
-                'note' => $request->note,
-                'appreciation' => $request->appreciation
-            ]);
-        } else {
-            Note::create([
-                $request->all()
-            ]);
-        }
+        //dd($request);
+        Note::create([
+            'matiere_id' => $request->matiere_id,
+            'user_id' => $request->user_id,
+            'classe_id' => $request->classe_id,
+            'evaluation_id' => $request->evaluation_id,
+            'remplissage_id' => $request->remplissage_id,
+            'note' => $request->note,
+            'appreciation' => $request->appreciation,
+        ]);
 
         return response()->json(['success' => 'Note enregistrée avec succès']);
     }

@@ -24,7 +24,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <form id="filterNoteForm" class="form form-inline row mt-3" action="{{ route('evaluation.notes') }}" method="get">
+                            <form id="filterNoteForm" class="form form-inline row mt-3">
                                 <div class="col-md-4">
                                     <div class="input-group">
                                         <input type="text" name="searchNote" value="{{ isset($searchNote) ? $searchNote : '' }}" id="searchNote" class="form-control" placeholder="Rechercher une note (nom de l'élève)"/>

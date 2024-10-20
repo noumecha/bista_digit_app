@@ -37,7 +37,7 @@ $(function() {
     });
 
     // update or submit note
-    $(document).on('submit', '.note-form', function(e) {
+    $(document).on('submit', '#note-form', function(e) {
         e.preventDefault();
         var form = $(this);
         var studentId = form.data('student-id');
@@ -50,11 +50,11 @@ $(function() {
         var formData = $(this).serialize();
         console.log(formData);
         $.ajax({
-            url: 'save/note',
+            url: "note/save",
             type: 'POST',
             data: formData,
             success: function(response) {
-                console.log(response.success);
+                //console.log(response.success);
                 fetchNotes();
             },
             error: function(xhr, status, error) {
@@ -64,21 +64,21 @@ $(function() {
     });
 
     // delete note :
-    $(document).on('click', '.delete-note', function() {
-        var noteId = $(this).data('note-id');
-        console.log("delete works:");
+    $(document).on('click', '#delete-note-button', function() {
+        var noteId = $('#note_id').val();
+        console.log(noteId);
         if(!noteId) return;
-        $.ajax({
+        /*$.ajax({
             url: 'notes/' + noteId,
             type: 'DELETE',
-            data: formData,
+            data: {},
             success: function(response) {
                 fetchNotes();
             },
             error: function(xhr, status, error) {
                 console.error('Erreur de suppression de note : ', error);
             }
-        });
+        });*/
     });
 
     // fetching all notes :
