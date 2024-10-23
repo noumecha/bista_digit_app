@@ -85,17 +85,27 @@ class NoteController extends Controller
         ]);
 
         //dd($request);
-        Note::create([
-            'matiere_id' => $request->matiere_id,
-            'user_id' => $request->user_id,
-            'classe_id' => $request->classe_id,
-            'evaluation_id' => $request->evaluation_id,
-            'remplissage_id' => $request->remplissage_id,
-            'note' => $request->note,
-            'appreciation' => $request->appreciation,
-        ]);
 
-        return response()->json(['success' => 'Note enregistrée avec succès']);
+        $noteId = $request->note_id;
+        if($noteId !== null) {
+            $note = Note::findOrFail($noteId);
+            $note->update([
+                'note' => $request->note,
+                'appreciation' => $request->appreciation
+            ]);
+            return response()->json(['success' => 'Note mise à jour avec succès']);
+        } else {
+            Note::create([
+                'matiere_id' => $request->matiere_id,
+                'user_id' => $request->user_id,
+                'classe_id' => $request->classe_id,
+                'evaluation_id' => $request->evaluation_id,
+                'remplissage_id' => $request->remplissage_id,
+                'note' => $request->note,
+                'appreciation' => $request->appreciation
+            ]);
+            return response()->json(['success' => 'Note enregistrée avec succès']);
+        }
     }
 
     /**

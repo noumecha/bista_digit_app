@@ -1,12 +1,5 @@
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+<div class="row alert alert-success text-center" id="msg" style="display: none;">
+</div>
 <table class="table text-secondary text-center">
     <thead>
         <tr>
@@ -55,6 +48,7 @@
                         id="note-{{ $student->id }}"
                         value="{{ isset($studentNote) ? $studentNote->note : '' }}"
                         data-student-id="{{ $student->id }}"
+                        {{ isset($studentNote) ? 'disabled' : '' }}
                     >
                 </td>
                 <td class="align-middle bg-transparent borer-bottom">
@@ -88,7 +82,7 @@
                         <button id="save-note-button" type="submit" class="btn btn-primary p-2 mb-0">
                             <i class="fa-solid fa-floppy-disk"></i>
                         </button>
-                        <button type="button" class="btn btn-secondary p-2 mb-0">
+                        <button type="button" id="edit-note-button" class="btn btn-secondary p-2 mb-0" data-student-id="{{ $student->id }}">
                             <i class="fa-solid fa-pen"></i>
                         </button>
                         <button id="delete-note-button" type="button" class="delete-note btn btn-danger p-2 mb-0">

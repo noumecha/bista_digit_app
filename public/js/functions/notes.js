@@ -1,4 +1,14 @@
 $(function() {
+    // hide succes alert by default :$('#msg').hide();
+
+    // onclick for edit
+    $(document).on('click', '#edit-note-button', function() {
+        var studentId = $(this).data('student-id');
+
+        $('#note-'+ studentId).prop('disabled', false);
+    })
+
+    // fetching note dynamically throw filters
     $('#searchNote,#matiereFilter,#classeFilter,#remplissageFilter').on('change keyup', function () {
         fetchNotes();
     });
@@ -36,7 +46,7 @@ $(function() {
         appreciationVal.val(appreciationText);
     });
 
-    // update or submit note
+    // update or create note
     $(document).on('submit', '#note-form', function(e) {
         e.preventDefault();
         var form = $(this);
@@ -54,11 +64,12 @@ $(function() {
             type: 'POST',
             data: formData,
             success: function(response) {
-                //console.log(response.success);
+                console.log(JSON.stringify(response));
+                setSuccessMessage(response.success);
                 fetchNotes();
             },
             error: function(xhr, status, error) {
-                console.error('Erreur pendant la sauvegarde à jour : ', error);
+                console.error('Erreur pendant la sauvegarde à jour : ', xhr);
             }
         });
     });
@@ -96,6 +107,20 @@ $(function() {
                 console.error('Erreur de chargement des notes : ', error);
             }
         });
+    }
+
+    // success function
+    function setSuccessMessage(msg) {
+        var message = $('#msg');
+        message.text(msg);
+        message.show();
+        message.css('opacity', 1);
+        setTimeout(function() {
+            message.text('');
+            /*message.fadeOut(10000, function() {
+                message.text('');
+            });*/
+        }, 5000);
     }
 
     // default data :
