@@ -79,17 +79,19 @@ $(function() {
         var noteId = $('#note_id').val();
         console.log(noteId);
         if(!noteId) return;
-        /*$.ajax({
+        $.ajax({
             url: 'notes/' + noteId,
             type: 'DELETE',
             data: {},
             success: function(response) {
+                console.log(JSON.stringify(response));
+                setSuccessMessage(response.success);
                 fetchNotes();
             },
             error: function(xhr, status, error) {
                 console.error('Erreur de suppression de note : ', error);
             }
-        });*/
+        });
     });
 
     // fetching all notes :

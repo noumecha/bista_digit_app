@@ -111,29 +111,6 @@ class NoteController extends Controller
     /**
      *
      */
-    public function edit($id) {
-
-    }
-
-    /**
-     *
-     */
-    public function update(Request $request, $id) {
-        $note = Note::findOrFail($id);
-        if($note) {
-            $note->update([
-                'note' => $request->note,
-                'appreciation' => $request->appreciation
-            ]);
-            return response()->json(['success' => 'Note mise à jour avec succès']);
-        }
-        return response()->json(['error' => 'Note introuvable']);
-    }
-
-
-    /**
-     *
-     */
     public function destroy($id) {
         $note = Note::findOrFail($id);
         if($note) {
