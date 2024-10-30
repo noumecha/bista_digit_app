@@ -74,10 +74,10 @@ class NoteController extends Controller
         ], [
             'user_id.required' => 'Aucun élève selectionner',
             'matiere_id.required' => 'Veuillez selectionner une matière',
-            'evaluation_id.required' => 'Veuillez selectionner une évaluation',
-            'remplissage_id.required' => 'Veuillez selctionner une évaluation',
+            'evaluation_id.required' => 'Veuillez selctionner un remplisage pour la définition de l\'évaluation',
+            'remplissage_id.required' => 'Veuillez selctionner un remplisage pour la définition de l\'évaluation',
             'classe_id.required' => 'Veuillez slectionner une classe',
-            'appreciation.required' => 'Veuillez une définir une note pour la définition de l\'appreciation',
+            'appreciation.required' => 'Veuillez définir une note pour la définition de l\'appreciation',
             'note.required' => 'Veuillez entrez une note',
             'note.numeric' => 'La note doite etre un nombre',
             'note.min' => 'La note doit etre égale au moins à 0',

@@ -58,18 +58,20 @@ $(function() {
         form.append('<input type="hidden" name="appreciation" value="'+appreciationValue+'">');
 
         var formData = $(this).serialize();
-        console.log(formData);
         $.ajax({
             url: "note/save",
             type: 'POST',
             data: formData,
             success: function(response) {
                 console.log(JSON.stringify(response));
-                setSuccessMessage(response.success);
+                setSuccessMessage(response.success, '#msg');
                 fetchNotes();
             },
             error: function(xhr, status, error) {
-                console.error('Erreur pendant la sauvegarde à jour : ', xhr);
+                var datas = Object.entries(xhr.responseJSON.errors);
+                var errors = datas.map(error => error[1][0]);
+                /*setSuccessMessage(errors, '#errors');*/
+                console.log("errors : ", errors);
             }
         });
     });
@@ -77,19 +79,24 @@ $(function() {
     // delete note :
     $(document).on('click', '#delete-note-button', function() {
         var noteId = $('#note_id').val();
-        console.log(noteId);
+        console.log("token : ", $('input[name="_token"]').val());
         if(!noteId) return;
         $.ajax({
             url: 'notes/' + noteId,
             type: 'DELETE',
-            data: {},
+            data: {
+                _token: $('input[name="_token"]').val() // Include CSRF token here
+            },
             success: function(response) {
                 console.log(JSON.stringify(response));
-                setSuccessMessage(response.success);
+                setSuccessMessage(response.success, '#msg');
                 fetchNotes();
             },
             error: function(xhr, status, error) {
-                console.error('Erreur de suppression de note : ', error);
+                var datas = Object.entries(xhr.responseJSON.errors);
+                var errors = datas.map(error => error[1][0]);
+                /*setSuccessMessage(errors, '#errors');*/
+                console.error('Erreur de suppression de note : ', errors);
             }
         });
     });
@@ -106,22 +113,33 @@ $(function() {
                 $('#notesTable').html(data);
             },
             error: function(xhr, status, error) {
-                console.error('Erreur de chargement des notes : ', error);
+                var datas = Object.entries(xhr.responseJSON.errors);
+                var errors = datas.map(error => error[1][0]);
+                setSuccessMessage(errors, '#errors');
+                //console.error('Erreur de chargement des notes : ', error);
             }
         });
     }
 
     // success function
-    function setSuccessMessage(msg) {
-        var message = $('#msg');
-        message.text(msg);
+    function setSuccessMessage(msg, id) {
+        var message = $(id);
+        message.empty();
+        if (Array.isArray(msg)) {
+            var list = $('<ul class="list-group text-left"></ul>');
+            msg.forEach(function(m) {
+                var items = $('<li class="list-group-item list-group-item-danger"></li>').text(m);
+                list.append(items);
+            });
+            message.append(list);
+        } else {
+            var text = $('<p class="text-center"></p>').text(msg);
+            message.append(text);
+        }
         message.show();
         message.css('opacity', 1);
         setTimeout(function() {
-            message.text('');
-            /*message.fadeOut(10000, function() {
-                message.text('');
-            });*/
+            message.hide();
         }, 5000);
     }
 

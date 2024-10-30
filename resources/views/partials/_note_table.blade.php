@@ -1,5 +1,7 @@
 <div class="row alert alert-success text-center" id="msg" style="display: none;">
 </div>
+<div class="alert-danger" id="errors" style="display: none;">
+</div>
 <table class="table text-secondary text-center">
     <thead>
         <tr>
