@@ -81,13 +81,27 @@
                         >
                         <input type="hidden" name="remplissage_id" value="{{ isset($remplissageFilter) ? $remplissageFilter : '' }}">
                         <input type="hidden" name="classe_id" value="{{ $student->classe_id }}">
-                        <button id="save-note-button" type="submit" class="btn btn-primary p-2 mb-0">
+                        <button
+                            id="save-note-button"
+                            type="submit"
+                            class="btn btn-primary p-2 mb-0"
+                        >
                             <i class="fa-solid fa-floppy-disk"></i>
                         </button>
-                        <button type="button" id="edit-note-button" class="btn btn-secondary p-2 mb-0" data-student-id="{{ $student->id }}">
+                        <button
+                            type="button"
+                            id="edit-note-button"
+                            class="btn btn-secondary p-2 mb-0"
+                            data-student-id="{{ $student->id }}"
+                        >
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <button id="delete-note-button" type="button" class="delete-note btn btn-danger p-2 mb-0">
+                        <button
+                            id="delete-note-button"
+                            type="button"
+                            class="delete-note btn btn-danger p-2 mb-0"
+                            data-note-id="{{ isset($studentNote) ? $studentNote->id : '' }}"
+                        >
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </form>

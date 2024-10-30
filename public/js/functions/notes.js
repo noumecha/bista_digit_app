@@ -63,9 +63,11 @@ $(function() {
             type: 'POST',
             data: formData,
             success: function(response) {
-                console.log(JSON.stringify(response));
-                setSuccessMessage(response.success, '#msg');
-                fetchNotes();
+                //console.log(JSON.stringify(response));
+                fetchNotes()
+                setTimeout(function() {
+                    setSuccessMessage(response.success, '#msg');
+                }, 1000);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -78,19 +80,22 @@ $(function() {
 
     // delete note :
     $(document).on('click', '#delete-note-button', function() {
-        var noteId = $('#note_id').val();
-        console.log("token : ", $('input[name="_token"]').val());
+        var noteId = $(this).data('note-id');
+        //console.log(noteId);
+        //console.log("token : ", $('input[name="_token"]').val());
         if(!noteId) return;
         $.ajax({
             url: 'notes/' + noteId,
             type: 'DELETE',
             data: {
-                _token: $('input[name="_token"]').val() // Include CSRF token here
+                _token: $('input[name="_token"]').val()
             },
             success: function(response) {
-                console.log(JSON.stringify(response));
-                setSuccessMessage(response.success, '#msg');
-                fetchNotes();
+                //console.log(JSON.stringify(response));
+                fetchNotes()
+                setTimeout(function() {
+                    setSuccessMessage(response.success, '#msg');
+                }, 1000);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -124,6 +129,7 @@ $(function() {
     // success function
     function setSuccessMessage(msg, id) {
         var message = $(id);
+        message.stop(true, true);
         message.empty();
         if (Array.isArray(msg)) {
             var list = $('<ul class="list-group text-left"></ul>');
@@ -136,11 +142,10 @@ $(function() {
             var text = $('<p class="text-center"></p>').text(msg);
             message.append(text);
         }
-        message.show();
-        message.css('opacity', 1);
+        message.fadeIn().css('display', 'block');
         setTimeout(function() {
-            message.hide();
-        }, 5000);
+            message.fadeOut();
+        }, 3000);
     }
 
     // default data :
