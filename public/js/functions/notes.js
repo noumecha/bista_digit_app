@@ -72,26 +72,39 @@ $(function() {
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
                 var errors = datas.map(error => error[1][0]);
-                /*setSuccessMessage(errors, '#errors');*/
+                setSuccessMessage(errors, '#errors');
                 console.log("errors : ", errors);
             }
         });
     });
 
+    // get globally the classe filter id :
+    var classeFilteredId = '';
+    $(function() {
+        classeFilteredId = $('#classeFilter').val();
+    });
+    $(document).on('change', '#classeFilter', function() {
+        classeFilteredId = $(this).val();
+    });
+
     // delete note :
-    $(document).on('click', '#delete-note-button', function() {
+    $(document).on('click', '#delete-note-button', function(e) {
+        e.preventDefault();
         var noteId = $(this).data('note-id');
-        //console.log(noteId);
-        //console.log("token : ", $('input[name="_token"]').val());
+        var studentId = $(this).data('student-id');
+        var form = $('#note-form[data-student-id="' + studentId + '"]');
+        form.append('<input type="hidden" name="classe_filter_id" value="'+classeFilteredId+'">');
+        var formData = form.serialize()
+        console.log("form data ", formData);
         if(!noteId) return;
         $.ajax({
             url: 'notes/' + noteId,
             type: 'DELETE',
-            data: {
+            data: formData,
+            /*{
                 _token: $('input[name="_token"]').val()
-            },
+            },*/
             success: function(response) {
-                //console.log(JSON.stringify(response));
                 fetchNotes()
                 setTimeout(function() {
                     setSuccessMessage(response.success, '#msg');
@@ -100,7 +113,7 @@ $(function() {
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
                 var errors = datas.map(error => error[1][0]);
-                /*setSuccessMessage(errors, '#errors');*/
+                setSuccessMessage(errors, '#errors');
                 console.error('Erreur de suppression de note : ', errors);
             }
         });

@@ -183,8 +183,6 @@ Route::delete('/evaluation/trimestres/{id}', [EvaluationController::class, 'trim
 # evaluation - notes routes
 Route::get('/evaluation/notes', [NoteController::class, 'index'])->name('evaluation.notes')->middleware('auth');
 Route::post('/evaluation/note/save', [NoteController::class, 'store'])->name('evaluation.noteStore')->middleware('auth');
-Route::get('/evaluation/notes/{id}/edit', [NoteController::class, 'edit'])->name('evaluation.notesEdit')->middleware('auth');
-Route::put('/evaluation/notes/{id}', [NoteController::class, 'update'])->name('evaluation.notesUpdate')->middleware('auth');
 Route::delete('/evaluation/notes/{id}', [NoteController::class, 'destroy'])->name('evaluation.notesDestroy')->middleware('auth');
 
 Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->name('evaluation.bulletins')->middleware('auth');

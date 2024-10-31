@@ -100,6 +100,7 @@
                             id="delete-note-button"
                             type="button"
                             class="delete-note btn btn-danger p-2 mb-0"
+                            data-student-id="{{ $student->id }}"
                             data-note-id="{{ isset($studentNote) ? $studentNote->id : '' }}"
                         >
                             <i class="fa-solid fa-trash"></i>

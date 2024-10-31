@@ -111,9 +111,28 @@ class NoteController extends Controller
     /**
      *
      */
-    public function destroy($id) {
+    public function destroy(Request $request, $id) {
+        $request->validate([
+            'user_id' => 'required',
+            'matiere_id' => 'required',
+            'evaluation_id' => 'required',
+            'remplissage_id' => 'required',
+            'classe_filter_id' => 'required',
+        ], [
+            'user_id.required' => 'Aucun élève selectionner',
+            'matiere_id.required' => 'Veuillez selectionner une matière',
+            'evaluation_id.required' => 'Veuillez selctionner un remplisage pour la définition de l\'évaluation',
+            'remplissage_id.required' => 'Veuillez selctionner un remplisage pour la définition de l\'évaluation',
+            'classe_filter_id.required' => 'Veuillez slectionner une classe',
+        ]);
         $note = Note::findOrFail($id);
-        if($note) {
+        if($note && $request->classe_filter_id
+            && $request->user_id
+            && $request->matiere_id
+            && $request->evaluation_id
+            && $request->remplissage_id
+        )
+        {
             $note->delete();
             return response()->json(['success' => 'Note supprimé avec succès']);
         }
