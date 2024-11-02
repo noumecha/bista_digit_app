@@ -46,10 +46,10 @@ class MatiereController extends Controller
      *
      */
     public function edit($id) {
-        $matiere = Matiere::findOrFail($id);
+        $matiereToEdit = Matiere::findOrFail($id);
         $matieres = Matiere::all();
 
-        return view('education.matiere', compact('matieres', 'matiere'));
+        return view('education.matiere', compact('matieres','matiereToEdit'));
     }
 
     /**

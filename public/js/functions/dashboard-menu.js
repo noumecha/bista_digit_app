@@ -10,14 +10,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 let btns = document.querySelectorAll("[data-submenu]");
 btns.forEach(btn => {
-  btn.addEventListener("click" , function(event) {
-    if(event.target.closest('.submenu-click-link')) {
-        let submenuGroup = btn.getAttribute('data-submenu');
-        localStorage.setItem('activeSubmenu', submenuGroup);
-        let elements = document.querySelectorAll(`[data-submenu="${submenuGroup}"].submenu-click-item`);
-        elements.forEach(element => {
-            element.classList.toggle('toggle-click-item');
-        });
-    };
-  });
+    btn.addEventListener("click" , function(event) {
+        if(event.target.closest('.submenu-click-link')) {
+            let submenuGroup = btn.getAttribute('data-submenu');
+            localStorage.setItem('activeSubmenu', submenuGroup);
+            let elements = document.querySelectorAll(`[data-submenu="${submenuGroup}"].submenu-click-item`);
+            elements.forEach(element => {
+                element.classList.toggle('toggle-click-item');
+            });
+        };
+    });
 });
