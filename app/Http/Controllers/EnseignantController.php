@@ -58,6 +58,9 @@ class EnseignantController extends Controller
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
             'name.required' => 'Entrez votre nom',
+            'name.min' => 'Le nom doit contenir au moins 3 caractères',
+            'surname.min' => 'Le prenom doit contenir au moins 3 caractères',
+            'phone.min' => 'Le numéro de téléphone doit contenir au moins 9 caractères',
             'matricule.unique' => 'Le matricule existe déja dans la base de données',
             'phone.required' => 'Entrez le numero de téléphone',
             'diplome1.required' => 'Entrez l\'intitulté du diplome 1',

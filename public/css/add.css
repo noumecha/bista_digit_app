@@ -1,9 +1,24 @@
+/* Alert Success message */
 #success-message {
     transition: opacity 0.5s ease-out;
 }
 .ml-n5 {
     margin-left: -5px !important;
 }
+/* ck-editor-eye */
 .ck-editor__editable_inline {
     min-height: 400px;
+}
+/* for password eye */
+#eye-password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: end;
+}
+.field-icon {
+    padding: 0.6875rem 0.75rem;
+    position: absolute;
+    cursor: pointer;
 }

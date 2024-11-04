@@ -27,7 +27,7 @@
                                 <div class="card-body">
                                     <form role="form" class="text-start" method="POST" action="sign-in">
                                         @csrf
-                                        <label>Adresse Email ou Matricule</label>
+                                        <label>Adresse email ou Matricule</label>
                                         <div class="mb-3">
                                             <input type="text" id="login" name="login" class="form-control"
                                                 placeholder="Entrez votre email ou votre matricule"
@@ -35,11 +35,13 @@
                                                 aria-label="login" aria-describedby="login-addon">
                                         </div>
                                         <label>Mot de passe</label>
-                                        <div class="mb-3">
+                                        <div class="mb-3" id="eye-password-container">
                                             <input type="password" id="password" name="password"
-                                                value="{{ old('password') ? old('password') : 'secret' }}"
+                                                value="{{ old('password') ? old('password') : 'admin123' }}"
                                                 class="form-control" placeholder="Entrez votre mot de passe" aria-label="Password"
                                                 aria-describedby="password-addon">
+                                                <span toggle="#password" class="fa-solid fa-eye field-icon toggle-eye"
+                                                onclick="togglePasswordVisibility()"></span>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <div class="form-check form-check-info text-left mb-0">
@@ -67,14 +69,6 @@
                                         </div>
                                     </form>
                                 </div>
-                                <!--div class="card-footer text-center pt-0 px-lg-2 px-1">
-                                    <p class="mb-4 text-xs mx-auto">
-                                        Pas encore de compte ?
-                                        < !-- a href="{#{ route('sign-up') }}" class="text-dark font-weight-bold">
-                                            Créer en un
-                                        </a>
-                                    </p>
-                                </div-->
                             </div>
                             <div class="w-100 top-0 text-center mt-6 end-0 p-4 h-100 d-md-block d-none">
                                 <h6 class="text-dark text-sm">Copyright © 2024 Byt3lab</h6>

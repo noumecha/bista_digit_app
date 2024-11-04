@@ -65,9 +65,11 @@ class PersonnelController extends Controller
         ], [
             'name.required' => 'Entrez votre nom',
             'surname.required' => 'Entrez votre prenom',
-            //'email.unique' => 'L\'adresse email est déjà prise',
             'phone.required' => 'Entrez le numero de téléphone',
-            'phone.max' => 'Le numero de téléphone doit contenir au moins 9 caractères',
+            'name.min' => 'Le nom doit contenir au moins 3 caractères',
+            'surname.min' => 'Le prenom doit contenir au moins 3 caractères',
+            'phone.min' => 'Le numéro de téléphone doit contenir au moins 9 caractères',
+            'phone.min' => 'Le numero de téléphone doit contenir au moins 9 caractères',
             'numCni.unique' => 'Ce numéro de CNI est déjà dans le système',
             'sex.required' => 'Choisissez le sexe',
             'fonction.required' => 'Choisisssez la fonction',
