@@ -25,32 +25,44 @@ class AnneeScolaireController extends Controller
      */
     public function store(Request $request) {
         $request->validate([
-            'libelle' => 'required|min:3|max:255',
+            'libelle' => 'required|min:3|max:255|unique:annee_scolaire',
         ], [
             'libelle.required' => 'Définissez une année scolaire',
+            'libelle.unique' => 'Cette année scolaire existe déjà',
          ]);
 
         AnneeScolaire::create([
             'libelleAnneeScolaire' => $request->libelle,
         ]);
 
-
-        $years = AnneeScolaire::all();
-
         return redirect()->route('annee_scolaire.show')->with('success', 'Année scolaire définie avec succès!');
     }
 
-    /**
-     *
-     */
-    public function edit() {
+    public function edit(Request $request, $id) {
+        $yearToEdit = AnneeScolaire::findOrFail($id);
+        $years = AnneeScolaire::all();
 
+        return view('annee_scolaire.show', compact('yearToEdit','years'));
     }
 
-    /**
-     *
-     */
-    public function delete() {
+    public function update(Request $request, $id) {
+        $request->validate([
+            'libelle' => 'required|min:3|max:255|unique:annee_scolaire',
+        ], [
+            'libelle.required' => 'Définissez une année scolaire',
+            'libelle.unique' => 'Cette année scolaire existe déjà',
+         ]);
 
+        $year = AnneeScolaire::findOrFail($id);
+        $year->update($request->all());
+
+        return redirect()->route('annee_scolaire.show')->with('success', 'Année mise à jour avec succès');
+    }
+
+    public function destroy($id) {
+        $year = AnneeScolaire::findOrFail($id);
+        $year->delete();
+
+        return redirect()->route('annee_scolaire.show')->with('deleteSuccess', 'Année supprimée avec succès');
     }
 }

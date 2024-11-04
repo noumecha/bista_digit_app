@@ -223,6 +223,9 @@ Route::delete('/personnel/{id}', [PersonnelController::class, 'destroy'])->name(
 # annee_scolaire routes
 Route::get('/annee_scolaire/list', [AnneeScolaireController::class, 'show'])->name('annee_scolaire.show')->middleware('auth');
 Route::post('/annee_scolaire/save', [AnneeScolaireController::class, 'store'])->name('annee_scolaire.store')->middleware('auth');
+Route::put('/annee_scolaire/{id}', [AnneeScolaireController::class, 'update'])->name('annee_scolaire.update')->middleware('auth');
+Route::get('/annee_scolaire/{id}/edit', [AnneeScolaireController::class, 'edit'])->name('annee_scolaire.edit')->middleware('auth');
+Route::delete('/annee_scolaire/{id}', [AnneeScolaireController::class, 'destroy'])->name('annee_scolaire.destroy')->middleware('auth');
 
 
 # actualites routes

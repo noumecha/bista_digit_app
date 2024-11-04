@@ -61,9 +61,17 @@
                                             <td class="align-middle bg-transparent border-bottom">
                                                 {{ $year->libelleAnneeScolaire }}
                                             </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                                <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
+                                            <td class="text-center d-flex justify-content-evenly align-middle bg-transparent border-bottom">
+                                                <a class="btn btn-primary mt-3 p-2" href="{{ route('annee_scolaire.edit', $year->id) }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
+                                                <form role="form" class="form" method="POST" action="{{ route('annee_scolaire.destroy', $year->id) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger mt-3 p-2">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
