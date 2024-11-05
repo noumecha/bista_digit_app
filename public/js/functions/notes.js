@@ -31,14 +31,20 @@ $(function() {
         noteVal = parseFloat(noteVal);
         var appreciationText = '';
 
-        if (parseFloat(noteVal) >= 0 && parseFloat(noteVal) <= 11) {
-            appreciationText = "NON ACQUIS(NA)";
-        } else if (parseFloat(noteVal) >= 12 && parseFloat(noteVal) <= 16) {
-            appreciationText = "EN COURS D'ACQUISITION(ECA)";
-        } else if (parseFloat(noteVal) >= 17 && parseFloat(noteVal) <= 19) {
-            appreciationText = "ACQUIS(A)";
-        } else if (parseFloat(noteVal) > 19 && parseFloat(noteVal) <= 20) {
-            appreciationText = "Expert (A+)";
+        if (parseFloat(noteVal) < 10) {
+            appreciationText = "D (CNA)";
+        } else if (parseFloat(noteVal) >= 10 && parseFloat(noteVal) < 12) {
+            appreciationText = "CMA (C)";
+        } else if (parseFloat(noteVal) >= 12 && parseFloat(noteVal) < 14) {
+            appreciationText = "CA (C+)";
+        } else if (parseFloat(noteVal) >= 14 && parseFloat(noteVal) < 15) {
+            appreciationText = "CBA (B)";
+        } else if (parseFloat(noteVal) >= 15 && parseFloat(noteVal) < 16) {
+            appreciationText = "CBA (B+)";
+        } else if (parseFloat(noteVal) >= 16 && parseFloat(noteVal) < 18) {
+            appreciationText = "CTBA (A)";
+        } else if (parseFloat(noteVal) >= 18 && parseFloat(noteVal) <= 20) {
+            appreciationText = "CTBA (A+)";
         } else {
             appreciationText = "NOTE INVALIDE";
         }

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class AnneeScolaireController extends Controller
 {
     /**
-     *
+     * first function to show the datas
      */
     public function show() {
         $user = User::find(Auth::id());
@@ -25,19 +25,23 @@ class AnneeScolaireController extends Controller
      */
     public function store(Request $request) {
         $request->validate([
-            'libelle' => 'required|min:3|max:255|unique:annee_scolaire',
+            'libelleAnneeScolaire' => 'required|min:3|max:255|unique:annee_scolaires',
         ], [
-            'libelle.required' => 'Définissez une année scolaire',
-            'libelle.unique' => 'Cette année scolaire existe déjà',
+            'libelleAnneeScolaire.required' => 'Définissez une année scolaire',
+            'libelleAnneeScolaire.unique' => 'Cette année scolaire existe déjà',
          ]);
 
         AnneeScolaire::create([
-            'libelleAnneeScolaire' => $request->libelle,
+            'libelleAnneeScolaire' => $request->libelleAnneeScolaire,
+            'statut' => false,
         ]);
 
         return redirect()->route('annee_scolaire.show')->with('success', 'Année scolaire définie avec succès!');
     }
 
+    /**
+     * function to edit year
+     */
     public function edit(Request $request, $id) {
         $yearToEdit = AnneeScolaire::findOrFail($id);
         $years = AnneeScolaire::all();
@@ -45,12 +49,43 @@ class AnneeScolaireController extends Controller
         return view('annee_scolaire.show', compact('yearToEdit','years'));
     }
 
+    /**
+     * this function helps to activate a year for using his datas
+     */
+    public function activate($id) {
+
+        AnneeScolaire::where('statut', '=', true)->update(['statut' => false]);
+
+        $year = AnneeScolaire::findOrFail($id);
+        //$year->statut = true;
+        //dd($year);
+        $year->update([
+            'statut' => true,
+        ]);
+
+        return redirect()->route('annee_scolaire.show')->with('listSuccess', 'Année scolaire activé avec succès!');
+    }
+
+    /**
+     * this function helps to deactivate a year.
+     */
+    public function desactivate($id) {
+        $year = AnneeScolaire::findOrFail($id);
+        $year->update([
+            'statut' => false,
+        ]);
+
+        return redirect()->route('annee_scolaire.show')->with('listSuccess', 'Année scolaire désactivé avec succès!');
+    }
+
+    /**
+     * function to update a year.
+     */
     public function update(Request $request, $id) {
         $request->validate([
-            'libelle' => 'required|min:3|max:255|unique:annee_scolaire',
+            'libelleAnneeScolaire' => 'required|min:3|max:255',
         ], [
-            'libelle.required' => 'Définissez une année scolaire',
-            'libelle.unique' => 'Cette année scolaire existe déjà',
+            'libelleAnneeScolaire.required' => 'Définissez une année scolaire',
          ]);
 
         $year = AnneeScolaire::findOrFail($id);
@@ -59,10 +94,13 @@ class AnneeScolaireController extends Controller
         return redirect()->route('annee_scolaire.show')->with('success', 'Année mise à jour avec succès');
     }
 
+    /**
+     * function to delete a year
+     */
     public function destroy($id) {
         $year = AnneeScolaire::findOrFail($id);
         $year->delete();
 
-        return redirect()->route('annee_scolaire.show')->with('deleteSuccess', 'Année supprimée avec succès');
+        return redirect()->route('annee_scolaire.show')->with('listSuccess', 'Année supprimée avec succès');
     }
 }

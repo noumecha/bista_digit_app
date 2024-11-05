@@ -20253,7 +20253,7 @@ fieldset:disabled .btn {
   margin-left: -1rem;
 }
 
-.badge.bg-primary {
+/*.badge.bg-primary {
   background: rgba(119, 77, 211, 0.1) !important;
 }
 
@@ -20287,7 +20287,7 @@ fieldset:disabled .btn {
 
 .badge.bg-white {
   background: rgba(255, 255, 255, 0.1) !important;
-}
+}*/
 
 .badge {
   text-transform: inherit;

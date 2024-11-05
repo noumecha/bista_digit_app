@@ -14,6 +14,7 @@ class AnneeScolaire extends Model
      */
     protected $fillable = [
         'libelleAnneeScolaire',
+        'statut',
     ];
 
     /**

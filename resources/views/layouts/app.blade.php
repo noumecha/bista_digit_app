@@ -494,6 +494,7 @@
     <script src="{{ asset('js/functions/success.js') }}"></script>
     <script src="{{ asset('js/plugins/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('js/functions/notes.js') }}"></script>
+    <script src="{{ asset('js/functions/spinner.js') }}"></script>
     <script src="{{ asset('js/functions/toggle-eye.js') }}"></script>
 </body>
 
