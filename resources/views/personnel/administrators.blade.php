@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="pb-0 card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
@@ -41,7 +41,10 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-lg btn-primary">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Rechercher
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -71,7 +74,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($personnels as $personnel)
+                                    @if (empty($personnels->items()))
+                                        <td colspan="6" class="text">
+                                            Aucune donnée disponible
+                                        </td>
+                                    @else
+                                        @foreach ($personnels as $personnel)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 {{ $personnel->id }}
@@ -91,32 +99,43 @@
                                             <td class="text-center align-middle bg-transparent border-bottom">
                                                 {{ $personnel->fonction }}
                                             </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li>
-                                                            <a class="dropdown-item" href="{{ route('personnel.edit', $personnel->id) }}">
-                                                                <i class="fas fa-user-edit" aria-hidden="true"></i>
-                                                                modifier
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <div class="dropdown-item">
-                                                                <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="{{ route('personnel.destroy', $personnel->id) }}">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <input type="submit" value="Supprimer">
-                                                                </form>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                            <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
+                                                <a class="btn btn-primary mt-3 p-2" href="{{ route('personnel.edit', $personnel->id) }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $personnel->id }}">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                        <!-- modal for delete confirmation -->
+                                        <div class="modal fade" id="confirmDelete-{{ $personnel->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Voulez-vous vraiment supprimée le personnel :
+                                                        {{ $personnel->name }} ? (Cette action est irreversible)
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                        <form role="form" class="form" method="POST" action="{{ route('personnel.destroy', $personnel->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                Confirmer
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
@@ -133,7 +152,7 @@
                     <div class="card">
                         <div class="pb-0 card-header">
                             @if (session('success'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('success') }}
                                 </div>
                             @endif
@@ -150,6 +169,15 @@
                                 @csrf
                                 @if(isset($personnelToEdit))
                                     @method('PUT')
+                                @endif
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 @endif
                                 <div class="row">
                                     <div class="col-md-6">
@@ -183,8 +211,8 @@
                                             <label for="phone" class="form-control-label">
                                                 Téléphone :
                                             </label>
-                                            <input type="tel" id="phone" name="phone" class="form-control"
-                                                placeholder="Entrez le numero de téléphone" value="{{isset($personnelToEdit) ? $personnelToEdit->phone : old("phone")}}">
+                                            <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" class="form-control"
+                                                placeholder="696-879-475" value="{{isset($personnelToEdit) ? $personnelToEdit->phone : old("phone")}}">
                                             @error('phone')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
@@ -324,18 +352,12 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="{{ isset($personnelToEdit) ? 'Mettre à jour' : 'Enregistrer' }}" class="btn btn-lg {{ isset($personnelToEdit) ? 'btn-success' : 'btn-primary' }}">
+                                        <button type="submit" onclick="showSpinner(this)" class="btn btn-lg {{ isset($personnelToEdit) ? 'btn-success' : 'btn-primary' }}">
+                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            {{ isset($personnelToEdit) ? 'Mettre à jour' : 'Enregistrer' }}
+                                        </button>
                                     </div>
                                 </div>
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
                             </form>
                         </div>
                     </div>

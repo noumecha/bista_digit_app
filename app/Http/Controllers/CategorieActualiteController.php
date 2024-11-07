@@ -20,7 +20,7 @@ class CategorieActualiteController extends Controller
             $query->where('libelleCategorie', 'LIKE', "%{$search}%");
         }
 
-        $categories = $query->paginate(4);
+        $categories = $query->paginate(10);
         return view('actualites.categories', compact('categories','search'));
     }
 
@@ -57,7 +57,7 @@ class CategorieActualiteController extends Controller
             $query->where('libelleCategorie', 'LIKE', "%{$search}%");
         }
 
-        $categories = $query->paginate(4);
+        $categories = $query->paginate(10);
 
         return view('actualites.categories', compact('categorieToEdit','categories','search'));
     }

@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="pb-0 card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
@@ -61,31 +61,41 @@
                                             <td class="align-middle bg-transparent borer-bottom">
                                                 {{ $categorie->libelleCategorie }}
                                             </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li>
-                                                            <a class="dropdown-item" href="{{ route('categorie.edit', $categorie->id) }}">
-                                                                <i class="fas fa-user-edit" aria-hidden="true"></i>
-                                                                modifier
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <div class="dropdown-item">
-                                                                <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="{{ route('categorie.destroy', $categorie->id) }}">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <input type="submit" value="Supprimer">
-                                                                </form>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                            <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
+                                                <a class="btn btn-primary mt-3 p-2" href="{{ route('categorie.edit', $categorie->id) }}">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $categorie->id }}">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
                                             </td>
                                         </tr>
+                                        <!-- modal for delete confirmation -->
+                                        <div class="modal fade" id="confirmDelete-{{ $categorie->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Voulez-vous vraiment supprimée la catégorie d'actualité :
+                                                        {{ $categorie->libelleCategorie }} (Cette action est irreversible)
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                        <form role="form" class="form" method="POST" action="{{ route('categorie.destroy', $categorie->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                Confirmer
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -103,7 +113,7 @@
                     <div class="card">
                         <div class="pb-0 card-header">
                             @if (session('success'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('success') }}
                                 </div>
                             @endif

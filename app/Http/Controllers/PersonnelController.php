@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class PersonnelController extends Controller
 {
@@ -38,7 +38,7 @@ class PersonnelController extends Controller
                 ->orWhere('phone', 'LIKE', "%{$search}%");
             });
         }
-        $personnels = $query->paginate(7);
+        $personnels = $query->paginate(10);
         return view('personnel.administrators',compact('user','personnels','search','FonctionFilter'));
     }
 
@@ -50,9 +50,9 @@ class PersonnelController extends Controller
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
-            'email' => 'max:255',//|unique:users
+            'email' => 'nullable|email|max:255|unique:users',
             'password' => 'required|min:8|max:255',
-            'phone' => 'required|min:9|max:255',
+            'phone' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
             'diplome1' => 'max:255',
             'diplome2' => 'max:255',
             'lieuNaiss' => 'max:255',
@@ -61,18 +61,21 @@ class PersonnelController extends Controller
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
             'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG'])],
+            'fonction' => 'unique:users',
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
-            'name.required' => 'Entrez votre nom',
-            'surname.required' => 'Entrez votre prenom',
+            'name.required' => 'Entrez le nom',
+            'email.email' => 'Entrez une adresse email valide',
+            'email.unique' => 'Un utilisateur avec cette adresse email existe déjà',
+            'surname.required' => 'Entrez le prenom',
             'phone.required' => 'Entrez le numero de téléphone',
+            'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
             'name.min' => 'Le nom doit contenir au moins 3 caractères',
             'surname.min' => 'Le prenom doit contenir au moins 3 caractères',
-            'phone.min' => 'Le numéro de téléphone doit contenir au moins 9 caractères',
-            'phone.min' => 'Le numero de téléphone doit contenir au moins 9 caractères',
             'numCni.unique' => 'Ce numéro de CNI est déjà dans le système',
             'sex.required' => 'Choisissez le sexe',
             'fonction.required' => 'Choisisssez la fonction',
+            'fonction.unique' => 'Cette fonction est déja occupée',
         ]);
 
         User::create([
@@ -125,9 +128,9 @@ class PersonnelController extends Controller
             });
         }
 
-        $personnels = $query->paginate(7);
+        $personnels = $query->paginate(10);
 
-        return view('personnel.administrators', compact('personnels','personnelToEdit','search','FonctionFilter'));
+        return view('personnel.administrators', ['#personnelform'], compact('personnels','personnelToEdit','search','FonctionFilter'));
     }
 
     /**
@@ -137,9 +140,9 @@ class PersonnelController extends Controller
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
-            'email' => 'max:255',
+            'email' => ['nullable','email','max:255',Rule::unique('users')->ignore($id)],
             'password' => 'required|min:8|max:255',
-            'phone' => 'required|min:9|max:255',
+            'phone' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
             'diplome1' => 'max:255',
             'diplome2' => 'max:255',
             'lieuNaiss' => 'max:255',
@@ -147,12 +150,15 @@ class PersonnelController extends Controller
             'location' => 'max:255',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'fonction' => ['required', Rule::in(['SG','DE','Principale','DET','DEC'])],
+            'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
-                'name.required' => 'Entrez votre nom',
-                'surname.required' => 'Entrez votre prenom',
+                'name.required' => 'Entrez le nom',
+                'surname.required' => 'Entrez le prenom',
+                'email.email' => 'Entrez une adresse email valide',
+                'email.unique' => 'Un utilisateur avec cette adresse email existe déjà',
                 'phone.required' => 'Entrez le numero de téléphone',
+                'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
                 'sex.required' => 'Choisissez le sexe',
                 'fonction.required' => 'Choisisssez la fonction',
         ]);

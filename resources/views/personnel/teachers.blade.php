@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="pb-0 card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
@@ -31,7 +31,10 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-lg btn-primary">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Rechercher
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -58,49 +61,65 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($teachers as $teacher)
-                                        <tr>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                {{ $teacher->id }}
-                                            </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <img src="{{ asset('storage/' . $teacher->profile) }}" class="rounded-circle mr-2"
-                                                        alt="user1" style="height: 36px; width: 36px;">
-                                                </div>
-                                            </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                {{ $teacher->name }}
-                                            </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                {{ $teacher->phone }}
-                                            </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @if (empty($teachers->items()))
+                                        <td colspan="5" class="text">
+                                            Aucunne donnée disponible
+                                        </td>
+                                    @else
+                                        @foreach ($teachers as $teacher)
+                                            <tr>
+                                                <td class="align-middle bg-transparent border-bottom">
+                                                    {{ $teacher->id }}
+                                                </td>
+                                                <td class="align-middle bg-transparent border-bottom">
+                                                    <div class="d-flex justify-content-center align-items-center">
+                                                        <img src="{{ asset('storage/' . $teacher->profile) }}" class="rounded-circle mr-2"
+                                                            alt="user1" style="height: 36px; width: 36px;">
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle bg-transparent border-bottom">
+                                                    {{ $teacher->name }}
+                                                </td>
+                                                <td class="text-center align-middle bg-transparent border-bottom">
+                                                    {{ $teacher->phone }}
+                                                </td>
+                                                <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
+                                                    <a class="btn btn-primary mt-3 p-2" href="{{ route('teacher.edit', $teacher->id) }}">
+                                                        <i class="fa-solid fa-pen"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $teacher->id }}">
+                                                        <i class="fa-solid fa-trash"></i>
                                                     </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li>
-                                                            <a class="dropdown-item" href="{{ route('teacher.edit', $teacher->id) }}">
-                                                                <i class="fas fa-user-edit" aria-hidden="true"></i>
-                                                                modifier
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <div class="dropdown-item">
-                                                                <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="{{ route('teacher.destroy', $teacher->id) }}">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <input type="submit" value="Supprimer">
-                                                                </form>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
+                                                </td>
+                                            </tr>
+                                            <!-- modal for delete confirmation -->
+                                            <div class="modal fade" id="confirmDelete-{{ $teacher->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Voulez-vous vraiment supprimée l'enseignant {{ $teacher->name }} ?
+                                                            (Cette action est irreversible)
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                            <form role="form" class="form" method="POST" action="{{ route('teacher.destroy', $teacher->id) }}">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                    Confirmer
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
@@ -117,7 +136,7 @@
                     <div class="card">
                         <div class="pb-0 card-header">
                             @if (session('success'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('success') }}
                                 </div>
                             @endif
@@ -179,7 +198,7 @@
                                             <label for="phone" class="form-control-label">
                                                 Téléphone :
                                             </label>
-                                            <input type="tel" id="phone" name="phone" class="form-control"
+                                            <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
                                                 placeholder="Entrez le numero de téléphone" value="{{ isset($teacherToEdit) ? $teacherToEdit->phone : old("phone") }}">
                                             @error('phone')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
@@ -314,12 +333,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="{{ isset($teacherToEdit) ? 'Mettre à jour' : 'Enregistrer' }}" class="btn btn-lg {{ isset($teacherToEdit) ? 'btn-success' : 'btn-primary' }}">
-                                    </div>
-                                    <div class="col-md-6 col-lg-16">
-                                        <a href="{{ route('utilisateur.teachers') }}" class="btn btn-danger btn-lg">
-                                            Annuler
-                                        </a>
+                                        <button type="submit" onclick="showSpinner(this)" class="btn btn-lg {{ isset($teacherToEdit) ? 'btn-success' : 'btn-primary' }}">
+                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            {{ isset($teacherToEdit) ? 'Mettre à jour' : 'Enregistrer' }}
+                                        </button>
                                     </div>
                                 </div>
                                 @if ($errors->any())

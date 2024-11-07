@@ -54,12 +54,19 @@ class ActusController extends Controller
             'categorie_actualites_id.required' => 'Veuillez selectionner selectionner la catégorie',
         ]);
 
+        if($request->hasFile('image'))
+            $imagePath = $request->file('image')->store('actualites', 'public');
+        else
+            $imagePath = '';
+
+        //dd($imagePath);
         Actualite::create([
             'titre' => $request->titre,
             'contenu' => $request->contenu,
             'user_id' => Auth::id(),
             'categorie_actualites_id' => $request->categorie_actualites_id,
-            'image' => $request->hasFile('image') ? $request->file('image')->store('actualites', 'public') : '',
+            'image' => $imagePath,
+            //'image' => $request->hasFile('image') ? $request->file('image')->store('actualites', 'public') : '',
         ]);
 
         return redirect()->route('actualites.index')->with('success', 'Actualites ajouté avec succès');
@@ -109,7 +116,6 @@ class ActusController extends Controller
             'categorie_actualites_id.required' => 'Veuillez selectionner selectionner la catégorie',
         ]);
         $actualite = Actualite::findOrFail($id);
-
         if($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('actualites', 'public');
             if ($actualite->image) {

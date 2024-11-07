@@ -31,7 +31,7 @@ class EnseignantController extends Controller
             });
         }
 
-        $teachers = $query->paginate(7);
+        $teachers = $query->paginate(10);
 
         return view('personnel.teachers', compact('matieres','teachers','user','searchTeacher'));
     }
@@ -45,9 +45,9 @@ class EnseignantController extends Controller
             'name' => 'required|min:3|max:255',
             'matricule' => 'max:255|unique:users,id',
             'surname' => 'min:3|max:255',
-            'email' => 'max:255|unique:users,id',
+            'email' => 'nullable|email|max:255|unique:users',
             'password' => 'required|min:8|max:255',
-            'phone' => 'required|min:9|max:255',
+            'phone' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
             'diplome1' => 'required|min:3|max:255',
             'diplome2' => 'max:255',
             'lieuNaiss' => 'max:255',
@@ -57,12 +57,14 @@ class EnseignantController extends Controller
             'sex' => ['required', Rule::in(['M','F'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
-            'name.required' => 'Entrez votre nom',
+            'name.required' => 'Entrez le nom',
             'name.min' => 'Le nom doit contenir au moins 3 caractères',
+            'email.email' => 'Entrez une adresse email valide',
+            'email.unique' => 'Un utilisateur avec cette adresse email existe déjà',
             'surname.min' => 'Le prenom doit contenir au moins 3 caractères',
-            'phone.min' => 'Le numéro de téléphone doit contenir au moins 9 caractères',
             'matricule.unique' => 'Le matricule existe déja dans la base de données',
             'phone.required' => 'Entrez le numero de téléphone',
+            'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
             'diplome1.required' => 'Entrez l\'intitulté du diplome 1',
             'numCni.required' => 'Entrez le numero de la CNI',
             'sex.required' => 'Choisissez le sexe',
@@ -115,9 +117,10 @@ class EnseignantController extends Controller
             'name' => 'required|min:3|max:255',
             'matricule' => 'max:255',
             'surname' => 'min:3|max:255',
-            'email' => 'max:255',
+            'email' => ['nullable','email','max:255',Rule::unique('users')->ignore($id)],
             'password' => 'required|min:8|max:255',
             'phone' => 'required|min:9|max:255',
+            'phone' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
             'diplome1' => 'required|min:3|max:255',
             'diplome2' => 'max:255',
             'lieuNaiss' => 'max:255',
@@ -130,6 +133,7 @@ class EnseignantController extends Controller
                 'name.required' => 'Entrez votre nom',
                 'surname.required' => 'Entrez votre prenom',
                 'phone.required' => 'Entrez le numero de téléphone',
+                'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
                 'diplome1.required' => 'Entrez l\'intitulté du diplome 1',
                 'sex.required' => 'Choisissez le sexe',
          ]);
