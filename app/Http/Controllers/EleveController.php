@@ -41,7 +41,7 @@ class EleveController extends Controller
             });
         }
 
-        $students = $query->paginate(7);
+        $students = $query->paginate(10);
 
         return view('personnel.students', compact('classes','students','user','searchStudent','classeFilter'));
     }
