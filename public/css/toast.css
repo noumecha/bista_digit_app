@@ -1,0 +1,31 @@
+/* Toast block container styling */
+.toast-block {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    width: 100%;
+}
+
+.toast {
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+    text-align: center;
+    animation: slideDown 0.5s ease forwards;
+}
+
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px) translateX(-50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(20px) translateX(-50%);
+    }
+}
