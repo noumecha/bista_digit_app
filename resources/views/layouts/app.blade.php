@@ -23,6 +23,7 @@
     <!-- css -->
     <link rel="stylesheet" href="{{ asset('css/add.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/toast.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/custom-dropdown.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/dashboard-menu.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/ckeditor5.css') }}" />
     <!--     Fonts and icons     -->
@@ -499,6 +500,7 @@
     <script src="{{ asset('js/functions/toggle-eye.js') }}"></script>
     <script src="{{ asset('js/functions/error-input.js') }}"></script>
     <script src="{{ asset('js/functions/toast.js') }}"></script>
+    <script src="{{ asset('js/functions/custom-dropdown.js') }}"></script>
 </body>
 
 </html>

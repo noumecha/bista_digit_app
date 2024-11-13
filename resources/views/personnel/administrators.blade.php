@@ -106,6 +106,17 @@
                                                 <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $personnel->id }}">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
+                                                <button type="button" onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
+                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                    <div class="ddown-items-container d-none p-2 bg-dark">
+                                                        <a class="mb-0 p-2 btn text-white" href="#">
+                                                            Migrer
+                                                        </a>
+                                                        <a class="mb-0 p-2 btn text-white" href="#">
+                                                            Statistiques
+                                                        </a>
+                                                    </div>
+                                                </button>
                                             </td>
                                         </tr>
                                         <!-- modal for delete confirmation -->

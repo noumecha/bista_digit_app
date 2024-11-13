@@ -33,7 +33,7 @@
                                 <div class="col-md-4">
                                     <div class="input-group">
                                         <select name="category" class="form-select" id="">
-                                            <option value="">Filtrer les catégorie</option>
+                                            <option value="">Toutes les catégorie</option>
                                             @foreach ($categories as $cat)
                                                 <option value="{{$cat->id}}" {{ request('category') == $cat->id ? 'selected' : '' }}>
                                                     {{ $cat->libelleCategorie }}
@@ -43,7 +43,10 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-lg btn-primary">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Rechercher
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -74,59 +77,65 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($actualites as $actualite)
-                                        <tr>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                {{ Str::limit($actualite->titre , $limit=5, $end="...") }}
-                                            </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <img src="{{ asset('storage/' . $actualite->image) }}" class="rounded-circle mr-2"
-                                                        alt="user1" style="height: 36px; width: 36px;">
-                                                </div>
-                                            </td>
-                                            <td class="align-middle bg-transparent borer-bottom">
-                                                {{ $actualite->categorieActualite->libelleCategorie }}
-                                            </td>
-                                            <td class="align-middle bg-transparent borer-bottom">
-                                                {!! Str::limit($actualite->contenu , $limit=30, $end="...") !!}
-                                            </td>
-                                            <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
-                                                <a class="btn btn-primary mt-3 p-2" href="{{ route('actualite.edit', $actualite->id) }}">
-                                                    <i class="fa-solid fa-pen"></i>
-                                                </a>
-                                                <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $actualite->id }}">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <!-- modal for delete confirmation -->
-                                        <div class="modal fade" id="confirmDelete-{{ $actualite->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    @if (empty($actualites->items()))
+                                        <td class="text" colspan="5">
+                                            Aucune donnée disponible
+                                        </td>
+                                    @else
+                                        @foreach ($actualites as $actualite)
+                                            <tr>
+                                                <td class="align-middle bg-transparent border-bottom">
+                                                    {{ Str::limit($actualite->titre , $limit=5, $end="...") }}
+                                                </td>
+                                                <td class="align-middle bg-transparent border-bottom">
+                                                    <div class="d-flex justify-content-center align-items-center">
+                                                        <img src="{{ asset('storage/' . $actualite->image) }}" class="rounded-circle mr-2"
+                                                            alt="user1" style="height: 36px; width: 36px;">
                                                     </div>
-                                                    <div class="modal-body">
-                                                        Voulez-vous vraiment supprimée l'actualité :
-                                                        {{ $actualite->titre }} (Cette action est irreversible)
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                        <form role="form" class="form" method="POST" action="{{ route('actualite.destroy', $actualite->id) }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
-                                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                                Confirmer
-                                                            </button>
-                                                        </form>
+                                                </td>
+                                                <td class="align-middle bg-transparent borer-bottom">
+                                                    {{ $actualite->categorieActualite->libelleCategorie }}
+                                                </td>
+                                                <td class="align-middle bg-transparent borer-bottom">
+                                                    {!! Str::limit($actualite->contenu , $limit=30, $end="...") !!}
+                                                </td>
+                                                <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
+                                                    <a class="btn btn-primary mt-3 p-2" href="{{ route('actualite.edit', $actualite->id) }}">
+                                                        <i class="fa-solid fa-pen"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $actualite->id }}">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <!-- modal for delete confirmation -->
+                                            <div class="modal fade" id="confirmDelete-{{ $actualite->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Voulez-vous vraiment supprimée l'actualité :
+                                                            {{ $actualite->titre }} ? (Cette action est irreversible)
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                            <form role="form" class="form" method="POST" action="{{ route('actualite.destroy', $actualite->id) }}">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                    Confirmer
+                                                                </button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
@@ -235,9 +244,14 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="{{ isset($actualiteToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($actualiteToEdit) ? 'btn-success' :  'btn-primary'}}">
-                                    </div>
+                                    <button
+                                        type="submit"
+                                        style="margin-left: 0.8rem !important;"
+                                        onclick="showSpinner(this)"
+                                        class="col-md-4 col-lg-4 btn btn-lg {{ isset($actualiteToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        {{ isset($actualiteToEdit) ? 'Mettre à jour' : 'Enregistrer'}}
+                                    </button>
                                 </div>
                                 @if ($errors->any())
                                     <div class="alert alert-danger">

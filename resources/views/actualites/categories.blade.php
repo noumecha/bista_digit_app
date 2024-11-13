@@ -31,7 +31,10 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <button class="btn btn-lg btn-primary" type="submit">Rechercher</button>
+                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-lg btn-primary">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Rechercher
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -53,50 +56,56 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($categories as $categorie)
-                                        <tr>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                {{ $categorie->id }}
-                                            </td>
-                                            <td class="align-middle bg-transparent borer-bottom">
-                                                {{ $categorie->libelleCategorie }}
-                                            </td>
-                                            <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
-                                                <a class="btn btn-primary mt-3 p-2" href="{{ route('categorie.edit', $categorie->id) }}">
-                                                    <i class="fa-solid fa-pen"></i>
-                                                </a>
-                                                <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $categorie->id }}">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <!-- modal for delete confirmation -->
-                                        <div class="modal fade" id="confirmDelete-{{ $categorie->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Voulez-vous vraiment supprimée la catégorie d'actualité :
-                                                        {{ $categorie->libelleCategorie }} (Cette action est irreversible)
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                        <form role="form" class="form" method="POST" action="{{ route('categorie.destroy', $categorie->id) }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
-                                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                                Confirmer
-                                                            </button>
-                                                        </form>
+                                    @if (empty($categories->items()))
+                                        <td class="text" colspan="7">
+                                            Aucune donnée disponible
+                                        </td>
+                                    @else
+                                        @foreach ($categories as $categorie)
+                                            <tr>
+                                                <td class="align-middle bg-transparent border-bottom">
+                                                    {{ $categorie->id }}
+                                                </td>
+                                                <td class="align-middle bg-transparent borer-bottom">
+                                                    {{ $categorie->libelleCategorie }}
+                                                </td>
+                                                <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
+                                                    <a class="btn btn-primary mt-3 p-2" href="{{ route('categorie.edit', $categorie->id) }}">
+                                                        <i class="fa-solid fa-pen"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $categorie->id }}">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <!-- modal for delete confirmation -->
+                                            <div class="modal fade" id="confirmDelete-{{ $categorie->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Voulez-vous vraiment supprimée la catégorie d'actualité :
+                                                            {{ $categorie->libelleCategorie }} (Cette action est irreversible)
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                            <form role="form" class="form" method="POST" action="{{ route('categorie.destroy', $categorie->id) }}">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                    Confirmer
+                                                                </button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
@@ -152,9 +161,14 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="{{ isset($categorieToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($categorieToEdit) ? 'btn-success' :  'btn-primary'}}">
-                                    </div>
+                                    <button
+                                        type="submit"
+                                        style="margin-left: 0.8rem !important;"
+                                        onclick="showSpinner(this)"
+                                        class="col-md-4 col-lg-4 btn btn-lg {{ isset($categorieToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        {{ isset($categorieToEdit) ? 'Mettre à jour' : 'Enregistrer'}}
+                                    </button>
                                 </div>
                                 @if ($errors->any())
                                     <div class="alert alert-danger">

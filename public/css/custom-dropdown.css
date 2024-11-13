@@ -1,0 +1,23 @@
+.ddown-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ddown-items-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    z-index: 1000;
+    margin-left: 25px;
+    animation: slideDown 0.5s ease forwards;
+}
+@keyframes slideDown {
+    0% {
+        transform: translateY(10px) translateX(-50%);
+    }
+    100% {
+        transform: translateY(60px) translateX(-50%);
+    }
+}

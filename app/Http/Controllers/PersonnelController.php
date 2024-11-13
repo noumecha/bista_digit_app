@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnneeScolaire;
 use App\Models\User;
+use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +21,14 @@ class PersonnelController extends Controller
         $search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
 
-        $query = User::where('typeUser', '=', 'personnel');
+        /*$activeYear = AnneeScolaire::where('statut','=', true);
+
+        $userSchoolYear = UserAnneeScolaire::create([
+            $user->id,
+            $activeYear->id,
+        ]);*/
+
+        $query = User::where('typeUser', '=', 'personnel'); //->where('id', '=',$userSchoolYear->user_id );
         if(!empty($search) && !empty($FonctionFilter)) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
@@ -95,6 +104,13 @@ class PersonnelController extends Controller
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
         ]);
+
+        /*$activeYear = AnneeScolaire::where('statut','=', true);
+
+        UserAnneeScolaire::create([
+            $user->id,
+            $activeYear->id,
+        ]);*/
 
         return redirect()->route('utilisateur.administrators')->with('success', 'Personnel ajouté avec succès!');
     }
