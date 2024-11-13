@@ -126,21 +126,15 @@
                                     {{ session('success') }}
                                 </div>
                             @endif
-                            @if (session('success'))
-                                <div class="toast-block" id="toast-block">
-                                    <div id="liveToast" class="toast">
-                                        <div class="toast-header">
-                                            <!--strong class="me-auto">Notification</!--strong-->
-                                            <button type="button" class="btn-close" id="toast-close">
-                                                <i class="fa-solid fa-xmark"></i>
-                                            </button>
-                                        </div>
-                                        <div class="toast-body">
-                                            {{ session('success') }}
-                                        </div>
+                            <!--div class="toast-block" id="toast-block">
+                                <div id="liveToast" class="toast-card bg-success text-center text-white">
+                                    <button type="button" class="toast-close" id="toast-close">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    <div class="toast-body">
                                     </div>
                                 </div>
-                            @endif
+                            </div -->
                             <div class="row">
                                 <div class="col-md-6">
                                     @if (isset($yearToEdit))
@@ -171,7 +165,7 @@
                                             placeholder="{{ $errors->has('libelleAnneeScolaire') ? $errors->first('libelleAnneeScolaire') : 'exemple : 2024/2025' }}"
                                             value="{{ isset($yearToEdit) ? $yearToEdit->libelleAnneeScolaire : old("libelleAnneeScolaire")}}"
                                             >
-                                        <button type="submit" id="toast-btn" onclick="showSpinner(this)" class="col-md-4 col-lg-4 btn mb-0 btn-lg {{ isset($yearToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
+                                        <button type="submit" onclick="showSpinner(this)" class="col-md-4 col-lg-4 btn mb-0 btn-lg {{ isset($yearToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
                                             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                             {{ isset($yearToEdit) ? 'Mettre à jour' : 'Enregistrer' }}
                                         </button>
