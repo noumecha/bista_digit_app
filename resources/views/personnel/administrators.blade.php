@@ -103,13 +103,23 @@
                                                 <a class="btn btn-primary mt-3 p-2" href="{{ route('personnel.edit', $personnel->id) }}">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
-                                                <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $personnel->id }}">
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-danger ml-2 mt-3 p-2"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#confirmDelete-{{ $personnel->id }}"
+                                                >
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <div onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
                                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                                     <div class="ddown-items-container d-none p-2 bg-dark">
-                                                        <button class="mb-0 p-2 btn text-white" data-bs-toggle="migrate-modal" data-bs-target="#confirmMigrate-{{ $personnel->id }}">
+                                                        <button
+                                                            type="button"
+                                                            class="mb-0 p-2 btn text-white"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#confirmMigrate-{{ $personnel->id }}"
+                                                        >
                                                             Migrer
                                                         </button>
                                                         <a class="mb-0 p-2 btn text-white" href="#">
@@ -120,12 +130,12 @@
                                             </td>
                                         </tr>
                                         <!-- modal for migrate user to annother year -->
-                                        <div class="modal fade" id="confirmMigrate-{{ $personnel->id }}" tabindex="0" aria-labelledby="migrateModal" aria-hidden="true">
+                                        <div class="modal fade" id="confirmMigrate-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="migrateModal">Confirmation de migration</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="migrate-modal" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         Vous êtes sur le point d'ajouter le personnel actuel à une année ultérieure!

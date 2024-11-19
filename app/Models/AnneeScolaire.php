@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class AnneeScolaire extends Model
 {
     use HasFactory;
+
     /**
      * @var array
      */

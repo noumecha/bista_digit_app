@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 
 class PersonnelController extends Controller
 {
-        /**
+    /**
      *
      */
     public function index(Request $request) {
@@ -22,12 +22,14 @@ class PersonnelController extends Controller
         $FonctionFilter = $request->input('funcFilter');
         $years = AnneeScolaire::all();
 
-        /*$activeYear = AnneeScolaire::where('statut','=', true);
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
 
-        $userSchoolYear = UserAnneeScolaire::create([
+        /*$userSchoolYear = UserAnneeScolaire::create([
             $user->id,
             $activeYear->id,
-        ]);*/
+        ]);
+
+        dd($userSchoolYear);*/
 
         $query = User::where('typeUser', '=', 'personnel'); //->where('id', '=',$userSchoolYear->user_id );
         if(!empty($search) && !empty($FonctionFilter)) {
