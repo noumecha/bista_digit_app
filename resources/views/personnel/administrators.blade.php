@@ -106,19 +106,43 @@
                                                 <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $personnel->id }}">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
-                                                <button type="button" onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
+                                                <div onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
                                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                                     <div class="ddown-items-container d-none p-2 bg-dark">
-                                                        <a class="mb-0 p-2 btn text-white" href="#">
+                                                        <button class="mb-0 p-2 btn text-white" data-bs-toggle="migrate-modal" data-bs-target="#confirmMigrate-{{ $personnel->id }}">
                                                             Migrer
-                                                        </a>
+                                                        </button>
                                                         <a class="mb-0 p-2 btn text-white" href="#">
                                                             Statistiques
                                                         </a>
                                                     </div>
-                                                </button>
+                                                </div>
                                             </td>
                                         </tr>
+                                        <!-- modal for migrate user to annother year -->
+                                        <div class="modal fade" id="confirmMigrate-{{ $personnel->id }}" tabindex="0" aria-labelledby="migrateModal" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="migrateModal">Confirmation de migration</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="migrate-modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Vous êtes sur le point d'ajouter le personnel actuel à une année ultérieure!
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                        <form role="form" class="form" method="POST" action="{{ route('personnel.migrate', $personnel->id) }}">
+                                                            @csrf
+                                                            <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                Confirmer
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <!-- modal for delete confirmation -->
                                         <div class="modal fade" id="confirmDelete-{{ $personnel->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">

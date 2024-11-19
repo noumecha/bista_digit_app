@@ -10,8 +10,6 @@ function showDropdown(button) {
     currentDropedElement = ddowContainer.classList.contains('d-none') ? null : ddowContainer;
 }
 
-console.log(currentDropedElement);
-
 document.addEventListener('click', function(e) {
     if (currentDropedElement && !e.target.closest('.ddown-menu')) {
         currentDropedElement.classList.add('d-none');

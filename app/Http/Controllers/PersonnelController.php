@@ -20,6 +20,7 @@ class PersonnelController extends Controller
         $user = User::find(Auth::id());
         $search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
+        $years = AnneeScolaire::all();
 
         /*$activeYear = AnneeScolaire::where('statut','=', true);
 
@@ -48,7 +49,7 @@ class PersonnelController extends Controller
             });
         }
         $personnels = $query->paginate(10);
-        return view('personnel.administrators',compact('user','personnels','search','FonctionFilter'));
+        return view('personnel.administrators',compact('user','personnels','search','FonctionFilter','years'));
     }
 
      /**
@@ -202,5 +203,18 @@ class PersonnelController extends Controller
         $personnel->delete();
 
         return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel supprimé avec succès');
+    }
+
+    /**
+     *
+     */
+    public function migrate(Request $request, $id) {
+        /*$activeYear = AnneeScolaire::where('statut','=', true);
+
+        UserAnneeScolaire::create([
+            $user->id,
+            $activeYear->id,
+        ]);*/
+        return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel migré avec succès');
     }
 }
