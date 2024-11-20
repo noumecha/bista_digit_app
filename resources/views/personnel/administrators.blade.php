@@ -138,12 +138,25 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Vous êtes sur le point d'ajouter le personnel actuel à une année ultérieure!
+                                                        Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
                                                         <form role="form" class="form" method="POST" action="{{ route('personnel.migrate', $personnel->id) }}">
                                                             @csrf
+                                                            <input type="text" name="migrate_user_id" value="{{ $personnel->id }}">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="sex" class="form-control-label">
+                                                                        Année :
+                                                                    </label>
+                                                                    <select name="sex" id="sex" class="form-control">
+                                                                        @foreach ($migrateYears as $myear)
+                                                                            <option value="{{ $myear->id }}">{{ $myear->libelleAnneeScolaire }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
                                                             <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
                                                                 <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                 Confirmer

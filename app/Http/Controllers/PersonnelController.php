@@ -21,15 +21,15 @@ class PersonnelController extends Controller
         $search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
         $years = AnneeScolaire::all();
-
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
 
         /*$userSchoolYear = UserAnneeScolaire::create([
             $user->id,
             $activeYear->id,
-        ]);
+        ]);*/
 
-        dd($userSchoolYear);*/
+        //dd($migrateYears);
 
         $query = User::where('typeUser', '=', 'personnel'); //->where('id', '=',$userSchoolYear->user_id );
         if(!empty($search) && !empty($FonctionFilter)) {
@@ -51,7 +51,7 @@ class PersonnelController extends Controller
             });
         }
         $personnels = $query->paginate(10);
-        return view('personnel.administrators',compact('user','personnels','search','FonctionFilter','years'));
+        return view('personnel.administrators',compact('user','personnels','migrateYears','search','FonctionFilter','years'));
     }
 
      /**
@@ -108,7 +108,7 @@ class PersonnelController extends Controller
             'sex' => $request->sex,
         ]);
 
-        /*$activeYear = AnneeScolaire::where('statut','=', true);
+        /*$activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
 
         UserAnneeScolaire::create([
             $user->id,
