@@ -74,7 +74,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (empty($personnels->items()))
+                                    @if (empty($personnels))
+                                        <!-- empty($personnels->items()) -->
                                         <td colspan="6" class="text">
                                             Aucune donnée disponible
                                         </td>
@@ -138,25 +139,22 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                        <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>
                                                         <form role="form" class="form" method="POST" action="{{ route('personnel.migrate', $personnel->id) }}">
                                                             @csrf
-                                                            <input type="text" name="migrate_user_id" value="{{ $personnel->id }}">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label for="sex" class="form-control-label">
-                                                                        Année :
+                                                                        Selectionnez l'année :
                                                                     </label>
-                                                                    <select name="sex" id="sex" class="form-control">
+                                                                    <select name="migrate_year_id" id="migrate_year_id" class="form-control form-select">
                                                                         @foreach ($migrateYears as $myear)
                                                                             <option value="{{ $myear->id }}">{{ $myear->libelleAnneeScolaire }}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
                                                             </div>
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
                                                             <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
                                                                 <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                 Confirmer
@@ -197,7 +195,7 @@
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center">
-                                {{ $personnels->appends(request()->query())->links() }}
+                                {{ !empty($personnels) ? $personnels->appends(request()->query())->links() : '' }}
                             </div>
                         </div>
                     </div>
@@ -405,6 +403,14 @@
                                             @error('password')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="active_year_id" class="form-control-label d-none">
+                                                Anneé :
+                                            </label>
+                                            <input type="hidden" class="form-control" id="active_year_id" name="active_year_id" value="{{ isset($activeYear) ?? $activeYear->id }}">
                                         </div>
                                     </div>
                                 </div>

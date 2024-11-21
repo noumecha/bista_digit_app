@@ -20,18 +20,17 @@ class PersonnelController extends Controller
         $user = User::find(Auth::id());
         $search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
-        $years = AnneeScolaire::all();
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
+        $userSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
 
-        /*$userSchoolYear = UserAnneeScolaire::create([
-            $user->id,
-            $activeYear->id,
-        ]);*/
-
-        //dd($migrateYears);
-
-        $query = User::where('typeUser', '=', 'personnel'); //->where('id', '=',$userSchoolYear->user_id );
+        $usersSchoolYearId = $userSchoolYear->pluck('user_id');
+        //dd($usersSchoolYearId);
+        if(isset($userSchoolYear)) {
+            $query = User::where('typeUser', '=', 'personnel')->whereIn('id', $usersSchoolYearId);
+        } else {
+            $query = "";
+        }
         if(!empty($search) && !empty($FonctionFilter)) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
@@ -50,8 +49,8 @@ class PersonnelController extends Controller
                 ->orWhere('phone', 'LIKE', "%{$search}%");
             });
         }
-        $personnels = $query->paginate(10);
-        return view('personnel.administrators',compact('user','personnels','migrateYears','search','FonctionFilter','years'));
+        $query ?  $personnels = $query->paginate(10) : $personnels = [];
+        return view('personnel.administrators',compact('user','personnels','migrateYears','activeYear','search','FonctionFilter'));
     }
 
      /**
@@ -70,6 +69,7 @@ class PersonnelController extends Controller
             'lieuNaiss' => 'max:255',
             'dateNaiss' => 'max:255',
             'location' => 'max:255',
+            'active_year_id' => 'required',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
             'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG'])],
@@ -87,10 +87,12 @@ class PersonnelController extends Controller
             'numCni.unique' => 'Ce numéro de CNI est déjà dans le système',
             'sex.required' => 'Choisissez le sexe',
             'fonction.required' => 'Choisisssez la fonction',
+            'active_year_id.required' => 'Aucune annéee selectionnée',
             'fonction.unique' => 'Cette fonction est déja occupée',
+            'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'surname' => $request->surname,
@@ -108,12 +110,10 @@ class PersonnelController extends Controller
             'sex' => $request->sex,
         ]);
 
-        /*$activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
-
         UserAnneeScolaire::create([
-            $user->id,
-            $activeYear->id,
-        ]);*/
+            'user_id' => $user->id,
+            'annee_scolaire_id' => $request->active_year_id,
+        ]);
 
         return redirect()->route('utilisateur.administrators')->with('success', 'Personnel ajouté avec succès!');
     }
@@ -126,8 +126,16 @@ class PersonnelController extends Controller
         $personnelToEdit = User::findOrFail($id);
         $search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
+        $userSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id)->first();
+        $usersSchoolYearId = $userSchoolYear->pluck('user_id');
 
-        $query = User::where('typeUser', '=', 'personnel');
+        if(isset($userSchoolYear)) {
+            $query = User::where('typeUser', '=', 'personnel')->whereIn('id',$usersSchoolYearId);
+        } else {
+            $query = "";
+        }
         if(!empty($search) && !empty($FonctionFilter)) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
@@ -147,15 +155,15 @@ class PersonnelController extends Controller
             });
         }
 
-        $personnels = $query->paginate(10);
-
-        return view('personnel.administrators', ['#personnelform'], compact('personnels','personnelToEdit','search','FonctionFilter'));
+        $query ?  $personnels = $query->paginate(10) : $personnels = [];
+        return view('personnel.administrators', ['#personnelform'], compact('personnels','personnelToEdit','migrateYears','search','FonctionFilter'));
     }
 
     /**
      *
      */
     public function update(Request $request, $id) {
+        //dd($request);
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
@@ -171,6 +179,7 @@ class PersonnelController extends Controller
             'sex' => ['required', Rule::in(['M','F'])],
             'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
+            //'active_year_id' => 'required',
         ], [
                 'name.required' => 'Entrez le nom',
                 'surname.required' => 'Entrez le prenom',
@@ -180,6 +189,8 @@ class PersonnelController extends Controller
                 'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
                 'sex.required' => 'Choisissez le sexe',
                 'fonction.required' => 'Choisisssez la fonction',
+                'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
+                //'active_year_id.required' => 'Aucune annéee selectionnée xxcx',
         ]);
 
         $personnel = User::findOrFail($id);
@@ -191,8 +202,13 @@ class PersonnelController extends Controller
             }
             $personnel->profile = $imagePath;
         }
-        //dd($request);
+
         $personnel->update($request->except('profile'));
+
+        /*UserAnneeScolaire::create([
+            'user_id' => $personnel->id,
+            'annee_scolaire_id' => $request->active_year_id,
+        ]);*/
 
         return redirect()->route('utilisateur.administrators')->with('success', 'Personnel mis à jour avec succès');
     }
@@ -211,12 +227,17 @@ class PersonnelController extends Controller
      *
      */
     public function migrate(Request $request, $id) {
-        /*$activeYear = AnneeScolaire::where('statut','=', true);
+        $request->validate([
+            'migrate_year_id' => 'required',
+        ], [
+            'migrate_year_id.email' => 'Aucune année selectionnée',
+        ]);
 
         UserAnneeScolaire::create([
-            $user->id,
-            $activeYear->id,
-        ]);*/
+            'user_id' => $id,
+            'annee_scolaire_id'=>$request->migrate_year_id,
+        ]);
+
         return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel migré avec succès');
     }
 }
