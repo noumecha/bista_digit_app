@@ -72,10 +72,10 @@
                                                 <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $year->id }}">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
-                                                <form method="POST" action="{{ !$year->statut ? route('annee_scolaire.activate', $year->id) : route('annee_scolaire.desactivate', $year->id) }}" class="activation-form">
+                                                <form role="form" class="activation-form" method="POST" action="{{ !$year->statut ? route('annee_scolaire.activate', $year->id) : route('annee_scolaire.desactivate', $year->id) }}">
                                                     @csrf
                                                     @method('PUT')
-                                                    <button type="button" onclick="showSpinner(this)" class="btn {{ !$year->statut ? 'btn-success' : 'btn-danger'}} mt-3 p-2">
+                                                    <button type="submit" onclick="showSpinner(this)" class="btn {{ !$year->statut ? 'btn-success' : 'btn-danger'}} mt-3 p-2">
                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                         {{ !$year->statut ? 'Activer' : 'Désactiver' }}
                                                     </button>

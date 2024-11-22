@@ -156,7 +156,7 @@ class PersonnelController extends Controller
         }
 
         $query ?  $personnels = $query->paginate(10) : $personnels = [];
-        return view('personnel.administrators', ['#personnelform'], compact('personnels','personnelToEdit','migrateYears','search','FonctionFilter'));
+        return view('personnel.administrators', ['#personnelform'], compact('personnels','personnelToEdit','activeYear','migrateYears','search','FonctionFilter'));
     }
 
     /**

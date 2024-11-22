@@ -410,7 +410,7 @@
                                             <label for="active_year_id" class="form-control-label d-none">
                                                 Anneé :
                                             </label>
-                                            <input type="hidden" class="form-control" id="active_year_id" name="active_year_id" value="{{ isset($activeYear) ?? $activeYear->id }}">
+                                            <input type="hidden" class="form-control" id="active_year_id" name="active_year_id" value="{{ $activeYear->id }}">
                                         </div>
                                     </div>
                                 </div>
