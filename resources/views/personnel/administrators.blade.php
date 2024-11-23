@@ -178,7 +178,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                        <form role="form" class="form" method="POST" action="{{ route('personnel.destroy', $personnel->id) }}">
+                                                        <form role="form" id="delete-form" class="form" method="POST" action="{{ route('personnel.destroy', $personnel->id) }}">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
