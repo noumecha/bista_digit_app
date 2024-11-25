@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
 use App\Models\User;
+use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -99,7 +100,10 @@ class AnneeScolaireController extends Controller
      */
     public function destroy($id) {
         $year = AnneeScolaire::findOrFail($id);
+        $userYears = UserAnneeScolaire::where('annee_scolaire_id', '=', $id);
+        dd($userYears);
         $year->delete();
+        $userYears->delete();
 
         return redirect()->route('annee_scolaire.show')->with('listSuccess', 'Année supprimée avec succès');
     }

@@ -80,33 +80,33 @@
                                                         {{ !$year->statut ? 'Activer' : 'Désactiver' }}
                                                     </button>
                                                 </form>
-                                            </td>
-                                            <!-- modal for delete confirmation -->
-                                            <div class="modal fade" id="confirmDelete-{{ $year->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Année scolaire : {{ $year->libelleAnneeScolaire }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Faut-il vraiment supprimé l'année scolaire {{ $year->libelleAnneeScolaire }}
-                                                            avec toutes ses données ? (Cette action est irreversible)
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <form class="form" method="POST" action="{{ route('annee_scolaire.destroy', $year->id) }}">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="reset" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                                <button type="button" onclick="showSpinner(this)" class="btn btn-success">
-                                                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                                    Confirmer
-                                                                </button>
-                                                            </form>
-                                                        </div>
+                                                <!-- modal for delete confirmation -->
+                                                <div class="modal fade" id="confirmDelete-{{ $year->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form class="form" method="POST" action="{{ route('annee_scolaire.destroy', $year->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLabel">Année scolaire : {{ $year->libelleAnneeScolaire }}</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body text-wrap text-justify">
+                                                                    Faut-il vraiment supprimé l'année scolaire {{ $year->libelleAnneeScolaire }}
+                                                                    avec toutes ses données ? (Cette action est irreversible)
+                                                                </div>
+                                                                <div class="modal-footer flex-row-reverse">
+                                                                    <button type="reset" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                        Confirmer
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

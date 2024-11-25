@@ -4,7 +4,7 @@ function showSpinner(button) {
     button.disabled = true;
 
     console.log(button.closest('form'));
-    /*setTimeout(() => {
+    setTimeout(() => {
         button.closest('form').submit();
-    }, 3000);*/
+    }, 3000);
 }

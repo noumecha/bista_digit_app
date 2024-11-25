@@ -128,68 +128,70 @@
                                                         </a>
                                                     </div>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                        <!-- modal for migrate user to annother year -->
-                                        <div class="modal fade" id="confirmMigrate-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="migrateModal">Confirmation de migration</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>
+                                                <!-- modal for migrate user to annother year -->
+                                                <div class="modal fade" id="confirmMigrate-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                                                    <div class="modal-dialog">
                                                         <form role="form" class="form" method="POST" action="{{ route('personnel.migrate', $personnel->id) }}">
                                                             @csrf
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="sex" class="form-control-label">
-                                                                        Selectionnez l'année :
-                                                                    </label>
-                                                                    <select name="migrate_year_id" id="migrate_year_id" class="form-control form-select">
-                                                                        @foreach ($migrateYears as $myear)
-                                                                            <option value="{{ $myear->id }}">{{ $myear->libelleAnneeScolaire }}</option>
-                                                                        @endforeach
-                                                                    </select>
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="migrateModal">Confirmation de migration</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body text-wrap text-justify">
+                                                                    <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="sex" class="form-control-label">
+                                                                                Selectionnez l'année :
+                                                                            </label>
+                                                                            <select name="migrate_year_id" id="migrate_year_id" class="form-control form-select">
+                                                                                @foreach ($migrateYears as $myear)
+                                                                                    <option value="{{ $myear->id }}">{{ $myear->libelleAnneeScolaire }}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer flex-row-reverse">
+                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                        Confirmer
+                                                                    </button>
                                                                 </div>
                                                             </div>
-                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                            <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
-                                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                                Confirmer
-                                                            </button>
                                                         </form>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <!-- modal for delete confirmation -->
-                                        <div class="modal fade" id="confirmDelete-{{ $personnel->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Voulez-vous vraiment supprimée le personnel :
-                                                        {{ $personnel->name }} ? (Cette action est irreversible)
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                <!-- modal for delete confirmation -->
+                                                <div class="modal fade" id="confirmDelete-{{ $personnel->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
                                                         <form role="form" id="delete-form" class="form" method="POST" action="{{ route('personnel.destroy', $personnel->id) }}">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
-                                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                                Confirmer
-                                                            </button>
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body text-wrap text-justify">
+                                                                    Voulez-vous vraiment supprimée le personnel :
+                                                                    {{ $personnel->name }} ? (Cette action est irreversible)
+                                                                </div>
+                                                                <div class="modal-footer flex-row-reverse">
+                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                        Confirmer
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </form>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </td>
+                                        </tr>
                                         @endforeach
                                     @endif
                                 </tbody>

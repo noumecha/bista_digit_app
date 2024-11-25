@@ -218,7 +218,10 @@ class PersonnelController extends Controller
      */
     public function destroy($id) {
         $personnel = User::findOrFail($id);
+        $userYears = UserAnneeScolaire::where('user_id', '=', $id);
+        //dd($userYears);
         $personnel->delete();
+        $userYears->delete();
 
         return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel supprimé avec succès');
     }
@@ -230,7 +233,7 @@ class PersonnelController extends Controller
         $request->validate([
             'migrate_year_id' => 'required',
         ], [
-            'migrate_year_id.email' => 'Aucune année selectionnée',
+            'migrate_year_id.required' => 'Aucune année selectionnée',
         ]);
 
         UserAnneeScolaire::create([
