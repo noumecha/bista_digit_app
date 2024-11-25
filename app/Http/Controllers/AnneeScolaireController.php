@@ -101,7 +101,6 @@ class AnneeScolaireController extends Controller
     public function destroy($id) {
         $year = AnneeScolaire::findOrFail($id);
         $userYears = UserAnneeScolaire::where('annee_scolaire_id', '=', $id);
-        dd($userYears);
         $year->delete();
         $userYears->delete();
 

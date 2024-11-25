@@ -219,7 +219,6 @@ class PersonnelController extends Controller
     public function destroy($id) {
         $personnel = User::findOrFail($id);
         $userYears = UserAnneeScolaire::where('user_id', '=', $id);
-        //dd($userYears);
         $personnel->delete();
         $userYears->delete();
 
