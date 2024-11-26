@@ -218,7 +218,7 @@ Route::post('/personnel/save', [PersonnelController::class, 'store'])->name('per
 Route::put('/personnel/{id}', [PersonnelController::class, 'update'])->name('personnel.update')->middleware('auth');
 Route::get('/personnel/{id}/edit', [PersonnelController::class, 'edit'])->name('personnel.edit')->middleware('auth');
 Route::delete('/personnel/{id}', [PersonnelController::class, 'destroy'])->name('personnel.destroy')->middleware('auth');
-Route::post('/personnel/{id}/migrate', [PersonnelController::class, 'migrate'])->name('personnel.migrate')->middleware('auth');
+Route::post('/personnel/migrate', [PersonnelController::class, 'migrate'])->name('personnel.migrate')->middleware('auth');
 
 
 # annee_scolaire routes

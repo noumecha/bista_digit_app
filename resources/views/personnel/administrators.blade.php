@@ -74,7 +74,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (empty($personnels))
+                                    @if (empty($personnels->items()))
                                         <!-- empty($personnels->items()) -->
                                         <td colspan="6" class="text">
                                             Aucune donnée disponible
@@ -131,7 +131,7 @@
                                                 <!-- modal for migrate user to annother year -->
                                                 <div class="modal fade" id="confirmMigrate-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
                                                     <div class="modal-dialog">
-                                                        <form role="form" class="form" method="POST" action="{{ route('personnel.migrate', $personnel->id) }}">
+                                                        <form role="form" class="form" method="POST" action="{{ route('personnel.migrate') }}">
                                                             @csrf
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -140,6 +140,20 @@
                                                                 </div>
                                                                 <div class="modal-body text-wrap text-justify">
                                                                     <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>
+                                                                    @if ($errors->any())
+                                                                        <div class="alert alert-danger">
+                                                                            <ul>
+                                                                                @foreach ($errors->all() as $error)
+                                                                                    <li>{{ $error }}</li>
+                                                                                @endforeach
+                                                                            </ul>
+                                                                        </div>
+                                                                    @endif
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <input type="hidden" name="migrate_user_id" id="migrate_user_id" value="{{ $personnel->id }}">
+                                                                        </div>
+                                                                    </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="sex" class="form-control-label">
@@ -155,7 +169,7 @@
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
                                                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                    <button type="button" class="spinner-submit-button btn btn-success">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
                                                                     </button>

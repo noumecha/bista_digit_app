@@ -228,15 +228,19 @@ class PersonnelController extends Controller
     /**
      *
      */
-    public function migrate(Request $request, $id) {
+    public function migrate(Request $request) {
+        $y = AnneeScolaire::findOrFail($request->migrate_year_id);
         $request->validate([
             'migrate_year_id' => 'required',
+            'migrate_user_id' => 'required|unique:user_annee_scolaires,user_id',
         ], [
             'migrate_year_id.required' => 'Aucune année selectionnée',
+            'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',
+            'migrate_user_id.unique' => 'L\'utilisateur à déjà été défini pour l\'année',
         ]);
 
         UserAnneeScolaire::create([
-            'user_id' => $id,
+            'user_id' => $request->migrate_user_id,
             'annee_scolaire_id'=>$request->migrate_year_id,
         ]);
 

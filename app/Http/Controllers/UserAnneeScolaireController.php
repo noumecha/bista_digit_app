@@ -18,9 +18,20 @@ class UserAnneeScolaireController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $request->validate([
+            'migrate_year_id' => 'required',
+            'migrate_user_id' => 'required',
+        ], [
+            'migrate_year_id.required' => 'Aucune année selectionnée',
+            'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',
+        ]);
+
+        UserAnneeScolaire::create([
+            'user_id' => $request->migrate_user_id,
+            'annee_scolaire_id'=>$request->migrate_year_id,
+        ]);
     }
 
     /**
