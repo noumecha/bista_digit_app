@@ -236,7 +236,7 @@ class PersonnelController extends Controller
         ], [
             'migrate_year_id.required' => 'Aucune année selectionnée',
             'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',
-            'migrate_user_id.unique' => 'L\'utilisateur à déjà été défini pour l\'année',
+            'migrate_user_id.unique' => 'L\'utilisateur à déjà été défini pour l\'année : '.$y->libelleAnneeScolaire,
         ]);
 
         UserAnneeScolaire::create([
@@ -244,6 +244,7 @@ class PersonnelController extends Controller
             'annee_scolaire_id'=>$request->migrate_year_id,
         ]);
 
-        return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel migré avec succès');
+        return response()->json(['success' => 'Personnel migré avec succès']);
+        //return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel migré avec succès');
     }
 }

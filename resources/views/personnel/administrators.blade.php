@@ -129,7 +129,7 @@
                                                     </div>
                                                 </div>
                                                 <!-- modal for migrate user to annother year -->
-                                                <div class="modal fade" id="confirmMigrate-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                                                <div class="modal fade" data-form-id="{{ $personnel->id }}" id="confirmMigrate-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <form role="form" class="form" method="POST" action="{{ route('personnel.migrate') }}">
                                                             @csrf
@@ -138,17 +138,12 @@
                                                                     <h5 class="modal-title" id="migrateModal">Confirmation de migration</h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
+                                                                <div class="row alert alert-success text-center" id="msg" style="display: none;">
+                                                                </div>
+                                                                <div class="alert-danger" id="errors" style="display: none;">
+                                                                </div>
                                                                 <div class="modal-body text-wrap text-justify">
                                                                     <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>
-                                                                    @if ($errors->any())
-                                                                        <div class="alert alert-danger">
-                                                                            <ul>
-                                                                                @foreach ($errors->all() as $error)
-                                                                                    <li>{{ $error }}</li>
-                                                                                @endforeach
-                                                                            </ul>
-                                                                        </div>
-                                                                    @endif
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <input type="hidden" name="migrate_user_id" id="migrate_user_id" value="{{ $personnel->id }}">
