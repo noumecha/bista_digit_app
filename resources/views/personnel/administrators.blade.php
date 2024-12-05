@@ -164,7 +164,7 @@
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
                                                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                                    <button type="button" class="spinner-submit-button btn btn-success">
+                                                                    <button type="button" class="spinner-submit-modal-button btn btn-success">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
                                                                     </button>

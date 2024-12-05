@@ -75,7 +75,7 @@
                                                 <form role="form" class="activation-form" method="POST" action="{{ !$year->statut ? route('annee_scolaire.activate', $year->id) : route('annee_scolaire.desactivate', $year->id) }}">
                                                     @csrf
                                                     @method('PUT')
-                                                    <button type="submit" onclick="showSpinner(this)" class="btn {{ !$year->statut ? 'btn-success' : 'btn-danger'}} mt-3 p-2">
+                                                    <button type="" class="spinner-submit-button btn {{ !$year->statut ? 'btn-success' : 'btn-danger'}} mt-3 p-2">
                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                         {{ !$year->statut ? 'Activer' : 'Désactiver' }}
                                                     </button>
@@ -97,7 +97,7 @@
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
                                                                     <button type="reset" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
+                                                                    <button type="submit" class="spinner-submit-modal-button btn btn-success">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
                                                                     </button>
@@ -165,7 +165,7 @@
                                             placeholder="{{ $errors->has('libelleAnneeScolaire') ? $errors->first('libelleAnneeScolaire') : 'exemple : 2024/2025' }}"
                                             value="{{ isset($yearToEdit) ? $yearToEdit->libelleAnneeScolaire : old("libelleAnneeScolaire")}}"
                                             >
-                                        <button type="submit" onclick="showSpinner(this)" class="col-md-4 col-lg-4 btn mb-0 btn-lg {{ isset($yearToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
+                                        <button type="submit" class="spinner-submit-button col-md-4 col-lg-4 btn mb-0 btn-lg {{ isset($yearToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
                                             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                             {{ isset($yearToEdit) ? 'Mettre à jour' : 'Enregistrer' }}
                                         </button>

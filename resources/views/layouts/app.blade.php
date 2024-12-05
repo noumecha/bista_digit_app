@@ -501,6 +501,7 @@
     <script src="{{ asset('js/functions/error-input.js') }}"></script>
     <script src="{{ asset('js/functions/toast.js') }}"></script>
     <script src="{{ asset('js/functions/custom-dropdown.js') }}"></script>
+    <script src="{{ asset('js/functions/migrate.js') }}"></script>
 </body>
 
 </html>
