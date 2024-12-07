@@ -238,7 +238,8 @@ class PersonnelController extends Controller
             'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',
         ]);
 
-        $userYear = UserAnneeScolaire::where('annee_scolaire_id','=',$request->migrate_year_id)->where('user_id', '=', $request->migrate_user_id);
+        $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=',$request->migrate_year_id)->where('user_id', '=', $request->migrate_user_id)->first();
+        //dd($userYear);
         if($userYear) {
             return response()->json(['error' => 'L\'utilisateur à déjà été défini pour l\'année : '.$y->libelleAnneeScolaire]);
         } else {
@@ -248,7 +249,5 @@ class PersonnelController extends Controller
             ]);
             return response()->json(['success' => 'Personnel migré avec succès']);
         }
-
-        //return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel migré avec succès');
     }
 }

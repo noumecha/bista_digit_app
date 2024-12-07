@@ -1,12 +1,12 @@
 $(function(){
     $(document).on('click','.spinner-submit-modal-button', function() {
-        $(this).children('span.spinner-border').removeClass('d-none');
+        var spinner = $(this).children('span.spinner-border');
+        spinner.removeClass('d-none');
         $(this).disabled = true;
         var form_datas = $(this).closest('form').serialize();
         var form_method = $(this).closest('form').prop('method');
         var form_action = $(this).closest('form').prop('action');
         var modal_id = $(this).closest('div.modal').prop('id');
-        //console.log($('#'+modal_id));
         setTimeout(() => {
             $.ajax({
                 url: form_action,
@@ -14,15 +14,20 @@ $(function(){
                 data: form_datas,
                 success: function(response) {
                     setTimeout(function() {
-                        console.log(JSON.stringify(response));
-                        setSuccessMessage(response, '#msg');
-                    }, 3000);
-                    setTimeout(function() {
-                        $(this).children('span.spinner-border').addBack('d-none');
-                        $('#'+modal_id).on('hidden.bs.modal', function() {
-                            return true;
+                        if(response.error) {
+                            setSuccessMessage(response.error, '#errors');
+                            spinner.addClass('d-none');
+                        } else {
+                            setSuccessMessage(response.success, '#msg');
+                        }
+                        spinner.addClass('d-none');
+                        console.log($('#'+modal_id));
+                        $('#'+modal_id).on('shown.bs.modal', function() {
+                            setTimeout(function() {
+                                $('#'+modal_id).modal("hide");
+                            }, 3000)
                         });
-                    }, 3000);
+                    }, 1000);
                 },
                 error: function(xhr, status, error) {
                     var datas = Object.entries(xhr.responseJSON.errors);
@@ -31,13 +36,12 @@ $(function(){
                         return false;
                     });
                     setTimeout(function() {
-                        $(this).children('span.spinner-border').addBack('d-none');
-                    }, 3000);
+                        spinner.addClass('d-none');
+                    }, 1000);
                     setSuccessMessage(errors, '#errors');
-                    console.log("errors : ", errors);
                 }
             });
-        }, 3000);
+        }, 2000);
     });
 
     // success function

@@ -136,11 +136,13 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title" id="migrateModal">Confirmation de migration</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                                    </button>
                                                                 </div>
                                                                 <div class="row alert alert-success text-center" id="msg" style="display: none;">
                                                                 </div>
-                                                                <div class="alert-danger" id="errors" style="display: none;">
+                                                                <div class="alert alert-danger text-center" id="errors" style="display: none;">
                                                                 </div>
                                                                 <div class="modal-body text-wrap text-justify">
                                                                     <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>

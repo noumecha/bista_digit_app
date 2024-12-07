@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AnneeScolaire;
 use Illuminate\Support\Facades\Route;
 
     if(!function_exists('is_current_route')) {
@@ -12,3 +13,13 @@ use Illuminate\Support\Facades\Route;
             return Route::currentRouteName() === $routeName;
         }
     }
+
+    /**
+     * this function is for get the current year
+     */
+    function getCurrentYear() {
+        $currentYear = AnneeScolaire::all()->where('statut','=', true)->first();
+
+        return $currentYear;
+    }
+
