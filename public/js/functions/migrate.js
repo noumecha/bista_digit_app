@@ -13,21 +13,13 @@ $(function(){
                 type: form_method,
                 data: form_datas,
                 success: function(response) {
-                    setTimeout(function() {
-                        if(response.error) {
-                            setSuccessMessage(response.error, '#errors');
-                            spinner.addClass('d-none');
-                        } else {
-                            setSuccessMessage(response.success, '#msg');
-                        }
-                        spinner.addClass('d-none');
-                        console.log($('#'+modal_id));
-                        $('#'+modal_id).on('shown.bs.modal', function() {
-                            setTimeout(function() {
-                                $('#'+modal_id).modal("hide");
-                            }, 3000)
-                        });
-                    }, 1000);
+                    if(response.error) {
+                        setSuccessMessage(response.error, '#errors');
+                    } else {
+                        setSuccessMessage(response.success, '#msg');
+                    }
+                    console.log(response);
+                    spinner.addClass('d-none');
                 },
                 error: function(xhr, status, error) {
                     var datas = Object.entries(xhr.responseJSON.errors);

@@ -123,6 +123,14 @@
                                                         >
                                                             Migrer
                                                         </button>
+                                                        <button
+                                                            type="button"
+                                                            class="mb-0 p-2 btn text-white"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#confirmDeleteYear-{{ $personnel->id }}"
+                                                        >
+                                                            Supprimer pour l'année
+                                                        </button>
                                                         <a class="mb-0 p-2 btn text-white" href="#">
                                                             Statistiques
                                                         </a>
@@ -167,6 +175,34 @@
                                                                 <div class="modal-footer flex-row-reverse">
                                                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
                                                                     <button type="button" class="spinner-submit-modal-button btn btn-success">
+                                                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                        Confirmer
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- modal for delete user  in the current year -->
+                                                <div class="modal fade" data-form-id="{{ $personnel->id }}" id="confirmDeleteYear-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form role="form" class="form" method="POST" action="{{ route('personnel.deleteusercurrentyear') }}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
+                                                                <input type="hidden" name="delusyear_user_id" value="{{ $personnel->id }}">
+                                                                <div class="modal-body text-wrap text-justify">
+                                                                    Voulez-vous vraiment supprimée le personnel {{ $personnel->name }}
+                                                                    pour l'année {{ $activeYear->libelleAnnneeScolaire }} ?
+                                                                </div>
+                                                                <div class="modal-footer flex-row-reverse">
+                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="submit" class="spinner-submit-button btn btn-success">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
                                                                     </button>

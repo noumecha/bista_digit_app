@@ -219,7 +219,7 @@ Route::put('/personnel/{id}', [PersonnelController::class, 'update'])->name('per
 Route::get('/personnel/{id}/edit', [PersonnelController::class, 'edit'])->name('personnel.edit')->middleware('auth');
 Route::delete('/personnel/{id}', [PersonnelController::class, 'destroy'])->name('personnel.destroy')->middleware('auth');
 Route::post('/personnel/migrate', [PersonnelController::class, 'migrate'])->name('personnel.migrate')->middleware('auth');
-
+Route::delete('/personnel/delete/user/in/year', [PersonnelController::class, 'deleteUserCurrentYear'])->name('personnel.deleteusercurrentyear')->middleware('auth');
 
 # annee_scolaire routes
 Route::get('/annee_scolaire/list', [AnneeScolaireController::class, 'show'])->name('annee_scolaire.show')->middleware('auth');

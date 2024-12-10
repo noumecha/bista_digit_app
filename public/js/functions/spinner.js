@@ -10,6 +10,6 @@ $(function(){
         setTimeout(function() {
             el.children('span.spinner-border').addBack('d-none');
         }, 3000);
-        //el.closest('form').submit();
+        el.closest('form').submit();
     }
 });

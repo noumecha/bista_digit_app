@@ -226,6 +226,17 @@ class PersonnelController extends Controller
     }
 
     /**
+     *  delete user for the current yerar
+     */
+    public function deleteUserCurrentYear(Request $request) {
+        //dd($request);
+        $userYear = UserAnneeScolaire::where('id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id);
+        $userYear->delete();
+
+        return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel supprimé avec succès pour l\'année courrante');
+    }
+
+    /**
      *
      */
     public function migrate(Request $request) {
