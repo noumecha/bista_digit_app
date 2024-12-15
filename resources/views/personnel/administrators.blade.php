@@ -11,6 +11,11 @@
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
+                            @if (session('errorSuccess'))
+                                <div class="row alert alert-danger text-center success-message" id="">
+                                    {{ session('errorSuccess') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
                                     <h5 class="">Liste du personnel Administratif</h5>
@@ -128,6 +133,7 @@
                                                             class="mb-0 p-2 btn text-white"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#confirmDeleteYear-{{ $personnel->id }}"
+                                                            {{ $activeYear->id === $personnel->create_year_id ? 'disabled' : '' }}
                                                         >
                                                             Supprimer pour l'année
                                                         </button>
@@ -148,9 +154,9 @@
                                                                         <i class="fa-solid fa-ellipsis-vertical"></i>
                                                                     </button>
                                                                 </div>
-                                                                <div class="row alert alert-success text-center" id="msg" style="display: none;">
+                                                                <div class="alert alert-success text-center d-none" id="modal-alert-success">
                                                                 </div>
-                                                                <div class="alert alert-danger text-center" id="errors" style="display: none;">
+                                                                <div class="alert alert-danger text-center d-none" id="modal-alert-errors">
                                                                 </div>
                                                                 <div class="modal-body text-wrap text-justify">
                                                                     <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>
@@ -165,7 +171,13 @@
                                                                                 Selectionnez l'année :
                                                                             </label>
                                                                             <select name="migrate_year_id" id="migrate_year_id" class="form-control form-select">
+                                                                                <option value="">Selectionner une année</option>
                                                                                 @foreach ($migrateYears as $myear)
+                                                                                @if ($myear->id === $personnel->create_year_id)
+                                                                                    @php
+                                                                                        continue;
+                                                                                    @endphp
+                                                                                @endif
                                                                                     <option value="{{ $myear->id }}">{{ $myear->libelleAnneeScolaire }}</option>
                                                                                 @endforeach
                                                                             </select>
@@ -173,7 +185,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
-                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
                                                                     <button type="button" class="spinner-submit-modal-button btn btn-success">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
@@ -191,17 +203,17 @@
                                                             @method('DELETE')
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                                    <h5 class="modal-title" id="exampleModalLabel">Supprimé définitivement l'utilisateur</h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
                                                                 <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
                                                                 <input type="hidden" name="delusyear_user_id" value="{{ $personnel->id }}">
                                                                 <div class="modal-body text-wrap text-justify">
-                                                                    Voulez-vous vraiment supprimée le personnel {{ $personnel->name }}
+                                                                    Voulez-vous vraiment supprimée définitivement le personnel {{ $personnel->name }}
                                                                     pour l'année {{ $activeYear->libelleAnnneeScolaire }} ?
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
-                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
                                                                     <button type="submit" class="spinner-submit-button btn btn-success">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
@@ -227,7 +239,7 @@
                                                                     {{ $personnel->name }} ? (Cette action est irreversible)
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
-                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
+                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
                                                                     <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer

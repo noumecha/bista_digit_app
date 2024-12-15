@@ -48,6 +48,7 @@ class User extends Authenticatable
         'phone',
         'location',
         'about',
+        'create_year_id',
     ];
 
 

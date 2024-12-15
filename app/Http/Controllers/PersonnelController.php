@@ -108,6 +108,7 @@ class PersonnelController extends Controller
             'typeUser' => 'personnel',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
+            'create_year_id' => $request->active_year_id,
         ]);
 
         UserAnneeScolaire::create([
@@ -230,17 +231,20 @@ class PersonnelController extends Controller
      */
     public function deleteUserCurrentYear(Request $request) {
         //dd($request);
-        $userYear = UserAnneeScolaire::where('id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id);
-        $userYear->delete();
+        $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id)->first();
+        //dd($userYear);
+        if ($userYear->delete()) {
+            return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel supprimé avec succès pour l\'année courrante');
+        } else {
+            return redirect()->route('utilisateur.administrators')->with('errorSuccess', 'Echec de surpression du personne pour l\'année courrante');
+        }
 
-        return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel supprimé avec succès pour l\'année courrante');
     }
 
     /**
      *
      */
     public function migrate(Request $request) {
-        $y = AnneeScolaire::findOrFail($request->migrate_year_id);
         $request->validate([
             'migrate_year_id' => 'required',
             'migrate_user_id' => 'required',
@@ -248,7 +252,7 @@ class PersonnelController extends Controller
             'migrate_year_id.required' => 'Aucune année selectionnée',
             'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',
         ]);
-
+        $y = AnneeScolaire::findOrFail($request->migrate_year_id);
         $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=',$request->migrate_year_id)->where('user_id', '=', $request->migrate_user_id)->first();
         //dd($userYear);
         if($userYear) {
