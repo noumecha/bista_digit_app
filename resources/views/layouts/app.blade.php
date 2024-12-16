@@ -21,7 +21,9 @@
         </title>
         <!-- css -->
         <link rel="stylesheet" href="{{ asset('css/add.css') }}" />
-        <link rel="stylesheet" href="{{ asset('front/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-grid.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-grid.rtl.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-reboot.css') }}"/>
         <link rel="stylesheet" href="{{ asset('css/toast.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/custom-dropdown.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/dashboard-menu.css') }}">
@@ -75,7 +77,7 @@
         <script src="{{ asset('js/plugins/jquery.js') }}"></script>
         <!--   Core JS Files   -->
         <script src="{{ asset('js/core/popper.min.js') }}"></script>
-        <script src="{{ asset('js/core/bootstrap.js') }}"></script>
+        <script src="{{ asset('bootstrap/js/bootstrap.js')}}"></script>
         <script src="{{ asset('js/plugins/perfect-scrollbar.min.js') }}"></script>
         <script src="{{ asset('js/plugins/smooth-scrollbar.min.js') }}"></script>
         <script src="{{ asset('js/plugins/chartjs.min.js') }}"></script>
@@ -423,6 +425,7 @@
         <script src="{{ asset('js/functions/toast.js') }}"></script>
         <script src="{{ asset('js/functions/custom-dropdown.js') }}"></script>
         <script src="{{ asset('js/functions/migrate.js') }}"></script>
+        <script src="{{ asset('js/functions/save.js') }}"></script>
     </body>
 
 </html>

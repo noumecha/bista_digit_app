@@ -116,14 +116,14 @@ class PersonnelController extends Controller
             'annee_scolaire_id' => $request->active_year_id,
         ]);
 
-        return redirect()->route('utilisateur.administrators')->with('success', 'Personnel ajouté avec succès!');
+        return response()->json(['success' => 'Personnel ajouté avec succès!']);
+        //return redirect()->route('utilisateur.administrators')->with('success', 'Personnel ajouté avec succès!');
     }
 
     /**
      *
      */
     public function edit(Request $request, $id) {
-        $personnels = User::all()->where('typeUser', '=', 'personnel');
         $personnelToEdit = User::findOrFail($id);
         $search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
@@ -246,8 +246,8 @@ class PersonnelController extends Controller
      */
     public function migrate(Request $request) {
         $request->validate([
-            'migrate_year_id' => 'required',
-            'migrate_user_id' => 'required',
+            'migrate_year_id' => 'required|exists:annee_scolaires,id',
+            'migrate_user_id' => 'required|exists:users,id',
         ], [
             'migrate_year_id.required' => 'Aucune année selectionnée',
             'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',

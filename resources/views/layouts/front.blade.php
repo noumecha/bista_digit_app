@@ -5,7 +5,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{{ env('APP_NAME')}}</title>
-        <link rel="stylesheet" href="{{ asset('front/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-grid.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-grid.rtl.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-reboot.css') }}"/>
         <link rel="stylesheet" href="{{ asset('front/css/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('front/css/owl.carousel.min.css') }}">
         <link rel="stylesheet" href="{{ asset('front/css/owl.carousel.css') }}">
@@ -23,7 +25,7 @@
 
     <script src="{{ asset('front/js/jquery-3.2.1.min.js') }}"></script>
     <script src="{{ asset('front/js/popper.min.js') }}"></script>
-    <script src="{{ asset('front/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.js')}}"></script>
     <script src="{{ asset('front/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('front/js/owl.carousel.js') }}"></script>
     <script src="{{ asset('front/js/script.js') }}"></script>
