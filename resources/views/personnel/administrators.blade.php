@@ -28,16 +28,15 @@
                                         type="button"
                                         class="btn btn-lg btn-dark btn-primary text-white"
                                         data-bs-toggle="modal"
+                                        data-action="create"
+                                        id="add-button"
                                         data-bs-target="#create-modal"
                                     >
                                         <i class="fas fa-user-plus me-2"></i> Ajouter
                                     </button>
-                                    <!--a href="#personnelform" class="btn btn-lg btn-dark btn-primary">
-                                        <i class="fas fa-user-plus me-2"></i> Ajouter
-                                    </!--a-->
                                 </div>
                             </div>
-                            <form class="form form-inline row mb-3 mt-3" action="{{ route('utilisateur.administrators') }}" method="get">
+                            <form class="form form-inline row mb-3 mt-3" action="{{ route('utilisateur.personnels') }}" method="get">
                                 <div class="col-md-4">
                                     <div class="input-group">
                                         <input type="text" name="search" value="{{ isset($search) ? $search : '' }}" id="search" class="form-control" placeholder="Rechercher par (nom, prenom, téléphone, email)"/>
@@ -117,7 +116,15 @@
                                                 {{ $personnel->fonction }}
                                             </td>
                                             <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
-                                                <a class="btn btn-primary mt-3 p-2" href="{{ route('personnel.edit', $personnel->id) }}">
+                                                <a
+                                                    data-bs-toggle="modal"
+                                                    id="edit-button"
+                                                    data-bs-target="#create-modal"
+                                                    data-action="edit"
+                                                    data-url="{{ route('utilisateur.personnelStore', $personnel->id) }}"
+                                                    class="btn btn-primary mt-3 p-2"
+                                                    href="{{ route('personnel.edit', $personnel->id) }}"
+                                                >
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
                                                 <button
@@ -158,11 +165,10 @@
                                                     <div class="modal-dialog">
                                                         <form role="form" class="form" method="POST" action="{{ route('personnel.migrate') }}">
                                                             @csrf
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="migrateModal">Confirmation de migration</h5>
+                                                            <div class="modal-content p-0">
+                                                                <div class="modal-header bg-dark">
+                                                                    <h5 class="modal-title text-white" id="migrateModal">Confirmation de migration</h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                                                        <i class="fa-solid fa-ellipsis-vertical"></i>
                                                                     </button>
                                                                 </div>
                                                                 <div class="alert alert-success text-center" style="display: none;" id="modal-alert-success-{{ $personnel->id }}">
@@ -191,8 +197,8 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
-                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-                                                                    <button type="button" data-personnel-id="{{ $personnel->id }}" class="spinner-submit-modal-button btn btn-success">
+                                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                                                    <button type="button" data-personnel-id="{{ $personnel->id }}" class="spinner-submit-modal-button btn btn-dark">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
                                                                     </button>
@@ -207,20 +213,20 @@
                                                         <form role="form" class="form" method="POST" action="{{ route('personnel.deleteusercurrentyear') }}">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">Supprimé définitivement l'utilisateur</h5>
+                                                            <div class="modal-content p-0">
+                                                                <div class="modal-header bg-danger">
+                                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Suppresion de l'année scolaire</h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
                                                                 <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
                                                                 <input type="hidden" name="delusyear_user_id" value="{{ $personnel->id }}">
                                                                 <div class="modal-body text-wrap text-justify">
-                                                                    Voulez-vous vraiment supprimée définitivement le personnel {{ $personnel->name }}
+                                                                    Voulez-vous vraiment supprimér le personnel {{ $personnel->name }}
                                                                     pour l'année {{ $activeYear->libelleAnnneeScolaire }} ?
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
-                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-                                                                    <button type="submit" class="spinner-submit-button btn btn-success">
+                                                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                                                    <button type="submit" class="spinner-submit-button btn btn-danger">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
                                                                     </button>
@@ -235,9 +241,9 @@
                                                         <form role="form" id="delete-form" class="form" method="POST" action="{{ route('personnel.destroy', $personnel->id) }}">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                            <div class="modal-content p-0">
+                                                                <div class="modal-header bg-danger">
+                                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Supprimer définitivement</h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body text-wrap text-justify">
@@ -245,8 +251,8 @@
                                                                     {{ $personnel->name }} ? (Cette action est irreversible)
                                                                 </div>
                                                                 <div class="modal-footer flex-row-reverse">
-                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-                                                                    <button type="submit" class="btn spinner-submit-button btn-success">
+                                                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                                                    <button type="submit" class="btn spinner-submit-button btn-danger">
                                                                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                                         Confirmer
                                                                     </button>
@@ -271,25 +277,21 @@
         </div>
         <!-- create or update modal form -->
         <div class="modal fade" id="create-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ isset($personnelToEdit) ? route('personnel.update', $personnelToEdit->id) : route('personnel.store') }}">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <form  enctype="multipart/form-data" role="form" id="createEditForm" class="form row" method="POST" action="{{ isset($personnelToEdit) ? route('personnel.update', $personnelToEdit->id) : route('personnel.store') }}">
                     @csrf
-                    @if(isset($personnelToEdit))
-                        @method('PUT')
-                    @endif
-                    <div class="modal-content">
-                        <div class="modal-header">
+                    <div class="modal-content p-0">
+                        <div class="modal-header" id="modal-header">
                             <div class="modal-title row">
                                 <div class="col-12">
                                     @if (isset($personnelToEdit))
-                                        <h5 class="">Modifier les informations du personnel {{ $personnelToEdit->name }} </h5>
+                                        <h5 class="text-white">Modifier les informations du personnel {{ $personnelToEdit->name }} </h5>
                                     @else
-                                        <h5 class="">Ajouter un nouveau membre du personnel</h5>
+                                        <h5 class="text-white">Ajouter un nouveau membre du personnel</h5>
                                     @endif
                                 </div>
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -307,7 +309,7 @@
                                             type="text" id="name" name="name"
                                             class="form-control"
                                             placeholder="Entrez le nom du personnel"
-                                            value="{{ isset($personnelToEdit) ? $personnelToEdit->name : old("name") }}"
+                                            value="{{old("name")}}"
                                             aria-label="Name"
                                             aria-describedby="name-addon"
                                         >
@@ -319,7 +321,7 @@
                                             Prenom :
                                         </label>
                                         <input type="text" id="surname" name="surname" class="form-control"
-                                            placeholder="Entrez le prénom du personnel" value="{{isset($personnelToEdit) ? $personnelToEdit->surname : old("surname")}}" aria-label="Name"
+                                            placeholder="Entrez le prénom du personnel" value="{{old("surname")}}" aria-label="Name"
                                             aria-describedby="name-addon">
                                     </div>
                                 </div>
@@ -329,7 +331,7 @@
                                             Téléphone :
                                         </label>
                                         <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" class="form-control"
-                                            placeholder="696-879-475" value="{{isset($personnelToEdit) ? $personnelToEdit->phone : old("phone")}}">
+                                            placeholder="696-879-475" value="{{old("phone")}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -339,7 +341,7 @@
                                         </label>
                                         <select name="sex" id="sex" class="form-select">
                                             @foreach (\App\Sex::cases() as $sex)
-                                            <option value="{{ $sex->value }}" {{ isset($personnelToEdit) && $personnelToEdit->sex === $sex->value ? 'selected' : '' }}>{{ $sex->name }}</option>
+                                            <option value="{{ $sex->value }}">{{ $sex->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -350,7 +352,7 @@
                                             Email :
                                         </label>
                                         <input type="email" id="email" name="email" class="form-control"
-                                            placeholder="Entrez l'adresse email" value="{{isset($personnelToEdit) ? $personnelToEdit->email : old("email")}}">
+                                            placeholder="Entrez l'adresse email" value="{{old("email")}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -359,7 +361,7 @@
                                             Lieu de naissance :
                                         </label>
                                         <input type="text" id="lieuNaiss" name="lieuNaiss" class="form-control"
-                                            placeholder="Entrez le lieu de naissance" value="{{isset($personnelToEdit) ? $personnelToEdit->lieuNaiss : old("lieuNaiss")}}">
+                                            placeholder="Entrez le lieu de naissance" value="{{old("lieuNaiss")}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -367,8 +369,8 @@
                                         <label for="dateNaiss" class="form-control-label">
                                             Date de naissance :
                                         </label>
-                                        <input type="date" id="dateNaiss" name="dateNaiss" class="form-control"
-                                        placeholder="Entrez la date de naissance" value="{{ old("dateNaiss" , isset($personnelToEdit) ? \Carbon\Carbon::parse($personnelToEdit->dateNaiss)->format('Y-m-d') : '') }}">
+                                        <input type="datetime-local" id="dateNaiss" name="dateNaiss" class="form-control"
+                                        placeholder="Entrez la date de naissance" value="{{old("dateNaiss")}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -377,7 +379,7 @@
                                             Diplome 1 :
                                         </label>
                                         <input type="text" id="diplome1" name="diplome1" class="form-control"
-                                            placeholder="Entrez le Diplôme 1" value="{{isset($personnelToEdit) ? $personnelToEdit->diplome1 : old("diplome1")}}">
+                                            placeholder="Entrez le Diplôme 1" value="{{old("diplome1")}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -386,7 +388,7 @@
                                             Diplome 2 :
                                         </label>
                                         <input type="text" id="diplome2" name="diplome2" class="form-control"
-                                            placeholder="Entrez le Diplôme 2 " value="{{isset($personnelToEdit) ? $personnelToEdit->diplome2 : old("diplome2")}}">
+                                            placeholder="Entrez le Diplôme 2 " value="{{old("diplome2")}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -395,11 +397,15 @@
                                             Numero CNI :
                                         </label>
                                         <input type="text" id="numCni" name="numCni" class="form-control"
-                                            placeholder="Entrez le lieu de résidence" value="{{isset($personnelToEdit) ? $personnelToEdit->numCni : old("numCni")}}">
+                                            placeholder="Entrez le lieu de résidence" value="{{old("numCni")}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <div>
+                                            <img src="" id="profile-image" alt="Profile Image"
+                                                style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
+                                        </div>
                                         <label for="profile" class="form-control-label">
                                             Photo :
                                         </label>
@@ -413,7 +419,7 @@
                                             Lieu de résidence :
                                         </label>
                                         <input type="text" id="location" name="location" class="form-control"
-                                            placeholder="Entrez le lieu de résidence" value="{{isset($personnelToEdit) ? $personnelToEdit->location : old("location")}}">
+                                            placeholder="Entrez le lieu de résidence" value="{{ old("location") }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -423,7 +429,7 @@
                                         </label>
                                         <select name="fonction" id="fonction" class="form-select">
                                             @foreach (\App\Fonction::cases() as $f)
-                                                <option value="{{ $f->value }}" {{ isset($personnelToEdit) && $personnelToEdit->fonction === $f->value ? 'selected' : '' }}>{{ $f->value }}</option>
+                                                <option value="{{ $f->value }}">{{ $f->value }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -447,10 +453,10 @@
                             </div>
                         </div>
                         <div class="modal-footer flex-row-reverse">
-                            <button type="button" class="btn btn-lg btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="button" class="spinner-submit-form-button btn btn-lg {{ isset($personnelToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" id="submit-form-button" class="spinner-submit-form-button btn btn-lg">
                                 <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                {{ isset($personnelToEdit) ? 'Mettre à jour' : 'Enregistrer' }}
+                                Enregistrer
                             </button>
                         </div>
                     </div>

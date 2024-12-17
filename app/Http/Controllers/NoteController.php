@@ -84,8 +84,6 @@ class NoteController extends Controller
             'note.max' => 'La note doit etre égale au plus à 20'
         ]);
 
-        //dd($request);
-
         $noteId = $request->note_id;
         if($noteId !== null) {
             $note = Note::findOrFail($noteId);

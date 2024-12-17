@@ -106,9 +106,6 @@ $(function() {
                 url: 'notes/' + noteId,
                 type: 'DELETE',
                 data: formData,
-                /*{
-                    _token: $('input[name="_token"]').val()
-                },*/
                 success: function(response) {
                     fetchNotes()
                     setTimeout(function() {
@@ -127,7 +124,6 @@ $(function() {
         // fetching all notes :
         function fetchNotes() {
             var formData = $('#filterNoteForm').serialize();
-            //console.log("works !");
             $.ajax({
                 url : "notes",
                 type : 'GET',
@@ -139,7 +135,6 @@ $(function() {
                     var datas = Object.entries(xhr.responseJSON.errors);
                     var errors = datas.map(error => error[1][0]);
                     setSuccessMessage(errors, '#errors');
-                    //console.error('Erreur de chargement des notes : ', error);
                 }
             });
         }

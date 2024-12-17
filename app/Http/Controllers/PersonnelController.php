@@ -50,6 +50,7 @@ class PersonnelController extends Controller
             });
         }
         $query ?  $personnels = $query->paginate(10) : $personnels = [];
+
         return view('personnel.administrators',compact('user','personnels','migrateYears','activeYear','search','FonctionFilter'));
     }
 
@@ -125,7 +126,8 @@ class PersonnelController extends Controller
      */
     public function edit(Request $request, $id) {
         $personnelToEdit = User::findOrFail($id);
-        $search = $request->input('search');
+        return response()->json(['personnel' => $personnelToEdit]);
+        /*$search = $request->input('search');
         $FonctionFilter = $request->input('funcFilter');
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
@@ -157,7 +159,7 @@ class PersonnelController extends Controller
         }
 
         $query ?  $personnels = $query->paginate(10) : $personnels = [];
-        return view('personnel.administrators', ['#personnelform'], compact('personnels','personnelToEdit','activeYear','migrateYears','search','FonctionFilter'));
+        return view('personnel.administrators', ['#personnelform'], compact('personnels','personnelToEdit','activeYear','migrateYears','search','FonctionFilter'));*/
     }
 
     /**
