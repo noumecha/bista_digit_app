@@ -227,14 +227,14 @@ Route::put('/student/{id}', [EleveController::class, 'update'])->name('student.u
 Route::get('/student/{id}/edit', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
 Route::delete('/student/{id}', [EleveController::class, 'destroy'])->name('student.destroy')->middleware('auth');
 
-## users -> student routes
+## users -> personnel routes
 Route::get('/utilisateur/personnels', [PersonnelController::class, 'index'])->name('utilisateur.personnels')->middleware('auth');
 Route::post('/utilisateur/personnel/save', [PersonnelController::class, 'store'])->name('utilisateur.personnelStore')->middleware('auth');
-//Route::put('/utilisateur/personnel/{id}', [PersonnelController::class, 'update'])->name('utilisateur.personnelUpdate')->middleware('auth');
-//Route::get('/utilisateur/personnels/{id}/edit', [PersonnelController::class, 'edit'])->name('utilisateur.personnelEdit')->middleware('auth');
+Route::put('/utilisateur/personnel/update/{id}', [PersonnelController::class, 'update'])->name('utilisateur.personnelUpdate')->middleware('auth');
+Route::get('/utilisateur/personnels/{id}/edit', [PersonnelController::class, 'edit'])->name('utilisateur.personnelEdit')->middleware('auth');
 Route::delete('/utilisateur/personnels/{id}', [PersonnelController::class, 'destroy'])->name('utilisateur.personnelDestroy')->middleware('auth');
 Route::post('/utilisateur/personnels/migrate', [PersonnelController::class, 'migrate'])->name('utilisateur.personnelMigrate')->middleware('auth');
-Route::delete('/utilisateur/personnels/delete-user-in-year', [PersonnelController::class, 'deleteUserCurrentYear'])->name('utilisateur.personnelDeleteUserCurrentYear')->middleware('auth');
+Route::post('/utilisateur/personnels/delete-user-in-year', [PersonnelController::class, 'deleteUserCurrentYear'])->name('utilisateur.personnelDeleteUserCurrentYear')->middleware('auth');
 
 # annee_scolaire routes
 Route::get('/annee_scolaire/list', [AnneeScolaireController::class, 'show'])->name('annee_scolaire.show')->middleware('auth');

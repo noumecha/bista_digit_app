@@ -2,7 +2,6 @@ $(function(){
     $(document).on('click','.spinner-submit-modal-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        //$(this).prop('disabled', true);
         var form_datas = $(this).closest('form').serialize();
         var form_method = $(this).closest('form').prop('method');
         var form_action = $(this).closest('form').prop('action');
@@ -22,7 +21,6 @@ $(function(){
                 }, 4000);
             },
             error: function(xhr) {
-                console.log(`xhr : ${xhr}`)
                 var errors = []
                 if(xhr.responseJSON && xhr.responseJSON.errors) {
                     var datas = Object.entries(xhr.responseJSON.errors);
@@ -44,7 +42,6 @@ $(function(){
     // success function
     function setSuccessMessage(msg, id) {
         var msgBlock = $(id);
-        console.log(id);
         msgBlock.stop(true, true);
         msgBlock.empty();
         if (Array.isArray(msg)) {

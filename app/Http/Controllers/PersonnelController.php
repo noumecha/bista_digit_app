@@ -18,40 +18,42 @@ class PersonnelController extends Controller
      */
     public function index(Request $request) {
         $user = User::find(Auth::id());
-        $search = $request->input('search');
+        $searchPersonnel = $request->input('searchPersonnel');
         $FonctionFilter = $request->input('funcFilter');
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $userSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
 
         $usersSchoolYearId = $userSchoolYear->pluck('user_id');
-        //dd($usersSchoolYearId);
         if(isset($userSchoolYear)) {
             $query = User::where('typeUser', '=', 'personnel')->whereIn('id', $usersSchoolYearId);
         } else {
             $query = "";
         }
-        if(!empty($search) && !empty($FonctionFilter)) {
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                ->orWhere('surname', 'LIKE', "%{$search}%")
-                ->orWhere('email', 'LIKE', "%{$search}%")
-                ->orWhere('phone', 'LIKE', "%{$search}%");
+        if(!empty($searchPersonnel) && !empty($FonctionFilter)) {
+            $query->where(function($q) use ($searchPersonnel) {
+                $q->where('name', 'LIKE', "%{$searchPersonnel}%")
+                ->orWhere('surname', 'LIKE', "%{$searchPersonnel}%")
+                ->orWhere('email', 'LIKE', "%{$searchPersonnel}%")
+                ->orWhere('phone', 'LIKE', "%{$searchPersonnel}%");
             })->where('fonction', $FonctionFilter);
         } elseif(!empty($FonctionFilter)) {
             $query->where('fonction', $FonctionFilter)
             ->where('typeUser', '=', 'personnel');
-        } elseif (!empty($search)) {
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                ->orWhere('surname', 'LIKE', "%{$search}%")
-                ->orWhere('email', 'LIKE', "%{$search}%")
-                ->orWhere('phone', 'LIKE', "%{$search}%");
+        } elseif (!empty($searchPersonnel)) {
+            $query->where(function($q) use ($searchPersonnel) {
+                $q->where('name', 'LIKE', "%{$searchPersonnel}%")
+                ->orWhere('surname', 'LIKE', "%{$searchPersonnel}%")
+                ->orWhere('email', 'LIKE', "%{$searchPersonnel}%")
+                ->orWhere('phone', 'LIKE', "%{$searchPersonnel}%");
             });
         }
         $query ?  $personnels = $query->paginate(10) : $personnels = [];
-
-        return view('personnel.administrators',compact('user','personnels','migrateYears','activeYear','search','FonctionFilter'));
+        if($request->ajax()) {
+            return view('partials._personnels_table', compact('user','personnels','migrateYears','activeYear','searchPersonnel','FonctionFilter'));
+        } else {
+            return view('utilisateurs.personnels', compact('user','personnels','migrateYears','activeYear','searchPersonnel','FonctionFilter'));
+        }
     }
 
      /**
@@ -93,7 +95,7 @@ class PersonnelController extends Controller
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
-        $user = User::create([
+        $personnel = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'surname' => $request->surname,
@@ -113,60 +115,25 @@ class PersonnelController extends Controller
         ]);
 
         UserAnneeScolaire::create([
-            'user_id' => $user->id,
+            'user_id' => $personnel->id,
             'annee_scolaire_id' => $request->active_year_id,
         ]);
 
-        return response()->json(['success' => 'Personnel ajouté avec succès!']);
-        //return redirect()->route('utilisateur.administrators')->with('success', 'Personnel ajouté avec succès!');
+        return response()->json(['success' => 'Personnel ajouté avec succès']);
     }
 
     /**
      *
      */
-    public function edit(Request $request, $id) {
+    public function edit($id) {
         $personnelToEdit = User::findOrFail($id);
         return response()->json(['personnel' => $personnelToEdit]);
-        /*$search = $request->input('search');
-        $FonctionFilter = $request->input('funcFilter');
-        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
-        $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
-        $userSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id)->first();
-        $usersSchoolYearId = $userSchoolYear->pluck('user_id');
-
-        if(isset($userSchoolYear)) {
-            $query = User::where('typeUser', '=', 'personnel')->whereIn('id',$usersSchoolYearId);
-        } else {
-            $query = "";
-        }
-        if(!empty($search) && !empty($FonctionFilter)) {
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                ->orWhere('surname', 'LIKE', "%{$search}%")
-                ->orWhere('email', 'LIKE', "%{$search}%")
-                ->orWhere('phone', 'LIKE', "%{$search}%");
-            })->where('fonction', $FonctionFilter);
-        } elseif(!empty($FonctionFilter)) {
-            $query->where('fonction', $FonctionFilter)
-            ->where('typeUser', '=', 'personnel');
-        } elseif (!empty($search)) {
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                ->orWhere('surname', 'LIKE', "%{$search}%")
-                ->orWhere('email', 'LIKE', "%{$search}%")
-                ->orWhere('phone', 'LIKE', "%{$search}%");
-            });
-        }
-
-        $query ?  $personnels = $query->paginate(10) : $personnels = [];
-        return view('personnel.administrators', ['#personnelform'], compact('personnels','personnelToEdit','activeYear','migrateYears','search','FonctionFilter'));*/
     }
 
     /**
      *
      */
     public function update(Request $request, $id) {
-        //dd($request);
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
@@ -180,20 +147,20 @@ class PersonnelController extends Controller
             'location' => 'max:255',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG'])],
+            'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG']),Rule::unique('users')->ignore($id)],
+            //'fonction' => ['unique:users',Rule::unique('users')->ignore($id)],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
-            //'active_year_id' => 'required',
         ], [
-                'name.required' => 'Entrez le nom',
-                'surname.required' => 'Entrez le prenom',
-                'email.email' => 'Entrez une adresse email valide',
-                'email.unique' => 'Un utilisateur avec cette adresse email existe déjà',
-                'phone.required' => 'Entrez le numero de téléphone',
-                'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
-                'sex.required' => 'Choisissez le sexe',
-                'fonction.required' => 'Choisisssez la fonction',
-                'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
-                //'active_year_id.required' => 'Aucune annéee selectionnée xxcx',
+            'name.required' => 'Entrez le nom',
+            'surname.required' => 'Entrez le prenom',
+            'email.email' => 'Entrez une adresse email valide',
+            'email.unique' => 'Un utilisateur avec cette adresse email existe déjà',
+            'phone.required' => 'Entrez le numero de téléphone',
+            'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
+            'sex.required' => 'Choisissez le sexe',
+            'fonction.required' => 'Choisisssez la fonction',
+            'fonction.unique' => 'Cette fonction est déja occupée',
+            'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
         $personnel = User::findOrFail($id);
@@ -208,16 +175,11 @@ class PersonnelController extends Controller
 
         $personnel->update($request->except('profile'));
 
-        /*UserAnneeScolaire::create([
-            'user_id' => $personnel->id,
-            'annee_scolaire_id' => $request->active_year_id,
-        ]);*/
-
-        return redirect()->route('utilisateur.administrators')->with('success', 'Personnel mis à jour avec succès');
+        return response()->json(['success' => 'Informations du personnel mis à jour avec succès']);
     }
 
     /**
-     *
+     * delete user definitely
      */
     public function destroy($id) {
         $personnel = User::findOrFail($id);
@@ -225,20 +187,20 @@ class PersonnelController extends Controller
         $personnel->delete();
         $userYears->delete();
 
-        return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel supprimé avec succès');
+        return redirect()->route('utilisateur.personnels')->with('deleteSuccess', 'Personnel supprimé avec succès');
     }
 
     /**
      *  delete user for the current yerar
      */
     public function deleteUserCurrentYear(Request $request) {
-        //dd($request);
+
         $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id)->first();
-        //dd($userYear);
+
         if ($userYear->delete()) {
-            return redirect()->route('utilisateur.administrators')->with('deleteSuccess', 'Personnel supprimé avec succès pour l\'année courrante');
+            return redirect()->route('utilisateur.personnels')->with('deleteSuccess', 'Personnel supprimé avec succès pour l\'année courrante');
         } else {
-            return redirect()->route('utilisateur.administrators')->with('errorSuccess', 'Echec de surpression du personne pour l\'année courrante');
+            return redirect()->route('utilisateur.personnels')->with('errorSuccess', 'Echec de surpression du personnel pour l\'année courrante');
         }
 
     }
@@ -256,7 +218,7 @@ class PersonnelController extends Controller
         ]);
         $y = AnneeScolaire::findOrFail($request->migrate_year_id);
         $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=',$request->migrate_year_id)->where('user_id', '=', $request->migrate_user_id)->first();
-        //dd($userYear);
+
         if($userYear) {
             return response()->json(['error' => 'L\'utilisateur à déjà été défini pour l\'année : '.$y->libelleAnneeScolaire]);
         } else {
