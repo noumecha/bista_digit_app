@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
+use App\Models\Fonction;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class PersonnelController extends Controller
     public function index(Request $request) {
         $user = User::find(Auth::id());
         $searchPersonnel = $request->input('searchPersonnel');
+        $fonctions = Fonction::all();
         $FonctionFilter = $request->input('funcFilter');
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
@@ -36,9 +38,9 @@ class PersonnelController extends Controller
                 ->orWhere('surname', 'LIKE', "%{$searchPersonnel}%")
                 ->orWhere('email', 'LIKE', "%{$searchPersonnel}%")
                 ->orWhere('phone', 'LIKE', "%{$searchPersonnel}%");
-            })->where('fonction', $FonctionFilter);
+            })->where('fonction_id', $FonctionFilter);
         } elseif(!empty($FonctionFilter)) {
-            $query->where('fonction', $FonctionFilter)
+            $query->where('fonction_id', $FonctionFilter)
             ->where('typeUser', '=', 'personnel');
         } elseif (!empty($searchPersonnel)) {
             $query->where(function($q) use ($searchPersonnel) {
@@ -50,9 +52,9 @@ class PersonnelController extends Controller
         }
         $query ?  $personnels = $query->paginate(10) : $personnels = [];
         if($request->ajax()) {
-            return view('partials._personnels_table', compact('user','personnels','migrateYears','activeYear','searchPersonnel','FonctionFilter'));
+            return view('partials._personnels_table', compact('user','personnels','migrateYears','activeYear','searchPersonnel','FonctionFilter','fonctions'));
         } else {
-            return view('utilisateurs.personnels', compact('user','personnels','migrateYears','activeYear','searchPersonnel','FonctionFilter'));
+            return view('utilisateurs.personnels', compact('user','personnels','migrateYears','activeYear','searchPersonnel','FonctionFilter','fonctions'));
         }
     }
 
@@ -61,6 +63,7 @@ class PersonnelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      */
     public function store(Request $request) {
+        dd($request);
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
@@ -75,8 +78,8 @@ class PersonnelController extends Controller
             'active_year_id' => 'required',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG'])],
-            'fonction' => 'unique:users',
+            'fonction_id' => 'required|exists:fonctions,id',
+            'fonction_id' => 'unique:users',
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
             'name.required' => 'Entrez le nom',
@@ -89,9 +92,9 @@ class PersonnelController extends Controller
             'surname.min' => 'Le prenom doit contenir au moins 3 caractères',
             'numCni.unique' => 'Ce numéro de CNI est déjà dans le système',
             'sex.required' => 'Choisissez le sexe',
-            'fonction.required' => 'Choisisssez la fonction',
+            'fonction_id.required' => 'Choisisssez la fonction',
             'active_year_id.required' => 'Aucune annéee selectionnée',
-            'fonction.unique' => 'Cette fonction est déja occupée',
+            'fonction_id.unique' => 'Cette fonction est déja occupée',
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
@@ -106,7 +109,7 @@ class PersonnelController extends Controller
             'diplome1' => $request->diplome1,
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
-            'fonction' => $request->fonction,
+            'fonction_id' => $request->fonction_id,
             'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : '',
             'typeUser' => 'personnel',
             'password' => Hash::make($request->password),
@@ -147,7 +150,7 @@ class PersonnelController extends Controller
             'location' => 'max:255',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'fonction' => ['required', Rule::in(['Directeur Général','Comptable','Econome','Surveillant Général','Préfet des études','Principal','Dean Of Studies','Adjoint SG']),Rule::unique('users')->ignore($id)],
+            'fonction_id' => 'required|exists:fonctions,id',
             //'fonction' => ['unique:users',Rule::unique('users')->ignore($id)],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
@@ -158,8 +161,8 @@ class PersonnelController extends Controller
             'phone.required' => 'Entrez le numero de téléphone',
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
             'sex.required' => 'Choisissez le sexe',
-            'fonction.required' => 'Choisisssez la fonction',
-            'fonction.unique' => 'Cette fonction est déja occupée',
+            'fonction_id.required' => 'Choisisssez la fonction',
+            'fonction_id.unique' => 'Cette fonction est déja occupée',
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 

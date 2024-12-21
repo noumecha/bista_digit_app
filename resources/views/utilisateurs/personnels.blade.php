@@ -46,8 +46,8 @@
                                     <div class="input-group">
                                         <select name="funcFilter" class="form-select" id="funcFilter">
                                             <option value="">Toutes les fonctions</option>
-                                            @foreach (\App\Fonction::cases() as $f)
-                                                <option value="{{ $f->value }}" {{ request('funcFilter') == $f->value ? 'selected' : '' }}>{{ $f->value }}</option>
+                                            @foreach ($fonctions as $fonction)
+                                                <option value="{{ $fonction->id }}" {{ request('funcFilter') == $fonction->id ? 'selected' : '' }}>{{ $fonction->libelleFonction }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -206,12 +206,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fonction" class="form-control-label">
+                                        <label for="fonction_id" class="form-control-label">
                                             Fonction :
                                         </label>
-                                        <select name="fonction" id="fonction" class="form-select">
-                                            @foreach (\App\Fonction::cases() as $f)
-                                                <option value="{{ $f->value }}">{{ $f->value }}</option>
+                                        <select name="fonction_id" id="fonction_id" class="form-select">
+                                            @foreach ($fonctions as $fonction)
+                                                <option value="{{ $fonction->id }}">{{ $fonction->libelleFonction }}</option>
                                             @endforeach
                                         </select>
                                     </div>

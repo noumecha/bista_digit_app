@@ -51,7 +51,7 @@
                     {{ $personnel->phone }}
                 </td>
                 <td class="text-center align-middle bg-transparent border-bottom">
-                    {{ $personnel->fonction }}
+                    {{ $personnel->fonction->libelleFonction }}
                 </td>
                 <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                     <a
