@@ -22,6 +22,7 @@ use App\Http\Controllers\EnseignantMatiereModelController;
 use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\FonctionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\NoteController;
@@ -226,6 +227,13 @@ Route::post('/student/save', [EleveController::class, 'store'])->name('student.s
 Route::put('/student/{id}', [EleveController::class, 'update'])->name('student.update')->middleware('auth');
 Route::get('/student/{id}/edit', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
 Route::delete('/student/{id}', [EleveController::class, 'destroy'])->name('student.destroy')->middleware('auth');
+
+## users -> fonctions routes
+Route::get('/utilisateur/fonctions', [FonctionController::class, 'index'])->name('utilisateur.fonctions')->middleware('auth');
+Route::post('/utilisateur/fonction/save', [FonctionController::class, 'store'])->name('utilisateur.fonctionStore')->middleware('auth');
+Route::put('/utilisateur/fonction/update/{id}', [FonctionController::class, 'update'])->name('utilisateur.fonctionUpdate')->middleware('auth');
+Route::get('/utilisateur/fonctions/{id}/edit', [FonctionController::class, 'edit'])->name('utilisateur.fonctionEdit')->middleware('auth');
+Route::delete('/utilisateur/fonctions/{id}', [FonctionController::class, 'destroy'])->name('utilisateur.fonctionDestroy')->middleware('auth');
 
 ## users -> personnel routes
 Route::get('/utilisateur/personnels', [PersonnelController::class, 'index'])->name('utilisateur.personnels')->middleware('auth');

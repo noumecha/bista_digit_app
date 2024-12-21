@@ -117,7 +117,15 @@ class User extends Authenticatable
     }
 
     /**
-     *
+     * A personnel have a fonction
+     */
+    public function fonction() : BelongsTo
+    {
+        return $this->belongsTo(Fonction::class, 'fonction_id');
+    }
+
+    /**
+     * A teacher teach many subjects
      */
     public function matieres() : BelongsToMany
     {

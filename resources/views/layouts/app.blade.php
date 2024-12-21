@@ -426,6 +426,7 @@
         <script src="{{ asset('js/functions/custom-dropdown.js') }}"></script>
         <script src="{{ asset('js/functions/migrate.js') }}"></script>
         <script src="{{ asset('js/functions/personnels.js') }}"></script>
+        <script src="{{ asset('js/functions/fonctions.js') }}"></script>
         <script src="{{ asset('js/functions/edit.js') }}"></script>
     </body>
 
