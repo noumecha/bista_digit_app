@@ -63,7 +63,7 @@ class PersonnelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      */
     public function store(Request $request) {
-        dd($request);
+        //dd($request);
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
