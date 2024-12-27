@@ -111,9 +111,9 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                         </button>
                                     </div>
-                                    <div class="alert alert-success text-center" style="display: none;" id="modal-alert-success-{{ $personnel->id }}">
+                                    <div class="alert text-wrap alert-success text-center" style="display: none;" id="modal-alert-success-{{ $personnel->id }}">
                                     </div>
-                                    <div class="alert alert-danger text-center" style="display: none;" id="modal-alert-errors-{{ $personnel->id }}">
+                                    <div class="alert text-wrap alert-danger text-center" style="display: none;" id="modal-alert-errors-{{ $personnel->id }}">
                                     </div>
                                     <div class="modal-body text-wrap text-justify">
                                         <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>

@@ -40,7 +40,7 @@ class User extends Authenticatable
         'matricule',
         'statutRedoublanc',
         'typeUser',
-        'fonction',
+        'fonction_id',
         'name',
         'email',
         'classe_id',
@@ -74,42 +74,47 @@ class User extends Authenticatable
     ];
 
     /**
-     *
+     * get the user name
      */
     public function getName() {
         return $this->name;
     }
 
     /**
-     *
+     * a user can be on many schools years
      */
     public function anneeScolaire() {
         return $this->belongsToMany(AnneeScolaire::class);
     }
-
     /**
-     *
+     * a user can have different fonction throw different shool year
+     */
+    public function fonctionAnneeScolaire() {
+        return $this->belongsToMany(FonctionAnneeScolaireUser::class);
+    }
+    /**
+     * a user can be student
      */
     public function isEleve() {
         return $this->typeUser === 'eleve';
     }
 
     /**
-     *
+     * a user can be a teacher
      */
     public function isEnseignant() {
         return $this->typeUser === 'enseignant';
     }
 
     /**
-     *
+     * a user can be a personnel member
      */
     public function isPersonnel() {
         return $this->typeUser === 'personnel';
     }
 
     /**
-     *
+     * A student have a class
      */
     public function classe() : BelongsTo
     {
@@ -133,21 +138,21 @@ class User extends Authenticatable
     }
 
     /**
-     *
+     * a user can create many blog articles
      */
     public function actualites(): HasMany {
         return $this->hasMany(Actualite::class);
     }
 
     /**
-     *
+     * a teacher can upload many subjects
      */
     public function epreuves(): HasMany {
         return $this->hasMany(Epreuve::class);
     }
 
     /**
-     *
+     * A user can have many notes
      */
     public function notes(): HasMany {
         return $this->hasMany(Note::class);

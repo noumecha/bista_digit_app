@@ -19,4 +19,11 @@ class Fonction extends Model
     protected $fillable = [
         'libelleFonction'
     ];
+
+    /**
+     * a user can have different fonction throw different shool year
+     */
+    public function fonctionAnneeScolaire() {
+        return $this->belongsToMany(FonctionAnneeScolaireUser::class);
+    }
 }

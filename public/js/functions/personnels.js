@@ -41,20 +41,27 @@ $(function(){
         }
     })
 
-    // When submitting create form for updating or creating new personnel
+    // When submiting form for updating or creating new personnel
     $(document).on('click','.spinner-submit-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
         var buttonText = $(this).children('span#submit-form-button-text');
         var personnelId = $('#personnelId').val();
-        var form_datas = $(this).closest('form').serialize();
-        var form_method = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
-        var form_action = buttonText.text() === 'Mettre à jour' ? 'personnel/update/' + personnelId : 'personnel/save';
-        var modal_id = $(this).closest('div.modal').prop('id');
+        var form = $(this).closest('form')[0];
+        var formData = new FormData(form);
+        var csrfToken = $('#_token').val();
+        console.log(csrfToken);
+        formData.append('_token', csrfToken); // Add CSRF token to FormData
+        var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'personnel/update/' + personnelId : 'personnel/save';
+        var modalId = $(this).closest('div.modal').prop('id');
+        //console.log([...formData.entries()]);
         $.ajax({
-            url: form_action,
-            type: form_method,
-            data: form_datas,
+            url: formAction,
+            type: formMethod,
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function(response) {
                 if(response.error)
                     setSuccessMessage(response.error, '#modal-form-alert-errors');
@@ -71,7 +78,7 @@ $(function(){
                     stylingErrors(xhr.responseJSON.errors);
                     var datas = Object.entries(xhr.responseJSON.errors);
                     errors = datas.map(error => error[1][0]);
-                    $('#'+modal_id).on('hidden.bs.modal', function() {
+                    $('#'+modalId).on('hidden.bs.modal', function() {
                         return false;
                     });
                 } else {
@@ -133,7 +140,7 @@ $(function(){
             });
             msgBlock.append(list);
         } else {
-            msgBlock.append($('<p class="text-center"></p>').text(msg));
+            msgBlock.append($('<p class="text-center mb-0"></p>').text(msg));
         }
         msgBlock.fadeIn().css('display', 'block');
         setTimeout(function() {
@@ -159,7 +166,7 @@ $(function(){
 
     // fill the form with data :
     function fillInputForm(res, form) {
-        console.log(res);
+        //console.log(res);
         object = Object.keys(res)[0];
         data = res[object];
         form.find('input, select, checkbox').each(function() {
@@ -167,9 +174,9 @@ $(function(){
             if(inputName in data) {
                 if ($(this).is('input[type=checkbox]') || $(this).is('input[type=radio]')) {
                     $(this).prop('checked', data[inputName]);
-                } else if ($(this).is('select')) {
+                }/* else if ($(this).is('select')) {
                     $(this).val(data[inputName]).trigger('change');
-                } else {
+                }*/ else {
                     $(this).val(data[inputName]);
                 }
             }

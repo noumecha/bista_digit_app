@@ -64,7 +64,8 @@
         <div class="modal fade" id="create-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered">
                 <form  enctype="multipart/form-data" role="form" id="createEditForm" class="form row">
-                    @csrf
+                    <!-- @ csrf -->
+                    <input type="hidden" name="csrf-token" id="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="personnelId" id="personnelId" value="">
                     <div class="modal-content p-0">
                         <div class="modal-header" id="modal-header">
@@ -77,9 +78,9 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="alert alert-success" style="display: none;" id="modal-form-alert-success">
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
                             </div>
-                            <div class="alert alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -185,14 +186,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <div>
-                                            <img src="" id="profile-image" alt="Profile Image"
+                                            <img src="" id="profile-image" alt="image"
                                                 style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
                                         </div>
                                         <label for="profile" class="form-control-label">
                                             Photo :
                                         </label>
-                                        <input type="file" id="profile" name="profile" class="form-control"
-                                            placeholder="Entrez le lieu de résidence" value="{{ old("profile") }}">
+                                        <input type="file" id="profile" name="profile" class="form-control" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

@@ -4,18 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
 use App\Models\Fonction;
+use App\Models\FonctionAnneeScolaireUser;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;
+use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class PersonnelController extends Controller
 {
     /**
-     *
+     * load personnel informations or querying
      */
     public function index(Request $request) {
         $user = User::find(Auth::id());
@@ -26,6 +29,7 @@ class PersonnelController extends Controller
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $userSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
 
+        //dd($activeYear);
         $usersSchoolYearId = $userSchoolYear->pluck('user_id');
         if(isset($userSchoolYear)) {
             $query = User::where('typeUser', '=', 'personnel')->whereIn('id', $usersSchoolYearId);
@@ -59,7 +63,7 @@ class PersonnelController extends Controller
     }
 
      /**
-     * saving administrators members
+     * create a new personnel member
      * @param  \Illuminate\Http\Request  $request
      */
     public function store(Request $request) {
@@ -78,8 +82,21 @@ class PersonnelController extends Controller
             'active_year_id' => 'required',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'fonction_id' => 'required|exists:fonctions,id',
-            'fonction_id' => 'unique:users',
+            'fonction_id' => [
+                'required',
+                'exists:fonctions,id',
+                function ($attributes, $value, $fail) use ($request) {
+                    $exists = FacadesDB::table('fonction_annee_scolaire_users')
+                    ->where('fonction_id', $value)
+                    ->where('annee_scolaire_id',$request->active_year_id)
+                    ->exists();
+
+                    if($exists) {
+                        $fail('La fonction sélectionnée est déjà occupée pour l\'année scolaire actuelle.');
+                    }
+                }
+            ],
+            //'fonction_id' => 'unique:users',
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
             'name.required' => 'Entrez le nom',
@@ -94,7 +111,7 @@ class PersonnelController extends Controller
             'sex.required' => 'Choisissez le sexe',
             'fonction_id.required' => 'Choisisssez la fonction',
             'active_year_id.required' => 'Aucune annéee selectionnée',
-            'fonction_id.unique' => 'Cette fonction est déja occupée',
+            //'fonction_id.unique' => 'Cette fonction est déja occupée',
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
@@ -117,16 +134,29 @@ class PersonnelController extends Controller
             'create_year_id' => $request->active_year_id,
         ]);
 
-        UserAnneeScolaire::create([
+        // relation between user - fonction - school year
+        $fonctionAnneeScolaireUser = FonctionAnneeScolaireUser::create([
+            'user_id' => $request->user_id,
+            'fonction_id' => $request->fonction_id,
+            'annee_scolaire_id' => $request->active_year_id,
+        ]);
+
+        // add the user to the current school year
+        $userAnneeScolaire = UserAnneeScolaire::create([
             'user_id' => $personnel->id,
             'annee_scolaire_id' => $request->active_year_id,
         ]);
 
-        return response()->json(['success' => 'Personnel ajouté avec succès']);
+        if($personnel && $fonctionAnneeScolaireUser && $userAnneeScolaire) {
+            return response()->json(['success' => 'Personnel ajouté avec succès']);
+        } else {
+            return response()->json(['error' => 'Erreur lors de l\'enregistrement du personnel']);
+        }
+
     }
 
     /**
-     *
+     * click to edit a personnel
      */
     public function edit($id) {
         $personnelToEdit = User::findOrFail($id);
@@ -134,7 +164,7 @@ class PersonnelController extends Controller
     }
 
     /**
-     *
+     * update user information
      */
     public function update(Request $request, $id) {
         $request->validate([
@@ -150,8 +180,22 @@ class PersonnelController extends Controller
             'location' => 'max:255',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            'fonction_id' => 'required|exists:fonctions,id',
-            //'fonction' => ['unique:users',Rule::unique('users')->ignore($id)],
+            //'fonction_id' => 'required|exists:fonctions,id',
+            'fonction_id' => [
+                'required',
+                'exists:fonctions,id',
+                function ($attributes, $value, $fail) use ($request, $id) {
+                    $exists = FacadesDB::table('fonction_annee_scolaire_users')
+                    ->where('user_id','!=',$id)
+                    ->where('fonction_id', $value)
+                    ->where('annee_scolaire_id',$request->active_year_id)
+                    ->exists();
+
+                    if($exists) {
+                        $fail('La fonction sélectionnée est déjà occupée pour l\'année scolaire actuelle.');
+                    }
+                }
+            ],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
             'name.required' => 'Entrez le nom',
@@ -162,11 +206,25 @@ class PersonnelController extends Controller
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
             'sex.required' => 'Choisissez le sexe',
             'fonction_id.required' => 'Choisisssez la fonction',
-            'fonction_id.unique' => 'Cette fonction est déja occupée',
+            //'fonction_id.unique' => 'Cette fonction est déja occupée',
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
+        dd($request);
         $personnel = User::findOrFail($id);
+        if($personnel->fonction_id !== $request->fonction_id) {
+            // get the old user fonction year && delete it.
+            $currentUserFonction = FonctionAnneeScolaireUser::where('user_id', '=', $id)
+                ->where('fonction_id', '=', $personnel->fonction_id)->first();
+            //dd($currentUserFonction);
+            $currentUserFonction->delete();
+
+            FonctionAnneeScolaireUser::create([
+                'user_id' => $id,
+                'fonction_id' => $request->fonction_id,
+                'annee_scolaire_id' => $request->active_year_id,
+            ]);
+        }
 
         if($request->hasFile('profile')) {
             $imagePath = $request->file('profile')->store('profiles', 'public');
@@ -187,10 +245,12 @@ class PersonnelController extends Controller
     public function destroy($id) {
         $personnel = User::findOrFail($id);
         $userYears = UserAnneeScolaire::where('user_id', '=', $id);
+        $userFonctionYear = FonctionAnneeScolaireUser::where('user_id', '=', $id);
         $personnel->delete();
         $userYears->delete();
+        $userFonctionYear->delete();
 
-        return redirect()->route('utilisateur.personnels')->with('deleteSuccess', 'Personnel supprimé avec succès');
+        return redirect()->route('utilisateur.personnels')->with('deleteSuccess', 'Personnel supprimé définitivement avec succès');
     }
 
     /**
@@ -199,8 +259,12 @@ class PersonnelController extends Controller
     public function deleteUserCurrentYear(Request $request) {
 
         $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id)->first();
+        $userFonctionYear = FonctionAnneeScolaireUser::all()
+            ->where('annnee_scolaire_id', '=', $request->delusyear_year_id)
+            ->where('user_id', '=',$request->delusyear_user_id)
+            ->first();
 
-        if ($userYear->delete()) {
+        if ($userYear->delete() && $userFonctionYear->delete()) {
             return redirect()->route('utilisateur.personnels')->with('deleteSuccess', 'Personnel supprimé avec succès pour l\'année courrante');
         } else {
             return redirect()->route('utilisateur.personnels')->with('errorSuccess', 'Echec de surpression du personnel pour l\'année courrante');
@@ -209,7 +273,7 @@ class PersonnelController extends Controller
     }
 
     /**
-     *
+     * Migrate personnel for a forward year to achieve application evolution
      */
     public function migrate(Request $request) {
         $request->validate([
@@ -219,15 +283,36 @@ class PersonnelController extends Controller
             'migrate_year_id.required' => 'Aucune année selectionnée',
             'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',
         ]);
+
+        // getting data for evaluation
         $y = AnneeScolaire::findOrFail($request->migrate_year_id);
-        $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=',$request->migrate_year_id)->where('user_id', '=', $request->migrate_user_id)->first();
+        $u = User::findOrFail($request->migrate_user_id);
+        $f = Fonction::findOrFail($u->fonction_id);
+
+        // checking if something already exists :
+        $userYear = UserAnneeScolaire::all()
+            ->where('annee_scolaire_id','=',$request->migrate_year_id)
+            ->where('user_id', '=', $request->migrate_user_id)
+            ->first();
+        $userYearFonction = FonctionAnneeScolaireUser::all()
+            ->where('annee_scolaire_id','=',$request->migrate_year_id)
+            ->where('fonction_id','=',$u->fonction_id)
+            ->first();
 
         if($userYear) {
-            return response()->json(['error' => 'L\'utilisateur à déjà été défini pour l\'année : '.$y->libelleAnneeScolaire]);
+            return response()->json(['error' => 'L\'utilisateur à déjà été inclu pour l\'année : '.$y->libelleAnneeScolaire]);
+        } else if ($userYearFonction) {
+            return response()->json(['error' => 'Un utilisateur avec la fonction '.$f->libelleFonction.' existe déjà pour l\'année '.$y->libelleAnneeScolaire]);
         } else {
             UserAnneeScolaire::create([
                 'user_id' => $request->migrate_user_id,
                 'annee_scolaire_id'=>$request->migrate_year_id,
+            ]);
+            // relation between user - fonction - school year
+            FonctionAnneeScolaireUser::create([
+                'user_id' => $request->migrate_user_id,
+                'fonction_id' => $u->fonction_id,
+                'annee_scolaire_id' => $request->migrate_year_id,
             ]);
             return response()->json(['success' => 'Personnel migré avec succès']);
         }
