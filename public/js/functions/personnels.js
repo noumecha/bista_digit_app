@@ -1,7 +1,32 @@
 $(function(){
     // setting up text on header or button depending of action
+    $('#create-modal').on('shown.bs.modal', function() {
+        console.log('test');
+        $.ajax({
+            url: '/csrf-token',
+            method: 'GET',
+            success: function(data) {
+                // Update the CSRF token in the modal form
+                $('#_token').val(data);
+            }
+        });
+    });
+
+    // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-modal"]', function(e) {
         e.preventDefault();
+        // refresh token
+        console.log('test');
+        $.ajax({
+            url: '/csrf-token',
+            method: 'GET',
+            success: function(data) {
+                // Update the CSRF token in the modal form
+                $('#_token').val(data);
+            }
+        });
+
+        // setting up variables
         var action = $(this).data('action');
         var personnelId = $(this).data('personnel-id');
         var personnelIdInput = $('#personnelId');
@@ -49,7 +74,7 @@ $(function(){
         var personnelId = $('#personnelId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var csrfToken = $('#_token').val();
+        var csrfToken = $('input[name="_token"]').val();
         console.log(csrfToken);
         formData.append('_token', csrfToken); // Add CSRF token to FormData
         var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
@@ -59,6 +84,9 @@ $(function(){
         $.ajax({
             url: formAction,
             type: formMethod,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
             data: formData,
             processData: false,
             contentType: false,
@@ -81,7 +109,10 @@ $(function(){
                     $('#'+modalId).on('hidden.bs.modal', function() {
                         return false;
                     });
-                } else {
+                } /*else if (xhr.status === 419) {
+                    alert('Veuillez recharger la page!');
+                    location.reload();
+                } */ else {
                     setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
                 }
                 setTimeout(function() {

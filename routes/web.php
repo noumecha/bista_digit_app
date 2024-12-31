@@ -46,6 +46,11 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
+// refresh token routes :
+Route::get('/csrf-token', function () {
+    return response()->json(['token' => csrf_token()]);
+})->middleware('auth');
+
 // Actualites CRUD Routes :
 Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
 Route::post('/actualites/save', [ActusController::class, 'store'])->name('actualite.store')->middleware('auth');
