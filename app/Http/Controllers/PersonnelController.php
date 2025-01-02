@@ -127,7 +127,7 @@ class PersonnelController extends Controller
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
             'fonction_id' => $request->fonction_id,
-            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : '',
+            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : ($request->sex == 'M' ? asset('img/default-man.jpg') : asset('img/default-woman.jpg')),
             'typeUser' => 'personnel',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
@@ -210,14 +210,14 @@ class PersonnelController extends Controller
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
-        dd($request);
         $personnel = User::findOrFail($id);
-        if($personnel->fonction_id !== $request->fonction_id) {
+        if($personnel->fonction_id !== (int)$request->fonction_id) {
             // get the old user fonction year && delete it.
             $currentUserFonction = FonctionAnneeScolaireUser::where('user_id', '=', $id)
                 ->where('fonction_id', '=', $personnel->fonction_id)->first();
-            //dd($currentUserFonction);
-            $currentUserFonction->delete();
+            if($currentUserFonction) {
+                $currentUserFonction->delete();
+            }
 
             FonctionAnneeScolaireUser::create([
                 'user_id' => $id,

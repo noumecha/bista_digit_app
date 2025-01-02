@@ -64,8 +64,7 @@
         <div class="modal fade" id="create-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered">
                 <form  enctype="multipart/form-data" role="form" id="createEditForm" class="form row">
-                    <!-- @ csrf -->
-                    <input type="hidden" name="csrf-token" id="_token" value="{{ csrf_token() }}">
+                    @csrf
                     <input type="hidden" name="personnelId" id="personnelId" value="">
                     <div class="modal-content p-0">
                         <div class="modal-header" id="modal-header">

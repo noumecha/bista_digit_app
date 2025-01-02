@@ -1,31 +1,8 @@
 $(function(){
-    // setting up text on header or button depending of action
-    $('#create-modal').on('shown.bs.modal', function() {
-        console.log('test');
-        $.ajax({
-            url: '/csrf-token',
-            method: 'GET',
-            success: function(data) {
-                // Update the CSRF token in the modal form
-                $('#_token').val(data);
-            }
-        });
-    });
 
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-modal"]', function(e) {
         e.preventDefault();
-        // refresh token
-        console.log('test');
-        $.ajax({
-            url: '/csrf-token',
-            method: 'GET',
-            success: function(data) {
-                // Update the CSRF token in the modal form
-                $('#_token').val(data);
-            }
-        });
-
         // setting up variables
         var action = $(this).data('action');
         var personnelId = $(this).data('personnel-id');
@@ -74,19 +51,15 @@ $(function(){
         var personnelId = $('#personnelId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var csrfToken = $('input[name="_token"]').val();
-        console.log(csrfToken);
-        formData.append('_token', csrfToken); // Add CSRF token to FormData
         var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
         var formAction = buttonText.text() === 'Mettre à jour' ? 'personnel/update/' + personnelId : 'personnel/save';
         var modalId = $(this).closest('div.modal').prop('id');
-        //console.log([...formData.entries()]);
+        if (buttonText.text() === 'Mettre à jour') {
+            formData.append('_method', 'PUT');
+        }
         $.ajax({
             url: formAction,
-            type: formMethod,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-            },
+            type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
@@ -109,10 +82,7 @@ $(function(){
                     $('#'+modalId).on('hidden.bs.modal', function() {
                         return false;
                     });
-                } /*else if (xhr.status === 419) {
-                    alert('Veuillez recharger la page!');
-                    location.reload();
-                } */ else {
+                } else {
                     setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
                 }
                 setTimeout(function() {
@@ -122,8 +92,7 @@ $(function(){
             }
         });
     });
-
-    // reseting data :
+    // reseting form title and color :
     $('#create-modal').on('hidden.bs.modal', function () {
         const form = $('#createEditForm');
         form.trigger('reset');
@@ -132,7 +101,7 @@ $(function(){
         $('#submit-form-buuton').children('span#submit-form-button-text').text('');
     });
 
-    // fetching note dynamically throw filters
+    // fetching personnels member dynamically with filters
     $('#searchPersonnel,#funcFilter').on('change keyup', function () {
         fetchPersonnels();
     });

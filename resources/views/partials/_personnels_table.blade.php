@@ -38,7 +38,7 @@
                 <td class="align-middle bg-transparent border-bottom">
                     <div class="d-flex justify-content-center align-items-center">
                         <img
-                            src="{{ isset($personnel->profile) ? asset('storage/' . $personnel->profile) : asset('front/images/logo.png') }}"
+                            src="{{ asset('storage/' . $personnel->profile) }}"
                             class="rounded-circle mr-2"
                             alt="user1" style="height: 36px; width: 36px;"
                         />
