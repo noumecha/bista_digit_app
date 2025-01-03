@@ -51,7 +51,13 @@
                     {{ $personnel->phone }}
                 </td>
                 <td class="text-center align-middle bg-transparent border-bottom">
-                    {{ $personnel->fonction->libelleFonction }}
+                    @foreach ($personnel->fonctions as $f)
+                        @foreach ($fonctions as $fonction)
+                            @if ($fonction->id === $f->pivot->fonction_id && $activeYear->id === $f->pivot->annee_scolaire_id)
+                                {{ $fonction->libelleFonction }}
+                            @endif
+                        @endforeach
+                    @endforeach
                 </td>
                 <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                     <a
@@ -60,6 +66,7 @@
                         data-bs-target="#create-modal"
                         data-action="edit"
                         data-personnel-id="{{ $personnel->id }}"
+                        data-year-id="{{ $activeYear->id }}"
                         data-personnel-name="{{ $personnel->name }}"
                         data-url="{{ route('utilisateur.personnelStore', $personnel->id) }}"
                         class="btn btn-primary mt-3 p-2"
@@ -118,6 +125,9 @@
                                     <div class="modal-body text-wrap text-justify">
                                         <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>
                                         <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="hidden" name="migrate_current_year_id" id="migrate_current_year_id" value="{{ $activeYear->id }}">
+                                            </div>
                                             <div class="form-group">
                                                 <input type="hidden" name="migrate_user_id" id="migrate_user_id" value="{{ $personnel->id }}">
                                             </div>

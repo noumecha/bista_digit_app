@@ -7,7 +7,6 @@ use App\Models\Fonction;
 use App\Models\FonctionAnneeScolaireUser;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;
-use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +20,7 @@ class PersonnelController extends Controller
      * load personnel informations or querying
      */
     public function index(Request $request) {
+        // define variables
         $user = User::find(Auth::id());
         $searchPersonnel = $request->input('searchPersonnel');
         $fonctions = Fonction::all();
@@ -28,9 +28,10 @@ class PersonnelController extends Controller
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $userSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
-
-        //dd($activeYear);
         $usersSchoolYearId = $userSchoolYear->pluck('user_id');
+        $fonctionsUserYears = FonctionAnneeScolaireUser::all()->where('annee_scolaire_id', '=', $activeYear->id);
+
+        // starting filtering
         if(isset($userSchoolYear)) {
             $query = User::where('typeUser', '=', 'personnel')->whereIn('id', $usersSchoolYearId);
         } else {
@@ -42,10 +43,14 @@ class PersonnelController extends Controller
                 ->orWhere('surname', 'LIKE', "%{$searchPersonnel}%")
                 ->orWhere('email', 'LIKE', "%{$searchPersonnel}%")
                 ->orWhere('phone', 'LIKE', "%{$searchPersonnel}%");
-            })->where('fonction_id', $FonctionFilter);
+            });
+            $userIdsWithFonction = $fonctionsUserYears->where('fonction_id', $FonctionFilter)
+            ->pluck('user_id');
+            $query->whereIn('id', $userIdsWithFonction);
         } elseif(!empty($FonctionFilter)) {
-            $query->where('fonction_id', $FonctionFilter)
-            ->where('typeUser', '=', 'personnel');
+            $userIdsWithFonction = $fonctionsUserYears->where('fonction_id', $FonctionFilter)
+            ->pluck('user_id');
+            $query->whereIn('id', $userIdsWithFonction);
         } elseif (!empty($searchPersonnel)) {
             $query->where(function($q) use ($searchPersonnel) {
                 $q->where('name', 'LIKE', "%{$searchPersonnel}%")
@@ -67,7 +72,6 @@ class PersonnelController extends Controller
      * @param  \Illuminate\Http\Request  $request
      */
     public function store(Request $request) {
-        //dd($request);
         $request->validate([
             'name' => 'required|min:3|max:255',
             'surname' => 'required|min:3|max:255',
@@ -96,7 +100,6 @@ class PersonnelController extends Controller
                     }
                 }
             ],
-            //'fonction_id' => 'unique:users',
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
         ], [
             'name.required' => 'Entrez le nom',
@@ -111,7 +114,6 @@ class PersonnelController extends Controller
             'sex.required' => 'Choisissez le sexe',
             'fonction_id.required' => 'Choisisssez la fonction',
             'active_year_id.required' => 'Aucune annéee selectionnée',
-            //'fonction_id.unique' => 'Cette fonction est déja occupée',
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
@@ -126,8 +128,7 @@ class PersonnelController extends Controller
             'diplome1' => $request->diplome1,
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
-            'fonction_id' => $request->fonction_id,
-            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : ($request->sex == 'M' ? asset('img/default-man.jpg') : asset('img/default-woman.jpg')),
+            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'personnel',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
@@ -136,7 +137,7 @@ class PersonnelController extends Controller
 
         // relation between user - fonction - school year
         $fonctionAnneeScolaireUser = FonctionAnneeScolaireUser::create([
-            'user_id' => $request->user_id,
+            'user_id' => $personnel->id,
             'fonction_id' => $request->fonction_id,
             'annee_scolaire_id' => $request->active_year_id,
         ]);
@@ -158,9 +159,11 @@ class PersonnelController extends Controller
     /**
      * click to edit a personnel
      */
-    public function edit($id) {
+    public function edit($id, $yearId) {
         $personnelToEdit = User::findOrFail($id);
-        return response()->json(['personnel' => $personnelToEdit]);
+        $currentUserFonction = FonctionAnneeScolaireUser::where('user_id', '=', $id)
+        ->where('annee_scolaire_id', '=', (int)$yearId)->first();
+        return response()->json(['personnel' => $personnelToEdit,'fonction_id' => $currentUserFonction->fonction_id]);
     }
 
     /**
@@ -180,7 +183,6 @@ class PersonnelController extends Controller
             'location' => 'max:255',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
-            //'fonction_id' => 'required|exists:fonctions,id',
             'fonction_id' => [
                 'required',
                 'exists:fonctions,id',
@@ -206,15 +208,14 @@ class PersonnelController extends Controller
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
             'sex.required' => 'Choisissez le sexe',
             'fonction_id.required' => 'Choisisssez la fonction',
-            //'fonction_id.unique' => 'Cette fonction est déja occupée',
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
 
         $personnel = User::findOrFail($id);
-        if($personnel->fonction_id !== (int)$request->fonction_id) {
-            // get the old user fonction year && delete it.
-            $currentUserFonction = FonctionAnneeScolaireUser::where('user_id', '=', $id)
-                ->where('fonction_id', '=', $personnel->fonction_id)->first();
+        $currentUserFonction = FonctionAnneeScolaireUser::where('user_id', '=', $id)
+        ->where('annee_scolaire_id', '=', $request->active_year_id)->first();
+        if($currentUserFonction->fonction_id !== (int)$request->fonction_id) {
+            // get the old fonction_scoool_year_user of the same year && delete it.
             if($currentUserFonction) {
                 $currentUserFonction->delete();
             }
@@ -254,7 +255,7 @@ class PersonnelController extends Controller
     }
 
     /**
-     *  delete user for the current yerar
+     *  delete user for the current year
      */
     public function deleteUserCurrentYear(Request $request) {
 
@@ -279,24 +280,30 @@ class PersonnelController extends Controller
         $request->validate([
             'migrate_year_id' => 'required|exists:annee_scolaires,id',
             'migrate_user_id' => 'required|exists:users,id',
+            'migrate_current_year_id' => 'required|exists:annee_scolaires,id'
         ], [
             'migrate_year_id.required' => 'Aucune année selectionnée',
             'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',
+            'migrate_current_year_id.required' => 'Veuillez activer une année scolaire',
         ]);
 
         // getting data for evaluation
         $y = AnneeScolaire::findOrFail($request->migrate_year_id);
         $u = User::findOrFail($request->migrate_user_id);
-        $f = Fonction::findOrFail($u->fonction_id);
+        $fonctionAnneeScolaireUser = FonctionAnneeScolaireUser::where('user_id', '=', $request->migrate_user_id)
+        ->where('annee_scolaire_id','=',$request->migrate_current_year_id)->first();
+        $fonctionId = $fonctionAnneeScolaireUser->fonction_id;
+        $f = Fonction::findOrFail($fonctionId);
 
-        // checking if something already exists :
+        // checking if the user already migrated:
         $userYear = UserAnneeScolaire::all()
             ->where('annee_scolaire_id','=',$request->migrate_year_id)
             ->where('user_id', '=', $request->migrate_user_id)
             ->first();
+        // checking if a user in the migrate year already have the user fonction:
         $userYearFonction = FonctionAnneeScolaireUser::all()
             ->where('annee_scolaire_id','=',$request->migrate_year_id)
-            ->where('fonction_id','=',$u->fonction_id)
+            ->where('fonction_id','=',$fonctionId)
             ->first();
 
         if($userYear) {
@@ -311,7 +318,7 @@ class PersonnelController extends Controller
             // relation between user - fonction - school year
             FonctionAnneeScolaireUser::create([
                 'user_id' => $request->migrate_user_id,
-                'fonction_id' => $u->fonction_id,
+                'fonction_id' => $fonctionId,
                 'annee_scolaire_id' => $request->migrate_year_id,
             ]);
             return response()->json(['success' => 'Personnel migré avec succès']);

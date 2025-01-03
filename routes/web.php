@@ -239,7 +239,7 @@ Route::delete('/utilisateur/fonctions/{id}', [FonctionController::class, 'destro
 Route::get('/utilisateur/personnels', [PersonnelController::class, 'index'])->name('utilisateur.personnels')->middleware('auth');
 Route::post('/utilisateur/personnel/save', [PersonnelController::class, 'store'])->name('utilisateur.personnelStore')->middleware('auth');
 Route::put('/utilisateur/personnel/update/{id}', [PersonnelController::class, 'update'])->name('utilisateur.personnelUpdate')->middleware('auth');
-Route::get('/utilisateur/personnels/{id}/edit', [PersonnelController::class, 'edit'])->name('utilisateur.personnelEdit')->middleware('auth');
+Route::get('/utilisateur/personnels/{id}/edit/{yearId}', [PersonnelController::class, 'edit'])->name('utilisateur.personnelEdit')->middleware('auth');
 Route::delete('/utilisateur/personnels/{id}', [PersonnelController::class, 'destroy'])->name('utilisateur.personnelDestroy')->middleware('auth');
 Route::post('/utilisateur/personnels/migrate', [PersonnelController::class, 'migrate'])->name('utilisateur.personnelMigrate')->middleware('auth');
 Route::post('/utilisateur/personnels/delete-user-in-year', [PersonnelController::class, 'deleteUserCurrentYear'])->name('utilisateur.personnelDeleteUserCurrentYear')->middleware('auth');

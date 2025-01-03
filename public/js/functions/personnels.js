@@ -6,6 +6,7 @@ $(function(){
         // setting up variables
         var action = $(this).data('action');
         var personnelId = $(this).data('personnel-id');
+        var yearId = $(this).data('year-id');
         var personnelIdInput = $('#personnelId');
         var personnelName = $(this).data('personnel-name');
         var form = $('#createEditForm');
@@ -31,7 +32,7 @@ $(function(){
             headerText.text('Mettre à jour les informations du personnel : ' + personnelName);
             personnelIdInput.val(personnelId);
             $.ajax({
-                url: "personnels/"+personnelId+"/edit",
+                url: "personnels/"+personnelId+"/edit/"+yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -99,6 +100,8 @@ $(function(){
         $('#modal-header').removeClass('bg-primary bg-success');
         $('#submit-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-form-buuton').children('span#submit-form-button-text').text('');
+        $('#profile-image').attr('src', '');
+        console.log($('#profile-image'));
     });
 
     // fetching personnels member dynamically with filters
@@ -166,17 +169,29 @@ $(function(){
 
     // fill the form with data :
     function fillInputForm(res, form) {
-        //console.log(res);
         object = Object.keys(res)[0];
         data = res[object];
         form.find('input, select, checkbox').each(function() {
             var inputName = $(this).attr('name');
+            if ($(this).is('input[type=file]')) {
+                return true;
+            }
+            if ($(this).attr('name') === 'fonction_id') {
+                $(this).val(res.fonction_id);
+                return true;
+            }
+            if ($(this).is('input[type=date]') && inputName in data) {
+                const rawDate = data[inputName];
+                if (rawDate) {
+                    const formattedDate = rawDate.split(' ')[0];
+                    $(this).val(formattedDate);
+                }
+                return true;
+            }
             if(inputName in data) {
                 if ($(this).is('input[type=checkbox]') || $(this).is('input[type=radio]')) {
                     $(this).prop('checked', data[inputName]);
-                }/* else if ($(this).is('select')) {
-                    $(this).val(data[inputName]).trigger('change');
-                }*/ else {
+                } else {
                     $(this).val(data[inputName]);
                 }
             }

@@ -26,7 +26,7 @@ class AnneeScolaire extends Model
     }
 
     /**
-     *
+     * A year can have more than one user
      */
     public function users() {
         return $this->belongsToMany(User::class);

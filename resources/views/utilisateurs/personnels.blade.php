@@ -151,7 +151,7 @@
                                         <label for="dateNaiss" class="form-control-label">
                                             Date de naissance :
                                         </label>
-                                        <input type="datetime-local" id="dateNaiss" name="dateNaiss" class="form-control"
+                                        <input type="date" id="dateNaiss" name="dateNaiss" class="form-control"
                                         placeholder="Entrez la date de naissance" value="{{old("dateNaiss")}}">
                                     </div>
                                 </div>
@@ -184,10 +184,6 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <div>
-                                            <img src="" id="profile-image" alt="image"
-                                                style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
-                                        </div>
                                         <label for="profile" class="form-control-label">
                                             Photo :
                                         </label>

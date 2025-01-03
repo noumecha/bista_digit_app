@@ -26,4 +26,13 @@ class Fonction extends Model
     public function fonctionAnneeScolaire() {
         return $this->belongsToMany(FonctionAnneeScolaireUser::class);
     }
+    /**
+     *
+     */
+    public function personnels()
+    {
+        return $this->belongsToMany(User::class, 'fonction_annee_scolaire_users')
+                    ->withPivot('annee_scolaire_id')
+                    ->withTimestamps();
+    }
 }

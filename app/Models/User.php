@@ -40,7 +40,7 @@ class User extends Authenticatable
         'matricule',
         'statutRedoublanc',
         'typeUser',
-        'fonction_id',
+        //'fonction_id',
         'name',
         'email',
         'classe_id',
@@ -123,10 +123,16 @@ class User extends Authenticatable
 
     /**
      * A personnel have a fonction
-     */
+
     public function fonction() : BelongsTo
     {
         return $this->belongsTo(Fonction::class, 'fonction_id');
+    }*/
+    public function fonctions()
+    {
+        return $this->belongsToMany(Fonction::class, 'fonction_annee_scolaire_users')
+                    ->withPivot('annee_scolaire_id')
+                    ->withTimestamps();
     }
 
     /**
