@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
+use App\Models\FonctionAnneeScolaireUser;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
@@ -14,10 +15,22 @@ class AnneeScolaireController extends Controller
     /**
      * first function to show the datas
      */
-    public function show() {
+    public function show(Request $request) {
         $user = User::find(Auth::id());
         $years = AnneeScolaire::all();
-        return view('annee_scolaire.show',['years'=> $years] ,compact('user'));
+        $searchYear = $request->input('searchYear');
+        $query = AnneeScolaire::query();
+        if(!empty($searchYear)) {
+            $query->where(function($q) use ($searchYear) {
+                $q->where('libelleAnneeScolaire', 'LIKE', "%{$searchYear}%");
+            });
+        }
+        $query ?  $years = $query->paginate(10) : $years = [];
+        if($request->ajax()) {
+            return view('partials._year_table', compact('user','years','searchYear'));
+        } else {
+            return view('annee_scolaire.show', compact('user','years','searchYear'));
+        }
     }
 
      /**
@@ -26,28 +39,37 @@ class AnneeScolaireController extends Controller
      */
     public function store(Request $request) {
         $request->validate([
-            'libelleAnneeScolaire' => 'required|min:3|max:255|unique:annee_scolaires',
+            'libelleAnneeScolaire' => ['required','unique:annee_scolaires','regex:/^[0-9]{4}/[0-9]{4}$/'],
+            'dateDeDebut' => 'required|max:255',
+            'dateDeFin' => 'required|max:255',
         ], [
             'libelleAnneeScolaire.required' => 'Définissez une année scolaire',
             'libelleAnneeScolaire.unique' => 'Cette année scolaire existe déjà',
-         ]);
+            'libelleAnneeScolaire.regex' => 'le libbellé doit être au format XXXX/XXXX -> exemple 2024/2025',
+            'dateDeDebut.required' => 'Définissez une date de debut pour l\'année scolaire',
+            'dateDeFin.required' => 'Définissez une date de fin pour l\'année scolaire',
+        ]);
 
-        AnneeScolaire::create([
+        $annneScolaire = AnneeScolaire::create([
             'libelleAnneeScolaire' => $request->libelleAnneeScolaire,
+            'dateDeDebut' => $request->dateDeDebut,
+            'dateDeFin' => $request->dateDeFin,
             'statut' => false,
         ]);
 
-        return redirect()->route('annee_scolaire.show')->with('success', 'Année scolaire définie avec succès!');
+        if($annneScolaire) {
+            return response()->json(['success' => 'Année scolaire ajoutée avec succès!']);
+        } else {
+            return response()->json(['error' => 'Erreur lors de l\'enregistrement de la nouvelle année']);
+        }
     }
 
     /**
      * function to edit year
      */
-    public function edit(Request $request, $id) {
+    public function edit($id) {
         $yearToEdit = AnneeScolaire::findOrFail($id);
-        $years = AnneeScolaire::all();
-
-        return view('annee_scolaire.show', compact('yearToEdit','years'));
+        return response()->json(['year' => $yearToEdit]);
     }
 
     /**
@@ -58,8 +80,6 @@ class AnneeScolaireController extends Controller
         AnneeScolaire::where('statut', '=', true)->update(['statut' => false]);
 
         $year = AnneeScolaire::findOrFail($id);
-        //$year->statut = true;
-        //dd($year);
         $year->update([
             'statut' => true,
         ]);
@@ -85,14 +105,18 @@ class AnneeScolaireController extends Controller
     public function update(Request $request, $id) {
         $request->validate([
             'libelleAnneeScolaire' => 'required|min:3|max:255',
+            'dateDeDebut' => 'required|max:255',
+            'dateDeFin' => 'required|max:255',
         ], [
             'libelleAnneeScolaire.required' => 'Définissez une année scolaire',
+            'dateDeDebut.required' => 'Définissez une date de debut pour l\'année scolaire',
+            'dateDeFin.required' => 'Définissez une date de fin pour l\'année scolaire',
          ]);
 
         $year = AnneeScolaire::findOrFail($id);
         $year->update($request->all());
 
-        return redirect()->route('annee_scolaire.show')->with('success', 'Année mise à jour avec succès');
+        return response()->json(['success' => 'Année mise à jour avec succès']);
     }
 
     /**
@@ -101,8 +125,10 @@ class AnneeScolaireController extends Controller
     public function destroy($id) {
         $year = AnneeScolaire::findOrFail($id);
         $userYears = UserAnneeScolaire::where('annee_scolaire_id', '=', $id);
+        $fonctionYearUser = FonctionAnneeScolaireUser::where('annee_scolaire_id', '=', $id);
         $year->delete();
         $userYears->delete();
+        $fonctionYearUser->delete();
 
         return redirect()->route('annee_scolaire.show')->with('listSuccess', 'Année supprimée avec succès');
     }

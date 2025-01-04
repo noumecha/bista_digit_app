@@ -1,20 +1,17 @@
-import { setSuccessMessage, stylingErrors, fillInputForm } from './modules/utils.js';
-
 $(function(){
 
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-year-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var personnelId = $(this).data('personnel-id');
         var yearId = $(this).data('year-id');
-        var personnelIdInput = $('#personnelId');
-        var personnelName = $(this).data('personnel-name');
-        var form = $('#createEditForm');
-        var button = $('#submit-form-button');
-        var header = $('#modal-header');
-        var headerText = $('#header-text');
+        var schoolYearIdInput = $('#schoolYearId');
+        var yearLibelle = $(this).data('year-libelle');
+        var form = $('#schoolYearForm');
+        var button = $('#submit-year-form-button');
+        var header = $('#modal-year-header');
+        var headerText = $('#header-year-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -25,16 +22,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-form-button-text').text('Enregistrer');
-            headerText.text('Ajouter un nouveau membre du personnel');
+            button.children('span#submit-year-form-button-text').text('Enregistrer');
+            headerText.text('Ajouter une nouvelle année scolaire');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour les informations du personnel : ' + personnelName);
-            personnelIdInput.val(personnelId);
+            button.children('span#submit-year-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour les configuration de l\'année : ' + yearLibelle);
+            schoolYearIdInput.val(schoolYearId);
             $.ajax({
-                url: "personnels/"+personnelId+"/edit/"+yearId,
+                url: "edit/"+yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -46,16 +43,15 @@ $(function(){
         }
     })
 
-    // When submiting form for updating or creating new personnel
-    $(document).on('click','.spinner-submit-form-button', function() {
+    // When submiting form for updating or creating new year
+    $(document).on('click','.spinner-submit-year-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-form-button-text');
-        var personnelId = $('#personnelId').val();
+        var buttonText = $(this).children('span#submit-year-form-button-text');
+        var schoolYearId = $('#schoolYearId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'personnel/update/' + personnelId : 'personnel/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'annee_scolaire/update/' + schoolYearId : 'annee_scolaire/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -74,7 +70,7 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
-                fetchPersonnels();
+                fetchYears();
             },
             error: function(xhr) {
                 var errors = []
@@ -96,33 +92,31 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-modal').on('hidden.bs.modal', function () {
-        const form = $('#createEditForm');
+    $('#create-year-modal').on('hidden.bs.modal', function () {
+        const form = $('#schoolYearForm');
         form.trigger('reset');
-        $('#modal-header').removeClass('bg-primary bg-success');
-        $('#submit-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-form-buuton').children('span#submit-form-button-text').text('');
-        $('#profile-image').attr('src', '');
-        console.log($('#profile-image'));
+        $('#modal-year-header').removeClass('bg-primary bg-success');
+        $('#submit-year-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-year-form-button').children('span#submit-year-form-button-text').text('');
     });
 
-    // fetching personnels member dynamically with filters
-    $('#searchPersonnel,#funcFilter').on('change keyup', function () {
-        fetchPersonnels();
+    // fetching year dynamically with filters
+    $('#searchYear').on('change keyup', function () {
+        fetchYears();
     });
 
     // default data :
-    fetchPersonnels();
+    fetchYears();
 
-    // fetching all notes :
-    function fetchPersonnels() {
-        var formData = $('#filterPersonnelForm').serialize();
+    // fetching all years :
+    function fetchYears() {
+        var formData = $('#filterYearForm').serialize();
         $.ajax({
-            url : "personnels",
+            url : "/annee_scolaire/list",
             type : 'GET',
             data : formData,
             success : function(data) {
-                $('#personnelsTable').html(data);
+                $('#yearsTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -176,10 +170,6 @@ $(function(){
         form.find('input, select, checkbox').each(function() {
             var inputName = $(this).attr('name');
             if ($(this).is('input[type=file]')) {
-                return true;
-            }
-            if ($(this).attr('name') === 'fonction_id') {
-                $(this).val(res.fonction_id);
                 return true;
             }
             if ($(this).is('input[type=date]') && inputName in data) {
