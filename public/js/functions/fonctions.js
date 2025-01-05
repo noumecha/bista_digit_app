@@ -104,22 +104,26 @@ $(function(){
     // fetching all notes :
     function fecthFonctions() {
         var formData = $('#filterFonctionForm').serialize();
-        $.ajax({
-            url : "fonctions",
-            type : 'GET',
-            data : formData,
-            success : function(data) {
-                $('#fonctionsTable').html(data);
-            },
-            error: function(xhr, status, error) {
-                var datas = Object.entries(xhr.responseJSON.errors);
-                var errors = datas.map(error => error[1][0]);
-                setSuccessMessage(errors, '#modal-form-alert-errors');
-            }
-        });
+        try {
+            $.ajax({
+                url : "fonctions",
+                type : 'GET',
+                data : formData,
+                success : function(data) {
+                    $('#fonctionsTable').html(data);
+                },
+                error: function(xhr, status, error) {
+                    var datas = Object.entries(xhr.responseJSON.errors);
+                    var errors = datas.map(error => error[1][0]);
+                    setSuccessMessage(errors, '#modal-form-alert-errors');
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    // success function
+    /* success function
     function setSuccessMessage(msg, id) {
         var msgBlock = $(id);
         msgBlock.stop(true, true);
@@ -173,5 +177,5 @@ $(function(){
                 }
             }
         });
-    }
+    }*/
 });

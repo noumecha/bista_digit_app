@@ -28,10 +28,10 @@ $(function(){
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
             button.children('span#submit-year-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour les configuration de l\'année : ' + yearLibelle);
+            headerText.text('Mettre à jour les configurations de l\'année : ' + yearLibelle);
             schoolYearIdInput.val(schoolYearId);
             $.ajax({
-                url: "edit/"+yearId,
+                url: "/annee_scolaire/edit/"+yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -50,18 +50,14 @@ $(function(){
         var buttonText = $(this).children('span#submit-year-form-button-text');
         var schoolYearId = $('#schoolYearId').val();
         var form = $(this).closest('form')[0];
-        var formData = new FormData(form);
+        var formDatas = new FormData(form);
+        var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
         var formAction = buttonText.text() === 'Mettre à jour' ? 'annee_scolaire/update/' + schoolYearId : 'annee_scolaire/save';
         var modalId = $(this).closest('div.modal').prop('id');
-        if (buttonText.text() === 'Mettre à jour') {
-            formData.append('_method', 'PUT');
-        }
         $.ajax({
             url: formAction,
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            type: formMethod,
+            data: formDatas,
             success: function(response) {
                 if(response.error)
                     setSuccessMessage(response.error, '#modal-form-alert-errors');
@@ -110,11 +106,11 @@ $(function(){
 
     // fetching all years :
     function fetchYears() {
-        var formData = $('#filterYearForm').serialize();
+        var formDatas = $('#filterYearForm').serialize();
         $.ajax({
             url : "/annee_scolaire/list",
             type : 'GET',
-            data : formData,
+            data : formDatas,
             success : function(data) {
                 $('#yearsTable').html(data);
             },
@@ -126,7 +122,7 @@ $(function(){
         });
     }
 
-    // success function
+    /* success function
     function setSuccessMessage(msg, id) {
         var msgBlock = $(id);
         msgBlock.stop(true, true);
@@ -188,5 +184,5 @@ $(function(){
                 }
             }
         });
-    }
+    }*/
 });

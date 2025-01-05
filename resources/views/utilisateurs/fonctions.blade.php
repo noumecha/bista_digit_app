@@ -39,7 +39,7 @@
                             <form class="form form-inline row mb-3 mt-3" id="filterFonctionForm">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <input type="text" name="searchFonction" value="{{ isset($searchFonction) ? $searchFonction : '' }}" id="searchFonction" class="form-control" placeholder="Rechercher par libellé"/>
+                                        <input type="text" name="searchFonction" value="" id="searchFonction" class="form-control" placeholder="Rechercher par libellé"/>
                                     </div>
                                 </div>
                             </form>
@@ -102,5 +102,7 @@
         </div>
         <x-app.footer />
     </main>
-
+    @section('scripts')
+        <script src="{{ asset('js/functions/fonctions.js') }}"></script>
+    @endsection
 </x-app-layout>

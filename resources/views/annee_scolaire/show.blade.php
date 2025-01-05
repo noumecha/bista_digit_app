@@ -34,7 +34,7 @@
                             <form class="form form-inline row mb-3 mt-3" id="filterYearForm">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <input type="text" name="searchYear" value="{{ isset($searchYear) ? $searchYear : '' }}" id="searchYear" class="form-control" placeholder="Rechercher par libellé"/>
+                                        <input type="text" name="searchYear" value="" id="searchYear" class="form-control" placeholder="Rechercher par libellé"/>
                                     </div>
                                 </div>
                             </form>
@@ -47,8 +47,8 @@
         </div>
         <!-- create or update modal form -->
         <div class="modal fade" id="create-year-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <form enctype="multipart/form-data" role="form" id="schoolYearForm" class="form row" method="POST">
+            <div class="modal-dialog modal-dialog-centered">
+                <form enctype="multipart/form-data" role="form" id="schoolYearForm" class="form row">
                     @csrf
                     <input type="hidden" name="schoolYearId" id="schoolYearId" value="">
                     <div class="modal-content p-0">
@@ -111,5 +111,8 @@
         </div>
         <x-app.footer />
     </main>
+    @section('scripts')
+        <script src="{{ asset('js/functions/year.js') }}"></script>
+    @endsection
 
 </x-app-layout>

@@ -1,4 +1,4 @@
-export function setSuccessMessage(msg, id) {
+function setSuccessMessage(msg, id) {
     const msgBlock = $(id);
     msgBlock.stop(true, true).empty();
 
@@ -14,7 +14,7 @@ export function setSuccessMessage(msg, id) {
     setTimeout(() => msgBlock.fadeOut(), 4000);
 }
 
-export function stylingErrors(errs) {
+function stylingErrors(errs) {
     $('input').removeClass('is-invalid');
     for (let field in errs) {
         if (errs.hasOwnProperty(field)) {
@@ -27,7 +27,7 @@ export function stylingErrors(errs) {
     }
 }
 
-export function fillInputForm(res, form) {
+function fillInputForm(res, form) {
     const object = Object.keys(res)[0];
     const data = res[object];
     form.find('input, select, checkbox').each(function () {

@@ -242,5 +242,7 @@
         </div>
         <x-app.footer />
     </main>
-
+    @section('scripts')
+        <script src="{{ asset('js/functions/personnels.js') }}"></script>
+    @endsection
 </x-app-layout>

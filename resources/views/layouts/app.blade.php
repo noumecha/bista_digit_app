@@ -418,6 +418,7 @@
         <script src="{{ asset('js/functions/pwd.js') }}"></script>
         <script src="{{ asset('js/functions/dashboard-menu.js') }}"></script>
         <script src="{{ asset('js/functions/success.js') }}"></script>
+        <script src="{{ asset('js/functions/modules/utils.js') }}"></script>
         <script src="{{ asset('js/functions/notes.js') }}"></script>
         <script src="{{ asset('js/functions/spinner.js') }}"></script>
         <script src="{{ asset('js/functions/toggle-eye.js') }}"></script>
@@ -425,10 +426,8 @@
         <script src="{{ asset('js/functions/toast.js') }}"></script>
         <script src="{{ asset('js/functions/custom-dropdown.js') }}"></script>
         <script src="{{ asset('js/functions/migrate.js') }}"></script>
-        <script src="{{ asset('js/functions/personnels.js') }}"></script>
-        <script src="{{ asset('js/functions/year.js') }}"></script>
-        <script src="{{ asset('js/functions/fonctions.js') }}"></script>
         <script src="{{ asset('js/functions/edit.js') }}"></script>
+        @yield('scripts')
     </body>
 
 </html>

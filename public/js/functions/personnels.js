@@ -1,5 +1,3 @@
-import { setSuccessMessage, stylingErrors, fillInputForm } from './modules/utils.js';
-
 $(function(){
 
     // when the modal is opened
@@ -128,74 +126,6 @@ $(function(){
                 var datas = Object.entries(xhr.responseJSON.errors);
                 var errors = datas.map(error => error[1][0]);
                 setSuccessMessage(errors, '#modal-form-alert-errors');
-            }
-        });
-    }
-
-    // success function
-    function setSuccessMessage(msg, id) {
-        var msgBlock = $(id);
-        msgBlock.stop(true, true);
-        msgBlock.empty();
-        if (Array.isArray(msg)) {
-            var list = $('<ul></ul>');
-            msg.forEach(function(m) {
-                var items = $('<li></li>').text(m);
-                list.append(items);
-            });
-            msgBlock.append(list);
-        } else {
-            msgBlock.append($('<p class="text-center mb-0"></p>').text(msg));
-        }
-        msgBlock.fadeIn().css('display', 'block');
-        setTimeout(function() {
-            msgBlock.fadeOut();
-        }, 4000);
-    }
-
-    // stylise the error input
-    function stylingErrors(errs) {
-        $('input').removeClass('is-invalid');
-        for(let field in errs) {
-            if(errs.hasOwnProperty(field)) {
-                let input_element = $('#' + field);
-                if(input_element.length) {
-                    input_element.addClass('is-invalid');
-                    setTimeout(function() {
-                        input_element.removeClass('is-invalid');
-                    }, 4000);
-                }
-            }
-        }
-    }
-
-    // fill the form with data :
-    function fillInputForm(res, form) {
-        object = Object.keys(res)[0];
-        data = res[object];
-        form.find('input, select, checkbox').each(function() {
-            var inputName = $(this).attr('name');
-            if ($(this).is('input[type=file]')) {
-                return true;
-            }
-            if ($(this).attr('name') === 'fonction_id') {
-                $(this).val(res.fonction_id);
-                return true;
-            }
-            if ($(this).is('input[type=date]') && inputName in data) {
-                const rawDate = data[inputName];
-                if (rawDate) {
-                    const formattedDate = rawDate.split(' ')[0];
-                    $(this).val(formattedDate);
-                }
-                return true;
-            }
-            if(inputName in data) {
-                if ($(this).is('input[type=checkbox]') || $(this).is('input[type=radio]')) {
-                    $(this).prop('checked', data[inputName]);
-                } else {
-                    $(this).val(data[inputName]);
-                }
             }
         });
     }
