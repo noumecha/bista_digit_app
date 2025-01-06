@@ -36,10 +36,10 @@
                         {{ $year->libelleAnneeScolaire }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $year->dateDeDebut }}
+                        {{ $year->dateDeDebut ? date('d M Y', strtotime($year->dateDeDebut)) : '' }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $year->dateDeFin }}
+                        {{  $year->dateDeFin ? date('d M Y', strtotime($year->dateDeFin)) : '' }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         <span class="badge rounded-pill {{ $year->statut ? 'bg-success' : 'bg-danger'}}">

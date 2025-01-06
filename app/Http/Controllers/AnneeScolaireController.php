@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use DateTime;
 
 
 class AnneeScolaireController extends Controller
@@ -39,9 +41,45 @@ class AnneeScolaireController extends Controller
      */
     public function store(Request $request) {
         $request->validate([
-            'libelleAnneeScolaire' => ['required','unique:annee_scolaires','regex:/^[0-9]{4}/[0-9]{4}$/'],
-            'dateDeDebut' => 'required|max:255',
-            'dateDeFin' => 'required|max:255',
+            'libelleAnneeScolaire' => [
+                'required',
+                'unique:annee_scolaires',
+                'regex:/^[0-9]{4}\/[0-9]{4}$/',
+                /*function ($attribute, $value, $fail) {
+                    $years = explode('/', $value);
+                    if (count($years) !== 2 || !checkdate(1, 1, $years[0]) || !checkdate(1, 1, $years[1])) {
+                        $fail('Le libellé doit être au format XXXX/XXXX -> exemple 2024/2025');
+                    }
+                },*/
+            ],
+            'dateDeDebut' => [
+                'required',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $libelleAnneeScolaire = $request->input('libelleAnneeScolaire');
+                    $years = explode('/', $libelleAnneeScolaire);
+                    $startDate = new DateTime($value);
+                    $yearStart = new DateTime($years[0] . '-09-01');
+                    $yearEnd = new DateTime($years[1] . '-06-31');
+                    if ($startDate < $yearStart || $startDate > $yearEnd) {
+                        $fail('La date de début doit être comprise entre ' . $years[0] . ' et ' . $years[1]);
+                    }
+                },
+            ],
+            'dateDeFin' => [
+                'required',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $libelleAnneeScolaire = $request->input('libelleAnneeScolaire');
+                    $years = explode('/', $libelleAnneeScolaire);
+                    $endDate = new DateTime($value);
+                    $yearStart = new DateTime($years[0] . '-09-01');
+                    $yearEnd = new DateTime($years[1] . '-06-31');
+                    if ($endDate < $yearStart || $endDate > $yearEnd) {
+                        $fail('La date de fin doit être comprise entre ' . $years[0] . ' et ' . $years[1]);
+                    }
+                },
+            ],
         ], [
             'libelleAnneeScolaire.required' => 'Définissez une année scolaire',
             'libelleAnneeScolaire.unique' => 'Cette année scolaire existe déjà',
@@ -49,7 +87,6 @@ class AnneeScolaireController extends Controller
             'dateDeDebut.required' => 'Définissez une date de debut pour l\'année scolaire',
             'dateDeFin.required' => 'Définissez une date de fin pour l\'année scolaire',
         ]);
-
         $annneScolaire = AnneeScolaire::create([
             'libelleAnneeScolaire' => $request->libelleAnneeScolaire,
             'dateDeDebut' => $request->dateDeDebut,
@@ -104,10 +141,49 @@ class AnneeScolaireController extends Controller
      */
     public function update(Request $request, $id) {
         $request->validate([
-            'libelleAnneeScolaire' => 'required|min:3|max:255',
-            'dateDeDebut' => 'required|max:255',
-            'dateDeFin' => 'required|max:255',
+            'libelleAnneeScolaire' => [
+                'required',
+                'unique:annee_scolaires',
+                'regex:/^[0-9]{4}\/[0-9]{4}$/',
+                /*function ($attribute, $value, $fail) {
+                    $years = explode('/', $value);
+                    if (count($years) !== 2 || !checkdate(1, 1, $years[0]) || !checkdate(1, 1, $years[1])) {
+                        $fail('Le libellé doit être au format XXXX/XXXX -> exemple 2024/2025');
+                    }
+                },*/
+                Rule::unique('users')->ignore($id)
+            ],
+            'dateDeDebut' => [
+                'required',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $libelleAnneeScolaire = $request->input('libelleAnneeScolaire');
+                    $years = explode('/', $libelleAnneeScolaire);
+                    $startDate = new DateTime($value);
+                    $yearStart = new DateTime($years[0] . '-09-01');
+                    $yearEnd = new DateTime($years[1] . '-06-31');
+                    if ($startDate < $yearStart || $startDate > $yearEnd) {
+                        $fail('La date de début doit être comprise entre Septembre ' . $years[0] . ' et Juin ' . $years[1]);
+                    }
+                },
+            ],
+            'dateDeFin' => [
+                'required',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $libelleAnneeScolaire = $request->input('libelleAnneeScolaire');
+                    $years = explode('/', $libelleAnneeScolaire);
+                    $endDate = new DateTime($value);
+                    $yearStart = new DateTime($years[0] . '-09-01');
+                    $yearEnd = new DateTime($years[1] . '-06-31');
+                    if ($endDate < $yearStart || $endDate > $yearEnd) {
+                        $fail('La date de fin doit être comprise entre ' . $years[0] . ' et ' . $years[1]);
+                    }
+                },
+            ],
         ], [
+            'libelleAnneeScolaire.unique' => 'Cette année scolaire existe déjà',
+            'libelleAnneeScolaire.regex' => 'le libbellé doit être au format XXXX/XXXX -> exemple 2024/2025',
             'libelleAnneeScolaire.required' => 'Définissez une année scolaire',
             'dateDeDebut.required' => 'Définissez une date de debut pour l\'année scolaire',
             'dateDeFin.required' => 'Définissez une date de fin pour l\'année scolaire',

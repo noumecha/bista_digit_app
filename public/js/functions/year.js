@@ -29,7 +29,7 @@ $(function(){
             button.addClass('btn-outline-success');
             button.children('span#submit-year-form-button-text').text('Mettre à jour');
             headerText.text('Mettre à jour les configurations de l\'année : ' + yearLibelle);
-            schoolYearIdInput.val(schoolYearId);
+            schoolYearIdInput.val(yearId);
             $.ajax({
                 url: "/annee_scolaire/edit/"+yearId,
                 type: "GET",
@@ -49,43 +49,46 @@ $(function(){
         spinner.removeClass('d-none');
         var buttonText = $(this).children('span#submit-year-form-button-text');
         var schoolYearId = $('#schoolYearId').val();
-        var form = $(this).closest('form')[0];
-        var formDatas = new FormData(form);
+        var formDatas = $(this).closest('form').serialize();
         var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'annee_scolaire/update/' + schoolYearId : 'annee_scolaire/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'update/' + schoolYearId : 'save';
         var modalId = $(this).closest('div.modal').prop('id');
-        $.ajax({
-            url: formAction,
-            type: formMethod,
-            data: formDatas,
-            success: function(response) {
-                if(response.error)
-                    setSuccessMessage(response.error, '#modal-form-alert-errors');
-                if(response.success)
-                    setSuccessMessage(response.success, '#modal-form-alert-success');
-                setTimeout(function() {
-                    spinner.addClass('d-none');
-                }, 4000);
-                fetchYears();
-            },
-            error: function(xhr) {
-                var errors = []
-                if(xhr.responseJSON && xhr.responseJSON.errors) {
-                    stylingErrors(xhr.responseJSON.errors);
-                    var datas = Object.entries(xhr.responseJSON.errors);
-                    errors = datas.map(error => error[1][0]);
-                    $('#'+modalId).on('hidden.bs.modal', function() {
-                        return false;
-                    });
-                } else {
-                    setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
+        try {
+            $.ajax({
+                url: formAction,
+                type: formMethod,
+                data: formDatas,
+                success: function(response) {
+                    if(response.error)
+                        setSuccessMessage(response.error, '#modal-form-alert-errors');
+                    if(response.success)
+                        setSuccessMessage(response.success, '#modal-form-alert-success');
+                    setTimeout(function() {
+                        spinner.addClass('d-none');
+                    }, 4000);
+                    fetchYears();
+                },
+                error: function(xhr) {
+                    var errors = []
+                    if(xhr.responseJSON && xhr.responseJSON.errors) {
+                        stylingErrors(xhr.responseJSON.errors);
+                        var datas = Object.entries(xhr.responseJSON.errors);
+                        errors = datas.map(error => error[1][0]);
+                        $('#'+modalId).on('hidden.bs.modal', function() {
+                            return false;
+                        });
+                    } else {
+                        setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
+                    }
+                    setTimeout(function() {
+                        spinner.addClass('d-none');
+                    }, 4000);
+                    setSuccessMessage(errors, '#modal-form-alert-errors');
                 }
-                setTimeout(function() {
-                    spinner.addClass('d-none');
-                }, 4000);
-                setSuccessMessage(errors, '#modal-form-alert-errors');
-            }
-        });
+            });
+        } catch (error) {
+            console.log(error);
+        }
     });
     // reseting form title and color :
     $('#create-year-modal').on('hidden.bs.modal', function () {

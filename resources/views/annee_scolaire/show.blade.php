@@ -100,7 +100,7 @@
                         </div>
                         <div class="modal-footer flex-row-reverse">
                             <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="submit" id="submit-year-form-button" class="spinner-submit-year-form-button btn btn-lg">
+                            <button type="button" id="submit-year-form-button" class="spinner-submit-year-form-button btn btn-lg">
                                 <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                 <span id="submit-year-form-button-text"></span>
                             </button>
