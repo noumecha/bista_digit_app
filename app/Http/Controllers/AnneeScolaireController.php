@@ -60,9 +60,9 @@ class AnneeScolaireController extends Controller
                     $years = explode('/', $libelleAnneeScolaire);
                     $startDate = new DateTime($value);
                     $yearStart = new DateTime($years[0] . '-09-01');
-                    $yearEnd = new DateTime($years[1] . '-06-31');
+                    $yearEnd = new DateTime($years[1] . '-07-31');
                     if ($startDate < $yearStart || $startDate > $yearEnd) {
-                        $fail('La date de début doit être comprise entre ' . $years[0] . ' et ' . $years[1]);
+                        $fail('La date de début doit être comprise entre Septembre ' . $years[0] . ' et Juillet ' . $years[1]);
                     }
                 },
             ],
@@ -74,9 +74,9 @@ class AnneeScolaireController extends Controller
                     $years = explode('/', $libelleAnneeScolaire);
                     $endDate = new DateTime($value);
                     $yearStart = new DateTime($years[0] . '-09-01');
-                    $yearEnd = new DateTime($years[1] . '-06-31');
+                    $yearEnd = new DateTime($years[1] . '-07-31');
                     if ($endDate < $yearStart || $endDate > $yearEnd) {
-                        $fail('La date de fin doit être comprise entre ' . $years[0] . ' et ' . $years[1]);
+                        $fail('La date de fin doit être comprise entre Septembre ' . $years[0] . ' et Juillet ' . $years[1]);
                     }
                 },
             ],
@@ -143,7 +143,7 @@ class AnneeScolaireController extends Controller
         $request->validate([
             'libelleAnneeScolaire' => [
                 'required',
-                'unique:annee_scolaires',
+                //'unique:annee_scolaires',
                 'regex:/^[0-9]{4}\/[0-9]{4}$/',
                 /*function ($attribute, $value, $fail) {
                     $years = explode('/', $value);
@@ -151,7 +151,7 @@ class AnneeScolaireController extends Controller
                         $fail('Le libellé doit être au format XXXX/XXXX -> exemple 2024/2025');
                     }
                 },*/
-                Rule::unique('users')->ignore($id)
+                Rule::unique('annee_scolaires')->ignore($id)
             ],
             'dateDeDebut' => [
                 'required',
@@ -161,9 +161,9 @@ class AnneeScolaireController extends Controller
                     $years = explode('/', $libelleAnneeScolaire);
                     $startDate = new DateTime($value);
                     $yearStart = new DateTime($years[0] . '-09-01');
-                    $yearEnd = new DateTime($years[1] . '-06-31');
+                    $yearEnd = new DateTime($years[1] . '-07-31');
                     if ($startDate < $yearStart || $startDate > $yearEnd) {
-                        $fail('La date de début doit être comprise entre Septembre ' . $years[0] . ' et Juin ' . $years[1]);
+                        $fail('La date de début doit être comprise entre Septembre ' . $years[0] . ' et Juilet ' . $years[1]);
                     }
                 },
             ],
@@ -175,9 +175,9 @@ class AnneeScolaireController extends Controller
                     $years = explode('/', $libelleAnneeScolaire);
                     $endDate = new DateTime($value);
                     $yearStart = new DateTime($years[0] . '-09-01');
-                    $yearEnd = new DateTime($years[1] . '-06-31');
+                    $yearEnd = new DateTime($years[1] . '-07-31');
                     if ($endDate < $yearStart || $endDate > $yearEnd) {
-                        $fail('La date de fin doit être comprise entre ' . $years[0] . ' et ' . $years[1]);
+                        $fail('La date de fin doit être comprise entre Septembre ' . $years[0] . ' et Juillet ' . $years[1]);
                     }
                 },
             ],

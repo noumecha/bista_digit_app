@@ -249,7 +249,7 @@ Route::get('/annee_scolaire/list', [AnneeScolaireController::class, 'show'])->na
 Route::post('/annee_scolaire/save', [AnneeScolaireController::class, 'store'])->name('annee_scolaire.store')->middleware('auth');
 Route::put('/annee_scolaire/update/{id}', [AnneeScolaireController::class, 'update'])->name('annee_scolaire.update')->middleware('auth');
 Route::get('/annee_scolaire/edit/{id}', [AnneeScolaireController::class, 'edit'])->name('annee_scolaire.edit')->middleware('auth');
-Route::delete('/annee_scolaire/{id}', [AnneeScolaireController::class, 'destroy'])->name('annee_scolaire.destroy')->middleware('auth');
+Route::delete('/annee_scolaire/delete/{id}', [AnneeScolaireController::class, 'destroy'])->name('annee_scolaire.destroy')->middleware('auth');
 Route::put('/annee_scolaire/activate/{id}', [AnneeScolaireController::class, 'activate'])->name('annee_scolaire.activate')->middleware('auth');
 Route::put('/annee_scolaire/desactivate/{id}', [AnneeScolaireController::class, 'desactivate'])->name('annee_scolaire.desactivate')->middleware('auth');
 

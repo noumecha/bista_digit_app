@@ -78,8 +78,8 @@
                                         @csrf
                                         @method('DELETE')
                                         <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Année scolaire : {{ $year->libelleAnneeScolaire }}</h5>
+                                            <div class="modal-header bg-danger">
+                                                <h5 class="modal-title text-white" id="exampleModalLabel">Année scolaire : {{ $year->libelleAnneeScolaire }}</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body text-wrap text-justify">
@@ -87,8 +87,8 @@
                                                 avec toutes ses données ? (Cette action est irreversible)
                                             </div>
                                             <div class="modal-footer flex-row-reverse">
-                                                <button type="reset" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                <button type="submit" class="spinner-submit-modal-button btn btn-success">
+                                                <button type="reset" class="btn btn-outline-danger" data-bs-dismiss="modal">Annuler</button>
+                                                <button type="submit" class="spinner-submit-modal-button btn btn-danger">
                                                     <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                     Confirmer
                                                 </button>
