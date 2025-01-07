@@ -32,8 +32,12 @@ class EnseignantController extends Controller
         }
 
         $teachers = $query->paginate(10);
-
-        return view('personnel.teachers', compact('matieres','teachers','user','searchTeacher'));
+        if($request->ajax()) {
+            return view('partials._teachers_table', compact('matieres','teachers','user','searchTeacher'));
+        } else {
+            return view('utilisateurs.teachers', compact('matieres','teachers','user','searchTeacher'));
+        }
+        //return view('utilisateurs.teachers', compact('matieres','teachers','user','searchTeacher'));
     }
 
      /**
@@ -70,7 +74,7 @@ class EnseignantController extends Controller
             'sex.required' => 'Choisissez le sexe',
         ]);
 
-        User::create([
+        $teacher = User::create([
             'name' => $request->name,
             'matricule' => $request->matricule,
             'email' => $request->email,
@@ -88,28 +92,18 @@ class EnseignantController extends Controller
             'sex' => $request->sex,
         ]);
 
-        return redirect()->route('utilisateur.teachers')->with('success', 'Enseignant ajouté avec succès');
+        if($teacher) {
+            return response()->json(['success' => 'Enseignant ajouté avec succès']);
+        } else {
+            return response()->json(['error' => 'Erreur lors de l\'enregistrement du nouvel enseignant']);
+        }
+        //return redirect()->route('utilisateur.teachers')->with('success', 'Enseignant ajouté avec succès');
     }
 
 
-    public function edit(Request $request, $id) {
-        $matieres = Matiere::all();
+    public function edit($id) {
         $teacherToEdit = User::findOrFail($id);
-        $searchTeacher = $request->input('searchTeacher');
-
-        $query = User::where('typeUser', '=', 'enseignant');
-        if(!empty($searchTeacher) && !empty($categoryFilter)) {
-            $query->where(function($q) use ($searchTeacher) {
-                $q->where('name', 'LIKE', "%{$searchTeacher}%")
-                ->orWhere('surname', 'LIKE', "%{$searchTeacher}%")
-                ->orWhere('email', 'LIKE', "%{$searchTeacher}%")
-                ->orWhere('phone', 'LIKE', "%{$searchTeacher}%");
-            });
-        }
-
-        $teachers = $query->paginate(7);
-
-        return view('personnel.teachers', compact('matieres','teachers','teacherToEdit','searchTeacher'));
+        return response()->json(['user' => $teacherToEdit]);
     }
 
     public function update(Request $request, $id) {
@@ -148,8 +142,8 @@ class EnseignantController extends Controller
             $teacher->profile = $imagePath;
         }
         $teacher->update($request->except('profile'));
-
-        return redirect()->route('utilisateur.teachers')->with('success', 'Enseignant mis à jour avec succès');
+        return response()->json(['success' => 'Informations de l\'enseignant mis à jour avec succès']);
+        //return redirect()->route('utilisateur.teachers')->with('success', 'Enseignant mis à jour avec succès');
     }
 
     public function destroy($id) {

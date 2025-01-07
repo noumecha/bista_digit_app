@@ -1,18 +1,17 @@
 $(function(){
 
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-teacher-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var personnelId = $(this).data('personnel-id');
-        var yearId = $(this).data('year-id');
-        var personnelIdInput = $('#personnelId');
-        var personnelName = $(this).data('personnel-name');
-        var form = $('#createEditForm');
-        var button = $('#submit-form-button');
-        var header = $('#modal-header');
-        var headerText = $('#header-text');
+        var teacherId = $(this).data('teacher-id');
+        var teacherIdInput = $('#teacherId');
+        var teacherName = $(this).data('teacher-name');
+        var form = $('#teacherForm');
+        var button = $('#submit-teacher-form-button');
+        var header = $('#modal-teacher-header');
+        var headerText = $('#header-teacher-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -23,16 +22,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-form-button-text').text('Enregistrer');
-            headerText.text('Ajouter un nouveau membre du personnel');
+            button.children('span#submit-teacher-form-button-text').text('Enregistrer');
+            headerText.text('Ajouter une nouvel enseignant');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour les informations du personnel : ' + personnelName);
-            personnelIdInput.val(personnelId);
+            button.children('span#submit-teacher-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour les configurations de l\'enseignant : ' + teacherName);
+            teacherIdInput.val(teacherId);
             $.ajax({
-                url: "personnels/"+personnelId+"/edit/"+yearId,
+                url: "/annee_scolaire/edit/"+teacherId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -44,16 +43,15 @@ $(function(){
         }
     })
 
-    // When submiting form for updating or creating new personnel
-    $(document).on('click','.spinner-submit-form-button', function() {
+    // When submiting form for updating or creating new teacher spinner-submit-year-form-button
+    $(document).on('click','.spinner-submit-teacher-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-form-button-text');
-        var personnelId = $('#personnelId').val();
+        var buttonText = $(this).children('span#submit-teacher-form-button-text');
+        var teacherId = $('#teacherId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        //var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'personnel/update/' + personnelId : 'personnel/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'teacher/update/' + teacherId : 'teacher/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -94,31 +92,31 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-modal').on('hidden.bs.modal', function () {
-        const form = $('#createEditForm');
+    $('#create-teacher-modal').on('hidden.bs.modal', function () {
+        const form = $('#teacherForm');
         form.trigger('reset');
-        $('#modal-header').removeClass('bg-primary bg-success');
-        $('#submit-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-form-buuton').children('span#submit-form-button-text').text('');
+        $('#modal-teacher-header').removeClass('bg-primary bg-success');
+        $('#submit-teacher-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-teacher-form-button').children('span#submit-teacher-form-button-text').text('');
     });
 
-    // fetching personnels member dynamically with filters
-    $('#searchPersonnel,#funcFilter').on('change keyup', function () {
-        fetchPersonnels();
+    // fetching year dynamically with filters
+    $('#searchTeacher').on('change keyup', function () {
+        fetchTeachers();
     });
 
     // default data :
-    fetchPersonnels();
+    fetchTeachers();
 
-    // fetching all notes :
-    function fetchPersonnels() {
-        var formData = $('#filterPersonnelForm').serialize();
+    // fetching all years :
+    function fetchTeachers() {
+        var formDatas = $('#filterTeacherForm').serialize();
         $.ajax({
-            url : "personnels",
+            url : "/annee_scolaire/list",
             type : 'GET',
-            data : formData,
+            data : formDatas,
             success : function(data) {
-                $('#personnelsTable').html(data);
+                $('#yearsTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);

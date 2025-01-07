@@ -73,29 +73,29 @@
                         </form>
                         <!-- modal for delete confirmation -->
                         <div class="modal fade" id="confirmDelete-{{ $year->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <form class="form" method="POST" action="{{ route('annee_scolaire.destroy', $year->id) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <div class="modal-content">
-                                            <div class="modal-header bg-danger">
-                                                <h5 class="modal-title text-white" id="exampleModalLabel">Année scolaire : {{ $year->libelleAnneeScolaire }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-wrap text-justify">
-                                                Faut-il vraiment supprimé l'année scolaire {{ $year->libelleAnneeScolaire }}
-                                                avec toutes ses données ? (Cette action est irreversible)
-                                            </div>
-                                            <div class="modal-footer flex-row-reverse">
-                                                <button type="reset" class="btn btn-outline-danger" data-bs-dismiss="modal">Annuler</button>
-                                                <button type="submit" class="spinner-submit-modal-button btn btn-danger">
-                                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                    Confirmer
-                                                </button>
-                                            </div>
+                            <div class="modal-dialog">
+                                <form class="form" method="POST" action="{{ route('annee_scolaire.destroy', $year->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Année scolaire : {{ $year->libelleAnneeScolaire }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                    </form>
-                                </div>
+                                        <div class="modal-body text-wrap text-justify">
+                                            Faut-il vraiment supprimé l'année scolaire {{ $year->libelleAnneeScolaire }}
+                                            avec toutes ses données ? (Cette action est irreversible)
+                                        </div>
+                                        <div class="modal-footer flex-row-reverse">
+                                            <button type="reset" class="btn btn-outline-danger" data-bs-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="spinner-submit-modal-button btn btn-danger">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                Confirmer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </td>
                 </tr>

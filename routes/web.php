@@ -217,10 +217,10 @@ Route::get('/utilisateur/teachers', [EnseignantController::class, 'index'])->nam
 Route::get('/utilisateur/students', [EleveController::class, 'index'])->name('utilisateur.students')->middleware('auth');
 
 ## users -> teacher routes
-Route::post('/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');
-Route::put('/teacher/{id}', [EnseignantController::class, 'update'])->name('teacher.update')->middleware('auth');
-Route::get('/teacher/{id}/edit', [EnseignantController::class, 'edit'])->name('teacher.edit')->middleware('auth');
-Route::delete('/teacher/{id}', [EnseignantController::class, 'destroy'])->name('teacher.destroy')->middleware('auth');
+Route::post('/utilisateur/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');
+Route::put('/utilisateur/teacher/update/{id}', [EnseignantController::class, 'update'])->name('teacher.update')->middleware('auth');
+Route::get('/utilisateur/teacher/{id}/edit', [EnseignantController::class, 'edit'])->name('teacher.edit')->middleware('auth');
+Route::delete('/utilisateur/teacher/delete/{id}', [EnseignantController::class, 'destroy'])->name('teacher.destroy')->middleware('auth');
 
 ## users -> student routes
 Route::post('/student/save', [EleveController::class, 'store'])->name('student.store')->middleware('auth');
