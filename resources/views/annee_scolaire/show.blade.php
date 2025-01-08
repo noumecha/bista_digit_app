@@ -114,5 +114,4 @@
     @section('scripts')
         <script src="{{ asset('js/functions/year.js') }}"></script>
     @endsection
-
 </x-app-layout>

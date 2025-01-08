@@ -52,7 +52,6 @@ $(function(){
         var personnelId = $('#personnelId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        //var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
         var formAction = buttonText.text() === 'Mettre à jour' ? 'personnel/update/' + personnelId : 'personnel/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {

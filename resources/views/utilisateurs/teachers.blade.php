@@ -48,7 +48,7 @@
         <!-- modal for create or update teacher -->
         <div class="modal fade" id="create-teacher-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <form  enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ isset($teacherToEdit) ? route('teacher.update', $teacherToEdit->id) : route('teacher.store') }}">
+                <form  enctype="multipart/form-data" role="form" id="teacherForm" class="form row">
                     @csrf
                     <input type="hidden" name="teacherId" id="teacherId" value="">
                     <div class="modal-content p-0">

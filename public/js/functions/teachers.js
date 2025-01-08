@@ -31,7 +31,7 @@ $(function(){
             headerText.text('Mettre à jour les configurations de l\'enseignant : ' + teacherName);
             teacherIdInput.val(teacherId);
             $.ajax({
-                url: "/annee_scolaire/edit/"+teacherId,
+                url: "/teacher/edit/"+teacherId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
