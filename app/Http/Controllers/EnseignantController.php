@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnneeScolaire;
+use App\Models\FonctionAnneeScolaireUser;
 use App\Models\Matiere;
 use App\Models\User;
+use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +23,7 @@ class EnseignantController extends Controller
         $matieres = Matiere::all();
         $teachers = User::all()->where('typeUser', '=', 'enseignant');
         $searchTeacher = $request->input('searchTeacher');
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
 
         $query = User::where('typeUser', '=', 'enseignant');
         if(!empty($searchTeacher)) {
@@ -33,11 +37,10 @@ class EnseignantController extends Controller
 
         $teachers = $query->paginate(10);
         if($request->ajax()) {
-            return view('partials._teachers_table', compact('matieres','teachers','user','searchTeacher'));
+            return view('partials._teachers_table', compact('matieres','teachers','user','searchTeacher','activeYear'));
         } else {
-            return view('utilisateurs.teachers', compact('matieres','teachers','user','searchTeacher'));
+            return view('utilisateurs.teachers', compact('matieres','teachers','user','searchTeacher','activeYear'));
         }
-        //return view('utilisateurs.teachers', compact('matieres','teachers','user','searchTeacher'));
     }
 
      /**
@@ -57,6 +60,7 @@ class EnseignantController extends Controller
             'lieuNaiss' => 'max:255',
             'dateNaiss' => 'max:255',
             'location' => 'max:255',
+            'active_year_id' => 'required',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
@@ -70,6 +74,7 @@ class EnseignantController extends Controller
             'phone.required' => 'Entrez le numero de téléphone',
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
             'diplome1.required' => 'Entrez l\'intitulté du diplome 1',
+            'active_year_id.required' => 'Aucune annéee selectionnée',
             'numCni.required' => 'Entrez le numero de la CNI',
             'sex.required' => 'Choisissez le sexe',
         ]);
@@ -86,10 +91,11 @@ class EnseignantController extends Controller
             'diplome1' => $request->diplome1,
             'diplome2' => $request->diplome2,
             'numCni' => $request->numCni,
-            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : '',
+            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'enseignant',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
+            'create_year_id' => $request->active_year_id,
         ]);
 
         if($teacher) {
@@ -151,5 +157,72 @@ class EnseignantController extends Controller
         $teacher->delete();
 
         return redirect()->route('utilisateur.teachers')->with('deleteSuccess', 'Enseignant supprimer avec succès');
+    }
+    /**
+     *  delete user for the current year
+     */
+    public function deleteUserCurrentYear(Request $request) {
+
+        $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id)->first();
+        $userFonctionYear = FonctionAnneeScolaireUser::all()
+            ->where('annnee_scolaire_id', '=', $request->delusyear_year_id)
+            ->where('user_id', '=',$request->delusyear_user_id)
+            ->first();
+
+        if ($userYear->delete() && $userFonctionYear->delete()) {
+            return redirect()->route('utilisateur.teachers')->with('deleteSuccess', 'Enseignant supprimé avec succès pour l\'année courrante');
+        } else {
+            return redirect()->route('utilisateur.teachers')->with('errorSuccess', 'Echec de surpression de l\'enseignant pour l\'année courrante');
+        }
+
+    }
+
+    /**
+     * Migrate teacher for a forward year to achieve application evolution
+     */
+    public function migrate(Request $request) {
+        $request->validate([
+            'migrate_year_id' => 'required|exists:annee_scolaires,id',
+            'migrate_user_id' => 'required|exists:users,id',
+            'migrate_current_year_id' => 'required|exists:annee_scolaires,id'
+        ], [
+            'migrate_year_id.required' => 'Aucune année selectionnée',
+            'migrate_user_id.required' => 'Veuillez selectionnez un utilisateur',
+            'migrate_current_year_id.required' => 'Veuillez activer une année scolaire',
+        ]);
+
+        // getting data for evaluation
+        $y = AnneeScolaire::findOrFail($request->migrate_year_id);
+        $u = User::findOrFail($request->migrate_user_id);
+        $fonctionAnneeScolaireUser = FonctionAnneeScolaireUser::where('user_id', '=', $request->migrate_user_id)
+        ->where('annee_scolaire_id','=',$request->migrate_current_year_id)->first();
+        $fonctionId = $fonctionAnneeScolaireUser->fonction_id;
+
+        // checking if the user already migrated:
+        $userYear = UserAnneeScolaire::all()
+            ->where('annee_scolaire_id','=',$request->migrate_year_id)
+            ->where('user_id', '=', $request->migrate_user_id)
+            ->first();
+        // checking if a user in the migrate year already have the user fonction:
+        $userYearFonction = FonctionAnneeScolaireUser::all()
+            ->where('annee_scolaire_id','=',$request->migrate_year_id)
+            ->where('fonction_id','=',$fonctionId)
+            ->first();
+
+        if($userYear) {
+            return response()->json(['error' => 'L\'enseignant à déjà été inclu pour l\'année : '.$y->libelleAnneeScolaire]);
+        } else {
+            UserAnneeScolaire::create([
+                'user_id' => $request->migrate_user_id,
+                'annee_scolaire_id'=>$request->migrate_year_id,
+            ]);
+            // relation between user - fonction - school year
+            FonctionAnneeScolaireUser::create([
+                'user_id' => $request->migrate_user_id,
+                'fonction_id' => $fonctionId,
+                'annee_scolaire_id' => $request->migrate_year_id,
+            ]);
+            return response()->json(['success' => 'Enseignant migré avec succès']);
+        }
     }
 }

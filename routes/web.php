@@ -221,12 +221,15 @@ Route::post('/utilisateur/teacher/save', [EnseignantController::class, 'store'])
 Route::put('/utilisateur/teacher/update/{id}', [EnseignantController::class, 'update'])->name('teacher.update')->middleware('auth');
 Route::get('/utilisateur/teacher/{id}/edit', [EnseignantController::class, 'edit'])->name('teacher.edit')->middleware('auth');
 Route::delete('/utilisateur/teacher/delete/{id}', [EnseignantController::class, 'destroy'])->name('teacher.destroy')->middleware('auth');
+Route::get('/utilisateur/teacher/{id}/edit/{yearId}', [PersonnelController::class, 'edit'])->name('utilisateur.personnelEdit')->middleware('auth');
+Route::post('/utilisateur/teacher/migrate', [PersonnelController::class, 'migrate'])->name('utilisateur.personnelMigrate')->middleware('auth');
+Route::post('/utilisateur/teacher/delete-user-in-year', [PersonnelController::class, 'deleteUserCurrentYear'])->name('utilisateur.personnelDeleteUserCurrentYear')->middleware('auth');
 
 ## users -> student routes
-Route::post('/student/save', [EleveController::class, 'store'])->name('student.store')->middleware('auth');
-Route::put('/student/{id}', [EleveController::class, 'update'])->name('student.update')->middleware('auth');
-Route::get('/student/{id}/edit', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
-Route::delete('/student/{id}', [EleveController::class, 'destroy'])->name('student.destroy')->middleware('auth');
+Route::post('/utilisateur/student/save', [EleveController::class, 'store'])->name('student.store')->middleware('auth');
+Route::put('/utilisateur/student/{id}', [EleveController::class, 'update'])->name('student.update')->middleware('auth');
+Route::get('/utilisateur/student/{id}/edit', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
+Route::delete('/utilisateur/student/{id}', [EleveController::class, 'destroy'])->name('student.destroy')->middleware('auth');
 
 ## users -> fonctions routes
 Route::get('/utilisateur/fonctions', [FonctionController::class, 'index'])->name('utilisateur.fonctions')->middleware('auth');

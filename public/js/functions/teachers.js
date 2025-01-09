@@ -31,7 +31,7 @@ $(function(){
             headerText.text('Mettre à jour les configurations de l\'enseignant : ' + teacherName);
             teacherIdInput.val(teacherId);
             $.ajax({
-                url: "/teacher/edit/"+teacherId,
+                url: "teacher/"+ teacherId + "/edit",
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -70,7 +70,7 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
-                fetchPersonnels();
+                fetchTeachers();
             },
             error: function(xhr) {
                 var errors = []
@@ -112,11 +112,11 @@ $(function(){
     function fetchTeachers() {
         var formDatas = $('#filterTeacherForm').serialize();
         $.ajax({
-            url : "/annee_scolaire/list",
+            url : "/utilisateur/teachers",
             type : 'GET',
             data : formDatas,
             success : function(data) {
-                $('#yearsTable').html(data);
+                $('#teachersTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
