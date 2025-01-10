@@ -42,8 +42,11 @@ class EleveController extends Controller
         }
 
         $students = $query->paginate(10);
-
-        return view('personnel.students', compact('classes','students','user','searchStudent','classeFilter'));
+        if($request->ajax()) {
+            return view('', compact('classes','students','user','searchStudent','classeFilter'));
+        } else {
+            return view('utilisateurs.students', compact('classes','students','user','searchStudent','classeFilter'));
+        }
     }
 
     /**

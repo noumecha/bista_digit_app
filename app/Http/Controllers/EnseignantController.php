@@ -24,6 +24,7 @@ class EnseignantController extends Controller
         $teachers = User::all()->where('typeUser', '=', 'enseignant');
         $searchTeacher = $request->input('searchTeacher');
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
 
         $query = User::where('typeUser', '=', 'enseignant');
         if(!empty($searchTeacher)) {
@@ -37,9 +38,9 @@ class EnseignantController extends Controller
 
         $teachers = $query->paginate(10);
         if($request->ajax()) {
-            return view('partials._teachers_table', compact('matieres','teachers','user','searchTeacher','activeYear'));
+            return view('partials._teachers_table', compact('matieres','teachers','user','searchTeacher','activeYear','migrateYears'));
         } else {
-            return view('utilisateurs.teachers', compact('matieres','teachers','user','searchTeacher','activeYear'));
+            return view('utilisateurs.teachers', compact('matieres','teachers','user','searchTeacher','activeYear','migrateYears'));
         }
     }
 

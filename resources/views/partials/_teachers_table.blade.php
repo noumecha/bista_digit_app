@@ -100,7 +100,7 @@
                                         <div class="alert text-wrap alert-danger text-center" style="display: none;" id="modal-alert-errors-{{ $teacher->id }}">
                                         </div>
                                         <div class="modal-body text-wrap text-justify">
-                                            <h5>Vous êtes sur le point d'ajouter le personnel {{ $personnel->name }} à une année ultérieure!</h5>
+                                            <h5>Vous êtes sur le point d'ajouter l'enseignant {{ $teacher->name }} à une année ultérieure!</h5>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <input type="hidden" name="migrate_current_year_id" id="migrate_current_year_id" value="{{ $activeYear->id }}">
@@ -147,7 +147,7 @@
                                         <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
                                         <input type="hidden" name="delusyear_user_id" value="{{ $teacher->id }}">
                                         <div class="modal-body text-wrap text-justify">
-                                            Voulez-vous vraiment supprimér le personnel {{ $personnel->name }}
+                                            Voulez-vous vraiment supprimér l'enseignant {{ $teacher->name }}
                                             pour l'année {{ $activeYear->libelleAnneeScolaire }} ?
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
