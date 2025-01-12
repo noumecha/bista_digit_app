@@ -108,7 +108,7 @@
                         </div>
                     </div>
                     <!-- modal for migrate user to annother year -->
-                    <div class="modal fade" data-form-id="{{ $personnel->id }}" id="confirmMigrate-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                    <div class="modal fade" data-form-id="{{ $personnel->id }}" id="confirmMigrate-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                         <div class="modal-dialog">
                             <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelMigrate') }}">
                                 @csrf
@@ -149,7 +149,7 @@
                                     <div class="modal-footer flex-row-reverse">
                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
                                         <button type="button" data-personnel-id="{{ $personnel->id }}" class="spinner-submit-modal-button btn btn-dark">
-                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
                                             Confirmer
                                         </button>
                                     </div>
@@ -158,7 +158,7 @@
                         </div>
                     </div>
                     <!-- modal for delete user  in the current year -->
-                    <div class="modal fade" data-form-id="{{ $personnel->id }}" id="confirmDeleteYear-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                    <div class="modal fade" data-form-id="{{ $personnel->id }}" id="confirmDeleteYear-{{ $personnel->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                         <div class="modal-dialog">
                             <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelDeleteUserCurrentYear') }}">
                                 @csrf
@@ -176,7 +176,7 @@
                                     <div class="modal-footer flex-row-reverse">
                                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
                                         <button type="submit" class="spinner-submit-button btn btn-danger">
-                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
                                             Confirmer
                                         </button>
                                     </div>
@@ -185,7 +185,7 @@
                         </div>
                     </div>
                     <!-- modal for delete confirmation -->
-                    <div class="modal fade" id="confirmDelete-{{ $personnel->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="confirmDelete-{{ $personnel->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" >
                         <div class="modal-dialog">
                             <form role="form" id="delete-form" class="form" method="POST" action="{{ route('utilisateur.personnelDestroy', $personnel->id) }}">
                                 @csrf
@@ -202,7 +202,7 @@
                                     <div class="modal-footer flex-row-reverse">
                                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
                                         <button type="submit" class="btn spinner-submit-button btn-danger">
-                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
                                             Confirmer
                                         </button>
                                     </div>

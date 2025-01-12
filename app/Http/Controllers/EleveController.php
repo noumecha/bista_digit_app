@@ -26,6 +26,8 @@ class EleveController extends Controller
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $classeFilter = $request->input('classFilter');
+        $classesYearsStudents = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', '=', $activeYear->id);
+        //dd($classesYearsStudents);
 
         $query = User::where('typeUser', '=', 'eleve');
         if(!empty($searchStudent) && !empty($classeFilter)) {
@@ -34,10 +36,14 @@ class EleveController extends Controller
                 ->orWhere('surname', 'LIKE', "%{$searchStudent}%")
                 ->orWhere('email', 'LIKE', "%{$searchStudent}%")
                 ->orWhere('phone', 'LIKE', "%{$searchStudent}%");
-            })->where('classe_id', $classeFilter);
+            });
+            $userIdsWithYearClasse = $classesYearsStudents->where('classe_id', $classeFilter)
+            ->pluck('user_id');
+            $query->whereIn('id', $userIdsWithYearClasse);
         } elseif(!empty($classeFilter)) {
-            $query->where('classe_id', $classeFilter)
-            ->where('typeUser', '=', 'eleve');
+            $userIdsWithYearClasse = $classesYearsStudents->where('classe_id', $classeFilter)
+            ->pluck('user_id');
+            $query->whereIn('id', $userIdsWithYearClasse);
         } elseif (!empty($searchStudent)) {
             $query->where(function ($q) use ($searchStudent) {
                 $q->where('name', 'LIKE', "%{$searchStudent}%")

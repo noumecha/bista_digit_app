@@ -43,4 +43,13 @@ class Classe extends Model
         return $this->hasMany(Note::class);
     }
 
+    /**
+     * A user belongs to one classe in a year.
+     */
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'classe_annee_scolaire_students')
+            ->withPivot('annee_scolaire_id')
+            ->withTimestamps();
+    }
 }

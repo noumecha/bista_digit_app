@@ -38,6 +38,10 @@ function fillInputForm(res, form) {
             $(this).val(res.fonction_id);
             return true;
         }
+        if ($(this).attr('name') === 'classe_id') {
+            $(this).val(res.classe_id);
+            return true;
+        }
 
         if ($(this).is('input[type=date]') && inputName in data) {
             const rawDate = data[inputName];

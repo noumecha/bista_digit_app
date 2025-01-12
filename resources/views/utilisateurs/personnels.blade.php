@@ -47,7 +47,9 @@
                                         <select name="funcFilter" class="form-select" id="funcFilter">
                                             <option value="">Toutes les fonctions</option>
                                             @foreach ($fonctions as $fonction)
-                                                <option value="{{ $fonction->id }}" {{ request('funcFilter') == $fonction->id ? 'selected' : '' }}>{{ $fonction->libelleFonction }}</option>
+                                                <option value="{{ $fonction->id }}">
+                                                    {{ $fonction->libelleFonction }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>

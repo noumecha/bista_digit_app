@@ -123,14 +123,20 @@ class User extends Authenticatable
 
     /**
      * A personnel have a fonction
-
-    public function fonction() : BelongsTo
-    {
-        return $this->belongsTo(Fonction::class, 'fonction_id');
-    }*/
+    */
     public function fonctions()
     {
         return $this->belongsToMany(Fonction::class, 'fonction_annee_scolaire_users')
+                    ->withPivot('annee_scolaire_id')
+                    ->withTimestamps();
+    }
+
+     /**
+     * A use is in a class
+    */
+    public function classes()
+    {
+        return $this->belongsToMany(Classe::class, 'classe_annee_scolaire_students')
                     ->withPivot('annee_scolaire_id')
                     ->withTimestamps();
     }

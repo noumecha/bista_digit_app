@@ -6,6 +6,7 @@ $(function(){
         // setting up variables
         var action = $(this).data('action');
         var studentId = $(this).data('student-id');
+        var yearId = $(this).data('year-id');
         var studentIdInput = $('#studentId');
         var studentName = $(this).data('student-name');
         var form = $('#studentForm');
@@ -31,7 +32,7 @@ $(function(){
             headerText.text('Mettre à jour les configurations de l\'élève : ' + studentName);
             studentIdInput.val(studentId);
             $.ajax({
-                url: "student/"+ studentId + "/edit",
+                url: "student/"+ studentId + "/edit/" + yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -101,7 +102,7 @@ $(function(){
     });
 
     // fetching year dynamically with filters
-    $('#searchStudent').on('change keyup', function () {
+    $('#searchStudent,#classFilter').on('change keyup', function () {
         fetchStudents();
     });
 

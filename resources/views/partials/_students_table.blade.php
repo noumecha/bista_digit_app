@@ -53,13 +53,34 @@
                         {{ $student->phone }}
                     </td>
                     <td class="text-center align-middle bg-transparent border-bottom">
-                        {{ $student->classe->libClasse }}
+                        @foreach ($student->classes as $c)
+                            @foreach ($classes as $classe)
+                                @if ($classe->id === $c->pivot->classe_id && $activeYear->id === $c->pivot->annee_scolaire_id)
+                                    {{ $classe->libClasse }}
+                                @endif
+                            @endforeach
+                        @endforeach
                     </td>
                     <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
-                        <a class="btn btn-primary mt-3 p-2" href="{{ route('student.edit', $student->id) }}">
+                        <a
+                            data-bs-toggle="modal"
+                            id="edit-button"
+                            data-bs-target="#create-student-modal"
+                            data-action="edit"
+                            data-student-id="{{ $student->id }}"
+                            data-year-id="{{ $activeYear->id }}"
+                            data-student-name="{{ $student->name }}"
+                            data-url="{{ route('student.store', $student->id) }}"
+                            class="btn btn-primary mt-3 p-2"
+                            href="#"
+                        >
                             <i class="fa-solid fa-pen"></i>
                         </a>
-                        <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $student->id }}">
+                        <button
+                            type="button"
+                            class="btn btn-danger ml-2 mt-3 p-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmDelete-{{ $student->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                         <div onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
@@ -88,7 +109,7 @@
                             </div>
                         </div>
                         <!-- modal for migrate user to annother year -->
-                        <div class="modal fade" data-form-id="{{ $student->id }}" id="confirmMigrate-{{ $student->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                        <div class="modal fade" data-form-id="{{ $student->id }}" id="confirmMigrate-{{ $student->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
                                 <form role="form" class="form" method="POST" action="{{ route('student.studentMigrate') }}">
                                     @csrf
@@ -128,7 +149,7 @@
                                         <div class="modal-footer flex-row-reverse">
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
                                             <button type="button" data-personnel-id="{{ $student->id }}" class="spinner-submit-modal-button btn btn-dark">
-                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
                                                 Confirmer
                                             </button>
                                         </div>
@@ -137,7 +158,7 @@
                             </div>
                         </div>
                         <!-- modal for delete user  in the current year -->
-                        <div class="modal fade" data-form-id="{{ $student->id }}" id="confirmDeleteYear-{{ $student->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                        <div class="modal fade" data-form-id="{{ $student->id }}" id="confirmDeleteYear-{{ $student->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
                                 <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelDeleteUserCurrentYear') }}">
                                     @csrf
@@ -155,7 +176,7 @@
                                         <div class="modal-footer flex-row-reverse">
                                             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
                                             <button type="submit" class="spinner-submit-button btn btn-danger">
-                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
                                                 Confirmer
                                             </button>
                                         </div>
@@ -166,29 +187,29 @@
                     </td>
                 </tr>
                 <!-- modal for delete confirmation -->
-                <div class="modal fade" id="confirmDelete-{{ $student->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="confirmDelete-{{ $student->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" >
                     <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Voulez-vous vraiment supprimée définitivement l'élève {{ $student->name }} ?
-                                (Cette action est irreversible)
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                <form role="form" class="form" method="POST" action="{{ route('student.destroy', $student->id) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
-                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        <form role="form" id="delete-form" class="form" method="POST" action="{{ route('student.destroy', $student->id) }}">
+                            @csrf
+                            @method('DELETE')
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger">
+                                    <h5 class="modal-title text-white" id="exampleModalLabel">Confirmation de suppression</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-wrap text-justify">
+                                    Voulez-vous vraiment supprimée définitivement l'élève {{ $student->name }} ?
+                                    (Cette action est irreversible)
+                                </div>
+                                <div class="modal-footer flex-row-reverse">
+                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                    <button type="submit" class="spinner-submit-button btn btn-danger">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
                                         Confirmer
                                     </button>
-                                </form>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             @endforeach

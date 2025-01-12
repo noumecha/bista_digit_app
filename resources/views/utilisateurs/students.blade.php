@@ -74,6 +74,10 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -197,6 +201,14 @@
                                             Mot de passe générer :
                                         </label>
                                         <input type="text" id="password" name="password" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="active_year_id" class="form-control-label d-none">
+                                            Anneé :
+                                        </label>
+                                        <input type="hidden" class="form-control" id="active_year_id" name="active_year_id" value="{{ $activeYear->id }}">
                                     </div>
                                 </div>
                             </div>
