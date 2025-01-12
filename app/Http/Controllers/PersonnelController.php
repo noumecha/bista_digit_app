@@ -153,7 +153,6 @@ class PersonnelController extends Controller
         } else {
             return response()->json(['error' => 'Erreur lors de l\'enregistrement du personnel']);
         }
-
     }
 
     /**

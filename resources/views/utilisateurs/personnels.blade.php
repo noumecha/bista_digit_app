@@ -5,7 +5,7 @@
             <div class="mt-4 row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="pb-0 card-header">
+                        <div class="card-header">
                             @if (session('deleteSuccess'))
                                 <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('deleteSuccess') }}

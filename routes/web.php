@@ -32,6 +32,7 @@ use App\Http\Controllers\RemplissageController;
 use App\Http\Controllers\TypeEpreuveController;
 use App\Http\Controllers\UtilisateurController;
 use App\Models\CategorieActualite;
+use App\Models\Enseignant;
 use App\Models\Personnel;
 use Illuminate\Support\Facades\Artisan;
 
@@ -215,21 +216,24 @@ Route::delete('/evaluation/remplissages/{id}', [RemplissageController::class, 'd
 # users routes
 Route::get('/utilisateur/teachers', [EnseignantController::class, 'index'])->name('utilisateur.teachers')->middleware('auth');
 Route::get('/utilisateur/students', [EleveController::class, 'index'])->name('utilisateur.students')->middleware('auth');
+Route::get('/utilisateur/personnels', [PersonnelController::class, 'index'])->name('utilisateur.personnels')->middleware('auth');
 
 ## users -> teacher routes
 Route::post('/utilisateur/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');
 Route::put('/utilisateur/teacher/update/{id}', [EnseignantController::class, 'update'])->name('teacher.update')->middleware('auth');
-Route::get('/utilisateur/teacher/{id}/edit', [EnseignantController::class, 'edit'])->name('teacher.edit')->middleware('auth');
 Route::delete('/utilisateur/teacher/delete/{id}', [EnseignantController::class, 'destroy'])->name('teacher.destroy')->middleware('auth');
-Route::get('/utilisateur/teacher/{id}/edit/{yearId}', [PersonnelController::class, 'edit'])->name('utilisateur.personnelEdit')->middleware('auth');
-Route::post('/utilisateur/teacher/migrate', [PersonnelController::class, 'migrate'])->name('utilisateur.personnelMigrate')->middleware('auth');
-Route::post('/utilisateur/teacher/delete-user-in-year', [PersonnelController::class, 'deleteUserCurrentYear'])->name('utilisateur.personnelDeleteUserCurrentYear')->middleware('auth');
+Route::get('/utilisateur/teacher/{id}/edit/{yearId}', [EnseignantController::class, 'edit'])->name('teacher.edit')->middleware('auth');
+Route::post('/utilisateur/teacher/migrate', [EnseignantController::class, 'migrate'])->name('teacher.teacherMigrate')->middleware('auth');
+Route::post('/utilisateur/teacher/delete-user-in-year', [EnseignantController::class, 'deleteUserCurrentYear'])->name('teacher.teacherDeleteUserCurrentYear')->middleware('auth');
 
 ## users -> student routes
 Route::post('/utilisateur/student/save', [EleveController::class, 'store'])->name('student.store')->middleware('auth');
 Route::put('/utilisateur/student/{id}', [EleveController::class, 'update'])->name('student.update')->middleware('auth');
-Route::get('/utilisateur/student/{id}/edit', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
 Route::delete('/utilisateur/student/{id}', [EleveController::class, 'destroy'])->name('student.destroy')->middleware('auth');
+Route::get('/utilisateur/student/{id}/edit/{yearId}', [EleveController::class, 'edit'])->name('student.studentEdit')->middleware('auth');
+Route::post('/utilisateur/student/migrate', [EleveController::class, 'migrate'])->name('student.studentMigrate')->middleware('auth');
+Route::post('/utilisateur/student/delete-user-in-year', [EleveController::class, 'deleteUserCurrentYear'])->name('student.studentDeleteUserCurrentYear')->middleware('auth');
+
 
 ## users -> fonctions routes
 Route::get('/utilisateur/fonctions', [FonctionController::class, 'index'])->name('utilisateur.fonctions')->middleware('auth');
@@ -239,7 +243,6 @@ Route::get('/utilisateur/fonctions/{id}/edit', [FonctionController::class, 'edit
 Route::delete('/utilisateur/fonctions/{id}', [FonctionController::class, 'destroy'])->name('utilisateur.fonctionDestroy')->middleware('auth');
 
 ## users -> personnel routes
-Route::get('/utilisateur/personnels', [PersonnelController::class, 'index'])->name('utilisateur.personnels')->middleware('auth');
 Route::post('/utilisateur/personnel/save', [PersonnelController::class, 'store'])->name('utilisateur.personnelStore')->middleware('auth');
 Route::put('/utilisateur/personnel/update/{id}', [PersonnelController::class, 'update'])->name('utilisateur.personnelUpdate')->middleware('auth');
 Route::get('/utilisateur/personnels/{id}/edit/{yearId}', [PersonnelController::class, 'edit'])->name('utilisateur.personnelEdit')->middleware('auth');

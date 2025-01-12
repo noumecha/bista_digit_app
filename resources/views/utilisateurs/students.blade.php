@@ -5,7 +5,7 @@
             <div class="mt-4 row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="pb-0 card-header">
+                        <div class="card-header">
                             @if (session('deleteSuccess'))
                                 <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('deleteSuccess') }}
@@ -32,12 +32,12 @@
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterStudentForm">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="input-group">
                                         <input type="text" name="searchStudent" value="" id="searchStudent" class="form-control" placeholder="Rechercher un élève par (classe, nom , prenom, email, téléphone)"/>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="input-group">
                                         <select name="classFilter" class="form-select" id="classFilter">
                                             <option value="">Toutes les classes</option>

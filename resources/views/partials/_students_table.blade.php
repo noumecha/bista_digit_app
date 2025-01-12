@@ -62,6 +62,107 @@
                         <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $student->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
+                        <div onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                            <div class="ddown-items-container d-none p-2 bg-dark">
+                                <button
+                                    type="button"
+                                    class="mb-0 p-2 btn text-white"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmMigrate-{{ $student->id }}"
+                                >
+                                    Migrer
+                                </button>
+                                <button
+                                    type="button"
+                                    class="mb-0 p-2 btn text-white"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteYear-{{ $student->id }}"
+                                    {{ $activeYear->id === $student->create_year_id ? 'disabled' : '' }}
+                                >
+                                    Supprimer pour l'année
+                                </button>
+                                <a class="mb-0 p-2 btn text-white" href="#">
+                                    Informations
+                                </a>
+                            </div>
+                        </div>
+                        <!-- modal for migrate user to annother year -->
+                        <div class="modal fade" data-form-id="{{ $student->id }}" id="confirmMigrate-{{ $student->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form role="form" class="form" method="POST" action="{{ route('student.studentMigrate') }}">
+                                    @csrf
+                                    <div class="modal-content p-0">
+                                        <div class="modal-header bg-dark">
+                                            <h5 class="modal-title text-white" id="migrateModal">Confirmation de migration</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            </button>
+                                        </div>
+                                        <div class="alert text-wrap alert-success text-center" style="display: none;" id="modal-alert-success-{{ $student->id }}">
+                                        </div>
+                                        <div class="alert text-wrap alert-danger text-center" style="display: none;" id="modal-alert-errors-{{ $student->id }}">
+                                        </div>
+                                        <div class="modal-body text-wrap text-justify">
+                                            <h5>Vous êtes sur le point d'ajouter l'élève {{ $student->name }} à une année ultérieure!</h5>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <input type="hidden" name="migrate_current_year_id" id="migrate_current_year_id" value="{{ $activeYear->id }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="hidden" name="migrate_user_id" id="migrate_user_id" value="{{ $student->id }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="sex" class="form-control-label">
+                                                        Selectionnez l'année :
+                                                    </label>
+                                                    <select name="migrate_year_id" id="migrate_year_id" class="form-control form-select">
+                                                        @foreach ($migrateYears as $myear)
+                                                            <option value="{{ $myear->id }}">{{ $myear->libelleAnneeScolaire }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer flex-row-reverse">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                            <button type="button" data-personnel-id="{{ $student->id }}" class="spinner-submit-modal-button btn btn-dark">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                Confirmer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- modal for delete user  in the current year -->
+                        <div class="modal fade" data-form-id="{{ $student->id }}" id="confirmDeleteYear-{{ $student->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelDeleteUserCurrentYear') }}">
+                                    @csrf
+                                    <div class="modal-content p-0">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Suppresion de l'élève de l'année scolaire courrante</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
+                                        <input type="hidden" name="delusyear_user_id" value="{{ $student->id }}">
+                                        <div class="modal-body text-wrap text-justify">
+                                            Voulez-vous vraiment supprimér l'élève {{ $student->name }}
+                                            pour l'année {{ $activeYear->libelleAnneeScolaire }} ?
+                                        </div>
+                                        <div class="modal-footer flex-row-reverse">
+                                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                            <button type="submit" class="spinner-submit-button btn btn-danger">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                Confirmer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <!-- modal for delete confirmation -->
@@ -73,7 +174,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Voulez-vous vraiment supprimée l'élève {{ $student->name }} ?
+                                Voulez-vous vraiment supprimée définitivement l'élève {{ $student->name }} ?
                                 (Cette action est irreversible)
                             </div>
                             <div class="modal-footer">
