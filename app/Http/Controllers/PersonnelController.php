@@ -20,10 +20,9 @@ class PersonnelController extends Controller
      * load personnel informations or querying
      */
     public function index(Request $request) {
-        // define variables
         $user = User::find(Auth::id());
-        $searchPersonnel = $request->input('searchPersonnel');
         $fonctions = Fonction::all();
+        $searchPersonnel = $request->input('searchPersonnel');
         $FonctionFilter = $request->input('funcFilter');
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
@@ -108,6 +107,9 @@ class PersonnelController extends Controller
             'surname.required' => 'Entrez le prenom',
             'phone.required' => 'Entrez le numero de téléphone',
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
+            'profile.mimes' => 'L\'image doit à l\'un des formats (jpeg, png, gif)',
+            'profile.image' => 'Le fichier doit être une image',
+            'profile.max' => 'La taille du fichier ne doit pas dépasser 4Mo',
             'name.min' => 'Le nom doit contenir au moins 3 caractères',
             'surname.min' => 'Le prenom doit contenir au moins 3 caractères',
             'numCni.unique' => 'Ce numéro de CNI est déjà dans le système',
@@ -205,6 +207,9 @@ class PersonnelController extends Controller
             'email.unique' => 'Un utilisateur avec cette adresse email existe déjà',
             'phone.required' => 'Entrez le numero de téléphone',
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
+            'profile.mimes' => 'L\'image doit à l\'un des formats (jpeg, png, gif)',
+            'profile.image' => 'Le fichier doit être une image',
+            'profile.max' => 'La taille du fichier ne doit pas dépasser 4Mo',
             'sex.required' => 'Choisissez le sexe',
             'fonction_id.required' => 'Choisisssez la fonction',
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
@@ -260,7 +265,7 @@ class PersonnelController extends Controller
 
         $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id)->first();
         $userFonctionYear = FonctionAnneeScolaireUser::all()
-            ->where('annnee_scolaire_id', '=', $request->delusyear_year_id)
+            ->where('annee_scolaire_id', '=', $request->delusyear_year_id)
             ->where('user_id', '=',$request->delusyear_user_id)
             ->first();
 

@@ -25,8 +25,14 @@ class EnseignantController extends Controller
         $searchTeacher = $request->input('searchTeacher');
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
+        $teacherSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
+        $teacherSchoolYearIds = $teacherSchoolYear->pluck('user_id');
 
-        $query = User::where('typeUser', '=', 'enseignant');
+        if(isset($teacherSchoolYear)) {
+            $query = User::where('typeUser', '=', 'enseignant')->whereIn('id', $teacherSchoolYearIds);
+        } else {
+            $query = "";
+        }
         if(!empty($searchTeacher)) {
             $query->where(function($q) use ($searchTeacher) {
                 $q->where('name', 'LIKE', "%{$searchTeacher}%")
@@ -36,7 +42,8 @@ class EnseignantController extends Controller
             });
         }
 
-        $teachers = $query->paginate(10);
+        $query ? $teachers = $query->paginate(10) : $teachers = [];
+
         if($request->ajax()) {
             return view('partials._teachers_table', compact('matieres','teachers','user','searchTeacher','activeYear','migrateYears'));
         } else {
@@ -74,6 +81,9 @@ class EnseignantController extends Controller
             'matricule.unique' => 'Le matricule existe déja dans la base de données',
             'phone.required' => 'Entrez le numero de téléphone',
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
+            'profile.mimes' => 'L\'image doit à l\'un des formats (jpeg, png, gif)',
+            'profile.image' => 'Le fichier doit être une image',
+            'profile.max' => 'La taille du fichier ne doit pas dépasser 4Mo',
             'diplome1.required' => 'Entrez l\'intitulté du diplome 1',
             'active_year_id.required' => 'Aucune annéee selectionnée',
             'numCni.required' => 'Entrez le numero de la CNI',
@@ -135,6 +145,9 @@ class EnseignantController extends Controller
                 'surname.required' => 'Entrez votre prenom',
                 'phone.required' => 'Entrez le numero de téléphone',
                 'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
+                'profile.mimes' => 'L\'image doit à l\'un des formats (jpeg, png, gif)',
+                'profile.image' => 'Le fichier doit être une image',
+                'profile.max' => 'La taille du fichier ne doit pas dépasser 4Mo',
                 'diplome1.required' => 'Entrez l\'intitulté du diplome 1',
                 'sex.required' => 'Choisissez le sexe',
          ]);
@@ -150,7 +163,6 @@ class EnseignantController extends Controller
         }
         $teacher->update($request->except('profile'));
         return response()->json(['success' => 'Informations de l\'enseignant mis à jour avec succès']);
-        //return redirect()->route('utilisateur.teachers')->with('success', 'Enseignant mis à jour avec succès');
     }
 
     public function destroy($id) {

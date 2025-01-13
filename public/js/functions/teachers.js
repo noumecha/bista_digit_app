@@ -6,6 +6,7 @@ $(function(){
         // setting up variables
         var action = $(this).data('action');
         var teacherId = $(this).data('teacher-id');
+        var yearId = $(this).data('year-id');
         var teacherIdInput = $('#teacherId');
         var teacherName = $(this).data('teacher-name');
         var form = $('#teacherForm');
@@ -31,7 +32,7 @@ $(function(){
             headerText.text('Mettre à jour les configurations de l\'enseignant : ' + teacherName);
             teacherIdInput.val(teacherId);
             $.ajax({
-                url: "teacher/"+ teacherId + "/edit",
+                url: "teacher/"+ teacherId + "/edit/" + yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);

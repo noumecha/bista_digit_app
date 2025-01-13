@@ -228,7 +228,7 @@ Route::post('/utilisateur/teacher/delete-user-in-year', [EnseignantController::c
 
 ## users -> student routes
 Route::post('/utilisateur/student/save', [EleveController::class, 'store'])->name('student.store')->middleware('auth');
-Route::put('/utilisateur/student/{id}', [EleveController::class, 'update'])->name('student.update')->middleware('auth');
+Route::put('/utilisateur/student/update/{id}', [EleveController::class, 'update'])->name('student.update')->middleware('auth');
 Route::delete('/utilisateur/student/{id}', [EleveController::class, 'destroy'])->name('student.destroy')->middleware('auth');
 Route::get('/utilisateur/student/{id}/edit/{yearId}', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
 Route::post('/utilisateur/student/migrate', [EleveController::class, 'migrate'])->name('student.studentMigrate')->middleware('auth');

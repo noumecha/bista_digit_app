@@ -4,7 +4,6 @@ $(function(){
     });
 
     function showSpinner(el) {
-        console.log(el.closest('form'));
         el.children('span.spinner-border').removeClass('d-none');
         el.disabled = true;
         setTimeout(function() {

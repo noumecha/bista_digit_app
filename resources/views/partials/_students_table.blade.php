@@ -157,14 +157,14 @@
                                 </form>
                             </div>
                         </div>
-                        <!-- modal for delete user  in the current year -->
+                        <!-- modal for delete student for the current year -->
                         <div class="modal fade" data-form-id="{{ $student->id }}" id="confirmDeleteYear-{{ $student->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
-                                <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelDeleteUserCurrentYear') }}">
+                                <form role="form" class="form" method="POST" action="{{ route('student.studentDeleteUserCurrentYear') }}">
                                     @csrf
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-danger">
-                                            <h5 class="modal-title text-white" id="exampleModalLabel">Suppresion de l'élève de l'année scolaire courrante</h5>
+                                            <h5 class="modal-title text-wrap text-justify text-white" id="exampleModalLabel">Suppresion de l'élève de l'année scolaire courrante</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
@@ -184,34 +184,34 @@
                                 </form>
                             </div>
                         </div>
+                        <!-- modal for delete confirmation -->
+                        <div class="modal fade" id="confirmDelete-{{ $student->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" >
+                            <div class="modal-dialog">
+                                <form role="form" class="form" method="POST" action="{{ route('student.destroy', $student->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Confirmation de suppression</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-wrap text-justify">
+                                            Voulez-vous vraiment supprimée définitivement l'élève {{ $student->name }} ?
+                                            (Cette action est irreversible)
+                                        </div>
+                                        <div class="modal-footer flex-row-reverse">
+                                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                            <button type="submit" class="spinner-submit-button btn btn-danger">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
+                                                Confirmer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </td>
                 </tr>
-                <!-- modal for delete confirmation -->
-                <div class="modal fade" id="confirmDelete-{{ $student->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" >
-                    <div class="modal-dialog">
-                        <form role="form" id="delete-form" class="form" method="POST" action="{{ route('student.destroy', $student->id) }}">
-                            @csrf
-                            @method('DELETE')
-                            <div class="modal-content">
-                                <div class="modal-header bg-danger">
-                                    <h5 class="modal-title text-white" id="exampleModalLabel">Confirmation de suppression</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body text-wrap text-justify">
-                                    Voulez-vous vraiment supprimée définitivement l'élève {{ $student->name }} ?
-                                    (Cette action est irreversible)
-                                </div>
-                                <div class="modal-footer flex-row-reverse">
-                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
-                                    <button type="submit" class="spinner-submit-button btn btn-danger">
-                                        <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
-                                        Confirmer
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             @endforeach
         @endif
     </tbody>

@@ -23,13 +23,19 @@ class EleveController extends Controller
         $user = User::find(Auth::id());
         $classes = Classe::all();
         $searchStudent = $request->input('searchStudent');
+        $classeFilter = $request->input('classFilter');
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
-        $classeFilter = $request->input('classFilter');
+        $studentSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
+        $studentsSchoolYearId = $studentSchoolYear->pluck('user_id');
         $classesYearsStudents = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', '=', $activeYear->id);
-        //dd($classesYearsStudents);
 
-        $query = User::where('typeUser', '=', 'eleve');
+        if(isset($studentSchoolYear)) {
+            $query = User::where('typeUser', '=', 'eleve')->whereIn('id', $studentsSchoolYearId);
+        } else {
+            $query = "";
+        }
+
         if(!empty($searchStudent) && !empty($classeFilter)) {
             $query->where(function ($q) use ($searchStudent) {
                 $q->where('name', 'LIKE', "%{$searchStudent}%")
@@ -52,8 +58,8 @@ class EleveController extends Controller
                 ->orWhere('phone', 'LIKE', "%{$searchStudent}%");
             });
         }
+        $query ?  $students = $query->paginate(10) : $students = [];
 
-        $students = $query->paginate(10);
         if($request->ajax()) {
             return view('partials._students_table', compact(
                 'classes','students',
@@ -96,6 +102,9 @@ class EleveController extends Controller
             'surname.required' => 'Entrez le prenom de l\'élève',
             'phone.required' => 'Entrez le numero de téléphone de l\'élève ou du parent',
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
+            'profile.mimes' => 'L\'image doit à l\'un des formats (jpeg, png, gif)',
+            'profile.image' => 'Le fichier doit être une image',
+            'profile.max' => 'La taille du fichier ne doit pas dépasser 4Mo',
             'name.min' => 'Le nom doit contenir au moins 3 caractères',
             'surname.min' => 'Le prenom doit contenir au moins 3 caractères',
             'location.required' => 'Entrez le lieu de résidence',
@@ -118,8 +127,9 @@ class EleveController extends Controller
             'lieuNaiss' => $request->lieuNaiss,
             'dateNaiss' => $request->dateNaiss,
             'numCni' => $request->numCni,
+            'create_year_id' => $request->active_year_id,
             'classe_id' => $request->classe_id,
-            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : '',
+            'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'eleve',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
@@ -174,6 +184,9 @@ class EleveController extends Controller
             'email.unique' => 'Un utilisateur avec cette adresse email existe déjà',
             'phone.required' => 'Entrez le numero de téléphone de l\'élève ou du parent',
             'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
+            'profile.mimes' => 'L\'image doit à l\'un des formats (jpeg, png, gif)',
+            'profile.image' => 'Le fichier doit être une image',
+            'profile.max' => 'La taille du fichier ne doit pas dépasser 4Mo',
             'location.required' => 'Entrez le lieu de résidence',
             'lieuNaiss.required' => 'Entrez le lieu de naissance',
             'dateNaiss.required' => 'Entrez la date de naissance',
@@ -228,13 +241,13 @@ class EleveController extends Controller
     }
 
     /**
-     *  delete user for the current year
+     *  delete student for the current year
      */
     public function deleteUserCurrentYear(Request $request) {
 
         $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id)->first();
         $classeYearStudent = ClasseAnneeScolaireStudent::all()
-            ->where('annnee_scolaire_id', '=', $request->delusyear_year_id)
+            ->where('annee_scolaire_id', '=', $request->delusyear_year_id)
             ->where('user_id', '=',$request->delusyear_user_id)
             ->first();
 
@@ -278,17 +291,22 @@ class EleveController extends Controller
                 'error' => 'L\'élève a déjà été inclu pour l\'année : '.$y->libelleAnneeScolaire
             ]);
         } else {
-            UserAnneeScolaire::create([
+            $newStudentYear = UserAnneeScolaire::create([
                 'user_id' => $request->migrate_user_id,
                 'annee_scolaire_id'=>$request->migrate_year_id,
             ]);
             // relation between user - fonction - school year
-            ClasseAnneeScolaireStudent::create([
+            $newClasseYearStudent = ClasseAnneeScolaireStudent::create([
                 'user_id' => $request->migrate_user_id,
                 'classe_id' => $classeId,
                 'annee_scolaire_id' => $request->migrate_year_id,
             ]);
-            return response()->json(['success' => 'Elève migré avec succès']);
+
+            if( $newStudentYear && $newClasseYearStudent ) {
+                return response()->json(['success' => 'Elève migré avec succès']);
+            } else {
+                return response()->json(['error' => 'Impossible de faire migrer l\'élève!']);
+            }
         }
     }
 
