@@ -85,10 +85,10 @@
                                 </a>
                             </div>
                         </div>
-                        <!-- modal for migrate user to annother year -->
+                        <!-- modal for migrate teacher to annother year -->
                         <div class="modal fade" data-form-id="{{ $teacher->id }}" id="confirmMigrate-{{ $teacher->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
                             <div class="modal-dialog">
-                                <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelMigrate') }}">
+                                <form role="form" class="form" method="POST" action="{{ route('teacher.teacherMigrate') }}">
                                     @csrf
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-dark">
@@ -135,10 +135,10 @@
                                 </form>
                             </div>
                         </div>
-                        <!-- modal for delete user  in the current year -->
+                        <!-- modal for delete teacher in the current year -->
                         <div class="modal fade" data-form-id="{{ $teacher->id }}" id="confirmDeleteYear-{{ $teacher->id }}" tabindex="-1" aria-labelledby="migrateModal" aria-hidden="true">
                             <div class="modal-dialog">
-                                <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelDeleteUserCurrentYear') }}">
+                                <form role="form" class="form" method="POST" action="{{ route('teacher.teacherDeleteUserCurrentYear') }}">
                                     @csrf
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-danger">
@@ -170,12 +170,13 @@
                                     @method('DELETE')
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-danger">
-                                            <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Confirmation de suppression</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body text-wrap text-justify">
-                                            Voulez-vous vraiment supprimée l'enseignant {{ $teacher->name }} ?
-                                            (Cette action est irreversible)
+                                            Voulez-vous vraiment supprimée <b>définitivement</b> l'enseignant <b>{{ $teacher->name }} ?
+                                            (Cette action est irreversible)</b>. Cette action l'éffacera également des <b>enseignements</b>
+                                            et de <b>l'attribution des matières</b>.
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
                                             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>

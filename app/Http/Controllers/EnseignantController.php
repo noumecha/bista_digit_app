@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
+use App\Models\EnseignantMatiereModel;
+use App\Models\Enseignement;
 use App\Models\FonctionAnneeScolaireUser;
 use App\Models\Matiere;
 use App\Models\User;
@@ -27,7 +29,7 @@ class EnseignantController extends Controller
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $teacherSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
         $teacherSchoolYearIds = $teacherSchoolYear->pluck('user_id');
-
+        //dd($teacherSchoolYear);
         if(isset($teacherSchoolYear)) {
             $query = User::where('typeUser', '=', 'enseignant')->whereIn('id', $teacherSchoolYearIds);
         } else {
@@ -109,12 +111,17 @@ class EnseignantController extends Controller
             'create_year_id' => $request->active_year_id,
         ]);
 
-        if($teacher) {
+        // add the teacher to the current school year
+        $userAnneeScolaire = UserAnneeScolaire::create([
+            'user_id' => $teacher->id,
+            'annee_scolaire_id' => $request->active_year_id,
+        ]);
+
+        if($teacher && $userAnneeScolaire) {
             return response()->json(['success' => 'Enseignant ajouté avec succès']);
         } else {
             return response()->json(['error' => 'Erreur lors de l\'enregistrement du nouvel enseignant']);
         }
-        //return redirect()->route('utilisateur.teachers')->with('success', 'Enseignant ajouté avec succès');
     }
 
 
@@ -167,7 +174,17 @@ class EnseignantController extends Controller
 
     public function destroy($id) {
         $teacher = User::findOrFail($id);
+        $teacherYears = UserAnneeScolaire::where('user_id', '=', $id);
+        $teacherSubjects = EnseignantMatiereModel::where('user_id', $teacher->id);
+        foreach ($teacherSubjects as $teacherSubject) {
+            $enseignements = Enseignement::where('enseignant_matiere_id', $teacherSubject->id);
+            foreach ($enseignements as $enseignement) {
+                $enseignement->delete();
+            }
+        }
         $teacher->delete();
+        $teacherYears->delete();
+        $teacherSubjects->delete();
 
         return redirect()->route('utilisateur.teachers')->with('deleteSuccess', 'Enseignant supprimer avec succès');
     }
@@ -177,12 +194,8 @@ class EnseignantController extends Controller
     public function deleteUserCurrentYear(Request $request) {
 
         $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id)->first();
-        $userFonctionYear = FonctionAnneeScolaireUser::all()
-            ->where('annnee_scolaire_id', '=', $request->delusyear_year_id)
-            ->where('user_id', '=',$request->delusyear_user_id)
-            ->first();
 
-        if ($userYear->delete() && $userFonctionYear->delete()) {
+        if ($userYear->delete()) {
             return redirect()->route('utilisateur.teachers')->with('deleteSuccess', 'Enseignant supprimé avec succès pour l\'année courrante');
         } else {
             return redirect()->route('utilisateur.teachers')->with('errorSuccess', 'Echec de surpression de l\'enseignant pour l\'année courrante');
@@ -207,34 +220,21 @@ class EnseignantController extends Controller
         // getting data for evaluation
         $y = AnneeScolaire::findOrFail($request->migrate_year_id);
         $u = User::findOrFail($request->migrate_user_id);
-        $fonctionAnneeScolaireUser = FonctionAnneeScolaireUser::where('user_id', '=', $request->migrate_user_id)
-        ->where('annee_scolaire_id','=',$request->migrate_current_year_id)->first();
-        $fonctionId = $fonctionAnneeScolaireUser->fonction_id;
 
         // checking if the user already migrated:
         $userYear = UserAnneeScolaire::all()
             ->where('annee_scolaire_id','=',$request->migrate_year_id)
             ->where('user_id', '=', $request->migrate_user_id)
             ->first();
-        // checking if a user in the migrate year already have the user fonction:
-        $userYearFonction = FonctionAnneeScolaireUser::all()
-            ->where('annee_scolaire_id','=',$request->migrate_year_id)
-            ->where('fonction_id','=',$fonctionId)
-            ->first();
 
         if($userYear) {
-            return response()->json(['error' => 'L\'enseignant à déjà été inclu pour l\'année : '.$y->libelleAnneeScolaire]);
+            return response()->json(['error' => 'L\'enseignant '.$u->name.' à déjà été inclu pour l\'année : '.$y->libelleAnneeScolaire]);
         } else {
             UserAnneeScolaire::create([
                 'user_id' => $request->migrate_user_id,
                 'annee_scolaire_id'=>$request->migrate_year_id,
             ]);
-            // relation between user - fonction - school year
-            FonctionAnneeScolaireUser::create([
-                'user_id' => $request->migrate_user_id,
-                'fonction_id' => $fonctionId,
-                'annee_scolaire_id' => $request->migrate_year_id,
-            ]);
+
             return response()->json(['success' => 'Enseignant migré avec succès']);
         }
     }

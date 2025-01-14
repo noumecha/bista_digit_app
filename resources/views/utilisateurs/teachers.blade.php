@@ -110,7 +110,7 @@
                                         <label for="sex" class="form-control-label">
                                             Sexe :
                                         </label>
-                                        <select name="sex" id="sex" class="form-control">
+                                        <select name="sex" id="sex" class="form-select">
                                             @foreach (\App\Sex::cases() as $sex)
                                                 <option value="{{ $sex->value }}">{{ $sex->name }}</option>
                                             @endforeach

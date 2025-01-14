@@ -231,9 +231,9 @@ class EleveController extends Controller
      */
     public function destroy($id) {
         $student = User::findOrFail($id);
-        $userYears = UserAnneeScolaire::where('user_id', '=', $id);
+        $studentYears = UserAnneeScolaire::where('user_id', '=', $id);
         $classeYearStudent = ClasseAnneeScolaireStudent::where('user_id', '=', $id);
-        $userYears->delete();
+        $studentYears->delete();
         $classeYearStudent->delete();
         $student->delete();
 
