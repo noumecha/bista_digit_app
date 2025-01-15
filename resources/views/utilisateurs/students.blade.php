@@ -42,8 +42,8 @@
                                         <select name="classFilter" class="form-select" id="classFilter">
                                             <option value="">Toutes les classes</option>
                                             @foreach ($classes as $classe)
-                                                <option value="{{$classe->id}}" {{ request('classFilter') == $classe->id ? 'selected' : '' }}>
-                                                    {{ $classe->libClasse}}
+                                                <option value="{{ $classe->id }}" {{ request('classFilter') == $classe->id ? 'selected' : '' }}>
+                                                    {{ $classe->libClasse }}
                                                 </option>
                                             @endforeach
                                         </select>

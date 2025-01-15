@@ -1,18 +1,17 @@
 $(function(){
 
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-teacher-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-teacherSubject-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var teacherId = $(this).data('teacher-id');
+        var teacherSubjectId = $(this).data('teacherSubject-id');
         var yearId = $(this).data('year-id');
-        var teacherIdInput = $('#teacherId');
-        var teacherName = $(this).data('teacher-name');
-        var form = $('#teacherForm');
-        var button = $('#submit-teacher-form-button');
-        var header = $('#modal-teacher-header');
-        var headerText = $('#header-teacher-text');
+        var teacherSubjectIdInput = $('#teacherSubjectId');
+        var form = $('#teacherSubjectForm');
+        var button = $('#submit-teacherSubject-form-button');
+        var header = $('#modal-teacherSubject-header');
+        var headerText = $('#header-teacherSubject-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -23,16 +22,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-teacher-form-button-text').text('Enregistrer');
-            headerText.text('Ajouter un nouvel enseignant');
+            button.children('span#submit-teacherSubject-form-button-text').text('Enregistrer');
+            headerText.text('Ajouter une nouvelle configuration');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-teacher-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour les configurations de l\'enseignant : ' + teacherName);
-            teacherIdInput.val(teacherId);
+            button.children('span#submit-teacherSubject-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour les configurations');
+            teacherSubjectIdInput.val(teacherSubjectId);
             $.ajax({
-                url: "teacher/"+ teacherId + "/edit/" + yearId,
+                url: "enseignantMatiere/"+ teacherSubjectId + "/edit/" + yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -44,15 +43,15 @@ $(function(){
         }
     })
 
-    // When submiting form for updating or creating new teacher spinner-submit-year-form-button
-    $(document).on('click','.spinner-submit-teacher-form-button', function() {
+    // When submiting form for updating or creating new teacherSubject spinner-submit-year-form-button
+    $(document).on('click','.spinner-submit-teacherSubject-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-teacher-form-button-text');
-        var teacherId = $('#teacherId').val();
+        var buttonText = $(this).children('span#submit-teacherSubject-form-button-text');
+        var teacherSubjectId = $('#teacherSubjectId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'teacher/update/' + teacherId : 'teacher/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? '/enseignantMatiere/update/' + teacherSubjectId : '/enseignantMatiere/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -71,7 +70,7 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
-                fetchTeachers();
+                fetchteacherSubjects();
             },
             error: function(xhr) {
                 var errors = []
@@ -93,31 +92,31 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-teacher-modal').on('hidden.bs.modal', function () {
-        const form = $('#teacherForm');
+    $('#create-teacherSubject-modal').on('hidden.bs.modal', function () {
+        const form = $('#teacherSubjectForm');
         form.trigger('reset');
-        $('#modal-teacher-header').removeClass('bg-primary bg-success');
-        $('#submit-teacher-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-teacher-form-button').children('span#submit-teacher-form-button-text').text('');
+        $('#modal-teacherSubject-header').removeClass('bg-primary bg-success');
+        $('#submit-teacherSubject-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-teacherSubject-form-button').children('span#submit-teacherSubject-form-button-text').text('');
     });
 
     // fetching year dynamically with filters
-    $('#searchTeacher').on('change keyup', function () {
-        fetchTeachers();
+    $('#searchTeacherSubjects,#matiereFilter').on('change keyup', function () {
+        fetchteacherSubjects();
     });
 
     // default data :
-    fetchTeachers();
+    fetchteacherSubjects();
 
     // fetching all years :
-    function fetchTeachers() {
-        var formDatas = $('#filterTeacherForm').serialize();
+    function fetchteacherSubjects() {
+        var formDatas = $('#filterTeacherSubjectsForm').serialize();
         $.ajax({
-            url : "/utilisateur/teachers",
+            url : "/education/enseignantMatiere",
             type : 'GET',
             data : formDatas,
             success : function(data) {
-                $('#teachersTable').html(data);
+                $('#teachersSubjectsTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);

@@ -23,7 +23,7 @@ class EnseignantMatiereModel extends Model
      *
      */
     public function enseignant() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -34,4 +34,13 @@ class EnseignantMatiereModel extends Model
         return $this->belongsToMany(Classe::class, 'enseignement');
     }
 
+    /**
+     * A teacher can teach many subjects in a year.
+     */
+    public function enseignantMatieres()
+    {
+        return $this->belongsToMany(EnseignantMatiereModel::class, 'ens_mat_annee_scolaires')
+            ->withPivot('enseignant_matiere_models_id')
+            ->withTimestamps();
+    }
 }

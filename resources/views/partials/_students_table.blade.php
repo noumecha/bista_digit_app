@@ -1,4 +1,3 @@
-
 <table class="table text-secondary text-center">
     <thead>
         <tr>
@@ -217,5 +216,5 @@
     </tbody>
 </table>
 <div class="d-flex justify-content-center">
-    {{ $students->appends(request()->query())->links() }}
+    {{ $enseignantsMatieres->appends(request()->query())->links() }}
 </div>

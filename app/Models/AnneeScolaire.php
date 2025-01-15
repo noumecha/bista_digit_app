@@ -40,4 +40,14 @@ class AnneeScolaire extends Model
     public function fonctionAnneeScolaire() {
         return $this->belongsToMany(FonctionAnneeScolaireUser::class);
     }
+
+    /**
+     * In a year, A teacher can teach many subjects.
+     */
+    public function anneeScolaires()
+    {
+        return $this->belongsToMany(AnneeScolaire::class, 'ens_mat_annee_scolaires')
+            ->withPivot('')
+            ->withTimestamps();
+    }
 }

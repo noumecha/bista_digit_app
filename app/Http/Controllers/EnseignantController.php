@@ -175,16 +175,19 @@ class EnseignantController extends Controller
     public function destroy($id) {
         $teacher = User::findOrFail($id);
         $teacherYears = UserAnneeScolaire::where('user_id', '=', $id);
-        $teacherSubjects = EnseignantMatiereModel::where('user_id', $teacher->id);
-        foreach ($teacherSubjects as $teacherSubject) {
-            $enseignements = Enseignement::where('enseignant_matiere_id', $teacherSubject->id);
+        $teacherSubjects = EnseignantMatiereModel::all()->where('user_id', $teacher->id);
+        //dd($teacherSubjects->toArray());
+        foreach ($teacherSubjects->toArray() as $teacherSubject) {
+            $enseignements = Enseignement::all()->where('enseignant_matiere_id', $teacherSubject["id"]);
+            //dd($enseignements->toArray());
             foreach ($enseignements as $enseignement) {
+                //dd($enseignement);
                 $enseignement->delete();
             }
         }
         $teacher->delete();
         $teacherYears->delete();
-        $teacherSubjects->delete();
+        //$teacherSubjects->delete();
 
         return redirect()->route('utilisateur.teachers')->with('deleteSuccess', 'Enseignant supprimer avec succès');
     }
