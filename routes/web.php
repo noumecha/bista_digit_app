@@ -154,10 +154,10 @@ Route::get('/epreuve/{id}/edit', [EpreuveController::class, 'edit'])->name('epre
 Route::delete('/epreuve/{id}', [EpreuveController::class, 'destroy'])->name('epreuve.destroy')->middleware('auth');
 
 ## education -> attribution_matieres routes
-Route::post('/enseignantMatiere/save', [EnseignantMatiereModelController::class, 'store'])->name('enseignantMatiere.store')->middleware('auth');
-Route::put('/enseignantMatiere/update/{id}', [EnseignantMatiereModelController::class, 'update'])->name('enseignantMatiere.update')->middleware('auth');
-Route::get('/enseignantMatiere/{id}/edit/{yearId}', [EnseignantMatiereModelController::class, 'edit'])->name('enseignantMatiere.edit')->middleware('auth');
-Route::delete('/enseignantMatiere/{id}', [EnseignantMatiereModelController::class, 'destroy'])->name('enseignantMatiere.destroy')->middleware('auth');
+Route::post('/education/enseignantMatiere/save', [EnseignantMatiereModelController::class, 'store'])->name('enseignantMatiere.store')->middleware('auth');
+Route::put('/education/enseignantMatiere/update/{id}', [EnseignantMatiereModelController::class, 'update'])->name('enseignantMatiere.update')->middleware('auth');
+Route::get('/education/enseignantMatiere/{id}/edit/{yearId}', [EnseignantMatiereModelController::class, 'edit'])->name('enseignantMatiere.edit')->middleware('auth');
+Route::delete('/education/enseignantMatiere/{id}', [EnseignantMatiereModelController::class, 'destroy'])->name('enseignantMatiere.destroy')->middleware('auth');
 
 ## education -> course routes
 Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matiere.store')->middleware('auth');

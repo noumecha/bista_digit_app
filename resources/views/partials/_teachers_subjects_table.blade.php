@@ -44,7 +44,7 @@
                             id="edit-button"
                             data-bs-target="#create-teacherSubject-modal"
                             data-action="edit"
-                            data-enseignantMatiere-id="{{ $enseignantMatiere->id }}"
+                            data-teachersubject-id = "{{ $enseignantMatiere->id }}"
                             data-year-id="{{ $activeYear->id }}"
                             data-enseignantMatiere-name="{{ $enseignantMatiere->name }}"
                             data-url="{{ route('enseignantMatiere.store', $enseignantMatiere->id) }}"

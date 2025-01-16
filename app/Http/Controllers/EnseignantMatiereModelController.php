@@ -37,7 +37,7 @@ class EnseignantMatiereModelController extends Controller
                                  ->orWhere('surname', 'LIKE', "%{$searchTeacherSubjects}%");
                 });
             });
-            $query->whereIn('matiere_id', $matiereFilter);
+            $query->where('matiere_id', $matiereFilter);
         } elseif(!empty($matiereFilter)) {
             $query->where('matiere_id',$matiereFilter);
         } elseif (!empty($searchTeacherSubjects)) {
@@ -109,7 +109,7 @@ class EnseignantMatiereModelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, EnseignantMatiereModel $enseignantMatiereModel, $id, $yearId)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'matiere_id' => 'required|exists:matieres,id',
@@ -125,7 +125,7 @@ class EnseignantMatiereModelController extends Controller
             return response()->json(['error' => 'Cet enseignant enseigne déja cette matière']);
         }
 
-        $enseignantMatiere = $enseignantMatiereModel::findOrFail($id);
+        $enseignantMatiere = EnseignantMatiereModel::findOrFail($id);
         $enseignantMatiere->update([
             'user_id' => $request->user_id,
             'matiere_id' => $request->matiere_id,

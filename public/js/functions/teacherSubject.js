@@ -5,13 +5,14 @@ $(function(){
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var teacherSubjectId = $(this).data('teacherSubject-id');
+        var teacherSubjectId = $(this).data('teachersubject-id');
         var yearId = $(this).data('year-id');
         var teacherSubjectIdInput = $('#teacherSubjectId');
         var form = $('#teacherSubjectForm');
         var button = $('#submit-teacherSubject-form-button');
         var header = $('#modal-teacherSubject-header');
         var headerText = $('#header-teacherSubject-text');
+        console.log($(this).data('teachersubject-id'));
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -51,7 +52,7 @@ $(function(){
         var teacherSubjectId = $('#teacherSubjectId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formAction = buttonText.text() === 'Mettre à jour' ? '/enseignantMatiere/update/' + teacherSubjectId : '/enseignantMatiere/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'enseignantMatiere/update/' + teacherSubjectId : 'enseignantMatiere/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
