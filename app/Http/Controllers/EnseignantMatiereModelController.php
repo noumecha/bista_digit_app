@@ -73,6 +73,13 @@ class EnseignantMatiereModelController extends Controller
             'active_year_id.required' => 'Aucune annéee selectionnée',
         ]);
 
+        // the case when the user is migrate and we need to add a new subject to him,
+        // in that case we need to create the relation EnsMatAnneeScolaire for all the
+        // years where the teacher was migrated
+        $enseignantMatieres = EnseignantMatiereModel::all()->where('user_id', $request->user_id)->where('annee_scolaire_id', '!=', $request->active_year_id)->pluck('id');
+        $ensMatSchoolYears = EnsMatAnneeScolaire::all()->whereIn('enseignant_matiere_models_id', $enseignantMatieres);
+        dd($ensMatSchoolYears);
+
         $exists = EnseignantMatiereModel::where('matiere_id', '=', $request->matiere_id)->where('user_id','=',$request->user_id)->exists();
 
         if($exists) {
@@ -89,10 +96,6 @@ class EnseignantMatiereModelController extends Controller
             'enseignant_matiere_models_id' => $enseignantMatiereModel->id,
             'annee_scolaire_id' => $request->active_year_id,
         ]);
-
-        // the case when the user is migrate and we need to add a new matier to him,
-        // in that case we need to create the relation EnsMatAnneeScolaire for all the
-        // years where the teacher was migrated
 
         if($enseignantMatiereModel && $enseignatMatiereSchoolYear) {
             return response()->json(['success' => 'Matiere attribuer à l\'enseignant avec succès']);
