@@ -90,6 +90,10 @@ class EnseignantMatiereModelController extends Controller
             'annee_scolaire_id' => $request->active_year_id,
         ]);
 
+        // the case when the user is migrate and we need to add a new matier to him,
+        // in that case we need to create the relation EnsMatAnneeScolaire for all the
+        // years where the teacher was migrated
+
         if($enseignantMatiereModel && $enseignatMatiereSchoolYear) {
             return response()->json(['success' => 'Matiere attribuer à l\'enseignant avec succès']);
         } else {

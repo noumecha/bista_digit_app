@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AnneeScolaire;
 use App\Models\EnseignantMatiereModel;
 use App\Models\Enseignement;
+use App\Models\EnsMatAnneeScolaire;
 use App\Models\FonctionAnneeScolaireUser;
 use App\Models\Matiere;
 use App\Models\User;
@@ -195,15 +196,17 @@ class EnseignantController extends Controller
      *  delete user for the current year
      */
     public function deleteUserCurrentYear(Request $request) {
-
         $userYear = UserAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('user_id', '=', $request->delusyear_user_id)->first();
-
+        $teacherSubjects = EnseignantMatiereModel::all()->where('user_id', $request->delusyear_user_id)->pluck('id');
+        $ensMatSchoolYears = EnsMatAnneeScolaire::all()->where('annee_scolaire_id', $request->delusyear_year_id)->whereIn('enseignant_matiere_models_id',$teacherSubjects);
+        foreach ($ensMatSchoolYears as $ensMatSchoolYear) {
+            $ensMatSchoolYear->delete();
+        }
         if ($userYear->delete()) {
             return redirect()->route('utilisateur.teachers')->with('deleteSuccess', 'Enseignant supprimé avec succès pour l\'année courrante');
         } else {
             return redirect()->route('utilisateur.teachers')->with('errorSuccess', 'Echec de surpression de l\'enseignant pour l\'année courrante');
         }
-
     }
 
     /**
@@ -224,6 +227,9 @@ class EnseignantController extends Controller
         $y = AnneeScolaire::findOrFail($request->migrate_year_id);
         $u = User::findOrFail($request->migrate_user_id);
 
+        // migrate teacher configuration
+        $teacherSubjects = EnseignantMatiereModel::all()->where('user_id', $request->migrate_user_id);
+
         // checking if the user already migrated:
         $userYear = UserAnneeScolaire::all()
             ->where('annee_scolaire_id','=',$request->migrate_year_id)
@@ -237,6 +243,13 @@ class EnseignantController extends Controller
                 'user_id' => $request->migrate_user_id,
                 'annee_scolaire_id'=>$request->migrate_year_id,
             ]);
+
+            foreach ($teacherSubjects as $teacherSubject) {
+                EnsMatAnneeScolaire::create([
+                    'annee_scolaire_id' => $request->migrate_year_id,
+                    'enseignant_matiere_models_id' => $teacherSubject->id
+                ]);
+            }
 
             return response()->json(['success' => 'Enseignant migré avec succès']);
         }
