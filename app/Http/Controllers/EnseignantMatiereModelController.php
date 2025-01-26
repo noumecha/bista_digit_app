@@ -73,17 +73,10 @@ class EnseignantMatiereModelController extends Controller
             'active_year_id.required' => 'Aucune annéee selectionnée',
         ]);
 
-        // the case when the user is migrate and we need to add a new subject to him,
-        // in that case we need to create the relation EnsMatAnneeScolaire for all the
-        // years where the teacher was migrated
-        $enseignantMatieres = EnseignantMatiereModel::all()->where('user_id', $request->user_id)->where('annee_scolaire_id', '!=', $request->active_year_id)->pluck('id');
-        $ensMatSchoolYears = EnsMatAnneeScolaire::all()->whereIn('enseignant_matiere_models_id', $enseignantMatieres);
-        dd($ensMatSchoolYears);
-
         $exists = EnseignantMatiereModel::where('matiere_id', '=', $request->matiere_id)->where('user_id','=',$request->user_id)->exists();
 
         if($exists) {
-            return response()->json(['error' => 'Cet enseignant peut déja enseigner cette matière']);
+            return response()->json(['error' => 'Cette matière est déjà attribuer à cet enseignant']);
         }
 
         $enseignantMatiereModel = EnseignantMatiereModel::create([
@@ -96,6 +89,23 @@ class EnseignantMatiereModelController extends Controller
             'enseignant_matiere_models_id' => $enseignantMatiereModel->id,
             'annee_scolaire_id' => $request->active_year_id,
         ]);
+
+        // the case when the user is migrate and we need to add a new subject to him,
+        // in that case we need to create the relation EnsMatAnneeScolaire for all the
+        // years where the teacher was migrated
+        $enseignantMatieres = EnseignantMatiereModel::all()->where('user_id', $request->user_id)->pluck('id');
+        $ensMatSchoolYears = EnsMatAnneeScolaire::all()->where('annee_scolaire_id','<>',$request->active_year_id)->whereIn('enseignant_matiere_models_id', $enseignantMatieres);
+        foreach ($ensMatSchoolYears as $ensMatSchoolYear) {
+            $existEnsMatAnneeScolaire = EnsMatAnneeScolaire::where('enseignant_matiere_models_id','=',$enseignantMatiereModel->id)->where('annee_scolaire_id','=',$ensMatSchoolYear->annee_scolaire_id)->exists();
+            //dd(!$existEnsMatAnneeScolaire);
+            if(!$existEnsMatAnneeScolaire) {
+                EnsMatAnneeScolaire::create([
+                    'enseignant_matiere_models_id' => $enseignantMatiereModel->id,
+                    'annee_scolaire_id' => $ensMatSchoolYear->annee_scolaire_id,
+                ]);
+            }
+        }
+        //dd();
 
         if($enseignantMatiereModel && $enseignatMatiereSchoolYear) {
             return response()->json(['success' => 'Matiere attribuer à l\'enseignant avec succès']);
