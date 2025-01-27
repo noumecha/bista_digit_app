@@ -177,12 +177,16 @@ class EnseignantController extends Controller
         $teacher = User::findOrFail($id);
         $teacherYears = UserAnneeScolaire::where('user_id', '=', $id);
         $teacherSubjects = EnseignantMatiereModel::all()->where('user_id', $teacher->id);
-        //dd($teacherSubjects->toArray());
+        foreach ($teacherSubjects->toArray() as $teacherSubject) {
+            $ensMatSchoolYears = EnsMatAnneeScolaire::all()->where('enseignant_matiere_models_id', $teacherSubject["id"]);
+            dd($ensMatSchoolYears->toArray());
+            foreach ($ensMatSchoolYears as $ensMatSchoolYear) {
+                $ensMatSchoolYear->delete();
+            }
+        }
         foreach ($teacherSubjects->toArray() as $teacherSubject) {
             $enseignements = Enseignement::all()->where('enseignant_matiere_id', $teacherSubject["id"]);
-            //dd($enseignements->toArray());
             foreach ($enseignements as $enseignement) {
-                //dd($enseignement);
                 $enseignement->delete();
             }
         }
