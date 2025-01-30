@@ -177,22 +177,27 @@ class EnseignantController extends Controller
         $teacher = User::findOrFail($id);
         $teacherYears = UserAnneeScolaire::where('user_id', '=', $id);
         $teacherSubjects = EnseignantMatiereModel::all()->where('user_id', $teacher->id);
+        // deleting teacher in ensMatSchoolYears
         foreach ($teacherSubjects->toArray() as $teacherSubject) {
             $ensMatSchoolYears = EnsMatAnneeScolaire::all()->where('enseignant_matiere_models_id', $teacherSubject["id"]);
-            dd($ensMatSchoolYears->toArray());
+            //dd($ensMatSchoolYears->toArray());
             foreach ($ensMatSchoolYears as $ensMatSchoolYear) {
                 $ensMatSchoolYear->delete();
             }
         }
+        // deleting teacher -- class believe : enseignement
         foreach ($teacherSubjects->toArray() as $teacherSubject) {
             $enseignements = Enseignement::all()->where('enseignant_matiere_id', $teacherSubject["id"]);
             foreach ($enseignements as $enseignement) {
                 $enseignement->delete();
             }
         }
+        // delete teacherSubject
+        foreach ($teacherSubjects as $teacherSubject) {
+            $teacherSubject->delete();
+        }
         $teacher->delete();
         $teacherYears->delete();
-        //$teacherSubjects->delete();
 
         return redirect()->route('utilisateur.teachers')->with('deleteSuccess', 'Enseignant supprimer avec succès');
     }
