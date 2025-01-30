@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Env;
 
 class Enseignement extends Model
 {
@@ -25,6 +26,6 @@ class Enseignement extends Model
      *
      */
     public function enseignantmatiere() {
-        return $this->belongsTo(EnseignantMatiereModel::class);
+        return $this->belongsTo(EnseignantMatiereModel::class, 'enseignant_matiere_id');
     }
 }

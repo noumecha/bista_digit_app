@@ -24,23 +24,15 @@ class EnseignantMatiereModelController extends Controller
         $enseignantsMatieresAnneeScolaire = EnsMatAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
         $enseignantsMatieresAnneeScolaireIds = $enseignantsMatieresAnneeScolaire->pluck('enseignant_matiere_models_id');
 
+        // Querying
         if(isset($enseignantsMatieresAnneeScolaire)) {
             $query = EnseignantMatiereModel::whereIn('id', $enseignantsMatieresAnneeScolaireIds);
         } else {
             $query = "";
         }
 
-        if(!empty($searchTeacherSubjects) && !empty($matiereFilter)) {
-            $query->where(function ($q) use ($searchTeacherSubjects) {
-                $q->whereHas('enseignant', function ($teacherQuery) use ($searchTeacherSubjects) {
-                    $teacherQuery->where('name', 'LIKE', "%{$searchTeacherSubjects}%")
-                                 ->orWhere('surname', 'LIKE', "%{$searchTeacherSubjects}%");
-                });
-            });
-            $query->where('matiere_id', $matiereFilter);
-        } elseif(!empty($matiereFilter)) {
-            $query->where('matiere_id',$matiereFilter);
-        } elseif (!empty($searchTeacherSubjects)) {
+        // filtering
+        if(!empty($searchTeacherSubjects)) {
             $query->where(function ($q) use ($searchTeacherSubjects) {
                 $q->whereHas('enseignant', function ($teacherQuery) use ($searchTeacherSubjects) {
                     $teacherQuery->where('name', 'LIKE', "%{$searchTeacherSubjects}%")
@@ -48,6 +40,18 @@ class EnseignantMatiereModelController extends Controller
                 });
             });
         }
+        if(!empty($matiereFilter)) {
+            $query->where('matiere_id',$matiereFilter);
+        }
+        if (!empty($searchTeacherSubjects)) {
+            $query->where(function ($q) use ($searchTeacherSubjects) {
+                $q->whereHas('enseignant', function ($teacherQuery) use ($searchTeacherSubjects) {
+                    $teacherQuery->where('name', 'LIKE', "%{$searchTeacherSubjects}%")
+                                 ->orWhere('surname', 'LIKE', "%{$searchTeacherSubjects}%");
+                });
+            });
+        }
+
         //dd($query);
         $query ?  $enseignantsMatieres = $query->paginate(10) : $enseignantsMatieres = [];
 

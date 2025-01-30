@@ -86,7 +86,7 @@
                                         </label>
                                         <select name="user_id" id="user_id" class="form-select">
                                         @foreach ($enseignants as $enseignant)
-                                            <option value="{{ $enseignant->id }}" {{ isset($enseignantMatiereToEdit) && $enseignantMatiereToEdit->user_id == $enseignant->id ? 'selected' : '' }}>{{ $enseignant->name }}</option>
+                                            <option value="{{ $enseignant->id }}">{{ $enseignant->name }}</option>
                                         @endforeach
                                         </select>
                                     </div>

@@ -159,7 +159,7 @@ Route::put('/education/enseignantMatiere/update/{id}', [EnseignantMatiereModelCo
 Route::get('/education/enseignantMatiere/{id}/edit/{yearId}', [EnseignantMatiereModelController::class, 'edit'])->name('enseignantMatiere.edit')->middleware('auth');
 Route::delete('/education/enseignantMatiere/{id}', [EnseignantMatiereModelController::class, 'destroy'])->name('enseignantMatiere.destroy')->middleware('auth');
 
-## education -> course routes
+## education -> subjects routes
 Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matiere.store')->middleware('auth');
 Route::put('/matieres/{id}', [MatiereController::class, 'update'])->name('matiere.update')->middleware('auth');
 Route::get('/matieres/{id}/edit', [MatiereController::class, 'edit'])->name('matiere.edit')->middleware('auth');
@@ -179,9 +179,11 @@ Route::delete('/coefficient/{id}', [CoefficientController::class, 'destroy'])->n
 
 ## education -> enseignement routes
 Route::post('/enseignement/save', [EnseignementController::class, 'store'])->name('enseignement.store')->middleware('auth');
-Route::put('/enseignement/{id}', [EnseignementController::class, 'update'])->name('enseignement.update')->middleware('auth');
-Route::get('/enseignement/{id}/edit', [EnseignementController::class, 'edit'])->name('enseignement.edit')->middleware('auth');
+Route::put('/enseignement/update/{edit}', [EnseignementController::class, 'update'])->name('enseignement.update')->middleware('auth');
+Route::get('/enseignement/{id}/edit/{yearId}', [EnseignementController::class, 'edit'])->name('enseignement.edit')->middleware('auth');
 Route::delete('/enseignement/{id}', [EnseignementController::class, 'destroy'])->name('enseignement.destroy')->middleware('auth');
+Route::post('/enseignement/migrate', [EnseignementController::class, 'migrate'])->name('enseignement.migrate')->middleware('auth');
+Route::post('/enseignement/delete-ens-in-year', [EnseignementController::class, 'deleteEnsCurrentYear'])->name('enseignement.deleteEnsCurrentYear')->middleware('auth');
 
 # evaluation routes
 Route::get('/evaluation/trimestres', [EvaluationController::class, 'trimestres'])->name('evaluation.trimestres')->middleware('auth');

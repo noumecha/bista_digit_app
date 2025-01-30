@@ -13,10 +13,17 @@ class EnseignantMatiereModel extends Model
     protected $fillable = ['user_id', 'matiere_id'];
 
     /**
-     *
+     * all matiere
      */
     public function matieres() {
         return $this->belongsTo(Matiere::class);
+    }
+
+    /**
+     * corresponding specific matiere for teacher
+     */
+    public function matiere() {
+        return $this->belongsTo(Matiere::class, 'matiere_id');
     }
 
     /**

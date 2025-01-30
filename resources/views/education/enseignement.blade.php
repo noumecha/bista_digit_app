@@ -5,11 +5,11 @@
             <div class="mt-4 row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="pb-0 card-header">
+                        <div class="card-header">
                             @if (session('deleteSuccess'))
-                            <div class="row alert alert-success text-center" id="success-message">
-                                {{ session('deleteSuccess') }}
-                            </div>
+                                <div class="row alert alert-success text-center success-message" id="">
+                                    {{ session('deleteSuccess') }}
+                                </div>
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
@@ -19,172 +19,128 @@
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
-                                    <a href="#personnelform" class="btn btn-lg btn-dark btn-primary">
+                                    <button
+                                        type="button"
+                                        class="btn btn-lg btn-dark btn-primary text-white"
+                                        data-bs-toggle="modal"
+                                        data-action="create"
+                                        id="add-button"
+                                        data-bs-target="#create-enseignement-modal"
+                                    >
                                         <i class="fas fa-user-plus me-2"></i> Ajouter
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
+                            <form class="form form-inline row mt-3" id="filterEnseignementForm">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" name="searchTeacher" id="searchTeacher" class="form-control" placeholder="Rechercher par nom, prenom de l'enseignant"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="classeFilter" class="form-select" id="classeFilter">
+                                            <option value="">Toutes les classes</option>
+                                            @foreach ($classes as $classe)
+                                                <option value="{{ $classe->id }}">
+                                                    {{ $classe->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select name="matiereFilter" class="form-select" id="matiereFilter">
+                                            <option value="">Toutes les matieres</option>
+                                            @foreach ($matieres as $matiere)
+                                                <option value="{{ $matiere->id }}">
+                                                    {{ $matiere->libelleMatiere }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table text-secondary text-center">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            ID</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Enseignants</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Classes
-                                        </th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($enseignements as $enseignement)
-                                        <tr>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                {{ $enseignement->id }}
-                                            </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                @foreach ($enseignantsMatieres as $enseignantMatiere)
-                                                    @if ($enseignement->enseignant_matiere_id === $enseignantMatiere->id)
-                                                        @foreach ($enseignants as $enseignant)
-                                                            {{ $enseignantMatiere->user_id === $enseignant->id ? $enseignant->name : '' }}
-                                                        @endforeach
-                                                        @foreach ($matieres as $matiere)
-                                                            {{ $enseignantMatiere->matiere_id === $matiere->id ? '('. $matiere->libelleMatiere .')' : '' }}
-                                                        @endforeach
-                                                    @else
-                                                        {{ '' }}
-                                                    @endif
-                                                @endforeach
-                                            </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                {{ $enseignement->classe->libClasse }}
-                                            </td>
-                                            <td class="text-center align-middle bg-transparent border-bottom">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                        <li>
-                                                            <a class="dropdown-item" href="{{ route('enseignement.edit', $enseignement->id) }}">
-                                                                <i class="fas fa-user-edit" aria-hidden="true"></i>
-                                                                modifier
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <div class="dropdown-item">
-                                                                <i class="fas fa-trash" aria-hidden="true"></i>
-                                                                <form role="form" class="form" method="POST" action="{{ route('enseignement.destroy', $enseignement->id) }}" action="">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <input type="submit" value="Supprimer">
-                                                                </form>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-
+                        <div class="table-responsive" id="enseignementsTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="px-5 py-4 container-fluid">
-            <div class="mt-4 row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="pb-0 card-header">
-                            @if (session('success'))
-                                <div class="row alert alert-success text-center" id="success-message">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-                            <div class="row">
-                                <div class="col-md-6">
-                                    @if (isset($enseignementToEdit))
-                                        <h5 class="">
-                                            Modifier l'attributation de la classe de {{ $enseignementToEdit->classe->libClasse }}
-                                        </h5>
-                                    @else
-                                        <h5 class="">
-                                            Attribution des classes aux enseignants
-                                        </h5>
-                                    @endif
+        <!-- modal for create or update enseignement -->
+        <div class="modal fade" id="create-enseignement-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog modal-dialog-centered">
+                <form  enctype="multipart/form-data" role="form" id="enseignementForm" class="form row">
+                    @csrf
+                    <input type="hidden" name="enseignementId" id="enseignementId" value="">
+                    <div class="modal-content p-0">
+                        <div class="modal-header" id="modal-enseignement-header">
+                            <div class="modal-title row">
+                                <div class="col-12">
+                                    <h5 id="header-enseignement-text" class="text-white"></h5>
                                 </div>
                             </div>
-                            <form role="form" id="" class="form row" method="POST" action="{{ isset($enseignementToEdit) ? route('enseignement.update', $enseignementToEdit->id) : route('enseignement.store') }}">
-                                @csrf
-                                @if (isset($enseignementToEdit))
-                                    @method('PUT')
-                                @endif
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="enseignant_matiere_id" class="form-control-label">
-                                                Selectionner l'enseignant :
-                                            </label>
-                                            <select name="enseignant_matiere_id" id="enseignant_matiere_id" class="form-control">
-                                            @foreach ($enseignantsMatieres as $enseignantMatiere)
-                                                <option value="{{ $enseignantMatiere->id }}" {{ isset($enseignementToEdit)
-                                                    && $enseignementToEdit->enseignant_matiere_id == $enseignantMatiere->id ? 'selected' : '' }}>
-                                                    @foreach ($enseignants as $enseignant)
-                                                        {{ $enseignantMatiere->user_id === $enseignant->id ? $enseignant->name : '' }}
-                                                    @endforeach
-                                                    @foreach ($matieres as $matiere)
-                                                        {{ $enseignantMatiere->matiere_id === $matiere->id ? '('. $matiere->libelleMatiere .')' : '' }}
-                                                    @endforeach
-                                                </option>
-                                            @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="classe_id" class="form-control-label">
-                                                Selectionner la classe :
-                                            </label>
-                                            <select name="classe_id" id="classe_id" class="form-control">
-                                                @foreach ($classes as $classe)
-                                                    <option value="{{ $classe->id }}" {{ isset($enseignementToEdit) && $enseignementToEdit->classe_id == $classe->id ? 'selected' : '' }}>{{ $classe->libClasse }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="enseignant_matiere_id" class="form-control-label">
+                                            Selectionner l'enseignant :
+                                        </label>
+                                        <select name="enseignant_matiere_id" id="enseignant_matiere_id" class="form-select">
+                                        @foreach ($enseignantsMatieres as $enseignantMatiere)
+                                            <option value="{{ $enseignantMatiere->id }}">
+                                                {{ $enseignantMatiere->enseignant->name }} ( {{ $enseignantMatiere->matiere->libelleMatiere }} )
+                                            </option>
+                                        @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 col-lg-16">
-                                        <input type="submit" value="{{ isset($enseignementToEdit) ? 'Mettre à jour' : 'Enregistrer'}}" class="btn btn-lg {{ isset($enseignementToEdit) ? 'btn-success' :  'btn-primary'}}">
-                                    </div
-                                </div>
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="classe_id" class="form-control-label">
+                                            Selectionner la classe :
+                                        </label>
+                                        <select name="classe_id" id="classe_id" class="form-select">
+                                            @foreach ($classes as $classe)
+                                                <option value="{{ $classe->id }}">{{ $classe->libClasse }}</option>
                                             @endforeach
-                                        </ul>
+                                        </select>
                                     </div>
-                                @endif
-                            </form>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="active_year_id" class="form-control-label d-none">
+                                            Anneé :
+                                        </label>
+                                        <input type="hidden" class="form-control" id="active_year_id" name="active_year_id" value="{{ $activeYear->id }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-row-reverse">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" id="submit-enseignement-form-button" class="spinner-submit-enseignement-form-button btn btn-lg">
+                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                <span id="submit-enseignement-form-button-text"></span>
+                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <x-app.footer />
     </main>
-
+    @section('scripts')
+        <script src="{{ asset('js/functions/enseignement.js') }}"></script>
+    @endsection
 </x-app-layout>
