@@ -20,6 +20,7 @@ class EnseignementController extends Controller
         $classes = Classe::all();
         $enseignantsMatieres = EnseignantMatiereModel::all();
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $searchTeacher = $request->input('searchTeacher');
         $classeFilter = $request->input('classeFilter');
         $matiereFilter = $request->input('matiereFilter');
@@ -55,13 +56,13 @@ class EnseignementController extends Controller
         $query ?  $enseignements = $query->paginate(10) : $enseignements = [];
 
         if($request->ajax()) {
-            return view('partials._enseignements_table', compact('activeYear','classes','matieres', 'enseignants', 'enseignements','enseignantsMatieres'));
+            return view('partials._enseignements_table', compact('activeYear','classes','matieres', 'enseignants', 'enseignements','migrateYears','enseignantsMatieres'));
         } else {
-            return view('education.enseignement', compact('activeYear','matieres','classes','enseignants', 'enseignements','enseignantsMatieres'));
+            return view('education.enseignement', compact('activeYear','matieres','classes','enseignants', 'enseignements','migrateYears','enseignantsMatieres'));
         }
 
         //dd($enseignements);
-        return view('education.enseignement', compact('classes', 'enseignements', ' enseignantsMatieres', 'matieres', 'enseignants'));
+        return view('education.enseignement', compact('classes', 'enseignements', 'enseignantsMatieres', 'matieres','migrateYears', 'enseignants'));
     }
 
     public function store(Request $request) {
@@ -84,6 +85,7 @@ class EnseignementController extends Controller
         $enseignement = Enseignement::create([
             'classe_id' => $request->classe_id,
             'enseignant_matiere_id' => $request->enseignant_matiere_id,
+            'create_year_id' => $request->active_year_id
         ]);
 
         $enseignementAnneeScolaire = EnseignementAnneeScolaire::create([
@@ -91,7 +93,7 @@ class EnseignementController extends Controller
             'annee_scolaire_id' => $request->active_year_id
         ]);
 
-        if($$enseignement && $enseignementAnneeScolaire) {
+        if($enseignement && $enseignementAnneeScolaire) {
             return response()->json(['success' => 'Classe attribuée avec succès']);
         } else {
             return response()->json(['error' => 'Erreur inconue lors de l\'attribution de la classe']);
@@ -142,8 +144,9 @@ class EnseignementController extends Controller
      */
     public function deleteEnsCurrentYear(Request $request) {
 
-        $enseignementYear = EnseignementAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusens_year_id)->where('enseignement_id', '=', $request->delusyear_ensmatmod_id)->first();
-
+        $enseignementYear = EnseignementAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('enseignement_id', '=', $request->delusyear_ens_id)->first();
+        // checking if the teacher exist in the migrate year before migrate his configuration
+        dd();
         if ($enseignementYear->delete()) {
             return redirect()->route('education.enseignement')->with('deleteSuccess', 'Configuration supprimé avec succès pour l\'année courrante');
         } else {

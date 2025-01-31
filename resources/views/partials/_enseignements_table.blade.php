@@ -31,21 +31,14 @@
                     <td class="align-middle bg-transparent border-bottom">
                         @foreach ($enseignantsMatieres as $enseignantMatiere)
                             @if ($enseignement->enseignant_matiere_id === $enseignantMatiere->id)
-                                @foreach ($enseignants as $enseignant)
-                                    {{ $enseignantMatiere->user_id === $enseignant->id ? $enseignant->name : '' }}
-                                @endforeach
-                                @foreach ($matieres as $matiere)
-                                    {{ $enseignantMatiere->matiere_id === $matiere->id ? '('. $matiere->libelleMatiere .')' : '' }}
-                                @endforeach
-                            @else
-                                {{ '' }}
+                                {{ $enseignantMatiere->enseignant->name }} ({{ $enseignantMatiere->matiere->libelleMatiere }})
                             @endif
                         @endforeach
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $enseignement->classe->libClasse }}
                     </td>
-                    <td class="text-center align-middle bg-transparent border-bottom">
+                    <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                         <a
                             data-bs-toggle="modal"
                             id="edit-button"
@@ -66,6 +59,28 @@
                             data-bs-target="#confirmDelete-{{ $enseignement->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
+                        <div onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                            <div class="ddown-items-container d-none p-2 bg-dark">
+                                <button
+                                    type="button"
+                                    class="mb-0 p-2 btn text-white"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmMigrate-{{ $enseignement->id }}"
+                                >
+                                    Migrer
+                                </button>
+                                <button
+                                    type="button"
+                                    class="mb-0 p-2 btn text-white"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteYear-{{ $enseignement->id  }}"
+                                    {{ $activeYear->id === $enseignement->create_year_id ? 'disabled' : '' }}
+                                >
+                                    Supprimer pour l'année
+                                </button>
+                            </div>
+                        </div>
                         <!-- modal for migrate user to annother year -->
                         <div class="modal fade" data-form-id="{{ $enseignement->id }}" id="confirmMigrate-{{ $enseignement->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
@@ -82,13 +97,13 @@
                                         <div class="alert text-wrap alert-danger text-center" style="display: none;" id="modal-alert-errors-{{ $enseignement->id }}">
                                         </div>
                                         <div class="modal-body text-wrap text-justify">
-                                            <h5>Vous êtes sur le point d'ajouter le personnel {{ $enseignement->name }} à une année ultérieure!</h5>
+                                            <h5>Vous êtes sur le point d'ajouter cette configuration à une année ultérieure!</h5>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <input type="hidden" name="migrate_current_year_id" id="migrate_current_year_id" value="{{ $activeYear->id }}">
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="hidden" name="migrate_user_id" id="migrate_user_id" value="{{ $enseignement->id }}">
+                                                    <input type="hidden" name="migrate_ens_id" id="migrate_ens_id" value="{{ $enseignement->id }}">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -123,13 +138,13 @@
                                     @csrf
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-danger">
-                                            <h5 class="modal-title text-white" id="exampleModalLabel">Suppresion du personnel de l'année scolaire</h5>
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Suppresion de la configuration pour l'année scolaire en cours</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
-                                        <input type="hidden" name="delusyear_user_id" value="{{ $enseignement->id }}">
+                                        <input type="hidden" name="delusyear_ens_id" value="{{ $enseignement->id }}">
                                         <div class="modal-body text-wrap text-justify">
-                                            Voulez-vous vraiment supprimér le personnel {{ $enseignement->name }}
+                                            Voulez-vous vraiment supprimér la configuration
                                             pour l'année {{ $activeYear->libelleAnneeScolaire }} ?
                                         </div>
                                         <div class="modal-footer flex-row-reverse">

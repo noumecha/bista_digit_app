@@ -178,12 +178,12 @@ Route::get('/coefficient/{id}/edit', [CoefficientController::class, 'edit'])->na
 Route::delete('/coefficient/{id}', [CoefficientController::class, 'destroy'])->name('coefficient.destroy')->middleware('auth');
 
 ## education -> enseignement routes
-Route::post('/enseignement/save', [EnseignementController::class, 'store'])->name('enseignement.store')->middleware('auth');
-Route::put('/enseignement/update/{edit}', [EnseignementController::class, 'update'])->name('enseignement.update')->middleware('auth');
-Route::get('/enseignement/{id}/edit/{yearId}', [EnseignementController::class, 'edit'])->name('enseignement.edit')->middleware('auth');
-Route::delete('/enseignement/{id}', [EnseignementController::class, 'destroy'])->name('enseignement.destroy')->middleware('auth');
-Route::post('/enseignement/migrate', [EnseignementController::class, 'migrate'])->name('enseignement.migrate')->middleware('auth');
-Route::post('/enseignement/delete-ens-in-year', [EnseignementController::class, 'deleteEnsCurrentYear'])->name('enseignement.deleteEnsCurrentYear')->middleware('auth');
+Route::post('education/enseignement/save', [EnseignementController::class, 'store'])->name('enseignement.store')->middleware('auth');
+Route::put('education/enseignement/update/{edit}', [EnseignementController::class, 'update'])->name('enseignement.update')->middleware('auth');
+Route::get('education/enseignement/{id}/edit/{yearId}', [EnseignementController::class, 'edit'])->name('enseignement.edit')->middleware('auth');
+Route::delete('education/enseignement/{id}', [EnseignementController::class, 'destroy'])->name('enseignement.destroy')->middleware('auth');
+Route::post('education/enseignement/migrate', [EnseignementController::class, 'migrate'])->name('enseignement.migrate')->middleware('auth');
+Route::post('education/enseignement/delete-ens-in-year', [EnseignementController::class, 'deleteEnsCurrentYear'])->name('enseignement.deleteEnsCurrentYear')->middleware('auth');
 
 # evaluation routes
 Route::get('/evaluation/trimestres', [EvaluationController::class, 'trimestres'])->name('evaluation.trimestres')->middleware('auth');

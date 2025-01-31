@@ -99,7 +99,7 @@
                                         <select name="enseignant_matiere_id" id="enseignant_matiere_id" class="form-select">
                                         @foreach ($enseignantsMatieres as $enseignantMatiere)
                                             <option value="{{ $enseignantMatiere->id }}">
-                                                {{ $enseignantMatiere->enseignant->name }} ( {{ $enseignantMatiere->matiere->libelleMatiere }} )
+                                                {{ $enseignantMatiere->enseignant->name }} ({{ $enseignantMatiere->matiere->libelleMatiere }})
                                             </option>
                                         @endforeach
                                         </select>
