@@ -216,5 +216,5 @@
     </tbody>
 </table>
 <div class="d-flex justify-content-center">
-    {{ $enseignantsMatieres->appends(request()->query())->links() }}
+    {{ $students->appends(request()->query())->links() }}
 </div>

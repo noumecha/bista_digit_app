@@ -59,13 +59,6 @@
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-dark w-100 mt-4 mb-3">Connexion</button>
-                                            <button type="button" class="btn btn-white btn-icon w-100 mb-3">
-                                                <span class="btn-inner--icon me-1">
-                                                    <img class="w-5" src="{{ asset('img/logos/google-logo.svg') }}"
-                                                        alt="google-logo" />
-                                                </span>
-                                                <span class="btn-inner--text">Se connecter avec Google</span>
-                                            </button>
                                         </div>
                                     </form>
                                 </div>
