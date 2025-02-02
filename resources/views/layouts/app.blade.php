@@ -47,8 +47,8 @@
         <!-- Font Awesome Icons -->
         <script src="https://kit.fontawesome.com/612ac88160.js" crossorigin="anonymous"></script>
         <link href="{{ asset ('css/nucleo-svg.css') }}" rel="stylesheet" />
-        <!-- vite config -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- vite config
+        @ vite(['resources/css/app.css', 'resources/js/app.js'])-->
         <!-- CSS Files -->
         <link id="pagestyle" href="{{ asset('css/corporate-ui-dashboard.css?v=1.0.0') }}" rel="stylesheet" />
     </head>
