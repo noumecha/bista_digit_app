@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                 <div class="_kl_de_w">
-                    <h3>BISTA</h3>
+                    <h3>POWEREDUCATION</h3>
                     <p>ipsum dolor sit amet, Excepteur sint occaecat cupidatat non
                     proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                 </div>
@@ -13,10 +13,22 @@
                 <div class="_kl_de_w">
                     <h3>Liens rapides</h3>
                     <ol>
-                        <li><i class="far fa-angle-right"></i>Acceuil</li>
-                        <li><i class="far fa-angle-right"></i>Apropos</li>
-                        <li><i class="far fa-angle-right"></i>Actualités</li>
-                        <li><i class="far fa-angle-right"></i>Le Collège</li>
+                        <li>
+                            <i class="fas fa-angle-right"></i>
+                            <a class="text-white" href="{{ route ('home.index') }}">Acceuil</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-angle-right"></i>
+                            <a class="text-white" href="{{ route ('home.about') }}">Apropos</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-angle-right"></i>
+                            <a class="text-white" href="{{ route ('home.actus') }}">Actualités</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-angle-right"></i>
+                            <a class="text-white" href="{{ route ('home.about') }}">Le Collège</a>
+                        </li>
                     </ol>
                 </div>
             </div>
@@ -25,8 +37,14 @@
                 <div class="_kl_de_w">
                     <h3>Programmes</h3>
                     <ol>
-                        <li><i class="far fa-angle-right"></i>BOOSTER</li>
-                        <li><i class="far fa-angle-right"></i>I'AM A LEADER</li>
+                        <li>
+                            <i class="fas fa-angle-right"></i>
+                            <a class="text-white" href="{{ route ('home.programmes') }}">BOOSTER</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-angle-right"></i>
+                            <a class="text-white" href="{{ route ('home.programmes') }}">I'AM A LEADER</a>
+                        </li>
                     </ol>
                 </div>
             </div>

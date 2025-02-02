@@ -62,7 +62,9 @@ a:hover {
       width: 20%;
       max-width: 20%;
       flex: 1 1 30%;
-      padding: 10px 15px; }
+      padding: 10px 15px;
+      margin-top: 7px;
+    }
       @media screen and (max-width: 767.98px) {
         .my-nav .nav-items .logo {
           width: 100%;

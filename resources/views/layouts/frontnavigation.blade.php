@@ -5,9 +5,7 @@
                 <div class="nav-items">
                     <div class="menu-toggle"></div>
                     <div class="logo text-white">
-                        <h2>
-                            <a class="text-white" href={{ route('home.index') }}>BISTA</a>
-                        </h2>
+                        <a class="h4 text-white" href={{ route('home.index') }}>POWEREDUCATION</a>
                         <!--img src="../assets/front/images/logo-01.png"-->
                     </div>
                     <div class="menu-items">

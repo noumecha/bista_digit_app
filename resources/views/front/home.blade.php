@@ -1,4 +1,4 @@
-<x-front-layout :categories="$categories">
+<x-front-layout>
     <section id="carouselExampleFade" class="carousel slide carousel-fade slider" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -338,7 +338,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <article class="_lk_bg_sd_we">
-                      <div class="_bv_xs_we"></div>
+                      <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-01.jpg') }}"></div>
                       <div class="_xs_we_er">
                         <div class="_he_w">
                           <h3>Easy English Learning Way</h3>
@@ -368,7 +368,7 @@
 
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <article class="_lk_bg_sd_we">
-                        <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-03.jpg') }}"></div>
+                        <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-01.jpg') }}"></div>
                       <div class="_xs_we_er">
                         <div class="_he_w">
                           <h3>Guest Interview will Occur Soon</h3>
