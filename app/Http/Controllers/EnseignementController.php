@@ -101,13 +101,16 @@ class EnseignementController extends Controller
     }
 
     /**
-     *
+     * get specific enseignement id for editing
      */
     public function edit($id) {
         $enseignementToEdit = Enseignement::findOrFail($id);
         return response()->json(['enseignementToEdit' => $enseignementToEdit]);
     }
 
+    /**
+     * update specific enseignement
+     */
     public function update(Request $request, $id) {
         $request->validate([
             'classe_id' => 'required|exists:classes,id',
@@ -130,6 +133,9 @@ class EnseignementController extends Controller
         return response()->json(['success', 'Attributation de classe mise à jour avec succès']);
     }
 
+    /**
+     * drop enseignement from db
+     */
     public function destroy($id) {
         $enseignement = Enseignement::findOrFail($id);
         $enseignementAnneeScolaire = EnseignementAnneeScolaire::where('enseignenemt_id','=',$id);
@@ -161,13 +167,18 @@ class EnseignementController extends Controller
     public function migrate(Request $request) {
         $request->validate([
             'migrate_year_id' => 'required|exists:annee_scolaires,id',
-            'migrate_ens_id' => 'required|exists:enseignement,id',
+            'migrate_ens_id' => 'required|exists:enseignements,id',
             'migrate_current_year_id' => 'required|exists:annee_scolaires,id'
         ], [
             'migrate_year_id.required' => 'Aucune année selectionnée',
             'migrate_ens_id.required' => 'Veuillez selectionnez une configuration',
             'migrate_current_year_id.required' => 'Veuillez activer une année scolaire',
         ]);
+
+        // before migrate make sure that user that correspond to this enseignement already migrate
+        $teacher = EnseignementAnneeScolaire::all()->where('enseignement_id', $request->migrate_ens_id)->where('annee_scolaire_id', $request->migrate_year_id);
+        $enseignement = Enseignement::where('id', $request->migrate_ens_id);
+        dd($enseignement);
 
         // checking if the enseignement already migrated:
         $ensYear = EnseignementAnneeScolaire::all()

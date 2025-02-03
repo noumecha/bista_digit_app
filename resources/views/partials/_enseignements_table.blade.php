@@ -81,7 +81,7 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- modal for migrate user to annother year -->
+                        <!-- modal for migrate enseignement to annother year -->
                         <div class="modal fade" data-form-id="{{ $enseignement->id }}" id="confirmMigrate-{{ $enseignement->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
                                 <form role="form" class="form" method="POST" action="{{ route('enseignement.migrate') }}">
@@ -131,7 +131,7 @@
                                 </form>
                             </div>
                         </div>
-                        <!-- modal for delete user  in the current year -->
+                        <!-- modal for delete enseignement  in the current year -->
                         <div class="modal fade" data-form-id="{{ $enseignement->id }}" id="confirmDeleteYear-{{ $enseignement->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
                                 <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelDeleteUserCurrentYear') }}">
