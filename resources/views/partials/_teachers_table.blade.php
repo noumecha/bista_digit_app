@@ -126,7 +126,7 @@
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                                            <button type="button" data-personnel-id="{{ $teacher->id }}" class="spinner-submit-modal-button btn btn-dark">
+                                            <button type="button" data-teacher-id="{{ $teacher->id }}" class="spinner-submit-modal-button btn btn-dark">
                                                 <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                 Confirmer
                                             </button>
@@ -142,7 +142,7 @@
                                     @csrf
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-danger">
-                                            <h5 class="modal-title text-white" id="exampleModalLabel">Suppresion du personnel de l'année scolaire</h5>
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Suppresion de l'enseignant de l'année scolaire</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">

@@ -7,8 +7,10 @@ use App\Models\Enseignement;
 use App\Models\AnneeScolaire;
 use App\Models\EnseignantMatiereModel;
 use App\Models\EnseignementAnneeScolaire;
+use App\Models\EnsMatAnneeScolaire;
 use App\Models\Matiere;
 use App\Models\User;
+use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 
 class EnseignementController extends Controller
@@ -176,9 +178,15 @@ class EnseignementController extends Controller
         ]);
 
         // before migrate make sure that user that correspond to this enseignement already migrate
-        $teacher = EnseignementAnneeScolaire::all()->where('enseignement_id', $request->migrate_ens_id)->where('annee_scolaire_id', $request->migrate_year_id);
-        $enseignement = Enseignement::where('id', $request->migrate_ens_id);
-        dd($enseignement);
+        $enseignement = Enseignement::all()->where('id', $request->migrate_ens_id)->first();
+        $ensMat = EnseignantMatiereModel::all()->where('id', $enseignement->enseignant_matiere_id)->first();
+        // checking if ensMatYear exists in the migrate year :
+        $ensMatYear = EnsMatAnneeScolaire::all()
+            ->where('enseignant_matiere_models_id', $ensMat->id)
+            ->where('annee_scolaire_id', $request->migrate_year_id)->first();
+        // checking if the users exist in the migrate year :
+        $teacher = UserAnneeScolaire::all()->where('user_id', $ensMat->user_id)
+            ->where('annee_scolaire_id',$request->migrate_year_id)->first();
 
         // checking if the enseignement already migrated:
         $ensYear = EnseignementAnneeScolaire::all()
@@ -186,7 +194,13 @@ class EnseignementController extends Controller
             ->where('enseignement_id', '=', $request->migrate_ens_id)
             ->first();
 
-        if($ensYear) {
+        if(!$ensMatYear) {
+            return response()->json([
+                'error' => 'l\'attribution de matière pour cet enseignant n\'existe pas dans l\'année selectionnée'
+            ]);
+        } else if(!$teacher) {
+            return response()->json(['error' => 'L\'enseignant n\'existe pas dans l\'année selectionnée']);
+        } else if($ensYear) {
             return response()->json(['error' => 'Cette configuration existe déjà pour l\'année selectionnée']);
         } else {
             EnseignementAnneeScolaire::create([
