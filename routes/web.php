@@ -158,6 +158,7 @@ Route::post('/education/enseignantMatiere/save', [EnseignantMatiereModelControll
 Route::put('/education/enseignantMatiere/update/{id}', [EnseignantMatiereModelController::class, 'update'])->name('enseignantMatiere.update')->middleware('auth');
 Route::get('/education/enseignantMatiere/{id}/edit/{yearId}', [EnseignantMatiereModelController::class, 'edit'])->name('enseignantMatiere.edit')->middleware('auth');
 Route::delete('/education/enseignantMatiere/{id}', [EnseignantMatiereModelController::class, 'destroy'])->name('enseignantMatiere.destroy')->middleware('auth');
+Route::post('/education/enseignantMatiere/delete-ensmat-in-year', [EnseignantMatiereModelController::class, 'deleteEnsMatCurrentYear'])->name('enseignantMatiere.deleteEnsMatCurrentYear')->middleware('auth');
 
 ## education -> subjects routes
 Route::post('/matieres/save', [MatiereController::class, 'store'])->name('matiere.store')->middleware('auth');

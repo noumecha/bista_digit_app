@@ -154,7 +154,6 @@ class EnseignementController extends Controller
 
         $enseignementYear = EnseignementAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('enseignement_id', '=', $request->delusyear_ens_id)->first();
         // checking if the teacher exist in the migrate year before migrate his configuration
-        dd();
         if ($enseignementYear->delete()) {
             return redirect()->route('education.enseignement')->with('deleteSuccess', 'Configuration supprimé avec succès pour l\'année courrante');
         } else {

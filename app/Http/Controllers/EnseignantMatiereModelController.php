@@ -18,6 +18,7 @@ class EnseignantMatiereModelController extends Controller
     {
         $matieres = Matiere::all();
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $enseignants = User::all()->where('typeUser','=','enseignant');
         $searchTeacherSubjects = $request->input('searchTeacherSubjects');
         $matiereFilter = $request->input('matiereFilter');
@@ -85,7 +86,8 @@ class EnseignantMatiereModelController extends Controller
 
         $enseignantMatiereModel = EnseignantMatiereModel::create([
             'user_id' => $request->user_id,
-            'matiere_id' => $request->matiere_id
+            'matiere_id' => $request->matiere_id,
+            'create_year_id' => $request->active_year_id
         ]);
 
         // relation between enseignantMatiere && school year
@@ -112,7 +114,7 @@ class EnseignantMatiereModelController extends Controller
         //dd();
 
         if($enseignantMatiereModel && $enseignatMatiereSchoolYear) {
-            return response()->json(['success' => 'Matiere attribuer à l\'enseignant avec succès']);
+            return response()->json(['success' => 'Matiere attribuée à l\'enseignant avec succès']);
         } else {
             return response()->json(['error' => 'Erreur inconue lors de l\'attribution de la matière']);
         }
@@ -143,7 +145,7 @@ class EnseignantMatiereModelController extends Controller
         $exists = EnseignantMatiereModel::where('matiere_id', '=', $request->matiere_id)->where('user_id','=',$request->user_id)->exists();
 
         if($exists) {
-            return response()->json(['error' => 'Cet enseignant enseigne déja cette matière']);
+            return response()->json(['error' => 'Cette matière est déjà attribuée à cet enseignant']);
         }
 
         $enseignantMatiere = EnseignantMatiereModel::findOrFail($id);
@@ -152,7 +154,22 @@ class EnseignantMatiereModelController extends Controller
             'matiere_id' => $request->matiere_id,
         ]);
 
-        return response()->json(['success' => 'Attribution de matière mis à jour avec succès']);
+        return response()->json(['success' => 'Attribution de matière mise à jour avec succès']);
+    }
+
+    /**
+     *  delete ensMat relation for the current year
+     */
+    public function deleteEnsMatCurrentYear(Request $request) {
+
+        $ensMatYear = EnsMatAnneeScolaire::all()->where('annee_scolaire_id',$request->delusyear_year_id)->where('enseignant_matiere_models_id',$request->delusyear_ensmat_id)->first();
+
+        if ($ensMatYear->delete()) {
+            return redirect()->route('education.enseignantMatiere')->with('deleteSuccess', 'Configuration supprimé avec succès pour l\'année courrante');
+        } else {
+            return redirect()->route('education.enseignantMatiere')->with('errorSuccess', 'Echec de surpression de la configuration pour l\'année courrante');
+        }
+
     }
 
     /**
