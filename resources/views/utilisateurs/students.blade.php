@@ -174,7 +174,7 @@
                                             Numero CNI :
                                         </label>
                                         <input type="text" id="numCni" name="numCni" class="form-control"
-                                            placeholder="Entrez le lieu de résidence" value="{{ old("numCni") }}">
+                                            placeholder="Entrez le numero de la cni" value="{{ old("numCni") }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

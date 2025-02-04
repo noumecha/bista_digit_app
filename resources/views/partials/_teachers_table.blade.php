@@ -126,7 +126,7 @@
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                                            <button type="button" data-teacher-id="{{ $teacher->id }}" class="spinner-submit-modal-button btn btn-dark">
+                                            <button type="button" data-data-id="{{ $teacher->id }}" class="spinner-submit-modal-button btn btn-dark">
                                                 <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                                                 Confirmer
                                             </button>

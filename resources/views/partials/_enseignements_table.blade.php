@@ -47,7 +47,7 @@
                             data-enseignement-id = "{{ $enseignement->id }}"
                             data-year-id="{{ $activeYear->id }}"
                             data-url="{{ route('enseignement.store', $enseignement->id) }}"
-                            class="btn btn-primary mt-3 p-2"
+                            class="btn btn-primary mt-3 p-2 disabled"
                             href="#"
                         >
                             <i class="fa-solid fa-pen"></i>
@@ -122,7 +122,7 @@
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                                            <button type="button" data-enseignement-id="{{ $enseignement->id }}" class="spinner-submit-modal-button btn btn-dark">
+                                            <button type="button" data-data-id="{{ $enseignement->id }}" class="spinner-submit-modal-button btn btn-dark">
                                                 <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
                                                 Confirmer
                                             </button>

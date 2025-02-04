@@ -39,7 +39,10 @@ function fillInputForm(res, form) {
             return true;
         }
         if ($(this).attr('name') === 'classe_id') {
-            $(this).val(res.classe_id);
+            if(res.classe_id)
+                $(this).val(res.classe_id);
+            else
+                $(this).val(data.classe_id);
             return true;
         }
 

@@ -55,7 +55,7 @@ class EnseignantController extends Controller
     }
 
      /**
-     * saving administrators members
+     * saving teacher
      * @param  \Illuminate\Http\Request  $request
      */
     public function store(Request $request) {
@@ -126,11 +126,17 @@ class EnseignantController extends Controller
     }
 
 
+    /**
+     * get specific teacher by $id
+     */
     public function edit($id) {
         $teacherToEdit = User::findOrFail($id);
         return response()->json(['user' => $teacherToEdit]);
     }
 
+    /**
+     * update specific teacher
+     */
     public function update(Request $request, $id) {
         $request->validate([
             'name' => 'required|min:3|max:255',
@@ -173,6 +179,9 @@ class EnseignantController extends Controller
         return response()->json(['success' => 'Informations de l\'enseignant mis à jour avec succès']);
     }
 
+    /**
+     * delete specific teacher
+     */
     public function destroy($id) {
         $teacher = User::findOrFail($id);
         $teacherYears = UserAnneeScolaire::where('user_id', '=', $id);

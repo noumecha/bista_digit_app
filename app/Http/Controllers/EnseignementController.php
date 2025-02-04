@@ -140,7 +140,7 @@ class EnseignementController extends Controller
      */
     public function destroy($id) {
         $enseignement = Enseignement::findOrFail($id);
-        $enseignementAnneeScolaire = EnseignementAnneeScolaire::where('enseignenemt_id','=',$id);
+        $enseignementAnneeScolaire = EnseignementAnneeScolaire::where('enseignement_id',$id);
         $enseignement->delete();
         $enseignementAnneeScolaire->delete();
 
@@ -194,11 +194,7 @@ class EnseignementController extends Controller
             ->where('enseignement_id', '=', $request->migrate_ens_id)
             ->first();
 
-        if(!$ensMatYear) {
-            return response()->json([
-                'error' => 'l\'attribution de matière pour cet enseignant n\'existe pas dans l\'année selectionnée'
-            ]);
-        } else if(!$teacher) {
+        if(!$teacher && !$ensMatYear) {
             return response()->json(['error' => 'L\'enseignant n\'existe pas dans l\'année selectionnée']);
         } else if($ensYear) {
             return response()->json(['error' => 'Cette configuration existe déjà pour l\'année selectionnée']);

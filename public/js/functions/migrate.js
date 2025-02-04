@@ -6,16 +6,16 @@ $(function(){
         var form_method = $(this).closest('form').prop('method');
         var form_action = $(this).closest('form').prop('action');
         var modal_id = $(this).closest('div.modal').prop('id');
-        var personnel_id = $(this).data('personnel-id');
+        var data_id = $(this).data('data-id');
         $.ajax({
             url: form_action,
             type: form_method,
             data: form_datas,
             success: function(response) {
                 if(response.error)
-                    setSuccessMessage(response.error, '#modal-alert-errors-'+personnel_id);
+                    setSuccessMessage(response.error, '#modal-alert-errors-'+data_id);
                 if(response.success)
-                    setSuccessMessage(response.success, '#modal-alert-success-'+personnel_id);
+                    setSuccessMessage(response.success, '#modal-alert-success-'+data_id);
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);

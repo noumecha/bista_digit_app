@@ -11,9 +11,6 @@
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Nom</th>
             <th
-                class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Email</th>
-            <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Telephone</th>
             <th
@@ -27,7 +24,7 @@
     </thead>
     <tbody>
         @if (empty($students->items()))
-            <td class="text" colspan="7">
+            <td class="text" colspan="6">
                 Aucune donnée disponible
             </td>
         @else
@@ -44,9 +41,6 @@
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $student->name }}
-                    </td>
-                    <td class="align-middle bg-transparent border-bottom">
-                        {{ $student->email }}
                     </td>
                     <td class="text-center align-middle bg-transparent border-bottom">
                         {{ $student->phone }}
@@ -147,7 +141,7 @@
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                                            <button type="button" data-personnel-id="{{ $student->id }}" class="spinner-submit-modal-button btn btn-dark">
+                                            <button type="button" data-data-id="{{ $student->id }}" class="spinner-submit-modal-button btn btn-dark">
                                                 <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
                                                 Confirmer
                                             </button>
