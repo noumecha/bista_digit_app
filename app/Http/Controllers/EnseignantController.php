@@ -6,7 +6,6 @@ use App\Models\AnneeScolaire;
 use App\Models\EnseignantMatiereModel;
 use App\Models\Enseignement;
 use App\Models\EnsMatAnneeScolaire;
-use App\Models\FonctionAnneeScolaireUser;
 use App\Models\Matiere;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;

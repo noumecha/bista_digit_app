@@ -134,11 +134,11 @@
                         <!-- modal for delete enseignement  in the current year -->
                         <div class="modal fade" data-form-id="{{ $enseignement->id }}" id="confirmDeleteYear-{{ $enseignement->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
-                                <form role="form" class="form" method="POST" action="{{ route('utilisateur.personnelDeleteUserCurrentYear') }}">
+                                <form role="form" class="form" method="POST" action="{{ route('enseignement.deleteEnsCurrentYear') }}">
                                     @csrf
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-danger">
-                                            <h5 class="modal-title text-white" id="exampleModalLabel">Suppresion de la configuration pour l'année scolaire en cours</h5>
+                                            <h5 class="modal-title text-white text-wrap text-justify" id="exampleModalLabel">Suppresion de la configuration pour l'année scolaire en cours</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">

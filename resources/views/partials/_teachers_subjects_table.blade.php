@@ -48,7 +48,7 @@
                             data-year-id="{{ $activeYear->id }}"
                             data-enseignantMatiere-name="{{ $enseignantMatiere->name }}"
                             data-url="{{ route('enseignantMatiere.store', $enseignantMatiere->id) }}"
-                            class="btn btn-primary mt-3 p-2"
+                            class="btn btn-primary mt-3 p-2 disabled"
                             href="#"
                         >
                             <i class="fa-solid fa-pen"></i>

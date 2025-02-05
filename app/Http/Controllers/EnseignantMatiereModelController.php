@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\AnneeScolaire;
 use App\Models\EnsMatAnneeScolaire;
 use App\Models\EnseignantMatiereModel;
+use App\Models\Enseignement;
 use App\Models\Matiere;
 use App\Models\User;
+use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 
 class EnseignantMatiereModelController extends Controller
@@ -19,15 +21,16 @@ class EnseignantMatiereModelController extends Controller
         $matieres = Matiere::all();
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
-        $enseignants = User::all()->where('typeUser','=','enseignant');
         $searchTeacherSubjects = $request->input('searchTeacherSubjects');
         $matiereFilter = $request->input('matiereFilter');
         $enseignantsMatieresAnneeScolaire = EnsMatAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
         $enseignantsMatieresAnneeScolaireIds = $enseignantsMatieresAnneeScolaire->pluck('enseignant_matiere_models_id');
+        $userSchoolYearIds = UserAnneeScolaire::all()->where('annee_scolaire_id', $activeYear->id)->pluck('user_id');
+        $enseignants = User::all()->where('typeUser','enseignant')->whereIn('id',$userSchoolYearIds);
 
         // Querying
         if(isset($enseignantsMatieresAnneeScolaire)) {
-            $query = EnseignantMatiereModel::whereIn('id', $enseignantsMatieresAnneeScolaireIds);
+            $query = EnseignantMatiereModel::whereIn('id', $enseignantsMatieresAnneeScolaireIds);//->where('create_year_id',$activeYear->id);
         } else {
             $query = "";
         }
@@ -100,7 +103,10 @@ class EnseignantMatiereModelController extends Controller
         // in that case we need to create the relation EnsMatAnneeScolaire for all the
         // years where the teacher was migrated
         $enseignantMatieres = EnseignantMatiereModel::all()->where('user_id', $request->user_id)->pluck('id');
-        $ensMatSchoolYears = EnsMatAnneeScolaire::all()->where('annee_scolaire_id','<>',$request->active_year_id)->whereIn('enseignant_matiere_models_id', $enseignantMatieres);
+        $ensMatSchoolYears = EnsMatAnneeScolaire::all()
+            ->where('annee_scolaire_id','<>',$request->active_year_id)
+            ->where('created_at','>',$enseignatMatiereSchoolYear->created_at)
+            ->whereIn('enseignant_matiere_models_id', $enseignantMatieres);
         foreach ($ensMatSchoolYears as $ensMatSchoolYear) {
             $existEnsMatAnneeScolaire = EnsMatAnneeScolaire::where('enseignant_matiere_models_id','=',$enseignantMatiereModel->id)->where('annee_scolaire_id','=',$ensMatSchoolYear->annee_scolaire_id)->exists();
             //dd(!$existEnsMatAnneeScolaire);

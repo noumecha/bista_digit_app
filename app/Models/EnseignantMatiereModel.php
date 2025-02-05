@@ -10,7 +10,11 @@ class EnseignantMatiereModel extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'matiere_id'];
+    protected $fillable = [
+        'user_id',
+        'matiere_id',
+        'create_year_id'
+    ];
 
     /**
      * all matiere
