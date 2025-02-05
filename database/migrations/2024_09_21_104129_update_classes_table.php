@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('classes', function (Blueprint $table) {
-            $table->id();
-            $table->string('libClasse');
-            $table->enum('cycleClasse', ['2nd Cycle','1er Cycle'])->nullable();
-            $table->timestamps();
+        Schema::table('classes', function (Blueprint $table) {
+            $table->foreignId('section_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 
@@ -24,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('classes');
+        //
     }
 };

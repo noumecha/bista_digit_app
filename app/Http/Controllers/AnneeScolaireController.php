@@ -36,7 +36,7 @@ class AnneeScolaireController extends Controller
     }
 
      /**
-     * saving administrators members
+     * saving school year
      * @param  \Illuminate\Http\Request  $request
      */
     public function store(Request $request) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classe;
+use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,12 +13,38 @@ class ClasseController extends Controller
     /**
      * Classe controller implmentation
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = User::find(Auth::id());
-        $classes = Classe::All();
+        $classes = Classe::all();
+        $searchClasse = $request->input('searchClasse');
+        $cycleFilter= $request->input('cycleFilter');
+        $sectionFilter = $request->input('sectionFilter');
+        $sections = Section::all();
+        // querying
+        $query = Classe::query();
 
-        return view('education.classes',['classes' => $classes], compact('user'));
+        // filtering
+        if(!empty($searchClasse)) {
+            $query->where('libClasse', 'LIKE', "%{$searchClasse}%");
+        }
+        if(!empty($sectionFilter)) {
+            $query->whereHas('section', function ($q) use ($sectionFilter) {
+                $q->where('id', $sectionFilter);
+            });
+        }
+        if(!empty($cycleFilter)) {
+            $query->where('classe_id',$cycleFilter);
+        }
+
+        //dd($query);
+        $query ?  $classes = $query->paginate(10) : $classes = [];
+
+        if($request->ajax()) {
+            return view('partials._classes_table', compact('classes', 'user','sections'));
+        } else {
+            return view('education.classes', compact('classes', 'user','sections'));
+        }
     }
 
     /**
@@ -26,62 +53,64 @@ class ClasseController extends Controller
     public function store(Request $request) {
         $request->validate([
             'libClasse' => 'required|unique:classes',
-            'effectifClasse' => 'required',
+            'section_id' => 'required',
             'cycleClasse' => 'required',
         ], [
                 'libClasse.required' => 'Entrez le libellé de la classe',
-                'effectifClasse.required' => 'Entrez l\'effectif de la classe',
-                'cycleClasse.required' => 'Choisissez le cycle de la classe',
+                'section_id.required' => 'Selectionnez une section',
+                'cycleClasse.required' => 'Selectionnez le cycle de la classe',
                 'libClasse.unique' => 'Ce libellé de classe existe déjà'
          ]);
 
-        //dd($request->libClasse);
-        Classe::create([
+        dd($request);
+        $classe = Classe::create([
             'libClasse' => $request->libClasse,
-            'effectifClasse' => $request->effectifClasse,
+            'section_id' => $request->section_id,
             'cycleClasse' => $request->cycleClasse,
         ]);
 
-        return redirect()->route('education.classes')->with('success', 'Classe créée avec succès !');
+        if($classe) {
+            return response()->json(['success' => 'Classe créée avec succès !']);
+        } else {
+            return response()->json(['error' => 'Erreur inconue lors de la création de la classe']);
+        }
     }
 
 
     /**
-     *
+     * edit specific classe
      */
     public function edit($id) {
         $classToEdit = Classe::findOrFail($id);
-        $classes = Classe::all();
-
-        return view('education.classes', compact('classes', 'classToEdit'));
+        return response()->json(['classToEdit' => $classToEdit]);
     }
 
     /**
-     *
+     * update specific class
      */
     public function update(Request $request, $id) {
         $request->validate([
             'libClasse' => 'required',
-            'effectifClasse' => 'required',
+            'section_id' => 'required',
             'cycleClasse' => 'required',
         ], [
                 'libClasse.required' => 'Entrez le libellé de la classe',
-                'effectifClasse.required' => 'Entrez l\'effectif de la classe',
-                'cycleClasse.required' => 'Choisissez le cycle de la classe',
+                'section_id.required' => 'Selectionnez une section',
+                'cycleClasse.required' => 'Selectionnez le cycle de la classe',
          ]);
 
         $classe = Classe::findOrFail($id);
         $classe->update([
             'libClasse' => $request->libClasse,
-            'effectifClasse' => $request->effectifClasse,
+            'section_id' => $request->section_id,
             'cycleClasse' => $request->cycleClasse,
         ]);
 
-        return redirect()->route('education.classes')->with('success', 'Classe mise à jour avec succès');
+        return response()->json(['success', 'Classe mise à jour avec succès']);
     }
 
     /**
-     *
+     * delete specific clase forever
      */
     public function destroy($id) {
         $classe = Classe::findOrFail($id);

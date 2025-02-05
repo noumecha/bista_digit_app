@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Classe extends Model
@@ -14,15 +15,32 @@ class Classe extends Model
     /**
      * @var array
      */
-    protected $fillable = ['libClasse','effectifClasse','cycleClasse'];
+    protected $fillable = ['libClasse','cycleClasse','section_id'];
 
     /**
      * @var array
      */
     protected $casts = [];
 
+
     /**
-     *
+     * a class is related to a specific classeEffectif
+     */
+    public function effectif(): BelongsTo
+    {
+        return $this->belongsTo(ClasseEffectif::class);
+    }
+
+    /**
+     * a class belongs to a specific section
+     */
+    public function section(): BelongsTo
+    {
+        return $this->belongsTo(Section::class, 'section_id');
+    }
+
+    /**
+     * a class belongs to many ensMat relations
      */
     public function enseignantMatiere(): BelongsToMany
     {

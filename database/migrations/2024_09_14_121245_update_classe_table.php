@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('classes', function (Blueprint $table) {
             $table->string('libClasse')->nullable()->change();
-            $table->integer('effectifClasse')->nullable()->change();
         });
     }
 

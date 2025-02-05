@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('classes', function (Blueprint $table) {
+        Schema::create('classe_effectifs', function (Blueprint $table) {
             $table->id();
-            $table->string('libClasse');
-            $table->enum('cycleClasse', ['2nd Cycle','1er Cycle'])->nullable();
+            $table->integer('effectif')->nullable();
+            $table->foreignId('annee_scolaire_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('classe_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('classes');
+        Schema::dropIfExists('classe_effectifs');
     }
 };
