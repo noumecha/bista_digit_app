@@ -1,17 +1,16 @@
 $(function(){
 
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-enseignement-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-matiere-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var enseignementId = $(this).data('enseignement-id');
-        var yearId = $(this).data('year-id');
-        var enseignementIdInput = $('#enseignementId');
-        var form = $('#enseignementForm');
-        var button = $('#submit-enseignement-form-button');
-        var header = $('#modal-enseignement-header');
-        var headerText = $('#header-enseignement-text');
+        var matiereId = $(this).data('matiere-id');
+        var matiereIdInput = $('#matiereId');
+        var form = $('#matiereForm');
+        var button = $('#submit-matiere-form-button');
+        var header = $('#modal-matiere-header');
+        var headerText = $('#header-matiere-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -22,16 +21,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-enseignement-form-button-text').text('Enregistrer');
-            headerText.text('Attribuer une classe à un enseignant en fonction de sa matière');
+            button.children('span#submit-matiere-form-button-text').text('Enregistrer');
+            headerText.text('Ajouter une nouvelle matière');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-enseignement-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour la configuration de l\'enseignement');
-            enseignementIdInput.val(enseignementId);
+            button.children('span#submit-matiere-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour la configuration de la matiere');
+            matiereIdInput.val(matiereId);
             $.ajax({
-                url: "enseignement/"+enseignementId+"/edit/"+yearId,
+                url: "matieres/"+matiereId+"/edit",
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -44,14 +43,14 @@ $(function(){
     })
 
     // When submiting form for updating or creating new personnel
-    $(document).on('click','.spinner-submit-enseignement-form-button', function() {
+    $(document).on('click','.spinner-submit-matiere-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-enseignement-form-button-text');
-        var enseignementId = $('#enseigmentId').val();
+        var buttonText = $(this).children('span#submit-matiere-form-button-text');
+        var matiereId = $('#matiereId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'enseignement/update/' + enseignementId : 'enseignement/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'matieres/update/' + matiereId : 'matieres/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -70,7 +69,7 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
-                fetchEnseignements();
+                fetchMatiere();
             },
             error: function(xhr) {
                 var errors = []
@@ -92,31 +91,31 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-enseignement-modal').on('hidden.bs.modal', function () {
-        const form = $('#enseignementForm');
+    $('#create-matiere-modal').on('hidden.bs.modal', function () {
+        const form = $('#matiereForm');
         form.trigger('reset');
-        $('#modal-enseignement-header').removeClass('bg-primary bg-success');
-        $('#submit-enseignement-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-enseignement-form-buuton').children('span#submit-enseignement-form-button-text').text('');
+        $('#modal-matiere-header').removeClass('bg-primary bg-success');
+        $('#submit-matiere-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-matiere-form-buuton').children('span#submit-matiere-form-button-text').text('');
     });
 
     // fetching enseignements dynamically with filters
-    $('#searchTeacher,#classeFilter,#matiereFilter').on('change keyup', function () {
-        fetchEnseignements();
+    $('#searchMatiere').on('change keyup', function () {
+        fetchMatiere();
     });
 
     // default data :
-    fetchEnseignements();
+    fetchMatiere();
 
     // fetching all notes :
-    function fetchEnseignements() {
-        var formData = $('#filterEnseignementForm').serialize();
+    function fetchMatiere() {
+        var formData = $('#filterMatiereForm').serialize();
         $.ajax({
-            url : "/education/enseignement",
+            url : "/education/matieres",
             type : 'GET',
             data : formData,
             success : function(data) {
-                $('#enseignementsTable').html(data);
+                $('#matieresTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('classe_effectifs', function (Blueprint $table) {
             $table->id();
-            $table->integer('effectif')->nullable();
             $table->foreignId('annee_scolaire_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('classe_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();

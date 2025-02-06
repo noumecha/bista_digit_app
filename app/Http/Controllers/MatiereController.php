@@ -6,18 +6,36 @@ use App\Models\Matiere;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class MatiereController extends Controller
 {
     /**
      * Matiere controller implementation
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = User::find(Auth::id());
         $matieres = Matiere::all();
+        $searchMatiere = $request->input('searchMatiere');
 
-        return view('education.matiere',['matieres' => $matieres], compact('user'));
+        // querying
+        $query = Matiere::query();
+
+        // filtering
+        if(!empty($searchMatiere)) {
+            $query->where('libelleMatiere', 'LIKE', "%{$searchMatiere}%")
+            ->orWhere('codeMatiere', 'LIKE', "%{$searchMatiere}%");
+        }
+
+        //dd($query);
+        $query ?  $matieres = $query->paginate(10) : $matieres = [];
+
+        if($request->ajax()) {
+            return view('partials._matieres_table', compact('matieres', 'user'));
+        } else {
+            return view('education.matiere', compact('matieres', 'user'));
+        }
     }
 
     /**
@@ -34,12 +52,16 @@ class MatiereController extends Controller
                 'codeMatiere.unique' => 'Ce code de matiere existe déja',
          ]);
 
-        Matiere::create([
+        $matiere = Matiere::create([
             'libelleMatiere' => $request->libelleMatiere,
             'codeMatiere' => $request->codeMatiere,
         ]);
 
-        return redirect()->route('education.matiere')->with('success', 'Matière ajoutée avec succès !');
+        if($matiere) {
+            return response()->json(['success' => 'Matière ajoutée avec succès !']);
+        } else {
+            return response()->json(['error' => 'Erreur inconue lors de la création de la matiere']);
+        }
     }
 
     /**
@@ -47,9 +69,7 @@ class MatiereController extends Controller
      */
     public function edit($id) {
         $matiereToEdit = Matiere::findOrFail($id);
-        $matieres = Matiere::all();
-
-        return view('education.matiere', compact('matieres','matiereToEdit'));
+        return response()->json(['matiereToEdit' => $matiereToEdit]);
     }
 
     /**
@@ -57,17 +77,20 @@ class MatiereController extends Controller
      */
     public function update(Request $request, $id) {
         $request->validate([
-            'libelleMatiere' => 'required|min:3|max:255',
-            'codeMatiere' => 'required|max:255|unique:matieres',
+            'libelleMatiere' => ['required','min:3','max:255',Rule::unique('matieres')->ignore($id)],
+            'codeMatiere' => ['required','max:255',Rule::unique('matieres')->ignore($id)],
         ], [
                 'libelleMatiere.required' => 'Entrez le libellé de la matière',
                 'codeMatiere.required' => 'Entrez le code de la matière',
+                'codeMatiere.unique' => 'Ce code existe déjà',
+                'libelleMatiere.unique' => 'Ce libellé existe déjà',
          ]);
 
         $matiere = Matiere::findOrFail($id);
         $matiere->update($request->all());
 
-        return redirect()->route('education.matiere')->with('success', 'Matière mise à jour avec succès');
+        return response()->json(['success' => 'Matière mise à jour avec succès']);
+
     }
 
     /**

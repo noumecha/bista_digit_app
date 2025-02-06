@@ -54,6 +54,15 @@ class SectionController extends Controller
             return response()->json(['error' => 'Erreur lors de l\'enregistrement de la section d\'enseignement']);
         }
     }
+
+
+    /**
+     * edit specific section
+     */
+    public function edit($id) {
+        $sectionToEdit = Section::findOrFail($id);
+        return response()->json(['sectionToEdit' => $sectionToEdit]);
+    }
     /**
      * function to update a section.
      */

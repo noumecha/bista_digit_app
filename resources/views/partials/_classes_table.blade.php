@@ -9,6 +9,10 @@
                 Libellé</th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                Section
+            </th>
+            <th
+                class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Effectif
             </th>
             <th
@@ -23,7 +27,7 @@
     </thead>
     <tbody>
         @if (empty($classes->items()))
-            <td class="text" colspan="5">
+            <td class="text" colspan="6">
                 Aucune donnée disponible
             </td>
         @else
@@ -36,7 +40,10 @@
                         {{ $classe->libClasse }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $classe->effectif }}
+                        {{ $classe->section->libelleSection }}
+                    </td>
+                    <td class="align-middle bg-transparent border-bottom">
+                        {{ $classe->effectif ? $classe->effectif->getEffectif() : 0 }}
                     </td>
                     <td class="align-middle bg-transparent borer-bottom">
                         {{ $classe->cycleClasse }}

@@ -6,9 +6,8 @@ $(function(){
         // setting up variables
         var action = $(this).data('action');
         var sectionId = $(this).data('section-id');
-        var yearId = $(this).data('year-id');
         var sectionIdInput = $('#sectionId');
-        var form = $('#classeForm');
+        var form = $('#sectionForm');
         var button = $('#submit-section-form-button');
         var header = $('#modal-section-header');
         var headerText = $('#header-section-text');
@@ -93,7 +92,7 @@ $(function(){
     });
     // reseting form title and color :
     $('#create-section-modal').on('hidden.bs.modal', function () {
-        const form = $('#classeForm');
+        const form = $('#sectionForm');
         form.trigger('reset');
         $('#modal-section-header').removeClass('bg-primary bg-success');
         $('#submit-section-form-button').removeClass('btn-outline-primary btn-outline-success');

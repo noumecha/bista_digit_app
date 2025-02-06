@@ -13,7 +13,7 @@ class ClasseEffectif extends Model
     /**
      * @var array
      */
-    protected $fillable = ['annee_scolaire_id','classe_id','effectif'];
+    protected $fillable = ['annee_scolaire_id','classe_id'];
 
     /**
      * an effectif belongs to a specific class
@@ -30,4 +30,16 @@ class ClasseEffectif extends Model
     {
         return $this->belongsTo(AnneeScolaire::class, 'annee_scolaire_id');
     }
+
+    /**
+     * get effectif for a specific class
+     */
+    public function getEffectif() {
+        $studentIds = User::where('typeUser','eleve')->pluck('id');
+        return ClasseAnneeScolaireStudent::where('classe_id', $this->classe_id)
+        ->where('annee_scolaire_id', $this->annee_scolaire_id)
+        ->whereIn('user_id', $studentIds)
+        ->count();
+    }
+
 }

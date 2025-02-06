@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnneeScolaire;
 use App\Models\Classe;
+use App\Models\ClasseEffectif;
 use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class ClasseController extends Controller
 {
@@ -34,7 +37,7 @@ class ClasseController extends Controller
             });
         }
         if(!empty($cycleFilter)) {
-            $query->where('classe_id',$cycleFilter);
+            $query->where('cycleClasse',$cycleFilter);
         }
 
         //dd($query);
@@ -62,12 +65,20 @@ class ClasseController extends Controller
                 'libClasse.unique' => 'Ce libellé de classe existe déjà'
          ]);
 
-        dd($request);
+        //dd($request);
         $classe = Classe::create([
             'libClasse' => $request->libClasse,
             'section_id' => $request->section_id,
             'cycleClasse' => $request->cycleClasse,
         ]);
+        // create all ClasseEffectifs when creating a class :
+        $years = AnneeScolaire::all();
+        foreach ($years as $year) {
+            ClasseEffectif::create([
+                'annee_scolaire_id' => $year->id,
+                'classe_id' => $classe->id
+            ]);
+        }
 
         if($classe) {
             return response()->json(['success' => 'Classe créée avec succès !']);
@@ -90,13 +101,14 @@ class ClasseController extends Controller
      */
     public function update(Request $request, $id) {
         $request->validate([
-            'libClasse' => 'required',
+            'libClasse' => ['required','min:3','max:255',Rule::unique('classes')->ignore($id)],
             'section_id' => 'required',
             'cycleClasse' => 'required',
         ], [
                 'libClasse.required' => 'Entrez le libellé de la classe',
                 'section_id.required' => 'Selectionnez une section',
                 'cycleClasse.required' => 'Selectionnez le cycle de la classe',
+                'libClasse.unique' => 'Ce libellé de classe existe déjà'
          ]);
 
         $classe = Classe::findOrFail($id);
@@ -106,7 +118,7 @@ class ClasseController extends Controller
             'cycleClasse' => $request->cycleClasse,
         ]);
 
-        return response()->json(['success', 'Classe mise à jour avec succès']);
+        return response()->json(['success' => 'Classe mise à jour avec succès']);
     }
 
     /**

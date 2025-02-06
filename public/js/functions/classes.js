@@ -6,7 +6,6 @@ $(function(){
         // setting up variables
         var action = $(this).data('action');
         var classeId = $(this).data('classe-id');
-        var yearId = $(this).data('year-id');
         var classeIdInput = $('#classeId');
         var form = $('#classeForm');
         var button = $('#submit-classe-form-button');

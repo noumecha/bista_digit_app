@@ -24,11 +24,14 @@ class Classe extends Model
 
 
     /**
-     * a class is related to a specific classeEffectif
+     * Get the effectif for the current academic year.
      */
-    public function effectif(): BelongsTo
+    public function effectif()
     {
-        return $this->belongsTo(ClasseEffectif::class);
+        $activeYear = AnneeScolaire::where('statut', true)->first();
+
+        return $this->hasOne(ClasseEffectif::class)
+                    ->where('annee_scolaire_id', $activeYear->id);
     }
 
     /**

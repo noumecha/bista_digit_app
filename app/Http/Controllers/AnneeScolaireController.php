@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
+use App\Models\Classe;
+use App\Models\ClasseEffectif;
 use App\Models\FonctionAnneeScolaireUser;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;
@@ -87,14 +89,21 @@ class AnneeScolaireController extends Controller
             'dateDeDebut.required' => 'Définissez une date de debut pour l\'année scolaire',
             'dateDeFin.required' => 'Définissez une date de fin pour l\'année scolaire',
         ]);
-        $annneScolaire = AnneeScolaire::create([
+        $anneeScolaire = AnneeScolaire::create([
             'libelleAnneeScolaire' => $request->libelleAnneeScolaire,
             'dateDeDebut' => $request->dateDeDebut,
             'dateDeFin' => $request->dateDeFin,
             'statut' => false,
         ]);
-
-        if($annneScolaire) {
+        // create all ClasseEffectifs when creating a year :
+        $classes = Classe::all();
+        foreach ($classes as $classe) {
+            ClasseEffectif::create([
+                'annee_scolaire_id' => $anneeScolaire->id,
+                'classe_id' => $classe->id
+            ]);
+        }
+        if($anneeScolaire) {
             return response()->json(['success' => 'Année scolaire ajoutée avec succès!']);
         } else {
             return response()->json(['error' => 'Erreur lors de l\'enregistrement de la nouvelle année']);

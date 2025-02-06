@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center success-message" id="">
+                                <div class="row alert alert-success text-center success-message">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
@@ -108,7 +108,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="classe_id" class="form-control-label">
-                                            Selectionner la classe :
+                                            Selectionnez la classe :
                                         </label>
                                         <select name="classe_id" id="classe_id" class="form-select">
                                             @foreach ($classes as $classe)
@@ -120,7 +120,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="active_year_id" class="form-control-label d-none">
-                                            Anneé :
+                                            Année :
                                         </label>
                                         <input type="hidden" class="form-control" id="active_year_id" name="active_year_id" value="{{ $activeYear->id }}">
                                     </div>

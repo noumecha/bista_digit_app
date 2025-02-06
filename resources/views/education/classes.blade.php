@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
@@ -106,7 +106,7 @@
                                         <label for="cycleClasse" class="form-control-label">
                                             Cycle :
                                         </label>
-                                        <select name="cycleClasse" id="cycleClasse" class="form-control">
+                                        <select name="cycleClasse" id="cycleClasse" class="form-select">
                                             <option value="2nd Cycle">2<sup>nd</sup> Cycle</option>
                                             <option value="1er Cycle">1<sup>er</sup> Cycle</option>
                                         </select>
