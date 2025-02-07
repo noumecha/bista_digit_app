@@ -157,6 +157,14 @@
                                             aria-describedby="name-addon">
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="active_year_id" class="form-control-label d-none">
+                                            Anneé :
+                                        </label>
+                                        <input type="hidden" class="form-control" id="active_year_id" name="active_year_id" value="{{ $activeYear->id }}">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer flex-row-reverse">

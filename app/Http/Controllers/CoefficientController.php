@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnneeScolaire;
 use App\Models\Classe;
 use App\Models\Coefficient;
 use App\Models\Matiere;
@@ -15,6 +16,11 @@ class CoefficientController extends Controller
         $user = User::find(Auth::id());
         $classes = Classe::all();
         $matieres = Matiere::all();
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
+        /*$coefSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
+        $studentsSchoolYearId = $studentSchoolYear->pluck('user_id');
+        $classesYearsStudents = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', '=', $activeYear->id);*/
         // filters inputs
         $searchCoef = $request->input('searchCoef');
         $classeFilter = $request->input('classeFilter');
@@ -46,9 +52,9 @@ class CoefficientController extends Controller
         $coefficients = $query->paginate(10);
 
         if($request->ajax()) {
-            return view('partials._coefficients_table', compact('matieres','classes','coefficients','user'));
+            return view('partials._coefficients_table', compact('matieres','classes','coefficients','user','activeYear','migrateYears'));
         } else {
-            return view('education.coefficients', compact('matieres','classes','coefficients','user'));
+            return view('education.coefficients', compact('matieres','classes','coefficients','user','activeYear','migrateYears'));
         }
     }
 

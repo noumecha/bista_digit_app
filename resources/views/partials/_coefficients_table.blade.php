@@ -69,6 +69,55 @@
                             data-bs-target="#confirmDelete-{{ $coef->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
+                        <!-- modal for migrate coefficient to annother year -->
+                        <div class="modal fade" data-form-id="{{ $coef->id }}" id="confirmMigrate-{{ $coef->id }}" tabindex="-1" aria-labelledby="migrateModal" >
+                            <div class="modal-dialog">
+                                <form role="form" class="form" method="POST" action="{{ route('') }}">
+                                    @csrf
+                                    <div class="modal-content p-0">
+                                        <div class="modal-header bg-dark">
+                                            <h5 class="modal-title text-white" id="migrateModal">Confirmation de migration</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                            </button>
+                                        </div>
+                                        <div class="alert text-wrap alert-success text-center" style="display: none;" id="modal-alert-success-{{ $coef->id }}">
+                                        </div>
+                                        <div class="alert text-wrap alert-danger text-center" style="display: none;" id="modal-alert-errors-{{ $coef->id }}">
+                                        </div>
+                                        <div class="modal-body text-wrap text-justify">
+                                            <h5>Vous êtes sur le point d'ajouter la configuration actuelle à une année ultérieure!</h5>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <input type="hidden" name="migrate_current_year_id" id="migrate_current_year_id" value="{{ $activeYear->id }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="hidden" name="migrate_coef_id" id="migrate_coef_id" value="{{ $coef->id }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="sex" class="form-control-label">
+                                                        Selectionnez l'année :
+                                                    </label>
+                                                    <select name="migrate_year_id" id="migrate_year_id" class="form-control form-select">
+                                                        @foreach ($migrateYears as $myear)
+                                                            <option value="{{ $myear->id }}">{{ $myear->libelleAnneeScolaire }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer flex-row-reverse">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                            <button type="button" data-data-id="{{ $coef->id }}" class="spinner-submit-modal-button btn btn-dark">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
+                                                Confirmer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <!-- modal for delete confirmation -->
                         <div class="modal fade" id="confirmDelete-{{ $coef->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" >
                             <div class="modal-dialog">
