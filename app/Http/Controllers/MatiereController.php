@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EnseignantMatiereModel;
+use App\Models\Enseignement;
+use App\Models\EnseignementAnneeScolaire;
+use App\Models\EnsMatAnneeScolaire;
+use App\Models\Epreuve;
 use App\Models\Matiere;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -98,7 +103,25 @@ class MatiereController extends Controller
      */
     public function destroy($id) {
         $matiere = Matiere::findOrFail($id);
+        $epreuves = Epreuve::all()->where('matiere_id',$matiere->id);
+        dd($epreuves);
+        foreach ($epreuves as $epreuve) {
+            $epreuve->delete();
+        }
+        $enseignantMatieres = EnseignantMatiereModel::all()->where('matiere_id',$matiere->id);
+        foreach ($enseignantMatieres as $ensMat) {
+            $enseignatMatieresYear = EnsMatAnneeScolaire::all()->where('enseignant_matiere_models_id',$ensMat->id);
+            $enseignements = Enseignement::all()->where('enseignant_matiere_id',$ensMat->id);
+            foreach ($enseignements as $enseignement) {
+                $enseignementYear = EnseignementAnneeScolaire::all()->where('enseignement_id',$enseignement->id);
+                $enseignementYear->delete();
+                $enseignement->delete();
+            }
+            $enseignatMatieresYear->delete();
+            $ensMat->delete();
+        }
         $matiere->delete();
+        // also add deletion process for evaluation & programme booster & configuration matiere
 
         return redirect()->route('education.matiere')->with('deleteSuccess', 'Matière supprimée avec succès');
     }

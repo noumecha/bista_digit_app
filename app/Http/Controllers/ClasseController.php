@@ -125,6 +125,15 @@ class ClasseController extends Controller
      * delete specific clase forever
      */
     public function destroy($id) {
+        // delete some other stuff when deleting a classe
+        $years = AnneeScolaire::all();
+        foreach ($years as $year) {
+            $classeEffectif = ClasseEffectif::where([
+                'annee_scolaire_id' => $year->id,
+                'classe_id' => $id
+            ]);
+            dd($classeEffectif);
+        }
         $classe = Classe::findOrFail($id);
         $classe->delete();
 

@@ -68,6 +68,7 @@
                                         </div>
                                         <div class="modal-body text-wrap text-justify">
                                             Voulez-vous vraiment supprimée définitivement la matiere {{ $mat->libelleMatiere }} ?
+                                            Cette action supprimera également toutes les données liées à la matière.
                                             (Cette action est irreversible)
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
