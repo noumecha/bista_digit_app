@@ -27,7 +27,7 @@ $(function(){
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
             button.children('span#submit-matiere-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour la configuration de la matiere');
+            headerText.text('Mettre à jour la matière');
             matiereIdInput.val(matiereId);
             $.ajax({
                 url: "matieres/"+matiereId+"/edit",
@@ -42,7 +42,7 @@ $(function(){
         }
     })
 
-    // When submiting form for updating or creating new personnel
+    // When submiting form for updating or creating subjects
     $(document).on('click','.spinner-submit-matiere-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
@@ -99,7 +99,7 @@ $(function(){
         $('#submit-matiere-form-buuton').children('span#submit-matiere-form-button-text').text('');
     });
 
-    // fetching enseignements dynamically with filters
+    // fetching subjects dynamically with filters
     $('#searchMatiere').on('change keyup', function () {
         fetchMatiere();
     });
@@ -107,7 +107,7 @@ $(function(){
     // default data :
     fetchMatiere();
 
-    // fetching all notes :
+    // fetching all subjects :
     function fetchMatiere() {
         var formData = $('#filterMatiereForm').serialize();
         $.ajax({
@@ -124,4 +124,11 @@ $(function(){
             }
         });
     }
+    // handle pagination :
+    $(document).on('click', '.pagination a', function (event) {
+        event.preventDefault();
+
+        var page = $(this).attr('href').split('page=')[1];
+        fetchPage(page, '#matieresTable');
+    });
 });

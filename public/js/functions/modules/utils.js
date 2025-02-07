@@ -1,3 +1,4 @@
+// set the success message after form submission is successful
 function setSuccessMessage(msg, id) {
     const msgBlock = $(id);
     msgBlock.stop(true, true).empty();
@@ -14,6 +15,7 @@ function setSuccessMessage(msg, id) {
     setTimeout(() => msgBlock.fadeOut(), 4000);
 }
 
+// mark the input border of the form in red when some error occurs
 function stylingErrors(errs) {
     $('input').removeClass('is-invalid');
     for (let field in errs) {
@@ -27,6 +29,7 @@ function stylingErrors(errs) {
     }
 }
 
+// fill inputs when the user clicks on the update button for tables lists
 function fillInputForm(res, form) {
     const object = Object.keys(res)[0];
     const data = res[object];
@@ -60,6 +63,20 @@ function fillInputForm(res, form) {
             } else {
                 $(this).val(data[inputName]);
             }
+        }
+    });
+}
+
+// paginate throw different tables lists
+function fetchPage(page, tableId) {
+    $.ajax({
+        url: "?page=" + page,
+        type: "GET",
+        success: function (data) {
+            $(tableId).html(data);
+        },
+        error: function () {
+            console.log("Pagination failed!");
         }
     });
 }

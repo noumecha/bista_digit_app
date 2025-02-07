@@ -19,7 +19,6 @@ class ClasseController extends Controller
     public function index(Request $request)
     {
         $user = User::find(Auth::id());
-        $classes = Classe::all();
         $searchClasse = $request->input('searchClasse');
         $cycleFilter= $request->input('cycleFilter');
         $sectionFilter = $request->input('sectionFilter');
@@ -41,7 +40,7 @@ class ClasseController extends Controller
         }
 
         //dd($query);
-        $query ?  $classes = $query->paginate(10) : $classes = [];
+        $classes = $query->paginate(10);
 
         if($request->ajax()) {
             return view('partials._classes_table', compact('classes', 'user','sections'));

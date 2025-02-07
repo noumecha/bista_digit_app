@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coefficient;
 use App\Models\EnseignantMatiereModel;
 use App\Models\Enseignement;
 use App\Models\EnseignementAnneeScolaire;
@@ -21,7 +22,6 @@ class MatiereController extends Controller
     public function index(Request $request)
     {
         $user = User::find(Auth::id());
-        $matieres = Matiere::all();
         $searchMatiere = $request->input('searchMatiere');
 
         // querying
@@ -34,7 +34,7 @@ class MatiereController extends Controller
         }
 
         //dd($query);
-        $query ?  $matieres = $query->paginate(10) : $matieres = [];
+        $matieres = $query->paginate(10);
 
         if($request->ajax()) {
             return view('partials._matieres_table', compact('matieres', 'user'));
@@ -104,21 +104,28 @@ class MatiereController extends Controller
     public function destroy($id) {
         $matiere = Matiere::findOrFail($id);
         $epreuves = Epreuve::all()->where('matiere_id',$matiere->id);
-        dd($epreuves);
         foreach ($epreuves as $epreuve) {
             $epreuve->delete();
         }
         $enseignantMatieres = EnseignantMatiereModel::all()->where('matiere_id',$matiere->id);
         foreach ($enseignantMatieres as $ensMat) {
-            $enseignatMatieresYear = EnsMatAnneeScolaire::all()->where('enseignant_matiere_models_id',$ensMat->id);
+            $enseignatMatieresYears = EnsMatAnneeScolaire::all()->where('enseignant_matiere_models_id',$ensMat->id);
             $enseignements = Enseignement::all()->where('enseignant_matiere_id',$ensMat->id);
             foreach ($enseignements as $enseignement) {
-                $enseignementYear = EnseignementAnneeScolaire::all()->where('enseignement_id',$enseignement->id);
-                $enseignementYear->delete();
+                $enseignementYears = EnseignementAnneeScolaire::all()->where('enseignement_id',$enseignement->id);
+                foreach ($enseignementYears as $enseignementYear) {
+                    $enseignementYear->delete();
+                }
                 $enseignement->delete();
             }
-            $enseignatMatieresYear->delete();
+            foreach ($enseignatMatieresYears as $enseignatMatieresYear) {
+                $enseignatMatieresYear->delete();
+            }
             $ensMat->delete();
+        }
+        $coefficients = Coefficient::all()->where('matiere_id', $matiere->id);
+        foreach ($coefficients as $coef) {
+            $coef->delete();
         }
         $matiere->delete();
         // also add deletion process for evaluation & programme booster & configuration matiere

@@ -21,15 +21,15 @@ class AnneeScolaireController extends Controller
      */
     public function show(Request $request) {
         $user = User::find(Auth::id());
-        $years = AnneeScolaire::all();
         $searchYear = $request->input('searchYear');
         $query = AnneeScolaire::query();
+
         if(!empty($searchYear)) {
             $query->where(function($q) use ($searchYear) {
                 $q->where('libelleAnneeScolaire', 'LIKE', "%{$searchYear}%");
             });
         }
-        $query ?  $years = $query->paginate(10) : $years = [];
+        $years = $query->paginate(10);
         if($request->ajax()) {
             return view('partials._year_table', compact('user','years','searchYear'));
         } else {

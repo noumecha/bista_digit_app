@@ -67,7 +67,7 @@
                             <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="libelleMatiere" class="form-control-label">
                                             Libellé :
@@ -77,7 +77,7 @@
                                             value="{{ old("libelleMatiere") }}">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="codeMatiere" class="form-control-label">
                                             Code :

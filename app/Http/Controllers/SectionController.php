@@ -23,7 +23,7 @@ class SectionController extends Controller
                 $q->where('libelleSection', 'LIKE', "%{$searchSection}%");
             });
         }
-        $query ?  $sections = $query->paginate(10) : $sections = [];
+        $sections = $query->paginate(10);
         if($request->ajax()) {
             return view('partials._sections_table', compact('user','sections','searchSection'));
         } else {

@@ -1,16 +1,15 @@
 $(function(){
-
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-section-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-coefficient-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var sectionId = $(this).data('section-id');
-        var sectionIdInput = $('#sectionId');
-        var form = $('#sectionForm');
-        var button = $('#submit-section-form-button');
-        var header = $('#modal-section-header');
-        var headerText = $('#header-section-text');
+        var coefficientId = $(this).data('coefficient-id');
+        var coefficientIdInput = $('#coefficientId');
+        var form = $('#coefficientForm');
+        var button = $('#submit-coefficient-form-button');
+        var header = $('#modal-coefficient-header');
+        var headerText = $('#header-coefficient-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -21,16 +20,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-section-form-button-text').text('Enregistrer');
-            headerText.text('Ajouter une nouvelle Section');
+            button.children('span#submit-coefficient-form-button-text').text('Enregistrer');
+            headerText.text('Configurer une matière');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-section-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour les information de la Section');
-            sectionIdInput.val(sectionId);
+            button.children('span#submit-coefficient-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour la configuration de la matière');
+            coefficientIdInput.val(coefficientId);
             $.ajax({
-                url: "section/"+sectionId+"/edit",
+                url: "coefficient/"+coefficientId+"/edit",
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -42,15 +41,15 @@ $(function(){
         }
     })
 
-    // When submiting form for updating or creating new personnel
-    $(document).on('click','.spinner-submit-section-form-button', function() {
+    // When submiting form for updating or creating coefficient
+    $(document).on('click','.spinner-submit-coefficient-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-section-form-button-text');
-        var sectionId = $('#sectionId').val();
+        var buttonText = $(this).children('span#submit-coefficient-form-button-text');
+        var coefficientId = $('#coefficientId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'section/update/' + sectionId : 'section/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'coefficient/update/' + coefficientId : 'coefficient/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -69,7 +68,7 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
-                fetchSections();
+                fetchCoefficients();
             },
             error: function(xhr) {
                 var errors = []
@@ -91,31 +90,31 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-section-modal').on('hidden.bs.modal', function () {
-        const form = $('#sectionForm');
+    $('#create-coefficient-modal').on('hidden.bs.modal', function () {
+        const form = $('#coefficientForm');
         form.trigger('reset');
-        $('#modal-section-header').removeClass('bg-primary bg-success');
-        $('#submit-section-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-section-form-buuton').children('span#submit-section-form-button-text').text('');
+        $('#modal-coefficient-header').removeClass('bg-primary bg-success');
+        $('#submit-coefficient-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-coefficient-form-buuton').children('span#submit-coefficient-form-button-text').text('');
     });
 
-    // fetching enseignements dynamically with filters
-    $('#searchSection').on('change keyup', function () {
-        fetchSections();
+    // fetching coefficients dynamically with filters
+    $('#searchCoef,#classeFilter,#matiereFilter,#groupFilter').on('change keyup', function () {
+        fetchCoefficients();
     });
 
     // default data :
-    fetchSections();
+    fetchCoefficients();
 
-    // fetching all notes :
-    function fetchSections() {
-        var formData = $('#filterSectionForm').serialize();
+    // fetching all coefficients :
+    function fetchCoefficients() {
+        var formData = $('#filterCoefficientForm').serialize();
         $.ajax({
-            url : "/education/sections",
+            url : "/education/coefficients",
             type : 'GET',
             data : formData,
             success : function(data) {
-                $('#sectionsTable').html(data);
+                $('#coefficientsTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -125,12 +124,11 @@ $(function(){
         });
     }
 
-
     // handle pagination :
     $(document).on('click', '.pagination a', function (event) {
         event.preventDefault();
 
         var page = $(this).attr('href').split('page=')[1];
-        fetchPage(page, '#sectionsTable');
+        fetchPage(page, '#coefficientsTable');
     });
 });

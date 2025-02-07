@@ -44,7 +44,7 @@ class EnseignantController extends Controller
             });
         }
 
-        $query ? $teachers = $query->paginate(10) : $teachers = [];
+        $teachers = $query->paginate(10);
 
         if($request->ajax()) {
             return view('partials._teachers_table', compact('matieres','teachers','user','searchTeacher','activeYear','migrateYears'));

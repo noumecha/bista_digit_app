@@ -57,7 +57,7 @@ class EnseignantMatiereModelController extends Controller
         }
 
         //dd($query);
-        $query ?  $enseignantsMatieres = $query->paginate(10) : $enseignantsMatieres = [];
+        $enseignantsMatieres = $query->paginate(10);
 
         if($request->ajax()) {
             return view('partials._teachers_subjects_table', compact('activeYear','matieres', 'enseignants', 'enseignantsMatieres'));

@@ -12,11 +12,11 @@ class Coefficient extends Model
     protected $fillable = ['classe_id', 'matiere_id', 'coefficient','groupe_matiere'];
 
     public function classe() {
-        return $this->belongsTo(Classe::class);
+        return $this->belongsTo(Classe::class, 'classe_id');
     }
 
     public function matiere() {
-        return $this->belongsTo(Matiere::class);
+        return $this->belongsTo(Matiere::class, 'matiere_id');
     }
 
 }

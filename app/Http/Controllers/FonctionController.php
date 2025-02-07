@@ -20,7 +20,8 @@ class FonctionController extends Controller
         if(!empty($searchFonction) ) {
             $query->where('libelleFonction','LIKE',"%{$searchFonction}%");
         }
-        $query ?  $fonctions = $query->paginate(10) : $fonctions = [];
+
+        $fonctions = $query->paginate(10);
         if($request->ajax()) {
             return view('partials._fonctions_table', compact('user','fonctions'));
         } else {

@@ -181,10 +181,10 @@ Route::get('/education/classe/{id}/edit', [ClasseController::class, 'edit'])->na
 Route::delete('/education/classe/{id}', [ClasseController::class, 'destroy'])->name('classe.destroy')->middleware('auth');
 
 ## education -> coefficient routes
-Route::post('/coefficient/save', [CoefficientController::class, 'store'])->name('coefficient.store')->middleware('auth');
-Route::put('/coefficient/{id}', [CoefficientController::class, 'update'])->name('coefficient.update')->middleware('auth');
-Route::get('/coefficient/{id}/edit', [CoefficientController::class, 'edit'])->name('coefficient.edit')->middleware('auth');
-Route::delete('/coefficient/{id}', [CoefficientController::class, 'destroy'])->name('coefficient.destroy')->middleware('auth');
+Route::post('/education/coefficient/save', [CoefficientController::class, 'store'])->name('coefficient.store')->middleware('auth');
+Route::put('/education/coefficient/update/{id}', [CoefficientController::class, 'update'])->name('coefficient.update')->middleware('auth');
+Route::get('/education/coefficient/{id}/edit', [CoefficientController::class, 'edit'])->name('coefficient.edit')->middleware('auth');
+Route::delete('/education/coefficient/{id}', [CoefficientController::class, 'destroy'])->name('coefficient.destroy')->middleware('auth');
 
 ## education -> enseignement routes
 Route::post('education/enseignement/save', [EnseignementController::class, 'store'])->name('enseignement.store')->middleware('auth');

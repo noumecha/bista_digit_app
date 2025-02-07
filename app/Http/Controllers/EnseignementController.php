@@ -56,7 +56,7 @@ class EnseignementController extends Controller
         }
 
         //dd($query);
-        $query ?  $enseignements = $query->paginate(10) : $enseignements = [];
+        $enseignements = $query->paginate(10);
 
         if($request->ajax()) {
             return view('partials._enseignements_table', compact('activeYear','classes','matieres','enseignements','migrateYears','enseignantsMatieres'));
