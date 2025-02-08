@@ -48,6 +48,11 @@ function fillInputForm(res, form) {
                 $(this).val(data.classe_id);
             return true;
         }
+        if($(this).attr('name') === 'coefficient') {
+            if(res.coefficient)
+                $(this).val(res.coefficient);
+            return true;
+        }
 
         if ($(this).is('input[type=date]') && inputName in data) {
             const rawDate = data[inputName];

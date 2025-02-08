@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('actualites', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('categorie_actualites_id')->nullable()->constrained()->onDelete('cascade');
+        Schema::table('coefficients', function (Blueprint $table) {
+            $table->foreignId('annee_scolaire_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 

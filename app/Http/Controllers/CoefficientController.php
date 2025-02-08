@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
 use App\Models\Classe;
+use App\Models\CoefAnneeScolaire;
 use App\Models\Coefficient;
 use App\Models\Matiere;
 use App\Models\User;
@@ -18,9 +19,8 @@ class CoefficientController extends Controller
         $matieres = Matiere::all();
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
-        /*$coefSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
-        $studentsSchoolYearId = $studentSchoolYear->pluck('user_id');
-        $classesYearsStudents = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', '=', $activeYear->id);*/
+        $coefSchoolYears = CoefAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
+        $coefSchoolYearsIds = $coefSchoolYears->pluck('coefficient_id');
         // filters inputs
         $searchCoef = $request->input('searchCoef');
         $classeFilter = $request->input('classeFilter');
@@ -28,7 +28,10 @@ class CoefficientController extends Controller
         $groupFilter = $request->input('groupFilter');
 
         // querying
-        $query = Coefficient::query();
+        if(isset($coefSchoolYears)) {
+            $query = Coefficient::query()->whereIn('id', $coefSchoolYearsIds);
+        }
+        //$query = Coefficient::query();
 
         // filtering
         if(!empty($searchCoef)) {
@@ -64,17 +67,20 @@ class CoefficientController extends Controller
             'matiere_id' => 'required|exists:matieres,id',
             'coefficient' => 'required|numeric',
             'groupe_matiere' => 'required',
+            'active_year_id' => 'required'
         ], [
             'classe_id.required' => 'Selectionnez la classe',
             'matiere_id.required' => 'Selectionnez la matière',
             'groupe_matiere.required' => 'Selectionnez le groupe de la matière pour la classe',
             'coefficient.required' => 'Définissez la valeur du coefficient',
+            'active_year_id.required' => 'Veuillez activer une année scolaire!'
         ]);
 
         // check if the configuration already exists
         $existingCoefficient = Coefficient::where('classe_id', $request->classe_id)
             ->where('matiere_id', $request->matiere_id)
             ->where('groupe_matiere', $request->groupe_matiere)
+            ->where('annee_scolaire_id', $request->active_year_id)
             ->first();
 
         if ($existingCoefficient) {
@@ -85,43 +91,69 @@ class CoefficientController extends Controller
         $existingGroup = Coefficient::where('classe_id', $request->classe_id)
             ->where('matiere_id', $request->matiere_id)
             ->where('groupe_matiere', '!=', $request->groupe_matiere)
+            ->where('annee_scolaire_id', $request->active_year_id)
             ->exists();
 
         if ($existingGroup) {
             return response()->json(['error' => 'Cette matière est déjà affectée à un autre groupe dans cette classe.']);
         }
 
-        $coef = Coefficient::create($request->all());
+        $coef = Coefficient::create([
+            'classe_id' => $request->classe_id,
+            'matiere_id' => $request->matiere_id,
+            'groupe_matiere' => $request->groupe_matiere,
+            'annee_scolaire_id' => $request->active_year_id,
+        ]);
 
-        if($coef) {
+        $coefYear = CoefAnneeScolaire::create([
+            'annee_scolaire_id' => $request->active_year_id,
+            'coefficient_id' => $coef->id,
+            'coefficient_value' => $request->coefficient
+        ]);
+
+        if($coef && $coefYear) {
             return response()->json(['success' => 'Configuration de la matière pour la classe avec succès!']);
         } else {
             return response()->json(['error' => 'Erreur inconue lors de la configuration de la matière pour la classe']);
         }
     }
 
-    public function edit($id) {
+    /**
+     * get specific configuration for editing
+     */
+    public function edit($id, $yearId) {
         $coefToEdit = Coefficient::findOrFail($id);
-        return response()->json(['matiereToEdit' => $coefToEdit]);
+        $coefYear = CoefAnneeScolaire::where('coefficient_id', '=', $coefToEdit->id)
+        ->where('annee_scolaire_id', '=', (int)$yearId)->first();
+        return response()->json([
+            'matiereToEdit' => $coefToEdit,
+            'coefficient' => $coefYear->coefficient_value
+        ]);
     }
 
+    /**
+     * update specific configuration
+     */
     public function update(Request $request, $id) {
         $request->validate([
             'classe_id' => 'required|exists:classes,id',
             'matiere_id' => 'required|exists:matieres,id',
             'coefficient' => 'required|numeric',
             'groupe_matiere' => 'required',
+            'active_year_id' => 'required'
         ], [
             'classe_id.required' => 'Selectionnez la classe',
             'groupe_matiere.required' => 'Selectionnez le groupe de la matière pour la classe',
             'matiere_id.required' => 'Selectionnez la matière',
             'coefficient.required' => 'Définissez la valeur du coefficient',
+            'active_year_id.required' => 'Veuillez activer une année scolaire!'
         ]);
 
         // check if the configuration already exists
         $existingCoefficient = Coefficient::where('classe_id', $request->classe_id)
             ->where('matiere_id', $request->matiere_id)
             ->where('groupe_matiere', $request->groupe_matiere)
+            ->where('annee_scolaire_id', $request->active_year_id)
             ->where('id', '!=', $id)
             ->exists();
 
@@ -133,6 +165,7 @@ class CoefficientController extends Controller
         $existingGroup = Coefficient::where('classe_id', $request->classe_id)
             ->where('matiere_id', $request->matiere_id)
             ->where('groupe_matiere', '!=', $request->groupe_matiere)
+            ->where('annee_scolaire_id', $request->active_year_id)
             ->where('id', '!=', $id)
             ->exists();
 
@@ -142,12 +175,85 @@ class CoefficientController extends Controller
 
         $coefficient = Coefficient::findOrFail($id);
         $coefficient->update($request->all());
+        $coefYear = CoefAnneeScolaire::where('coefficient_id', $coefficient->id)
+            ->where('annee_scolaire_id', $request->active_year_id)->first();
+
+        $coefYear->update([
+            'coefficient_value' => $request->coefficient
+        ]);
+
         return response()->json(['success' => 'Matière mise à jour avec succès']);
     }
 
+    /**
+     * delete configuration permanently
+     */
     public function destroy($id) {
         $coefficient = Coefficient::findOrFail($id);
+        $coefYears = CoefAnneeScolaire::all()->where('coeffiecient_id', $coefficient->id);
+        foreach ($coefYears as $coefYear) {
+            $coefYear->delete();
+        }
         $coefficient->delete();
         return redirect()->route('education.coefficients')->with('deleteSuccess', 'Configuration de la matière supprimée avec succès');
+    }
+
+    /**
+     *  delete coefficient for current year
+     */
+    public function deleteCoefCurrentYear(Request $request) {
+
+        $coefYear = CoefAnneeScolaire::all()->where('annee_scolaire_id', '=', $request->delusyear_year_id)->where('coefficient_id', '=', $request->delusyear_coef_id)->first();
+
+        if ($coefYear->delete()) {
+            return redirect()->route('education.coefficients')->with('deleteSuccess', 'Configuration supprimé avec succès pour l\'année courrante');
+        } else {
+            return redirect()->route('education.coefficients')->with('errorSuccess', 'Echec de surpression de la configuration pour l\'année courrante');
+        }
+
+    }
+
+    /**
+     * Migrate configuration for a forward year to achieve application evolution
+     */
+    public function migrate(Request $request) {
+        $request->validate([
+            'migrate_year_id' => 'required|exists:annee_scolaires,id',
+            'migrate_coef_id' => 'required|exists:coefficients,id',
+            'migrate_coef_value' => 'required',
+            'migrate_current_year_id' => 'required|exists:annee_scolaires,id'
+        ], [
+            'migrate_year_id.required' => 'Aucune année selectionnée',
+            'migrate_coef_id.required' => 'Veuillez selectionnez une configuration',
+            'migrate_current_year_id.required' => 'Veuillez activer une année scolaire',
+            'migrate_coef_value' => 'La valeur du coefficient n\'est pas ajouté',
+        ]);
+
+        // getting data for evaluation
+        $y = AnneeScolaire::findOrFail($request->migrate_year_id);
+
+        // checking if the configuration already migrated:
+        $coefYear = CoefAnneeScolaire::all()
+            ->where('annee_scolaire_id','=',$request->migrate_year_id)
+            ->where('coefficient_id', '=', $request->migrate_user_id)
+            ->first();
+
+        if($coefYear) {
+            return response()->json([
+                'error' => 'La configuration a déjà été inclu pour l\'année : '.$y->libelleAnneeScolaire
+            ]);
+        } else {
+            $newCoefYear = CoefAnneeScolaire::create([
+                'coefficient_id' => $request->migrate_coef_id,
+                'annee_scolaire_id' => $request->migrate_year_id,
+                'coefficient_value' => $request->migrate_coef_value,
+            ]);
+
+            if($newCoefYear) {
+                return response()->json(['success' => 'Configuration migré avec succès']);
+            } else {
+                return response()->json(['error' => 'Impossible de faire migrer la configuration']);
+            }
+        }
     }
 }

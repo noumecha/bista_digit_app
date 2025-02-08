@@ -152,8 +152,8 @@ class User extends Authenticatable
     /**
      * a user can create many blog articles
      */
-    public function actualites(): HasMany {
-        return $this->hasMany(Actualite::class);
+    public function actualites(): BelongsToMany {
+        return $this->belongsToMany(Actualite::class);
     }
 
     /**

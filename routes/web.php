@@ -183,8 +183,10 @@ Route::delete('/education/classe/{id}', [ClasseController::class, 'destroy'])->n
 ## education -> coefficient routes
 Route::post('/education/coefficient/save', [CoefficientController::class, 'store'])->name('coefficient.store')->middleware('auth');
 Route::put('/education/coefficient/update/{id}', [CoefficientController::class, 'update'])->name('coefficient.update')->middleware('auth');
-Route::get('/education/coefficient/{id}/edit', [CoefficientController::class, 'edit'])->name('coefficient.edit')->middleware('auth');
+Route::get('/education/coefficient/{id}/edit/{yearId}', [CoefficientController::class, 'edit'])->name('coefficient.edit')->middleware('auth');
 Route::delete('/education/coefficient/{id}', [CoefficientController::class, 'destroy'])->name('coefficient.destroy')->middleware('auth');
+Route::post('/education/coefficient/migrate', [CoefficientController::class, 'migrate'])->name('coefficient.migrate')->middleware('auth');
+Route::post('/education/coefficient/delete-coef-in-year', [CoefficientController::class, 'deleteCoefCurrentYear'])->name('coefficient.deleteCoefCurrentYear')->middleware('auth');
 
 ## education -> enseignement routes
 Route::post('education/enseignement/save', [EnseignementController::class, 'store'])->name('enseignement.store')->middleware('auth');

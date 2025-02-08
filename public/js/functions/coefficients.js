@@ -5,6 +5,7 @@ $(function(){
         // setting up variables
         var action = $(this).data('action');
         var coefficientId = $(this).data('coefficient-id');
+        var yearId = $(this).data('year-id');
         var coefficientIdInput = $('#coefficientId');
         var form = $('#coefficientForm');
         var button = $('#submit-coefficient-form-button');
@@ -29,7 +30,7 @@ $(function(){
             headerText.text('Mettre à jour la configuration de la matière');
             coefficientIdInput.val(coefficientId);
             $.ajax({
-                url: "coefficient/"+coefficientId+"/edit",
+                url: "coefficient/"+coefficientId+"/edit/" + yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);

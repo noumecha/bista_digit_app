@@ -44,7 +44,7 @@
                         {{ $coef->matiere->libelleMatiere }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $coef->coefficient }}
+                        {{ $coef->getCoefficient() }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $coef->groupe_matiere }}
@@ -56,6 +56,7 @@
                             data-bs-target="#create-coefficient-modal"
                             data-action="edit"
                             data-coefficient-id = "{{ $coef->id }}"
+                            data-year-id="{{ $activeYear->id }}"
                             data-url="{{ route('coefficient.store', $coef->id) }}"
                             class="btn btn-primary mt-3 p-2"
                             href="#"
@@ -69,10 +70,32 @@
                             data-bs-target="#confirmDelete-{{ $coef->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
+                        <div onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                            <div class="ddown-items-container d-none p-2 bg-dark">
+                                <button
+                                    type="button"
+                                    class="mb-0 p-2 btn text-white"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmMigrate-{{ $coef->id }}"
+                                >
+                                    Migrer
+                                </button>
+                                <button
+                                    type="button"
+                                    class="mb-0 p-2 btn text-white"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteYear-{{ $coef->id }}"
+                                    {{ $activeYear->id === $coef->create_year_id ? 'disabled' : '' }}
+                                >
+                                    Supprimer pour l'année
+                                </button>
+                            </div>
+                        </div>
                         <!-- modal for migrate coefficient to annother year -->
                         <div class="modal fade" data-form-id="{{ $coef->id }}" id="confirmMigrate-{{ $coef->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
-                                <form role="form" class="form" method="POST" action="{{ route('') }}">
+                                <form role="form" class="form" method="POST" action="{{ route('coefficient.migrate') }}">
                                     @csrf
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-dark">
@@ -111,6 +134,33 @@
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
                                             <button type="button" data-data-id="{{ $coef->id }}" class="spinner-submit-modal-button btn btn-dark">
                                                 <span class="spinner-border spinner-border-sm d-none" role="status" ></span>
+                                                Confirmer
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- modal for delete configuration for the current year -->
+                        <div class="modal fade" data-form-id="{{ $coef->id }}" id="confirmDeleteYear-{{ $coef->id }}" tabindex="-1" aria-labelledby="migrateModal" >
+                            <div class="modal-dialog">
+                                <form role="form" class="form" method="POST" action="{{ route('coefficient.deleteCoefCurrentYear') }}">
+                                    @csrf
+                                    <div class="modal-content p-0">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-wrap text-justify text-white" id="exampleModalLabel">Suppresion de la configuration de l'année scolaire courrante</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
+                                        <input type="hidden" name="delusyear_coef_id" value="{{ $coef->id }}">
+                                        <div class="modal-body text-wrap text-justify">
+                                            Voulez-vous vraiment supprimér la configuration
+                                            pour l'année {{ $activeYear->libelleAnneeScolaire }} ?
+                                        </div>
+                                        <div class="modal-footer flex-row-reverse">
+                                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                            <button type="submit" class="spinner-submit-button btn btn-danger">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
                                                 Confirmer
                                             </button>
                                         </div>

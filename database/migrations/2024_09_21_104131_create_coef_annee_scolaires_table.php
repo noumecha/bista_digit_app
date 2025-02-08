@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('coefficients', function (Blueprint $table) {
+        Schema::create('coef_annee_scolaires', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('classe_id')->constrained()->onDelete('cascade');
-            $table->foreignId('matiere_id')->constrained()->onDelete('cascade');
+            $table->foreignId('annee_scolaire_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('coefficient_id')->nullable()->constrained()->onDelete('cascade');
+            $table->integer('coefficient_value');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('coefficients');
+        Schema::dropIfExists('coef_annee_scolaires');
     }
 };

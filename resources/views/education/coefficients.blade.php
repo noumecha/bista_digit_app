@@ -117,7 +117,7 @@
                                         <select name="matiere_id" id="matiere_id" class="form-select">
                                             <option value="">Toutes les matières</option>
                                         @foreach ($matieres as $mat)
-                                            <option value="{{ $mat->id }}" {{ isset($coefficient) && $coefficient->matiere_id == $mat->id ? 'selected' : '' }} class="">{{ $mat->libelleMatiere }}</option>
+                                            <option value="{{ $mat->id }}" class="">{{ $mat->libelleMatiere }}</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -130,7 +130,7 @@
                                         <select name="classe_id" id="classe_id" class="form-select">
                                             <option value="">Toutes les classes</option>
                                         @foreach ($classes as $classe)
-                                            <option value="{{ $classe->id }}" {{ isset($coefficient) && $coefficient->classe_id == $classe->id ? 'selected' : ''}} class="">{{ $classe->libClasse }}</option>
+                                            <option value="{{ $classe->id }}" class="">{{ $classe->libClasse }}</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -143,7 +143,7 @@
                                         <select name="groupe_matiere" id="groupe_matiere" class="form-select">
                                                 <option value="">Tout les groupes</option>
                                             @foreach (\App\GroupeMatiere::cases() as $groupe)
-                                                <option value="{{ $groupe->value }}" {{ isset($coefficient) && $coefficient->groupe_matiere === $groupe->value ? 'selected' : '' }}>{{ $groupe->value }}</option>
+                                                <option value="{{ $groupe->value }}">{{ $groupe->value }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -153,7 +153,7 @@
                                         <label for="coefficient" class="form-control-label">
                                             Coefficient :
                                         </label>
-                                        <input type="number" id="coefficient" name="coefficient" class="form-control" value="{{ isset($coefficient) && $coefficient->coefficient ? $coefficient->coefficient : old("coefficient") }}" aria-label="Name"
+                                        <input type="number" id="coefficient" name="coefficient" class="form-control" value="{{ old("coefficient") }}" aria-label="Name"
                                             aria-describedby="name-addon">
                                     </div>
                                 </div>
