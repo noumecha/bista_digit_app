@@ -47,7 +47,7 @@
                         {{ $coef->getCoefficient() }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $coef->groupe_matiere }}
+                        {{ $coef->getGroupeMatiere() }}
                     </td>
                     <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                         <a
@@ -86,7 +86,7 @@
                                     class="mb-0 p-2 btn text-white"
                                     data-bs-toggle="modal"
                                     data-bs-target="#confirmDeleteYear-{{ $coef->id }}"
-                                    {{ $activeYear->id === $coef->create_year_id ? 'disabled' : '' }}
+                                    {{ $activeYear->id === $coef->annee_scolaire_id ? 'disabled' : '' }}
                                 >
                                     Supprimer pour l'année
                                 </button>
@@ -115,6 +115,12 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="hidden" name="migrate_coef_id" id="migrate_coef_id" value="{{ $coef->id }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="hidden" name="migrate_coef_value" id="migrate_coef_value" value="{{ $coef->getCoefficient() }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="hidden" name="migrate_groupe_matiere" id="migrate_groupe_matiere" value="{{ $coef->getGroupeMatiere() }}">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">

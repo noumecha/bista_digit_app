@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CoefAnneeScolaire extends Model
 {
     use HasFactory;
+
     /**
      * @var array
      */
-    protected $fillable = ['annee_scolaiere_id', 'coefficient_id', 'coefficient_value'];
+    protected $fillable = ['annee_scolaire_id','coefficient_id','groupe_matiere','coefficient_value'];
 
     /**
      *

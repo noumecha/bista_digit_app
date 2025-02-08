@@ -35,7 +35,9 @@ class CoefficientController extends Controller
 
         // filtering
         if(!empty($searchCoef)) {
-            $query->where('coefficient', 'LIKE', "%{$searchCoef}%");
+            $query->whereHas('coefAnneeScolaire', function ($q) use ($searchCoef) {
+                $q->where('coefficient_value', 'LIKE', "%{$searchCoef}%");
+            });
         }
         if(!empty($groupFilter)) {
             $query->where('groupe_matiere', 'LIKE', "%{$groupFilter}%");
@@ -78,36 +80,38 @@ class CoefficientController extends Controller
 
         // check if the configuration already exists
         $existingCoefficient = Coefficient::where('classe_id', $request->classe_id)
-            ->where('matiere_id', $request->matiere_id)
-            ->where('groupe_matiere', $request->groupe_matiere)
-            ->where('annee_scolaire_id', $request->active_year_id)
-            ->first();
-
+            ->where('matiere_id', $request->matiere_id)->first();
         if ($existingCoefficient) {
-            return response()->json(['error' => 'Un coefficient pour cette matière exite déjà dans cette classe']);
+            $existingCoefYear = CoefAnneeScolaire::where('coefficient_id', $existingCoefficient->id)
+                ->where('groupe_matiere', $request->groupe_matiere)
+                ->where('annee_scolaire_id', $request->active_year_id)
+                ->first();
+            if($existingCoefYear)
+                return response()->json(['error' => 'Un coefficient pour cette matière exite déjà dans cette classe']);
         }
 
         // check if some subjet is already in a group in the correspondig class
         $existingGroup = Coefficient::where('classe_id', $request->classe_id)
-            ->where('matiere_id', $request->matiere_id)
-            ->where('groupe_matiere', '!=', $request->groupe_matiere)
-            ->where('annee_scolaire_id', $request->active_year_id)
-            ->exists();
-
+            ->where('matiere_id', $request->matiere_id)->first();
         if ($existingGroup) {
-            return response()->json(['error' => 'Cette matière est déjà affectée à un autre groupe dans cette classe.']);
+            $existingGroupYear = CoefAnneeScolaire::where('coefficient_id', $existingGroup->id)
+                ->where('groupe_matiere', '!=', $request->groupe_matiere)
+                ->where('annee_scolaire_id', $request->active_year_id)
+                ->exists();
+            if($existingGroupYear)
+                return response()->json(['error' => 'Cette matière est déjà affectée à un autre groupe dans cette classe.']);
         }
 
         $coef = Coefficient::create([
             'classe_id' => $request->classe_id,
             'matiere_id' => $request->matiere_id,
-            'groupe_matiere' => $request->groupe_matiere,
             'annee_scolaire_id' => $request->active_year_id,
         ]);
 
         $coefYear = CoefAnneeScolaire::create([
             'annee_scolaire_id' => $request->active_year_id,
             'coefficient_id' => $coef->id,
+            'groupe_matiere' => $request->groupe_matiere,
             'coefficient_value' => $request->coefficient
         ]);
 
@@ -126,8 +130,9 @@ class CoefficientController extends Controller
         $coefYear = CoefAnneeScolaire::where('coefficient_id', '=', $coefToEdit->id)
         ->where('annee_scolaire_id', '=', (int)$yearId)->first();
         return response()->json([
-            'matiereToEdit' => $coefToEdit,
-            'coefficient' => $coefYear->coefficient_value
+            'coefToEdit' => $coefToEdit,
+            'coefficient' => $coefYear->coefficient_value,
+            'groupe_matiere' => $coefYear->groupe_matiere
         ]);
     }
 
@@ -152,25 +157,29 @@ class CoefficientController extends Controller
         // check if the configuration already exists
         $existingCoefficient = Coefficient::where('classe_id', $request->classe_id)
             ->where('matiere_id', $request->matiere_id)
-            ->where('groupe_matiere', $request->groupe_matiere)
-            ->where('annee_scolaire_id', $request->active_year_id)
-            ->where('id', '!=', $id)
-            ->exists();
+            ->where('id', '!=', $id)->first();
 
         if ($existingCoefficient) {
-            return response()->json(['error' => 'Une autre configuration existe déjà avec cette combinaison classe-matière-groupe.']);
+            $existingCoefYear = CoefAnneeScolaire::where('coefficient_id',$existingCoefficient->id)
+            ->where('groupe_matiere', $request->groupe_matiere)
+            ->where('annee_scolaire_id', $request->active_year_id)
+            ->exists();
+            if($existingCoefYear)
+                return response()->json(['error' => 'Une autre configuration existe déjà avec cette combinaison classe-matière-groupe.']);
         }
 
         // check if some subjet is already in a group in the correspondig class
-        $existingGroup = Coefficient::where('classe_id', $request->classe_id)
-            ->where('matiere_id', $request->matiere_id)
-            ->where('groupe_matiere', '!=', $request->groupe_matiere)
-            ->where('annee_scolaire_id', $request->active_year_id)
-            ->where('id', '!=', $id)
-            ->exists();
+        $existingGroup = Coefficient::where('classe_id',$request->classe_id)
+            ->where('matiere_id',$request->matiere_id)
+            ->where('id','!=',$id)->first();
 
         if ($existingGroup) {
-            return response()->json(['error' => 'Cette matière est déjà affectée à un autre groupe dans cette classe.']);
+            $existingGroupYear = CoefAnneeScolaire::where('coefficient_id', $existingGroup->id)
+                ->where('groupe_matiere',$request->groupe_matiere)
+                ->where('annee_scolaire_id',$request->active_year_id)
+                ->exists();
+            if($existingGroupYear)
+                return response()->json(['error' => 'Cette matière est déjà affectée à un autre groupe dans cette classe.']);
         }
 
         $coefficient = Coefficient::findOrFail($id);
@@ -179,7 +188,8 @@ class CoefficientController extends Controller
             ->where('annee_scolaire_id', $request->active_year_id)->first();
 
         $coefYear->update([
-            'coefficient_value' => $request->coefficient
+            'coefficient_value' => $request->coefficient,
+            'groupe_matiere' => $request->groupe_matiere
         ]);
 
         return response()->json(['success' => 'Matière mise à jour avec succès']);
@@ -221,12 +231,14 @@ class CoefficientController extends Controller
             'migrate_year_id' => 'required|exists:annee_scolaires,id',
             'migrate_coef_id' => 'required|exists:coefficients,id',
             'migrate_coef_value' => 'required',
+            'migrate_groupe_matiere' => 'required',
             'migrate_current_year_id' => 'required|exists:annee_scolaires,id'
         ], [
             'migrate_year_id.required' => 'Aucune année selectionnée',
             'migrate_coef_id.required' => 'Veuillez selectionnez une configuration',
             'migrate_current_year_id.required' => 'Veuillez activer une année scolaire',
             'migrate_coef_value' => 'La valeur du coefficient n\'est pas ajouté',
+            'migrate_groupe_matiere' => 'Le groupe de la matière n\'est pas défini',
         ]);
 
         // getting data for evaluation
@@ -234,8 +246,8 @@ class CoefficientController extends Controller
 
         // checking if the configuration already migrated:
         $coefYear = CoefAnneeScolaire::all()
-            ->where('annee_scolaire_id','=',$request->migrate_year_id)
-            ->where('coefficient_id', '=', $request->migrate_user_id)
+            ->where('annee_scolaire_id',$request->migrate_year_id)
+            ->where('coefficient_id',$request->migrate_coef_id)
             ->first();
 
         if($coefYear) {
@@ -247,6 +259,7 @@ class CoefficientController extends Controller
                 'coefficient_id' => $request->migrate_coef_id,
                 'annee_scolaire_id' => $request->migrate_year_id,
                 'coefficient_value' => $request->migrate_coef_value,
+                'groupe_matiere' => $request->migrate_groupe_matiere,
             ]);
 
             if($newCoefYear) {

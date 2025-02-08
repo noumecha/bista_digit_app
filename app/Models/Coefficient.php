@@ -12,8 +12,11 @@ class Coefficient extends Model
     /**
      * @var array
      */
-    protected $fillable = ['classe_id','matiere_id','groupe_matiere','annee_scolaire_id'];
+    protected $fillable = ['classe_id','matiere_id','annee_scolaire_id'];
 
+    public function coefAnneeScolaire() {
+        return $this->hasMany(CoefAnneeScolaire::class, 'coefficient_id');
+    }
     /**
      *
      */
@@ -35,6 +38,15 @@ class Coefficient extends Model
         $coefYear = CoefAnneeScolaire::where('annee_scolaire_id', $this->annee_scolaire_id)
         ->where('coefficient_id', $this->id)->first();
         return $coefYear->coefficient_value;
+    }
+
+    /**
+     * get groupe_matiere value for a specific configuration
+     */
+    public function getGroupeMatiere() {
+        $coefYear = CoefAnneeScolaire::where('annee_scolaire_id', $this->annee_scolaire_id)
+        ->where('coefficient_id', $this->id)->first();
+        return $coefYear->groupe_matiere;
     }
 
 }

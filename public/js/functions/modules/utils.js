@@ -54,6 +54,12 @@ function fillInputForm(res, form) {
             return true;
         }
 
+        if($(this).attr('name') === 'groupe_matiere') {
+            if(res.groupe_matiere)
+                $(this).val(res.groupe_matiere);
+            return true;
+        }
+
         if ($(this).is('input[type=date]') && inputName in data) {
             const rawDate = data[inputName];
             if (rawDate) {

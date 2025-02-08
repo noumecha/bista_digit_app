@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('coefficients', function (Blueprint $table) {
+        Schema::table('coef_annee_scolaires', function (Blueprint $table) {
             $table->string('groupe_matiere');
         });
     }
