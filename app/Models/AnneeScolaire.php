@@ -50,4 +50,12 @@ class AnneeScolaire extends Model
             ->withPivot('')
             ->withTimestamps();
     }
+
+    /**
+     * In a year we can have more than one devoir
+     */
+    public function devoirs():HasMany
+    {
+        return $this->hasMany(Devoir::class);
+    }
 }

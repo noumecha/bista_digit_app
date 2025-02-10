@@ -40,7 +40,6 @@ class User extends Authenticatable
         'matricule',
         'statutRedoublanc',
         'typeUser',
-        //'fonction_id',
         'name',
         'email',
         'classe_id',
@@ -168,5 +167,28 @@ class User extends Authenticatable
      */
     public function notes(): HasMany {
         return $this->hasMany(Note::class);
+    }
+
+    /**
+     * A teacher can create many devoirs
+     */
+    public function devoirs():HasMany
+    {
+        return $this->hasMany(Devoir::class);
+    }
+
+    /**
+     * teachers classes
+     */
+    public function teacherClasses($activeYearId) {
+        $enseignantMatieres = EnseignantMatiereModel::all()
+            ->where('enseignant_id', $this->id)->pluck('enseignant_id');
+        $ensMatYearIds = EnseignementAnneeScolaire::all()->where('annee_scolaire_id', $activeYearId)
+            ->whereIn('enseignat_id', $enseignantMatieres)->pluck('enseignant_matiere_id');
+        $enseignantClassesIds = Enseignement::all()->whereIn('enseignant_matiere_id',$ensMatYearIds)
+            ->pluck('classe_id');
+        $classes = Classe::all()->whereIn('id', $enseignantClassesIds);
+
+        return $classes;
     }
 }

@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Question extends Model
+class DevoirAnneeScolaire extends Model
 {
     use HasFactory;
 
     /**
      * @var array
      */
-    protected $fillable = ['devoir_id', 'question'];
+    protected $fillable = ['devoir_id','annee_scolaire_id'];
 
     /**
-     * A question belongs to a specific devoir
+     *
      */
     public function devoir():BelongsTo
     {
@@ -25,10 +24,10 @@ class Question extends Model
     }
 
     /**
-     * A question haves many responses
+     *
      */
-    public function responses():HasMany
+    public function anneeScolaire():BelongsTo
     {
-        return $this->hasMany(Reponse::class);
+        return $this->belongsTo(AnneeScolaire::class, 'annee_scolaire_id');
     }
 }

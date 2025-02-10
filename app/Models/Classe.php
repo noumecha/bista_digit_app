@@ -73,4 +73,12 @@ class Classe extends Model
             ->withPivot('annee_scolaire_id')
             ->withTimestamps();
     }
+
+    /**
+     * A class has many devoirs
+     */
+    public function devoirs(): HasMany
+    {
+        return $this->hasMany(Devoir::class);
+    }
 }

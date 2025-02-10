@@ -48,4 +48,12 @@ class Matiere extends Model
     public function notes(): HasMany {
         return $this->hasMany(Note::class);
     }
+
+     /**
+     * A matiere can believe to more than one devoir
+     */
+    public function devoirs():HasMany
+    {
+        return $this->hasMany(Devoir::class);
+    }
 }

@@ -140,6 +140,7 @@ Route::get('/education/matieres', [MatiereController::class, 'index'])->name('ed
 Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
 Route::get('/education/sections', [SectionController::class, 'index'])->name('education.sections')->middleware('auth');
 Route::get('/education/coefficients', [CoefficientController::class, 'index'])->name('education.coefficients')->middleware('auth');
+Route::get('/education/devoirs', [DevoirController::class, 'index'])->name('education.devoirs')->middleware('auth');
 Route::get('/education/enseignement', [EnseignementController::class, 'index'])->name('education.enseignement')->middleware('auth');
 Route::get('/education/enseignantMatiere', [EnseignantMatiereModelController::class, 'index'])->name('education.enseignantMatiere')->middleware('auth');
 
@@ -187,6 +188,14 @@ Route::get('/education/coefficient/{id}/edit/{yearId}', [CoefficientController::
 Route::delete('/education/coefficient/{id}', [CoefficientController::class, 'destroy'])->name('coefficient.destroy')->middleware('auth');
 Route::post('/education/coefficient/migrate', [CoefficientController::class, 'migrate'])->name('coefficient.migrate')->middleware('auth');
 Route::post('/education/coefficient/delete-coef-in-year', [CoefficientController::class, 'deleteCoefCurrentYear'])->name('coefficient.deleteCoefCurrentYear')->middleware('auth');
+
+## education -> devoirs routes
+Route::post('/education/devoirs/save', [DevoirController::class, 'store'])->name('devoir.store')->middleware('auth');
+Route::put('/education/devoirs/update/{id}', [DevoirController::class, 'update'])->name('devoir.update')->middleware('auth');
+Route::get('/education/devoirs/{id}/edit/{yearId}', [DevoirController::class, 'edit'])->name('devoir.edit')->middleware('auth');
+Route::delete('/education/devoirs/{id}', [DevoirController::class, 'destroy'])->name('devoir.destroy')->middleware('auth');
+Route::post('/education/devoirs/migrate', [DevoirController::class, 'migrate'])->name('devoir.migrate')->middleware('auth');
+Route::post('/education/devoirs/delete-in-year', [DevoirController::class, 'deleteInCurrentYear'])->name('devoir.deleteInCurrentYear')->middleware('auth');
 
 ## education -> enseignement routes
 Route::post('education/enseignement/save', [EnseignementController::class, 'store'])->name('enseignement.store')->middleware('auth');
