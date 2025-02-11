@@ -129,20 +129,29 @@
                                 <!-- Questions input -->
                                 <div class="col-md-12 col-lg-12 row">
                                     <h4 class="">Configuration des questions : </h4>
-                                    <div class="col-md-6">
+                                    <div class="form-group col-md-12">
+                                        <label class="form-control-label">
+                                            Selectionnez le devoir :
+                                        </label>
+                                        <select name="devoir_id" id="devoir_id" class="form-select">
+                                            <option value="">Toutes les devoirs</option>
+                                        @foreach ($matieres as $matiere)
+                                            <option value="{{ $matiere->id }}" class="">{{ $matiere->libelleMatiere }}</option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="question" class="form-control-label">
                                                 Ajouter une nouvelle Question :
                                             </label>
-                                            <input type="text" placeholder="Entrez le texte de la question" class="form-control" id="question" name="question">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="questionImage" class="form-control-label">
-                                                Ajouter une image à la question (optionnel) :
-                                            </label>
-                                            <input type="file" class="form-control" id="questionImage" name="questionImage">
+                                            <textarea
+                                                name="question"
+                                                id="content"
+                                                placeholder="Entrez le texte de la question"
+                                                cols="12"
+                                                rows="30">
+                                            </textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-12 flex-row">
@@ -156,7 +165,7 @@
                                 <!-- Reponses input -->
                                 <div class="col-md-12 col-lg-12 row">
                                     <h4 class="">Configuration des réponses : </h4>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-12">
                                         <label class="form-control-label">
                                             Selectionnez la question :
                                         </label>
@@ -167,7 +176,7 @@
                                         @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="reponse" class="form-control-label">
                                                 Ajouter une nouvelle reponse :
