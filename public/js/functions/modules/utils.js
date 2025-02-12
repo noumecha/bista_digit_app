@@ -20,10 +20,17 @@ function stylingErrors(errs) {
     $('input').removeClass('is-invalid');
     for (let field in errs) {
         if (errs.hasOwnProperty(field)) {
-            const inputElement = $('#' + field);
-            if (inputElement.length) {
-                inputElement.addClass('is-invalid');
-                setTimeout(() => inputElement.removeClass('is-invalid'), 4000);
+            if (window.editor && field === 'content') {
+                const container = window.editor.ui.view.editable.element;
+                console.log(container);
+                container.classList.add('ck-editor-border-error');
+                setTimeout(() => container.classList.remove('ck-editor-border-error'), 4000);
+            } else {
+                const inputElement = $('#' + field);
+                if (inputElement.length) {
+                    inputElement.addClass('is-invalid');
+                    setTimeout(() => inputElement.removeClass('is-invalid'), 4000);
+                }
             }
         }
     }
@@ -33,7 +40,7 @@ function stylingErrors(errs) {
 function fillInputForm(res, form) {
     const object = Object.keys(res)[0];
     const data = res[object];
-    form.find('input, select, checkbox').each(function () {
+    form.find('input, select, textarea, checkbox').each(function () {
         const inputName = $(this).attr('name');
         if ($(this).is('input[type=file]')) return true;
 
@@ -46,6 +53,11 @@ function fillInputForm(res, form) {
                 $(this).val(res.classe_id);
             else
                 $(this).val(data.classe_id);
+            return true;
+        }
+        if ($(this).attr('name') === 'content') {
+            if(res.content && window.editor)
+                window.editor.setData(res.content);
             return true;
         }
         if($(this).attr('name') === 'coefficient') {

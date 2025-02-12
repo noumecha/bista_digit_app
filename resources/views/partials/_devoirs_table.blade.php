@@ -144,7 +144,7 @@
                         <!-- modal for delete configuration for the current year -->
                         <div class="modal fade" data-form-id="{{ $devoir->id }}" id="confirmDeleteYear-{{ $devoir->id }}" tabindex="-1" aria-labelledby="migrateModal" >
                             <div class="modal-dialog">
-                                <form role="form" class="form" method="POST" action="{{ route('devoir.deleteCoefCurrentYear') }}">
+                                <form role="form" class="form" method="POST" action="{{ route('devoir.deleteInCurrentYear') }}">
                                     @csrf
                                     <div class="modal-content p-0">
                                         <div class="modal-header bg-danger">
@@ -152,7 +152,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <input type="hidden" name="delusyear_year_id" value="{{ $activeYear->id }}">
-                                        <input type="hidden" name="delusyear_coef_id" value="{{ $devoir->id }}">
+                                        <input type="hidden" name="delusyear_devoir_id" value="{{ $devoir->id }}">
                                         <div class="modal-body text-wrap text-justify">
                                             Voulez-vous vraiment supprimér le devoir
                                             pour l'année {{ $activeYear->libelleAnneeScolaire }} ?

@@ -9,6 +9,13 @@
 .ck-editor__editable_inline {
     min-height: 400px;
 }
+
+/**
+ck editor error
+**/
+.ck-editor-border-error {
+    border: 1px solid red !important;
+}
 /* for password eye */
 #eye-password-container {
     position: relative;

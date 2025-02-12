@@ -87,16 +87,30 @@
                             <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
                             </div>
                             <div class="row">
-                                <!-- Devoir input -->
-                                <div class="col-md-12 col-lg-12 row">
-                                    <h4 class="">Configuration du devoir :</h4>
-                                    <div class="form-group col-md-12">
-                                        <label for="devoir_titre" class="form-control-label">
+                                <div class="ol-md-12">
+                                    <div class="form-group">
+                                        <label for="titre_devoir" class="form-control-label">
                                             Ajouter le titre du devoir :
                                         </label>
-                                        <input type="text" placeholder="Entrez le titre du devoir" class="form-control" id="devoir_titre" name="devoir_titre">
+                                        <input type="text" placeholder="Entrez le titre du devoir" class="form-control" id="titre_devoir" name="titre_devoir">
                                     </div>
-                                    <div class="form-group col-md-6">
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="content" class="form-control-label">
+                                            Ajouter une Description du devoir :
+                                        </label>
+                                        <textarea
+                                            name="content"
+                                            id="content"
+                                            placeholder="Entrez la description du devoir"
+                                            cols="12"
+                                            rows="20">
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label class="form-control-label">
                                             Selectionnez la classe :
                                         </label>
@@ -107,7 +121,9 @@
                                         @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label class="form-control-label">
                                             Selectionnez la matiere :
                                         </label>
@@ -118,85 +134,7 @@
                                         @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-12 flex-row">
-                                        <button type="button" id="submit-devoirSave-form-button" class="spinner-submit-devoirSave-form-button btn btn-lg">
-                                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                            Sauvegarder le devoir
-                                        </button>
-                                    </div>
                                 </div>
-                                <hr>
-                                <!-- Questions input -->
-                                <div class="col-md-12 col-lg-12 row">
-                                    <h4 class="">Configuration des questions : </h4>
-                                    <div class="form-group col-md-12">
-                                        <label class="form-control-label">
-                                            Selectionnez le devoir :
-                                        </label>
-                                        <select name="devoir_id" id="devoir_id" class="form-select">
-                                            <option value="">Toutes les devoirs</option>
-                                        @foreach ($matieres as $matiere)
-                                            <option value="{{ $matiere->id }}" class="">{{ $matiere->libelleMatiere }}</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="question" class="form-control-label">
-                                                Ajouter une nouvelle Question :
-                                            </label>
-                                            <textarea
-                                                name="question"
-                                                id="content"
-                                                placeholder="Entrez le texte de la question"
-                                                cols="12"
-                                                rows="30">
-                                            </textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 flex-row">
-                                        <button type="button" id="submit-questionSave-form-button" class="spinner-submit-questionSave-form-button btn btn-lg">
-                                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                            Sauvegarder la question
-                                        </button>
-                                    </div>
-                                </div>
-                                <hr>
-                                <!-- Reponses input -->
-                                <div class="col-md-12 col-lg-12 row">
-                                    <h4 class="">Configuration des réponses : </h4>
-                                    <div class="form-group col-md-12">
-                                        <label class="form-control-label">
-                                            Selectionnez la question :
-                                        </label>
-                                        <select name="question_id" id="question_id" class="form-select">
-                                            <option value="">Toutes les question</option>
-                                        @foreach ($matieres as $matiere)
-                                            <option value="{{ $matiere->id }}" class="">{{ $matiere->libelleMatiere }}</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="reponse" class="form-control-label">
-                                                Ajouter une nouvelle reponse :
-                                            </label>
-                                            <input type="text" placeholder="Entrez une reponse pour la question" class="form-control" id="reponse" name="reponse">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 flex-row">
-                                        <button type="button" id="submit-reponseSave-form-button" class="spinner-submit-reponseSave-form-button btn btn-lg">
-                                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                            Sauvegarder la reponse
-                                        </button>
-                                    </div>
-                                </div>
-                                <hr>
-                                <!-- Liste des questions correspondant au devoir -->
-                                <div class="col-md-12 col-lg-12">
-                                    <h4 class="">Liste des questions de ce devoir :</h4>
-                                </div>
-                                <!-- autres -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="active_year_id" class="form-control-label d-none">

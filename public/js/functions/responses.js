@@ -1,17 +1,17 @@
 $(function(){
 
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-devoir-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-reponse-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var devoirId = $(this).data('devoir-id');
+        var reponseId = $(this).data('reponse-id');
         var yearId = $(this).data('year-id');
-        var devoirIdInput = $('#devoirId');
-        var form = $('#devoirForm');
-        var button = $('#submit-devoir-form-button');
-        var header = $('#modal-devoir-header');
-        var headerText = $('#header-devoir-text');
+        var reponseIdInput = $('#reponseId');
+        var form = $('#reponseForm');
+        var button = $('#submit-reponse-form-button');
+        var header = $('#modal-reponse-header');
+        var headerText = $('#header-reponse-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -22,16 +22,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-devoir-form-button-text').text('Enregistrer');
-            headerText.text('Creer un nouveau devoir (QCM)');
+            button.children('span#submit-reponse-form-button-text').text('Enregistrer');
+            headerText.text('Creer un nouveau reponse (QCM)');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-devoir-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour la configuration du devoir');
-            devoirIdInput.val(devoirId);
+            button.children('span#submit-reponse-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour la configuration de la reponse');
+            reponseIdInput.val(reponseId);
             $.ajax({
-                url: "devoirs/"+devoirId+"/edit/"+yearId,
+                url: "reponses/"+reponseId+"/edit/"+yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -42,19 +42,16 @@ $(function(){
             });
         }
     })
-    // When submiting form for updating or creating new devoir
-    $(document).on('click','.spinner-submit-devoir-form-button', function() {
-        // ckeditor synchronize before save
-        if (window.editor) {
-            $('textarea#content').val(window.editor.getData());
-        }
+
+    // When submiting form for updating or creating new reponse
+    $(document).on('click','.spinner-submit-reponse-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-devoir-form-button-text');
-        var devoirId = $('#devoirId').val();
+        var buttonText = $(this).children('span#submit-reponse-form-button-text');
+        var reponseId = $('#reponseId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'devoirs/update/' + devoirId : 'devoirs/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'reponses/update/' + reponseId : 'reponses/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -73,7 +70,7 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
-                fetchDevoirs();
+                fetchReponses();
             },
             error: function(xhr) {
                 var errors = []
@@ -86,7 +83,6 @@ $(function(){
                     });
                 } else {
                     setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
-                    $('#create-devoir-modal').hide();
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
@@ -96,33 +92,31 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-devoir-modal').on('hidden.bs.modal', function () {
-        const form = $('#devoirForm');
+    $('#create-reponse-modal').on('hidden.bs.modal', function () {
+        const form = $('#reponseForm');
         form.trigger('reset');
-        $('#modal-devoir-header').removeClass('bg-primary bg-success');
-        $('#submit-devoir-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-devoir-form-buuton').children('span#submit-devoir-form-button-text').text('');
-        // clear the editor after submit the form with success
-        window.editor.setData('');
+        $('#modal-reponse-header').removeClass('bg-primary bg-success');
+        $('#submit-reponse-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-reponse-form-buuton').children('span#submit-reponse-form-button-text').text('');
     });
 
-    // fetching devoirs dynamically with filters
-    $('#searchDevoir,#classeFilter,#matiereFilter').on('change keyup', function () {
-        fetchDevoirs();
+    // fetching reponses dynamically with filters
+    $('#searchReponse,#questionFilter').on('change keyup', function () {
+        fetchReponses();
     });
 
     // default data :
-    fetchDevoirs();
+    fetchReponses();
 
-    // fetching all devoirs :
-    function fetchDevoirs() {
-        var formData = $('#filterDevoirForm').serialize();
+    // fetching all reponses:
+    function fetchReponses() {
+        var formData = $('#filterReponseForm').serialize();
         $.ajax({
-            url : "/education/devoirs",
+            url : "/education/reponses",
             type : 'GET',
             data : formData,
             success : function(data) {
-                $('#devoirsTable').html(data);
+                $('#questionsTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -136,7 +130,7 @@ $(function(){
         event.preventDefault();
 
         var page = $(this).attr('href').split('page=')[1];
-        fetchPage(page, '#devoirsTable');
+        fetchPage(page, '#questionsTable');
     });
 
 });
