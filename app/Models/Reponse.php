@@ -13,7 +13,7 @@ class Reponse extends Model
     /**
      * @var array
      */
-    protected $fillable = ['question_id','reponse', 'status'];
+    protected $fillable = ['question_id','reponse','status'];
 
     /**
      * A reponse belongs to a specific Question

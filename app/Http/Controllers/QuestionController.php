@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Devoir;
 use App\Models\Question;
+use App\Models\Reponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,31 +50,65 @@ class QuestionController extends Controller
     /**
      *
      */
-    public function store() {
+    public function store(Request $request) {
 
+        $request->validate([
+            'content' => 'required',
+            'devoir_id' => 'required|exists:devoirs,id',
+        ], [
+            'content.required' => 'Veuillez entrez le contenu de la question',
+            'devoir_id.required' => 'Veuillez selectionnez le devoir pour la question',
+        ]);
+
+        $question = Question::create([
+            'question' => $request->content,
+            'devoir_id' => $request->devoir_id,
+        ]);
+
+        if($question) {
+            return response()->json(['success' => 'Question ajoutée avec succès!']);
+        } else {
+            return response()->json(['error' => 'Erreur inconue lors de l\'ajout de la question']);
+        }
+
+    }
+
+    /**
+     * editing specific question
+     */
+    public function edit($id) {
+        $questionToEdit = Devoir::findOrFail($id);
+        return response()->json([
+            'questionToEdit' => $questionToEdit,
+            'content' => $questionToEdit->question
+        ]);
     }
     /**
      *
      */
-    public function update() {
+    public function update(Request $request, $id) {
+        $request->validate([
+            'content' => 'required',
+            'devoir_id' => 'required|exists:devoirs,id',
+        ], [
+            'content.required' => 'Veuillez entrez la description de la question',
+            'devoir_id.required' => 'Veuillez selectionnez le devoir',
+        ]);
 
+        $question = Question::findOrFail($id);
+        $question->update([
+            'question' => $request->content,
+            'devoir_id' => $request->devoir_id,
+        ]);
+
+        return response()->json(['success' => 'Question mise à jour avec succès']);
     }
     /**
      *
      */
-    public function destroy() {
-
-    }
-    /**
-     *
-     */
-    public function migrate() {
-
-    }
-    /**
-     *
-     */
-    public function deleteInCurrentYear() {
-
+    public function destroy($id) {
+        $question = Question::findOrFail($id);
+        $question->delete();
+        return redirect()->route('education.questions')->with('deleteSuccess', 'Question supprimée avec succès !');
     }
 }

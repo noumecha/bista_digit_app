@@ -78,7 +78,7 @@ class DevoirController extends Controller
             'titre_devoir.required' => 'Veuillez entrez un titre pour le devoir',
             'titre_devoir.unique' => 'Ce titre de devoir existe déja',
             'content.required' => 'Veuillez entrez la description du devoir',
-            'classe_id.required' => 'Veuillez selectionnerz la classe',
+            'classe_id.required' => 'Veuillez selectionnez la classe',
             'matiere_id.required' => 'Veuillez selectionnez la matière',
             'active_year_id.required' => 'Veuillez selectionnez une année scolaire',
         ]);
@@ -131,7 +131,7 @@ class DevoirController extends Controller
             'titre_devoir.min' => 'Le titre doit contenir minimum 3 caractères',
             'titre_devoir.max' => 'Le titre doit contenir maximum 255 cractères',
             'content.required' => 'Veuillez entrez la description du devoir',
-            'classe_id.required' => 'Veuillez selectionnerz la classe',
+            'classe_id.required' => 'Veuillez selectionnez la classe',
             'matiere_id.required' => 'Veuillez selectionnez la matière',
             'active_year_id.required' => 'Veuillez selectionnez une année scolaire',
         ]);
