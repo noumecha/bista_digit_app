@@ -27,7 +27,7 @@ class Question extends Model
     /**
      * A question haves many responses
      */
-    public function responses():HasMany
+    public function reponses():HasMany
     {
         return $this->hasMany(Reponse::class);
     }

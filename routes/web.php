@@ -203,7 +203,7 @@ Route::post('/education/devoirs/delete-in-year', [DevoirController::class, 'dele
 ## education -> questions routes
 Route::post('/education/questions/save', [QuestionController::class, 'store'])->name('question.store')->middleware('auth');
 Route::put('/education/questions/update/{id}', [QuestionController::class, 'update'])->name('question.update')->middleware('auth');
-Route::get('/education/questions/{id}/edit/{yearId}', [QuestionController::class, 'edit'])->name('question.edit')->middleware('auth');
+Route::get('/education/questions/{id}/edit', [QuestionController::class, 'edit'])->name('question.edit')->middleware('auth');
 Route::delete('/education/questions/{id}', [QuestionController::class, 'destroy'])->name('question.destroy')->middleware('auth');
 Route::post('/education/questions/migrate', [QuestionController::class, 'migrate'])->name('question.migrate')->middleware('auth');
 Route::post('/education/questions/delete-in-year', [QuestionController::class, 'deleteInCurrentYear'])->name('question.deleteInCurrentYear')->middleware('auth');

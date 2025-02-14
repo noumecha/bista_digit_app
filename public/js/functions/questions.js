@@ -1,12 +1,36 @@
 $(function(){
 
+    // gestion dynamique des réponses :
+     // Ajouter une réponse dynamiquement
+    $(document).on('click', '#add-reponse-button', function () {
+        var reponseHtml = `
+            <div class="reponse-item mb-3">
+                <div class="input-group">
+                    <input type="text" name="reponses[]" class="form-control" placeholder="Entrez une réponse">
+                    <button type="button" class="btn btn-danger remove-reponse-button">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="form-check mt-2">
+                    <input type="checkbox" name="status" value="1" class="form-check-input">
+                    <label class="form-check-label">Vrai</label>
+                </div>
+            </div>
+        `;
+        $('#reponses-container').append(reponseHtml);
+    });
+
+    // Supprimer une réponse
+    $(document).on('click', '.remove-reponse-button', function () {
+        $(this).closest('.reponse-item').remove();
+    });
+
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-question-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
         var questionId = $(this).data('question-id');
-        var yearId = $(this).data('year-id');
         var questionIdInput = $('#questionId');
         var form = $('#questionForm');
         var button = $('#submit-question-form-button');
@@ -31,9 +55,10 @@ $(function(){
             headerText.text('Mettre à jour la configuration de la question');
             questionIdInput.val(questionId);
             $.ajax({
-                url: "questions/"+questionId+"/edit/"+yearId,
+                url: "questions/"+questionId+"/edit",
                 type: "GET",
                 success: function(res) {
+                    //fillInputForm(res, form);
                     fillInputForm(res, form);
                 },
                 error: function(xhr) {
@@ -45,12 +70,28 @@ $(function(){
 
     // When submiting form for updating or creating new question
     $(document).on('click','.spinner-submit-question-form-button', function() {
+        // ckeditor synchronize before save
+        if (window.editor) {
+            $('textarea#content').val(window.editor.getData());
+        }
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
         var buttonText = $(this).children('span#submit-question-form-button-text');
         var questionId = $('#questionId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
+
+        // Ajouter les réponses au FormData
+        $('input[name="reponses[]"]').each(function (index, input) {
+            formData.append('reponses[]', $(input).val());
+        });
+
+        // Add status to the corrects answers
+        $('input[name="status[]"]').each(function (index, checkbox) {
+            formData.append('status[]', $(checkbox).is(':checked') ? 1 : 0);
+        });
+
+        // Kind of action
         var formAction = buttonText.text() === 'Mettre à jour' ? 'questions/update/' + questionId : 'questions/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
@@ -98,6 +139,8 @@ $(function(){
         $('#modal-question-header').removeClass('bg-primary bg-success');
         $('#submit-question-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-question-form-buuton').children('span#submit-question-form-button-text').text('');
+        // clear the editor after submit the form with success
+        window.editor.setData('');
     });
 
     // fetching questions dynamically with filters

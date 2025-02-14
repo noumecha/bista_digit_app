@@ -30,10 +30,10 @@
                         {{ $question->id }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $question->question }}
+                        {!! Str::limit($question->question, $limit=7, $end="...") !!}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $question->devoir }}
+                        {{ $question->devoir->titre_devoir }}
                     </td>
                     <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                         <a

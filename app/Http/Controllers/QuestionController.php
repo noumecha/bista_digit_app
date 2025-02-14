@@ -55,8 +55,10 @@ class QuestionController extends Controller
         $request->validate([
             'content' => 'required',
             'devoir_id' => 'required|exists:devoirs,id',
+            'reponses' => 'required|array',
         ], [
             'content.required' => 'Veuillez entrez le contenu de la question',
+            'reponses.required' => 'Veuillez ajouter au moins une réponse à la question',
             'devoir_id.required' => 'Veuillez selectionnez le devoir pour la question',
         ]);
 
@@ -65,8 +67,16 @@ class QuestionController extends Controller
             'devoir_id' => $request->devoir_id,
         ]);
 
+        // adding reponses with her status
+        foreach ($request->input('reponses') as $index => $reponse) {
+            $question->reponses()->create([
+                'reponse' => $reponse,
+                'status' => $request->input('status')[$index],
+            ]);
+        }
+
         if($question) {
-            return response()->json(['success' => 'Question ajoutée avec succès!']);
+            return response()->json(['success' => 'Question et ses réponses ajoutée avec succès!']);
         } else {
             return response()->json(['error' => 'Erreur inconue lors de l\'ajout de la question']);
         }
@@ -90,6 +100,7 @@ class QuestionController extends Controller
         $request->validate([
             'content' => 'required',
             'devoir_id' => 'required|exists:devoirs,id',
+            'reponses' => 'required|array',
         ], [
             'content.required' => 'Veuillez entrez la description de la question',
             'devoir_id.required' => 'Veuillez selectionnez le devoir',
@@ -101,7 +112,18 @@ class QuestionController extends Controller
             'devoir_id' => $request->devoir_id,
         ]);
 
-        return response()->json(['success' => 'Question mise à jour avec succès']);
+        // delete old reponses
+        $question->responses()->delete();
+
+        // add new reponses with them status
+        foreach ($request->input('reponses') as $index => $reponse) {
+            $question->responses()->create([
+                'reponse' => $reponse,
+                'status' => $request->status[$index],
+            ]);
+        }
+
+        return response()->json(['success' => 'Question et réponses mises à jour avec succès']);
     }
     /**
      *

@@ -38,6 +38,7 @@ function stylingErrors(errs) {
 
 // fill inputs when the user clicks on the update button for tables lists
 function fillInputForm(res, form) {
+    console.log(res);
     const object = Object.keys(res)[0];
     const data = res[object];
     form.find('input, select, textarea, checkbox').each(function () {
@@ -88,7 +89,29 @@ function fillInputForm(res, form) {
             }
         }
     });
+    // only for questions and responses
+    form.find('textarea[name="question"]').val(data.question.question);
+    $('#reponses-container').empty();
+
+    data.question.reponses.forEach((reponse, index) => {
+        var reponseHtml = `
+            <div class="reponse-item mb-3">
+                <div class="input-group">
+                    <input type="text" name="reponses[]" class="form-control" value="${reponse.reponse}">
+                    <button type="button" class="btn btn-danger remove-reponse-button">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="form-check mt-2">
+                    <input type="checkbox" name="status[]" value="1" class="form-check-input" ${reponse.status == 1 ? 'checked' : ''}>
+                    <label class="form-check-label">Réponse correcte</label>
+                </div>
+            </div>
+        `;
+        $('#reponses-container').append(reponseHtml);
+    });
 }
+
 
 // paginate throw different tables lists
 function fetchPage(page, tableId) {

@@ -32,7 +32,7 @@
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterQuestionForm">
-                                <div class="col-md-12 mb-4">
+                                <div class="col-md-6 mb-4">
                                     <div class="input-group">
                                         <input type="text" name="searchQuestion" id="searchQuestion" class="form-control" placeholder="Rechercher par titre"/>
                                     </div>
@@ -58,7 +58,7 @@
         <!-- modal for create or update question -->
         <div class="modal fade" id="create-question-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-xl">
-                <form enctype="multipart/form-data" role="form" id="devoirForm" class="form row">
+                <form enctype="multipart/form-data" role="form" id="questionForm" class="form row">
                     @csrf
                     <input type="hidden" name="questionId" id="questionId" value="">
                     <div class="modal-content p-0">
@@ -80,10 +80,23 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="question" class="form-control-label">
+                                            Selectionnez un devoir :
+                                        </label>
+                                        <select name="devoir_id" id="devoir_id" class="form-select">
+                                            <option value="">Toutes les devoirs</option>
+                                        @foreach ($devoirs as $devoir)
+                                            <option value="{{ $devoir->id }}" class="">{{ $devoir->titre_devoir }}</option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="content" class="form-control-label">
                                             Ajouter une nouvelle Question :
                                         </label>
                                         <textarea
-                                            name="question"
+                                            name="content"
                                             id="content"
                                             placeholder="Entrez le texte de la question"
                                             cols="12"
@@ -93,6 +106,13 @@
                                 </div>
                                 <div class="col-md-12">
                                     Listes des choix (réponses)
+                                    <!-- Zone pour ajouter dynamiquement les réponses -->
+                                    <div id="reponses-container">
+                                        <!-- Les réponses seront ajoutées ici dynamiquement -->
+                                    </div>
+                                    <button type="button" id="add-reponse-button" class="btn btn-sm btn-primary mt-2">
+                                        <i class="fas fa-plus me-2"></i> Ajouter une réponse
+                                    </button>
                                 </div>
                             </div>
                         </div>
