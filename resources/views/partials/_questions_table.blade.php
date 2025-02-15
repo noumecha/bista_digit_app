@@ -30,7 +30,7 @@
                         {{ $question->id }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {!! Str::limit($question->question, $limit=7, $end="...") !!}
+                        {!! Str::limit($question->question, $limit=20, $end="...") !!}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $question->devoir->titre_devoir }}

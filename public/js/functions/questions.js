@@ -12,8 +12,9 @@ $(function(){
                     </button>
                 </div>
                 <div class="form-check mt-2">
-                    <input type="checkbox" name="status" value="1" class="form-check-input">
-                    <label class="form-check-label">Vrai</label>
+                    <input type="checkbox" name="status_checkbox[]" value="1" class="form-check-input">
+                    <input type="hidden" name="status[]" value="0"> <!-- default value -->
+                    <label class="form-check-label">Réponse correcte</label>
                 </div>
             </div>
         `;
@@ -70,6 +71,12 @@ $(function(){
 
     // When submiting form for updating or creating new question
     $(document).on('click','.spinner-submit-question-form-button', function() {
+        // Synchronize responses status checkbox
+        $('input[name="status_checkbox[]"]').each(function (index, checkbox) {
+            if ($(checkbox).is(':checked')) {
+                $(checkbox).siblings('input[name="status[]"]').val(1);
+            }
+        });
         // ckeditor synchronize before save
         if (window.editor) {
             $('textarea#content').val(window.editor.getData());
@@ -81,14 +88,14 @@ $(function(){
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
 
-        // Ajouter les réponses au FormData
+        // add reponses to formData
         $('input[name="reponses[]"]').each(function (index, input) {
             formData.append('reponses[]', $(input).val());
         });
 
-        // Add status to the corrects answers
-        $('input[name="status[]"]').each(function (index, checkbox) {
-            formData.append('status[]', $(checkbox).is(':checked') ? 1 : 0);
+        // Add status of each reponses
+        $('input[name="status[]"]').each(function (index, hiddenInput) {
+            formData.append('status[]', $(hiddenInput).val());
         });
 
         // Kind of action

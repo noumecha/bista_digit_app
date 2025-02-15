@@ -38,7 +38,6 @@ function stylingErrors(errs) {
 
 // fill inputs when the user clicks on the update button for tables lists
 function fillInputForm(res, form) {
-    console.log(res);
     const object = Object.keys(res)[0];
     const data = res[object];
     form.find('input, select, textarea, checkbox').each(function () {
@@ -92,8 +91,11 @@ function fillInputForm(res, form) {
     // only for questions and responses
     form.find('textarea[name="question"]').val(data.question.question);
     $('#reponses-container').empty();
-
-    data.question.reponses.forEach((reponse, index) => {
+    reps = Object.entries(res.reponses);
+    /*reps.forEach(([index, reponse]) => {
+        console.log(`${index} : ${reponse}`);
+    });*/
+    reps.forEach(([index, reponse]) => {
         var reponseHtml = `
             <div class="reponse-item mb-3">
                 <div class="input-group">
@@ -103,7 +105,8 @@ function fillInputForm(res, form) {
                     </button>
                 </div>
                 <div class="form-check mt-2">
-                    <input type="checkbox" name="status[]" value="1" class="form-check-input" ${reponse.status == 1 ? 'checked' : ''}>
+                    <input type="checkbox" name="status_checkbox[]" value="1" class="form-check-input" ${reponse.status == 1 ? 'checked' : ''}>
+                    <input type="hidden" name="status[]" value="${reponse.status}"> <!-- Synchroniser avec le statut -->
                     <label class="form-check-label">Réponse correcte</label>
                 </div>
             </div>
