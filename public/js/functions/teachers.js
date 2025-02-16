@@ -71,6 +71,9 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                if(formAction === 'teacher/save') {
+                    resetForm(form);
+                }
                 fetchTeachers();
             },
             error: function(xhr) {

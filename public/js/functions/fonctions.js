@@ -46,6 +46,7 @@ $(function(){
         spinner.removeClass('d-none');
         var buttonText = $(this).children('span#submit-fonction-form-button-text');
         var fonctionId = $('#fonctionId').val();
+        var form = $(this).closest('form')[0];
         var form_datas = $(this).closest('form').serialize();
         var form_method = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
         var form_action = buttonText.text() === 'Mettre à jour' ? 'fonction/update/' + fonctionId : 'fonction/save';
@@ -62,6 +63,9 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                if(form_action === 'fonction/save') {
+                    resetForm(form);
+                }
                 fecthFonctions();
             },
             error: function(xhr) {

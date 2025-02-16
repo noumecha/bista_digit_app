@@ -69,6 +69,9 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                if(formAction === 'classe/save') {
+                    resetForm(form);
+                }
                 fetchClasses();
             },
             error: function(xhr) {

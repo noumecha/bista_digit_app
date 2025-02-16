@@ -73,6 +73,12 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                if(formAction === 'devoirs/save') {
+                    resetForm(form);
+                    setTimeout(function() {
+                        window.editor.setData('');
+                    }, 4000);
+                }
                 fetchDevoirs();
             },
             error: function(xhr) {
@@ -102,7 +108,6 @@ $(function(){
         $('#modal-devoir-header').removeClass('bg-primary bg-success');
         $('#submit-devoir-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-devoir-form-buuton').children('span#submit-devoir-form-button-text').text('');
-        // clear the editor after submit the form with success
         window.editor.setData('');
     });
 

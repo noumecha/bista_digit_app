@@ -37,7 +37,6 @@ class QuestionController extends Controller
             });
         }
 
-        //dd($query);
         $questions = $query->paginate(10);
 
         if($request->ajax()) {
@@ -116,6 +115,7 @@ class QuestionController extends Controller
             'reponses' => $reponses
         ]);
     }
+
     /**
      *
      */
@@ -171,14 +171,14 @@ class QuestionController extends Controller
 
         return response()->json(['success' => 'Question et réponses mises à jour avec succès']);
     }
+
     /**
      *
      */
     public function destroy($id) {
         $question = Question::findOrFail($id);
-        // delete all reponses that corresponding to the question
         Reponse::where('question_id', $question->id)->delete();
         $question->delete();
-        return redirect()->route('education.questions')->with('deleteSuccess', 'Question supprimée avec succès !');
+        return redirect()->route('education.questions')->with('deleteSuccess', 'Question et réponses supprimée avec succès !');
     }
 }

@@ -5,7 +5,7 @@
             <div class="mt-4 row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="pb-0 card-header">
+                        <div class="card-header">
                             @if (session('deleteSuccess'))
                                 <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('deleteSuccess') }}
@@ -19,257 +19,141 @@
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
-                                    <a href="#actualitesForm" class="btn btn-lg btn-dark btn-primary">
+                                    <button
+                                        type="button"
+                                        class="btn btn-lg btn-dark btn-primary text-white"
+                                        data-bs-toggle="modal"
+                                        data-action="create"
+                                        id="add-button"
+                                        data-bs-target="#create-actualite-modal"
+                                    >
                                         <i class="fas fa-user-plus me-2"></i> Ajouter
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
-                            <form class="form form-inline row mt-3" action="{{ route('actualites.index') }}" method="get">
-                                <div class="col-md-4">
+                            <form class="form form-inline row mt-3" id="filterActualiteForm">
+                                <div class="col-md-6">
                                     <div class="input-group">
-                                        <input type="text" name="search" value="{{ isset($search) ? $search : '' }}" id="search" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
+                                        <input type="text" name="searchActualite" value=""" id="searchActualite" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="input-group">
-                                        <select name="category" class="form-select" id="">
+                                        <select name="categorieFilter" class="form-select" id="categorieFilter">
                                             <option value="">Toutes les catégorie</option>
                                             @foreach ($categories as $cat)
-                                                <option value="{{$cat->id}}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                                <option value="{{$cat->id}}">
                                                     {{ $cat->libelleCategorie }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-lg btn-primary">
-                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                        Rechercher
-                                    </button>
-                                </div>
                             </form>
                         </div>
-
-                        <div class="table-responsive mt-3">
-                            <table class="table text-secondary text-center">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Titre</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Image
-                                        </th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Catégorie
-                                        </th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Contenu
-                                        </th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (empty($actualites->items()))
-                                        <td class="text" colspan="5">
-                                            Aucune donnée disponible
-                                        </td>
-                                    @else
-                                        @foreach ($actualites as $actualite)
-                                            <tr>
-                                                <td class="align-middle bg-transparent border-bottom">
-                                                    {{ Str::limit($actualite->titre , $limit=5, $end="...") }}
-                                                </td>
-                                                <td class="align-middle bg-transparent border-bottom">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <img src="{{ asset('storage/' . $actualite->image) }}" class="rounded-circle mr-2"
-                                                            alt="user1" style="height: 36px; width: 36px;">
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle bg-transparent borer-bottom">
-                                                    {{ $actualite->categorieActualite->libelleCategorie }}
-                                                </td>
-                                                <td class="align-middle bg-transparent borer-bottom">
-                                                    {!! Str::limit($actualite->contenu , $limit=30, $end="...") !!}
-                                                </td>
-                                                <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
-                                                    <a class="btn btn-primary mt-3 p-2" href="{{ route('actualite.edit', $actualite->id) }}">
-                                                        <i class="fa-solid fa-pen"></i>
-                                                    </a>
-                                                    <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $actualite->id }}">
-                                                        <i class="fa-solid fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <!-- modal for delete confirmation -->
-                                            <div class="modal fade" id="confirmDelete-{{ $actualite->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Voulez-vous vraiment supprimée l'actualité :
-                                                            {{ $actualite->titre }} ? (Cette action est irreversible)
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                            <form role="form" class="form" method="POST" action="{{ route('actualite.destroy', $actualite->id) }}">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
-                                                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                                    Confirmer
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </tbody>
-                            </table>
-                            <div class="d-flex justify-content-center">
-                                {{ $actualites->appends(request()->query())->links() }}
-                            </div>
+                        <div class="table-responsive" id="actualitesTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="px-5 py-4 container-fluid">
-            <div class="mt-4 row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="pb-0 card-header">
-                            @if (session('success'))
-                                <div class="row alert alert-success text-center success-message" id="">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-                            <div class="row">
-                                <div class="col-md-6">
-                                    @if (isset($actualiteToEdit))
-                                        <h5 class="">Modifier l'actualité de {{ $actualiteToEdit->titre}} </h5>
-                                    @else
-                                        <h5 class="">Ajouter une nouvelle Actualité</h5>
-                                    @endif
+        <!-- modal for creation new actualites -->
+        <div class="modal fade" id="create-actualite-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog modal-xl">
+                <form enctype="multipart/form-data" role="form" id="actualiteForm" class="form row">
+                    @csrf
+                    <input type="hidden" name="actualiteId" id="actualiteId" value="">
+                    <div class="modal-content p-0">
+                        <div class="modal-header" id="modal-actualite-header">
+                            <div class="modal-title row">
+                                <div class="col-12">
+                                    <h5 id="header-actualite-text" class="text-white"></h5>
                                 </div>
                             </div>
-                            <form enctype="multipart/form-data" role="form" id="actualitesForm" class="form row" method="POST" action="{{ isset($actualiteToEdit) ? route('actualite.update', $actualiteToEdit->id) : route('actualite.store') }}">
-                                @csrf
-                                @if (isset($actualiteToEdit))
-                                    @method('PUT')
-                                @endif
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="titre" class="form-control-label">
-                                                Titre :
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="titre"
-                                                name="titre"
-                                                class="form-control"
-                                                placeholder="Entrez le tire de la actualite"
-                                                value="{{ isset($actualiteToEdit) ? $actualiteToEdit->titre : old("titre") }}"
-                                            />
-                                            @error('titre')
-                                                <span class="text-danger text-sm">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            @if(isset($actualiteToEdit) && $actualiteToEdit->image)
-                                                <div>
-                                                    <img src="{{ asset('storage/' . $actualiteToEdit->image) }}" alt="Profile Image"
-                                                        style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
-                                                </div>
-                                            @endif
-                                            <label for="image" class="form-control-label">
-                                                Image de mise en Avant :
-                                            </label>
-                                            <input type="file" id="image" name="image" class="form-control"
-                                                placeholder="Selectionner une image de mise en avant" value="">
-                                            @error('image')
-                                                <span class="text-danger text-sm">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="categorie_actualites_id" class="form-control-label">
-                                                Categorie :
-                                            </label>
-                                            <select name="categorie_actualites_id" id="categorie_actualites_id" class="form-select">
-                                                @foreach ($categories as $categorie)
-                                                    <option value="{{ $categorie->id }}" {{ isset($actualiteToEdit) && $actualiteToEdit->categorie_actualites_id === $categorie->id ? 'selected' : '' }}>
-                                                        {{ $categorie->libelleCategorie }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('titre')
-                                                <span class="text-danger text-sm">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="contenu" class="form-control-label">
-                                            Contenu :
+                                        <label for="titre" class="form-control-label">
+                                            Titre :
                                         </label>
-                                        <textarea
-                                            name="contenu"
-                                            id="content"
-                                            placeholder="Entrez le contenu de l'actualité"
-                                            cols="12"
-                                            rows="30">
-                                            {{ isset($actualiteToEdit) ? $actualiteToEdit->contenu : old("contenu") }}
-                                        </textarea>
-                                        @error('contenu')
-                                            <span class="text-danger text-sm">{{ $message }}</span>
-                                        @enderror
+                                        <input
+                                            type="text"
+                                            id="titre"
+                                            name="titre"
+                                            class="form-control"
+                                            placeholder="Entrez le tire de la actualite"
+                                        />
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <button
-                                        type="submit"
-                                        style="margin-left: 0.8rem !important;"
-                                        onclick="showSpinner(this)"
-                                        class="col-md-4 col-lg-4 btn btn-lg {{ isset($actualiteToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
-                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                        {{ isset($actualiteToEdit) ? 'Mettre à jour' : 'Enregistrer'}}
-                                    </button>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @if(isset($actualiteToEdit) && $actualiteToEdit->image)
+                                            <div>
+                                                <img src="{{ asset('storage/' . $actualiteToEdit->image) }}" alt="Profile Image"
+                                                    style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
+                                            </div>
+                                        @endif
+                                        <label for="image" class="form-control-label">
+                                            Image de mise en Avant :
+                                        </label>
+                                        <input type="file" id="image" name="image" class="form-control"
+                                            placeholder="Selectionner une image de mise en avant" value="">
+                                    </div>
                                 </div>
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="categorie_actualites_id" class="form-control-label">
+                                            Categorie :
+                                        </label>
+                                        <select name="categorie_actualites_id" id="categorie_actualites_id" class="form-select">
+                                            <option value="">Toutes les catégories</option>
+                                            @foreach ($categories as $categorie)
+                                                <option value="{{ $categorie->id }}" {{ isset($actualiteToEdit) && $actualiteToEdit->categorie_actualites_id === $categorie->id ? 'selected' : '' }}>
+                                                    {{ $categorie->libelleCategorie }}
+                                                </option>
                                             @endforeach
-                                        </ul>
+                                        </select>
                                     </div>
-                                @endif
-                            </form>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="contenu" class="form-control-label">
+                                        Contenu :
+                                    </label>
+                                    <textarea
+                                        name="content"
+                                        id="content"
+                                        placeholder="Entrez le contenu de l'actualité"
+                                        cols="12"
+                                        rows="30">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-row-reverse">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" id="submit-actualite-form-button" class="spinner-submit-actualite-form-button btn btn-lg">
+                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                <span id="submit-actualite-form-button-text"></span>
+                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <x-app.footer />
     </main>
-
+    @section('scripts')
+        <script src="{{ asset('js/functions/actualites.js') }}"></script>
+    @endsection
 </x-app-layout>
 

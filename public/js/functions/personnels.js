@@ -71,6 +71,9 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                if(formAction === 'personnel/save') {
+                    resetForm(form);
+                }
                 fetchPersonnels();
             },
             error: function(xhr) {

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ActusController extends Controller
 {
@@ -15,41 +16,49 @@ class ActusController extends Controller
      * index function
      */
     public function index (Request $request) {
-        $actualites = Actualite::all();
+        // utils vars
+        $user = User::find(Auth::id());
         $categories = CategorieActualite::all();
-        $search = $request->input('search');
-        $categoryFilter = $request->input('category');
 
+        // filter vars
+        $searchActualite = $request->input('searchActualite');
+        $categorieFilter = $request->input('categorieFilter');
+
+        // querying
         $query = Actualite::query();
-        if(!empty($search) && !empty($categoryFilter)) {
-            $query->where('titre', 'LIKE', "%{$search}%")
-                ->orWhere('contenu', 'LIKE', "%{$search}%")
-                ->orWhere('categorie_actualites_id', $categoryFilter);
-        } elseif(!empty($categoryFilter)) {
-            $query->where('categorie_actualites_id', $categoryFilter);
-        } elseif (!empty($search)) {
-            $query->where('titre', 'LIKE', "%{$search}%")
-                ->orWhere('contenu', 'LIKE', "%{$search}%");
+
+        // filtering
+        if(!empty($categorieFilter)) {
+            $query->where('categorie_actualites_id', $categorieFilter);
+        }
+
+        if (!empty($searchActualite)) {
+            $query->where('titre', 'LIKE', "%{$searchActualite}%")
+                ->orWhere('contenu', 'LIKE', "%{$searchActualite}%");
         }
 
         $actualites = $query->paginate(10);
 
-        return view('actualites.index', compact('actualites', 'categories', 'search', 'categoryFilter'));
+        if($request->ajax()) {
+            return view('partials._actualites_table', compact('actualites', 'categories'));
+        } else {
+            return view('actualites.index', compact('actualites', 'categories'));
+        }
     }
 
     /**
-     *
+     * create new actualite
      */
     public function store(Request $request) {
         $request->validate([
             'titre' => 'required|min:3|max:255|unique:actualites,titre',
-            'contenu' => 'required',
+            'content' => 'required',
             'image' => 'required|image|mimes:jpg,jpeg,png,gif|max:4096',
             'categorie_actualites_id' => 'required'
         ], [
             'titre.required' => 'Veuillez entrez un titre',
             'titre.unique' => 'Ce titre existe déja',
-            'contenu.required' => 'Veuillez remplire le contenu de l\'actualité',
+            'content.required' => 'Veuillez remplire le contenu de l\'actualité',
             'image.required' => 'Veuillez selectionner une image de mise en avant',
             'categorie_actualites_id.required' => 'Veuillez selectionner selectionner la catégorie',
         ]);
@@ -59,63 +68,50 @@ class ActusController extends Controller
         else
             $imagePath = '';
 
-        //dd($imagePath);
-        Actualite::create([
+        $actualite = Actualite::create([
             'titre' => $request->titre,
-            'contenu' => $request->contenu,
+            'contenu' => $request->content,
             'user_id' => Auth::id(),
             'categorie_actualites_id' => $request->categorie_actualites_id,
             'image' => $imagePath,
-            //'image' => $request->hasFile('image') ? $request->file('image')->store('actualites', 'public') : '',
         ]);
 
-        return redirect()->route('actualites.index')->with('success', 'Actualites ajouté avec succès');
-    }
-
-
-    /**
-     *
-     */
-    public function edit(Request $request, $id) {
-        $actualites = Actualite::all();
-        $categories = CategorieActualite::all();
-        $actualiteToEdit = Actualite::findOrFail($id);
-        $search = $request->input('search');
-        $categoryFilter = $request->input('category');
-
-        $query = Actualite::query();
-        if(!empty($search) && !empty($categoryFilter)) {
-            $query->where('titre', 'LIKE', "%{$search}%")
-                ->orWhere('contenu', 'LIKE', "%{$search}%")
-                ->orWhere('categorie_actualites_id', $categoryFilter);
-        } elseif(!empty($categoryFilter)) {
-            $query->where('categorie_actualites_id', $categoryFilter);
-        } elseif (!empty($search)) {
-            $query->where('titre', 'LIKE', "%{$search}%")
-                ->orWhere('contenu', 'LIKE', "%{$search}%");
+        if($actualite) {
+            return response()->json(['success' => 'Actualité ajoutée avec succès!']);
+        } else {
+            return response()->json(['error' => 'Erreur inconue lors de l\'ajout de l\'actualité']);
         }
+    }
 
-        $actualites = $query->paginate(10);
 
-        return view('actualites.index', compact('actualites','actualiteToEdit','categories'));
+    /**
+     * edit a specific actualite
+     */
+    public function edit($id) {
+        $actualiteToEdit = Actualite::findOrFail($id);
+        return response()->json([
+            'actualiteToEdit' => $actualiteToEdit,
+            'content' => $actualiteToEdit->contenu
+        ]);
     }
 
     /**
-     *
+     * updating specific actualite
      */
     public function update(Request $request, $id) {
         $request->validate([
-            'titre' => 'required|min:3|max:255',
-            'contenu' => 'required',
+            'titre' => 'required|min:3|max:255',Rule::unique('actualites')->ignore($id),
+            'content' => 'required',
             'image' => 'image|mimes:jpg,jpeg,png,gif|max:4096',
             'categorie_actualites_id' => 'required'
         ], [
             'titre.required' => 'Veuillez entrez un titre',
             'titre.unique' => 'Ce titre existe déja',
-            'contenu.required' => 'Veuillez remplire le contenu de l\'actualité',
+            'content.required' => 'Veuillez remplire le contenu de l\'actualité',
             'categorie_actualites_id.required' => 'Veuillez selectionner selectionner la catégorie',
         ]);
         $actualite = Actualite::findOrFail($id);
+
         if($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('actualites', 'public');
             if ($actualite->image) {
@@ -123,19 +119,18 @@ class ActusController extends Controller
             }
             $actualite->image = $imagePath;
         }
-        //$actualite->user_id = User::find(Auth::id());
+
         $actualite->update($request->except('image'));
 
-        return redirect()->route('actualites.index')->with('success', 'Actualité mise à jour avec succès');
+        return response()->json(['success' => 'Actualité mise à jour avec succès']);
     }
 
     /**
-     *
+     * delete specific actualite
      */
     public function destroy($id) {
         $actualite = Actualite::findOrFail($id);
         $actualite->delete();
-
         return redirect()->route('actualites.index')->with('deleteSuccess', 'Actualité supprimer avec succès');
     }
 }

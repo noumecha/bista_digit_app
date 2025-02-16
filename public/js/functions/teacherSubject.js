@@ -71,6 +71,9 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                if(formAction === 'enseignantMatiere/save') {
+                    resetForm(form);
+                }
                 fetchteacherSubjects();
             },
             error: function(xhr) {

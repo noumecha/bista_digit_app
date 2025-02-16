@@ -56,7 +56,7 @@
                             <i class="fa-solid fa-trash"></i>
                         </button>
                         <!-- modal for delete confirmation -->
-                        <div class="modal fade" id="confirmDelete-{{ $question->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" >
+                        <div class="modal fade" id="confirmDelete-{{ $question->id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
                             <div class="modal-dialog">
                                 <form role="form" class="form" method="POST" action="{{ route('question.destroy', $question->id) }}">
                                     @csrf

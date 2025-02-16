@@ -53,7 +53,7 @@ use Illuminate\Support\Facades\Artisan;
 // Actualites CRUD Routes :
 Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
 Route::post('/actualites/save', [ActusController::class, 'store'])->name('actualite.store')->middleware('auth');
-Route::put('/actualites/{id}', [ActusController::class, 'update'])->name('actualite.update')->middleware('auth');
+Route::put('/actualites/update/{id}', [ActusController::class, 'update'])->name('actualite.update')->middleware('auth');
 Route::get('/actualites/{id}/edit', [ActusController::class, 'edit'])->name('actualite.edit')->middleware('auth');
 Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
 
@@ -68,13 +68,6 @@ Route::get('/actualites', [HomeController::class, 'actualites'])->name('home.act
 Route::get('/actualites/categorie/{category}', [HomeController::class, 'showCategorie'])->name('home.showCategorie');
 Route::get('/actualite/{id}/read', [HomeController::class, 'showActualite'])->name('actualites.show');
 Route::get('/epreuve/{id}/read', [HomeController::class, 'showEpreuve'])->name('home.showepreuve');
-
-// Actualites CRUD Routes :
-Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
-Route::post('/actualites/save', [ActusController::class, 'store'])->name('actualite.store')->middleware('auth');
-Route::put('/actualites/{id}', [ActusController::class, 'update'])->name('actualite.update')->middleware('auth');
-Route::get('/actualites/{id}/edit', [ActusController::class, 'edit'])->name('actualite.edit')->middleware('auth');
-Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
 
 // Categories actualites CRUD Routes :
 Route::get('/categories/actualites', [CategorieActualiteController::class, 'index'])->name('actualites.categories')->middleware('auth');

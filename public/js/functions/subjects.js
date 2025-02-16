@@ -69,6 +69,9 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                if(formAction === 'matieres/save') {
+                    resetForm(form);
+                }
                 fetchMatiere();
             },
             error: function(xhr) {

@@ -70,6 +70,9 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                if(formAction === 'enseignement/save') {
+                    resetForm(form);
+                }
                 fetchEnseignements();
             },
             error: function(xhr) {

@@ -5,7 +5,7 @@
             <div class="mt-4 row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="pb-0 card-header">
+                        <div class="card-header">
                             @if (session('deleteSuccess'))
                                 <div class="row alert alert-success text-center success-message" id="">
                                     {{ session('deleteSuccess') }}
@@ -79,7 +79,7 @@
                                             Selectionnez un devoir :
                                         </label>
                                         <select name="devoir_id" id="devoir_id" class="form-select">
-                                            <option value="">Toutes les devoirs</option>
+                                            <option value="">Tous les devoirs</option>
                                         @foreach ($devoirs as $devoir)
                                             <option value="{{ $devoir->id }}" class="">{{ $devoir->titre_devoir }}</option>
                                         @endforeach

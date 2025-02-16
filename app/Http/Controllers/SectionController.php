@@ -25,11 +25,12 @@ class SectionController extends Controller
         }
         $sections = $query->paginate(10);
         if($request->ajax()) {
-            return view('partials._sections_table', compact('user','sections','searchSection'));
+            return view('partials._sections_table', compact('user','sections'));
         } else {
-            return view('education.sections', compact('user','sections','searchSection'));
+            return view('education.sections', compact('user','sections'));
         }
     }
+
      /**
      * saving school sections
      * @param  \Illuminate\Http\Request  $request
@@ -63,6 +64,7 @@ class SectionController extends Controller
         $sectionToEdit = Section::findOrFail($id);
         return response()->json(['sectionToEdit' => $sectionToEdit]);
     }
+
     /**
      * function to update a section.
      */
@@ -89,7 +91,6 @@ class SectionController extends Controller
     public function destroy($id) {
         $section = Section::findOrFail($id);
         $section->delete();
-
-        return redirect()->route('education.sections')->with('listSuccess', 'Section supprimée avec succès');
+        return redirect()->route('education.sections')->with('deleteSuccess', 'Section supprimée avec succès');
     }
 }

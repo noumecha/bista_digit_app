@@ -6,9 +6,9 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
-                            @if (session('listSuccess'))
-                                <div class="alert alert-success success-message" role="alert" id="">
-                                    {{ session('listSuccess') }}
+                            @if (session('deleteSuccess'))
+                                <div class="row alert alert-success text-center success-message" id="">
+                                    {{ session('deleteSuccess') }}
                                 </div>
                             @endif
                             <div class="row">
@@ -34,7 +34,7 @@
                             <form class="form form-inline row mb-3 mt-3" id="filterSectionForm">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <input type="text" name="searchYear" value="" id="searchSection" class="form-control" placeholder="Rechercher par libellé"/>
+                                        <input type="text" name="searchSection" value="" id="searchSection" class="form-control" placeholder="Rechercher par libellé"/>
                                     </div>
                                 </div>
                             </form>

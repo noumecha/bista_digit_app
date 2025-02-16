@@ -11,11 +11,6 @@
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
-                            @if (session('errorSuccess'))
-                                <div class="row alert alert-danger text-center success-message" id="">
-                                    {{ session('errorSuccess') }}
-                                </div>
-                            @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
                                     <h5 class="">Liste des fonctions</h5>
@@ -67,10 +62,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="alert alert-success" style="display: none;" id="modal-form-alert-success">
-                            </div>
-                            <div class="alert alert-danger" style="display: none;" id="modal-form-alert-errors">
-                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -87,6 +78,10 @@
                                         >
                                     </div>
                                 </div>
+                            </div>
+                            <div class="alert alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert alert-danger" style="display: none;" id="modal-form-alert-errors">
                             </div>
                         </div>
                         <div class="modal-footer flex-row-reverse">

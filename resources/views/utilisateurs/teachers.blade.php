@@ -62,10 +62,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
-                            </div>
-                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
-                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -205,6 +201,10 @@
                                         <input type="hidden" class="form-control" id="active_year_id" name="active_year_id" value="{{ $activeYear->id }}">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
                             </div>
                         </div>
                         <div class="modal-footer flex-row-reverse">
