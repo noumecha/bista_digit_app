@@ -51,16 +51,36 @@ class QuestionController extends Controller
      *
      */
     public function store(Request $request) {
-
+        // getting custom id of question to perform error UX
+        $customAttributes = [];
+        if ($request->has('reponses')) {
+            foreach ($request->input('reponses') as $index => $value) {
+                $repId = $index + 1;
+                $customAttributes["reponses.$index"] = "réponse $repId";
+            }
+        }
+        // validates entries
         $request->validate([
             'content' => 'required',
             'devoir_id' => 'required|exists:devoirs,id',
             'reponses' => 'required|array',
+            'reponses.*' => 'required|string',
+            'status_checkbox' => [
+                'required',
+                function ($attribute, $fail, $value) use ($request) {
+                    // check if aleast one question is true
+                    if(!in_array('1', $request->input('status_checkbox', []))) {
+                        $fail('Au moins une réponse doit être défini comme vraie');
+                    }
+                }
+            ]
         ], [
             'content.required' => 'Veuillez entrez le contenu de la question',
             'reponses.required' => 'Veuillez ajouter au moins une réponse à la question',
             'devoir_id.required' => 'Veuillez selectionnez le devoir pour la question',
-        ]);
+            'status_checkbox.required' => 'Veuillez définir au moins une réponse comme correcte.',
+            'reponses.*.required' => 'Veuillez remplir la :attribute',
+        ], $customAttributes);
 
         $question = Question::create([
             'question' => $request->content,
@@ -100,15 +120,35 @@ class QuestionController extends Controller
      *
      */
     public function update(Request $request, $id) {
+        $customAttributes = [];
+        if ($request->has('reponses')) {
+            foreach ($request->input('reponses') as $index => $value) {
+                $repId = $index + 1;
+                $customAttributes["reponses.$index"] = "réponse $repId";
+            }
+        }
+        // make validations
         $request->validate([
             'content' => 'required',
             'devoir_id' => 'required|exists:devoirs,id',
             'reponses' => 'required|array',
+            'reponses.*' => 'required|string',
+            'status_checkbox' => [
+                'required',
+                function ($attribute, $fail, $value) use ($request) {
+                    // check if aleast one question is true
+                    if(!in_array('1', $request->input('status_checkbox', []))) {
+                        $fail('Au moins une réponse doit être défini comme vraie');
+                    }
+                }
+            ]
         ], [
             'content.required' => 'Veuillez entrez la description de la question',
             'reponses.required' => 'Veuillez ajouter au moins une réponse à la question',
             'devoir_id.required' => 'Veuillez selectionnez le devoir',
-        ]);
+            'status_checkbox.required' => 'Veuillez définir au moins une réponse comme correcte.',
+            'reponses.*.required' => 'Veuillez remplir la :attribute',
+        ], $customAttributes);
 
         //dd($request);
         $question = Question::findOrFail($id);
@@ -118,11 +158,8 @@ class QuestionController extends Controller
         ]);
 
         // delete old reponses
-        //$question->reponses()->delete();
-        $reponses = Reponse::all()->where('question_id', $question->id);
-        foreach($reponses as $reponse) {
-            $reponse->delete();
-        }
+        Reponse::where('question_id', $question->id)->delete();
+
         // add new reponses with them status
         foreach ($request->reponses as $index => $reponse) {
             Reponse::create([
@@ -139,10 +176,8 @@ class QuestionController extends Controller
      */
     public function destroy($id) {
         $question = Question::findOrFail($id);
-        $reponses = Reponse::all()->where('question_id', $question->id);
-        foreach($reponses as $reponse) {
-            $reponse->delete();
-        }
+        // delete all reponses that corresponding to the question
+        Reponse::where('question_id', $question->id)->delete();
         $question->delete();
         return redirect()->route('education.questions')->with('deleteSuccess', 'Question supprimée avec succès !');
     }

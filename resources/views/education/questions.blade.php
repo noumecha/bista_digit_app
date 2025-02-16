@@ -72,10 +72,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
-                            </div>
-                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
-                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -106,14 +102,16 @@
                                 </div>
                                 <div class="col-md-12">
                                     Listes des choix (réponses)
-                                    <!-- Zone pour ajouter dynamiquement les réponses -->
                                     <div id="reponses-container">
-                                        <!-- Les réponses seront ajoutées ici dynamiquement -->
-                                    </div>
+                                    </div >
                                     <button type="button" id="add-reponse-button" class="btn btn-sm btn-primary mt-2">
                                         <i class="fas fa-plus me-2"></i> Ajouter une réponse
                                     </button>
                                 </div>
+                            </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
                             </div>
                         </div>
                         <div class="modal-footer flex-row-reverse">

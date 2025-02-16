@@ -1,27 +1,31 @@
 $(function(){
-
-    // gestion dynamique des réponses :
-     // Ajouter une réponse dynamiquement
+    // Manage responses dynamically
+    let reponseId = 0;
     $(document).on('click', '#add-reponse-button', function () {
+        reponseId++;
         var reponseHtml = `
-            <div class="reponse-item mb-3">
-                <div class="input-group">
-                    <input type="text" name="reponses[]" class="form-control" placeholder="Entrez une réponse">
-                    <button type="button" class="btn btn-danger remove-reponse-button">
+            <div class="row reponse-item mt-2" id="reponse-${reponseId}">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" id="responses[]" name="reponses[]" class="form-control" placeholder="Entrez une réponse">
+                    </div>
+                </div>
+                <div class="col-md-2 form-check">
+                    <input type="hidden" name="status[]" class="form-check-input" value="0">
+                    <input type="checkbox" id="formCheck" name="status_checkbox[]" value="1" class="form-check-input">
+                    <label class="form-check-label" for="formCheck">Réponse correcte</label>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="remove-reponse-button" class="btn btn-danger remove-reponse-button">
                         <i class="fas fa-trash"></i>
                     </button>
-                </div>
-                <div class="form-check mt-2">
-                    <input type="checkbox" name="status_checkbox[]" value="1" class="form-check-input">
-                    <input type="hidden" name="status[]" value="0"> <!-- default value -->
-                    <label class="form-check-label">Réponse correcte</label>
                 </div>
             </div>
         `;
         $('#reponses-container').append(reponseHtml);
     });
 
-    // Supprimer une réponse
+    // delete reponse from dom
     $(document).on('click', '.remove-reponse-button', function () {
         $(this).closest('.reponse-item').remove();
     });
@@ -88,16 +92,6 @@ $(function(){
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
 
-        // add reponses to formData
-        $('input[name="reponses[]"]').each(function (index, input) {
-            formData.append('reponses[]', $(input).val());
-        });
-
-        // Add status of each reponses
-        $('input[name="status[]"]').each(function (index, hiddenInput) {
-            formData.append('status[]', $(hiddenInput).val());
-        });
-
         // Kind of action
         var formAction = buttonText.text() === 'Mettre à jour' ? 'questions/update/' + questionId : 'questions/save';
         var modalId = $(this).closest('div.modal').prop('id');
@@ -118,6 +112,14 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                // reset form after creation
+                if(formAction === 'questions/save') {
+                    resetForm(form);
+                    setTimeout(function() {
+                        window.editor.setData('');
+                        $('.reponse-item').remove();
+                    }, 4000);
+                }
                 fetchQuestions();
             },
             error: function(xhr) {
@@ -148,6 +150,8 @@ $(function(){
         $('#submit-question-form-buuton').children('span#submit-question-form-button-text').text('');
         // clear the editor after submit the form with success
         window.editor.setData('');
+        // remove item on dom after closing the form :
+        $('.reponse-item').remove();
     });
 
     // fetching questions dynamically with filters

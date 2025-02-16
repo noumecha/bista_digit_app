@@ -25,6 +25,13 @@ function stylingErrors(errs) {
                 console.log(container);
                 container.classList.add('ck-editor-border-error');
                 setTimeout(() => container.classList.remove('ck-editor-border-error'), 4000);
+            } else if (field.startsWith('reponses.')) {
+                const index = field.split('.')[1];
+                const inputElement = $(`input[name="reponses[]"]`).eq(index);
+                if (inputElement.length) {
+                    inputElement.addClass('is-invalid');
+                    setTimeout(() => inputElement.removeClass('is-invalid'), 4000);
+                }
             } else {
                 const inputElement = $('#' + field);
                 if (inputElement.length) {
@@ -92,22 +99,23 @@ function fillInputForm(res, form) {
     form.find('textarea[name="question"]').val(data.question.question);
     $('#reponses-container').empty();
     reps = Object.entries(res.reponses);
-    /*reps.forEach(([index, reponse]) => {
-        console.log(`${index} : ${reponse}`);
-    });*/
     reps.forEach(([index, reponse]) => {
         var reponseHtml = `
-            <div class="reponse-item mb-3">
-                <div class="input-group">
-                    <input type="text" name="reponses[]" class="form-control" value="${reponse.reponse}">
-                    <button type="button" class="btn btn-danger remove-reponse-button">
+            <div class="row reponse-item mt-2">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" name="reponses[]" value="${reponse.reponse}" class="form-control" placeholder="Entrez une réponse">
+                    </div>
+                </div>
+                <div class="col-md-2 form-check">
+                    <input type="hidden" name="status[]" class="form-check-input" value="${reponse.status}">
+                    <input type="checkbox" id="formCheck" name="status_checkbox[]" ${reponse.status == 1 ? 'checked' : ''} value="1" class="form-check-input">
+                    <label class="form-check-label" for="formCheck">Réponse correcte</label>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="remove-reponse-button" class="btn btn-danger remove-reponse-button">
                         <i class="fas fa-trash"></i>
                     </button>
-                </div>
-                <div class="form-check mt-2">
-                    <input type="checkbox" name="status_checkbox[]" value="1" class="form-check-input" ${reponse.status == 1 ? 'checked' : ''}>
-                    <input type="hidden" name="status[]" value="${reponse.status}"> <!-- Synchroniser avec le statut -->
-                    <label class="form-check-label">Réponse correcte</label>
                 </div>
             </div>
         `;
@@ -128,4 +136,11 @@ function fetchPage(page, tableId) {
             console.log("Pagination failed!");
         }
     });
+}
+
+// function for reseting form after submission validate
+function resetForm(form) {
+    setTimeout(function() {
+        form.reset();
+    }, 4000);
 }
