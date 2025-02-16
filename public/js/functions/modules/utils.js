@@ -22,7 +22,6 @@ function stylingErrors(errs) {
         if (errs.hasOwnProperty(field)) {
             if (window.editor && field === 'content') {
                 const container = window.editor.ui.view.editable.element;
-                console.log(container);
                 container.classList.add('ck-editor-border-error');
                 setTimeout(() => container.classList.remove('ck-editor-border-error'), 4000);
             } else if (field.startsWith('reponses.')) {
@@ -86,7 +85,6 @@ function fillInputForm(res, form) {
             }
             return true;
         }
-
         if (inputName in data) {
             if ($(this).is('input[type=checkbox]') || $(this).is('input[type=radio]')) {
                 $(this).prop('checked', data[inputName]);
@@ -96,31 +94,34 @@ function fillInputForm(res, form) {
         }
     });
     // only for questions and responses
-    form.find('textarea[name="question"]').val(data.question.question);
-    $('#reponses-container').empty();
-    reps = Object.entries(res.reponses);
-    reps.forEach(([index, reponse]) => {
-        var reponseHtml = `
-            <div class="row reponse-item mt-2">
-                <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="text" name="reponses[]" value="${reponse.reponse}" class="form-control" placeholder="Entrez une réponse">
+    if (data.question || res.reponses) {
+        form.find('textarea[name="question"]').val(data.question.question);
+        $('#reponses-container').empty();
+        reps = Object.entries(res.reponses);
+        reps.forEach(([index, reponse]) => {
+            var reponseHtml = `
+                <div class="row reponse-item mt-2">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" name="reponses[]" value="${reponse.reponse}" class="form-control" placeholder="Entrez une réponse">
+                        </div>
+                    </div>
+                    <div class="col-md-2 form-check">
+                        <input type="hidden" name="status[]" class="form-check-input" value="${reponse.status}">
+                        <input type="checkbox" id="formCheck" name="status_checkbox[]" ${reponse.status == 1 ? 'checked' : ''} value="1" class="form-check-input">
+                        <label class="form-check-label" for="formCheck">Réponse correcte</label>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" id="remove-reponse-button" class="btn btn-danger remove-reponse-button">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="col-md-2 form-check">
-                    <input type="hidden" name="status[]" class="form-check-input" value="${reponse.status}">
-                    <input type="checkbox" id="formCheck" name="status_checkbox[]" ${reponse.status == 1 ? 'checked' : ''} value="1" class="form-check-input">
-                    <label class="form-check-label" for="formCheck">Réponse correcte</label>
-                </div>
-                <div class="col-md-2">
-                    <button type="button" id="remove-reponse-button" class="btn btn-danger remove-reponse-button">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        $('#reponses-container').append(reponseHtml);
-    });
+            `;
+            $('#reponses-container').append(reponseHtml);
+        });
+    }
+
 }
 
 

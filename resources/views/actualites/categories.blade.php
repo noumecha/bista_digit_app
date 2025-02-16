@@ -19,173 +19,84 @@
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
-                                    <a href="#personnelform" class="btn btn-lg btn-dark btn-primary">
+                                    <button
+                                        type="button"
+                                        class="btn btn-lg btn-dark btn-primary text-white"
+                                        data-bs-toggle="modal"
+                                        data-action="create"
+                                        id="add-button"
+                                        data-bs-target="#create-categorieActu-modal"
+                                    >
                                         <i class="fas fa-user-plus me-2"></i> Ajouter
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
-                            <form class="form form-inline row mt-3" action="{{ route('actualites.categories') }}" method="get">
-                                <div class="col-md-4">
+                            <form class="form form-inline row mt-3" id="filterCategorieActuForm">
+                                <div class="col-md-12">
                                     <div class="input-group">
-                                        <input type="text" name="search" value="{{ isset($search) ? $search : '' }}" id="search" class="form-control" placeholder="Rechercher une catégorie d'actulaité"/>
+                                        <input type="text" name="searchCategorie" value="" id="searchCategorie" class="form-control" placeholder="Rechercher une catégorie d'actulaité"/>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" onclick="showSpinner(this)" class="btn btn-lg btn-primary">
-                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                        Rechercher
-                                    </button>
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table text-secondary text-center">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            ID</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Libellé
-                                        </th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (empty($categories->items()))
-                                        <td class="text" colspan="7">
-                                            Aucune donnée disponible
-                                        </td>
-                                    @else
-                                        @foreach ($categories as $categorie)
-                                            <tr>
-                                                <td class="align-middle bg-transparent border-bottom">
-                                                    {{ $categorie->id }}
-                                                </td>
-                                                <td class="align-middle bg-transparent borer-bottom">
-                                                    {{ $categorie->libelleCategorie }}
-                                                </td>
-                                                <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
-                                                    <a class="btn btn-primary mt-3 p-2" href="{{ route('categorie.edit', $categorie->id) }}">
-                                                        <i class="fa-solid fa-pen"></i>
-                                                    </a>
-                                                    <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $categorie->id }}">
-                                                        <i class="fa-solid fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <!-- modal for delete confirmation -->
-                                            <div class="modal fade" id="confirmDelete-{{ $categorie->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Voulez-vous vraiment supprimée la catégorie d'actualité :
-                                                            {{ $categorie->libelleCategorie }} (Cette action est irreversible)
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Annuler</button>
-                                                            <form role="form" class="form" method="POST" action="{{ route('categorie.destroy', $categorie->id) }}">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" onclick="showSpinner(this)" class="btn btn-success">
-                                                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                                                    Confirmer
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </tbody>
-                            </table>
-                            <div class="d-flex justify-content-center">
-                                {{ $categories->appends(request()->query())->links() }}
-                            </div>
+                        <div class="table-responsive" id="categorieActusTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="px-5 py-4 container-fluid">
-            <div class="mt-4 row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="pb-0 card-header">
-                            @if (session('success'))
-                                <div class="row alert alert-success text-center success-message" id="">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-                            <div class="row">
-                                <div class="col-md-6">
-                                    @if (isset($categorieToEdit))
-                                        <h5 class="">Modifier la Catégoire{{ $categorieToEdit->libelleCategorie}} </h5>
-                                    @else
-                                        <h5 class="">Ajouter une nouvelle Categorie d'Actaulité</h5>
-                                    @endif
+        <!-- modal for creating or updating a categorie -->
+        <div class="modal fade" id="create-categorieActu-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog modal-dialog-centered">
+                <form enctype="multipart/form-data" role="form" id="categorieActuForm" class="form row">
+                    @csrf
+                    <input type="hidden" name="categorieActuId" id="categorieActuId" value="">
+                    <div class="modal-content p-0">
+                        <div class="modal-header" id="modal-categorieActu-header">
+                            <div class="modal-title row">
+                                <div class="col-12">
+                                    <h5 id="header-categorieActu-text" class="text-white"></h5>
                                 </div>
                             </div>
-                            <form enctype="multipart/form-data" role="form" id="personnelform" class="form row" method="POST" action="{{ isset($categorieToEdit) ? route('categorie.update', $categorieToEdit->id) : route('categorie.store') }}">
-                                @csrf
-                                @if (isset($categorieToEdit))
-                                    @method('PUT')
-                                @endif
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="libelleCategorie" class="form-control-label">
-                                                Libellé :
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="libelleCategorie"
-                                                name="libelleCategorie"
-                                                class="form-control"
-                                                placeholder="Entrez le libellé de la categorie"
-                                                value="{{ isset($categorieToEdit) ? $categorieToEdit->libelleCategorie : old("libelleCategorie") }}"
-                                            />
-                                            @error('libelleCategorie')
-                                                <span class="text-danger text-sm">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="libelleCategorie" class="form-control-label">
+                                            Libellé :
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="libelleCategorie"
+                                            name="libelleCategorie"
+                                            class="form-control"
+                                            placeholder="Entrez le libellé de la categorie"
+                                        />
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <button
-                                        type="submit"
-                                        style="margin-left: 0.8rem !important;"
-                                        onclick="showSpinner(this)"
-                                        class="col-md-4 col-lg-4 btn btn-lg {{ isset($categorieToEdit) ? 'btn-outline-success' : 'btn-outline-primary' }}">
-                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                        {{ isset($categorieToEdit) ? 'Mettre à jour' : 'Enregistrer'}}
-                                    </button>
-                                </div>
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-                            </form>
+                            </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-row-reverse">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" id="submit-categorieActu-form-button" class="spinner-submit-categorieActu-form-button btn btn-lg">
+                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                <span id="submit-categorieActu-form-button-text"></span>
+                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <x-app.footer />
     </main>
-
+    @section('scripts')
+        <script src="{{ asset('js/functions/categories-actualites.js') }}"></script>
+    @endsection
 </x-app-layout>

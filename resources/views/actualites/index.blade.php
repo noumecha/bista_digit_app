@@ -34,7 +34,7 @@
                             <form class="form form-inline row mt-3" id="filterActualiteForm">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input type="text" name="searchActualite" value=""" id="searchActualite" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
+                                        <input type="text" name="searchActualite" id="searchActualite" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

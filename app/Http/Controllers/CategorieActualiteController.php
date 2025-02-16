@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategorieActualite;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CategorieActualiteController extends Controller
 {
@@ -12,16 +13,21 @@ class CategorieActualiteController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = CategorieActualite::all();
-        $search = $request->input('search');
-
+        $searchCategorie = $request->input('searchCategorie');
+        // querying
         $query = CategorieActualite::query();
-        if(!empty($search)) {
-            $query->where('libelleCategorie', 'LIKE', "%{$search}%");
+        // filtering
+        if(!empty($searchCategorie)) {
+            $query->where('libelleCategorie', 'LIKE', "%{$searchCategorie}%");
         }
 
         $categories = $query->paginate(10);
-        return view('actualites.categories', compact('categories','search'));
+
+        if($request->ajax()) {
+            return view('partials._categories_actus_table', compact('categories'));
+        } else {
+            return view('actualites.categories', compact('categories'));
+        }
     }
 
     /**
@@ -36,57 +42,52 @@ class CategorieActualiteController extends Controller
             'libelleCategorie.unique' => 'Ce libellé de Catégorie existe',
         ]);
 
-        CategorieActualite::create([
+        $categorie = CategorieActualite::create([
             'libelleCategorie' => $request->libelleCategorie,
         ]);
 
-        return redirect()->route('actualites.categories')->with('success', 'Catégorie ajoutée avec succès');
+        if($categorie) {
+            return response()->json(['success' => 'Catégorie ajoutée avec succès']);
+        } else {
+            return response()->json(['error' => 'Erreur inconue lors de l\'ajout de la catégorie']);
+        }
     }
 
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, CategorieActualite $categorieActualite, $id)
+    public function edit($id)
     {
-        $categories = $categorieActualite::all();
-        $categorieToEdit = $categorieActualite::findOrFail($id);
-        $search = $request->input('search');
-        $query = CategorieActualite::query();
-        if(!empty($search)) {
-            $query->where('libelleCategorie', 'LIKE', "%{$search}%");
-        }
-
-        $categories = $query->paginate(10);
-
-        return view('actualites.categories', compact('categorieToEdit','categories','search'));
+        $categorieToEdit = CategorieActualite::findOrFail($id);
+        return response()->json(['categorieToEdit' => $categorieToEdit]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CategorieActualite $categorieActualite, $id)
+    public function update(Request $request,$id)
     {
         $request->validate([
-            'libelleCategorie' => 'required|min:3|max:255',
+            'libelleCategorie' => 'required|min:3|max:255',Rule::unique('categorie_actualites')->ignore($id),
         ], [
             'libelleCategorie.required' => 'Veuillez entrez un libellé de Catégorie',
+            'libelleCategorie.unique' => 'Ce libellé de Catégorie existe',
         ]);
 
-        $categorie = $categorieActualite::findOrFail($id);
+        $categorie = CategorieActualite::findOrFail($id);
         $categorie->update($request->all());
 
-        return redirect()->route('actualites.categories')->with('success', 'Catégorie d\'Actualité mise à jour avec succès');
+        return response()->json(['success' => 'Catégorie d\'Actualité mise à jour avec succès']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CategorieActualite $categorieActualite, $id)
+    public function destroy($id)
     {
-        $categorie = $categorieActualite::findOrFail($id);
+        $categorie = CategorieActualite::findOrFail($id);
         $categorie->delete();
-
         return redirect()->route('actualites.categories')->with('deleteSuccess', 'Catégorie d\'Actualité supprimée avec succès');
     }
 }
