@@ -137,6 +137,7 @@ Route::get('/education/coefficients', [CoefficientController::class, 'index'])->
 Route::get('/education/devoirs', [DevoirController::class, 'index'])->name('education.devoirs')->middleware('auth');
 Route::get('/education/questions', [QuestionController::class, 'index'])->name('education.questions')->middleware('auth');
 Route::get('/education/reponses', [ReponseController::class, 'index'])->name('education.reponses')->middleware('auth');
+Route::get('/education/discipline', [DisciplineController::class, 'index'])->name('education.discipline')->middleware('auth');
 Route::get('/education/enseignement', [EnseignementController::class, 'index'])->name('education.enseignement')->middleware('auth');
 Route::get('/education/enseignantMatiere', [EnseignantMatiereModelController::class, 'index'])->name('education.enseignantMatiere')->middleware('auth');
 
@@ -184,6 +185,15 @@ Route::get('/education/coefficient/{id}/edit/{yearId}', [CoefficientController::
 Route::delete('/education/coefficient/{id}', [CoefficientController::class, 'destroy'])->name('coefficient.destroy')->middleware('auth');
 Route::post('/education/coefficient/migrate', [CoefficientController::class, 'migrate'])->name('coefficient.migrate')->middleware('auth');
 Route::post('/education/coefficient/delete-coef-in-year', [CoefficientController::class, 'deleteCoefCurrentYear'])->name('coefficient.deleteCoefCurrentYear')->middleware('auth');
+
+## education -> discipline routes
+Route::post('/education/discipline/save', [DisciplineController::class, 'store'])->name('discipline.store')->middleware('auth');
+Route::put('/education/discipline/update/{id}', [DisciplineController::class, 'update'])->name('discipline.update')->middleware('auth');
+Route::get('/education/discipline/{id}/edit', [DisciplineController::class, 'edit'])->name('discipline.edit')->middleware('auth');
+Route::delete('/education/discipline/{id}', [DisciplineController::class, 'destroy'])->name('discipline.destroy')->middleware('auth');
+Route::get('/education/discipline/students/{classe_id}', [DisciplineController::class, 'getStudents']); // gettting students base on classe_id filtering
+
+
 
 ## education -> devoirs routes
 Route::post('/education/devoirs/save', [DevoirController::class, 'store'])->name('devoir.store')->middleware('auth');

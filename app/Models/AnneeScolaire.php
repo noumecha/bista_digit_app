@@ -58,4 +58,12 @@ class AnneeScolaire extends Model
     {
         return $this->hasMany(Devoir::class);
     }
+
+    /**
+     *  A schoolYear can have many absences or many disciplines advices
+     */
+    public function disciplines():HasMany
+    {
+        return $this->hasMany(Discipline::class);
+    }
 }
