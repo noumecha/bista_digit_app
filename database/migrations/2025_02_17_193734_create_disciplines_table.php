@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('heures_absence')->default(0);
             $table->integer('heures_justifiees')->default(0);
             $table->integer('total_absences')->default(0);
-            $table->string('decision')->nullable();
+            $table->text('decision')->nullable();
             $table->string('avertissement')->nullable();
             $table->timestamps();
         });

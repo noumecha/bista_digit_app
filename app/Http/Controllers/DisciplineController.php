@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnneeScolaire;
 use App\Models\Classe;
+use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Discipline;
 use App\Models\User;
+use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 
 class DisciplineController extends Controller
@@ -15,11 +18,13 @@ class DisciplineController extends Controller
     public function index(Request $request) {
         // usefull vars
         $classes = Classe::all();
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         // filter vars
         $classeFilter = $request->input('classeFilter');
         $searchDiscipline = $request->input('searchDiscipline');
+        $monthFilter = $request->input('monthFilter');
         // querying
-        $query = Discipline::query();
+        $query = Discipline::query()->where('annee_scolaire_id', $activeYear->id);
 
         // filtering
         if(!empty($searchDiscipline)) {
@@ -30,6 +35,9 @@ class DisciplineController extends Controller
                 });
             })->orWhere('total_absences',$searchDiscipline);
         }
+        if (!empty($monthFilter)) {
+            $query->where('mois', $monthFilter);
+        }
         if(!empty($classeFilter)) {
             $query->where('classe_id',"%{$classeFilter}%");
         }
@@ -37,23 +45,38 @@ class DisciplineController extends Controller
         $disciplines = $query->paginate(10);
 
         if($request->ajax()) {
-            return view('partials._disciplines_table', compact('disciplines','classes'));
+            return view('partials._disciplines_table', compact('disciplines','classes','activeYear'));
         } else {
-            return view('education.discipline', compact('disciplines','classes'));
+            return view('education.discipline', compact('disciplines','classes','activeYear'));
         }
     }
 
     /**
-     * getting student base on classe filter
+     * getting all students of a specific class base on classe filter
      */
     public function getStudents($classe_id)
     {
-        $eleves = User::where('classe_id', $classe_id)->where('typeUser','eleve')->get();
+        $currrentActiveYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $elevesAnneeScolaire = ClasseAnneeScolaireStudent::all()
+            ->where('annee_scolaire_id', $currrentActiveYear->id)
+            ->where('classe_id', $classe_id)
+            ->pluck('user_id');
+        $eleves = User::where('typeUser','eleve')
+            ->whereIn('id',$elevesAnneeScolaire)->get();
         return response()->json($eleves);
     }
 
     /**
-     *
+     * getting student base on id when editing
+     */
+    public function getStudent($user_id)
+    {
+        $eleve = User::where('id', $user_id)->where('typeUser','eleve')->get();
+        return response()->json($eleve);
+    }
+
+    /**
+     * saving discipline datas
      */
     public function store(Request $request) {
         $request->validate([
@@ -72,6 +95,15 @@ class DisciplineController extends Controller
             'heures_absence' => 'Veuillez entrées le total des heures d\'absences',
             'heures_justifiees' => 'Veuillez entrées le total des heures d\'absences justifiées',
         ]);
+
+        // check if the configuration already exists
+        $existingDiscipline = Discipline::where('classe_id', $request->classe_id)
+            ->where('user_id', $request->user_id)
+            ->where('mois', $request->mois)
+            ->where('annee_scolaire_id',$request->annee_scolaire_id)->first();
+        if ($existingDiscipline) {
+            return response()->json(['error' => 'Un état disciplinaire pour cet élève existe déjà pour ce mois']);
+        }
 
         $totalAbsences = $request->heures_absence - $request->heures_justifiees;
 
@@ -104,7 +136,7 @@ class DisciplineController extends Controller
     }
 
     /**
-     *
+     * edit a specific discipline data
      */
     public function edit($id) {
         $disciplineToEdit = Discipline::findOrFail($id);
@@ -114,7 +146,7 @@ class DisciplineController extends Controller
     }
 
     /**
-     *
+     * update specific discipline datas
      */
     public function update(Request $request, $id) {
         $request->validate([
@@ -147,10 +179,6 @@ class DisciplineController extends Controller
 
         $discipline = Discipline::find($id);
         $discipline->update([
-            'user_id' => $request->user_id,
-            'mois' => $request->mois,
-            'annee_scolaire_id' => $request->annee_scolaire_id,
-            'classe_id' => $request->classe_id,
             'heures_absence' => $request->heures_absence,
             'heures_justifiees' => $request->heures_justifiees,
             'total_absences' => $totalAbsences,
@@ -166,7 +194,7 @@ class DisciplineController extends Controller
     }
 
     /**
-     *
+     * deleting specific discipline record from database
      */
     public function destroy($id) {
         $discipline = Discipline::findOrFail($id);

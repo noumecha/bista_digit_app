@@ -12,6 +12,7 @@ class Discipline extends Model
      */
     protected $fillable = [
         'user_id',
+        'classe_id',
         'annee_scolaire_id',
         'mois',
         'heures_absence',

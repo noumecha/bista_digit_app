@@ -1,4 +1,4 @@
-<table class="table text-secondary text-center">
+<table class="table text-secondary text-center table-hover">
     <thead>
         <tr>
             <th
@@ -41,7 +41,7 @@
             </td>
         @else
             @foreach ($disciplines as $discipline)
-                <tr>
+                <tr class="{{ $discipline->total_absences >= 30 ? 'table-danger bg-danger text-white' : '' }}">
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $discipline->eleve->name }}
                     </td>
@@ -69,7 +69,8 @@
                             id="edit-button"
                             data-bs-target="#create-discipline-modal"
                             data-action="edit"
-                            data-categorieactu-id = "{{ $discipline->id }}"
+                            data-discipline-id = "{{ $discipline->id }}"
+                            data-student-name = "{{ $discipline->eleve->name }}"
                             data-url="{{ route('discipline.store', $discipline->id) }}"
                             class="btn btn-primary mt-3 p-2"
                             href="#"

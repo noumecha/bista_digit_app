@@ -110,7 +110,7 @@ $(function(){
     // default data :
     fetchCategoriesActus();
 
-    // fetching all actualites :
+    // fetching all actualites categoiries :
     function fetchCategoriesActus() {
         var formData = $('#filterCategorieActuForm').serialize();
         $.ajax({

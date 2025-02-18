@@ -31,10 +31,38 @@
                                     </button>
                                 </div>
                             </div>
-                            <form class="form form-inline row mt-3" id="filterCategorieActuForm">
+                            <form class="form form-inline row mt-3" id="filterDisciplineForm">
                                 <div class="col-md-12">
-                                    <div class="input-group">
-                                        <input type="text" name="searchCategorie" value="" id="searchCategorie" class="form-control" placeholder="Rechercher une catégorie d'actulaité"/>
+                                    <div class="form-group">
+                                        <input type="text" name="searchDiscipline" value="" id="searchDiscipline" class="form-control" placeholder="Rechercher par élèves, par total d'abscence"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="classeFilter" id="classeFilter" class="form-select">
+                                            <option value="">Toutes les classes</option>
+                                            @foreach($classes as $classe)
+                                                <option value="{{ $classe->id }}">
+                                                    {{ $classe->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select id="monthFilter" name="monthFilter" class="form-select">
+                                            <option value="1">Septembre</option>
+                                            <option value="2">Octobre</option>
+                                            <option value="3">Novembre</option>
+                                            <option value="4">Décembre</option>
+                                            <option value="5">Janvier</option>
+                                            <option value="6">Février</option>
+                                            <option value="7">Mars</option>
+                                            <option value="8">Avril</option>
+                                            <option value="9">Mai</option>
+                                            <option value="10">Juin</option>
+                                        </select>
                                     </div>
                                 </div>
                             </form>
@@ -47,7 +75,7 @@
         </div>
         <!-- modal for creating or updating a discipline datas -->
         <div class="modal fade" id="create-discipline-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
                 <form enctype="multipart/form-data" role="form" id="disciplineForm" class="form row">
                     @csrf
                     <input type="hidden" name="disciplineId" id="disciplineId" value="">
@@ -63,15 +91,8 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <select id="user_id" name="user_id" class="form-select">
-                                            <option value="">Sélectionner l'élève</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
-                                    <div class="input-group">
+                                    <div class="form-group">
                                         <select name="classe_id" id="classe_id" class="form-select">
                                             <option value="">Toutes les classes</option>
                                             @foreach($classes as $classe)
@@ -83,8 +104,16 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="input-group">
-                                        <select id="mois" class="form-select">
+                                    <div class="form-group">
+                                        <select id="user_id" name="user_id" class="form-select">
+                                            <option value="">Sélectionner Un élève</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <select name="mois" id="mois" class="form-select">
+                                            <option value="">Selectionner le mois</option>
                                             <option value="1">Septembre</option>
                                             <option value="2">Octobre</option>
                                             <option value="3">Novembre</option>
@@ -96,6 +125,41 @@
                                             <option value="9">Mai</option>
                                             <option value="10">Juin</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="heures_absence" class="form-control-label">
+                                            Total heures d'abscence :
+                                        </label>
+                                        <input type="number" id="heures_absence" name="heures_absence" class="form-control" value="{{ old("heures_absence") }}" aria-label="Name"
+                                            aria-describedby="name-addon">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="heures_justifiees" class="form-control-label">
+                                            Heures d'abscence justifiées :
+                                        </label>
+                                        <input type="number" id="heures_justifiees" name="heures_justifiees" class="form-control" value="{{ old("heures_justifiees") }}" aria-label="Name"
+                                            aria-describedby="name-addon">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="decision" class="form-control-label">
+                                            Entrez la décision :
+                                        </label>
+                                        <textarea name="decision" class="form-control" id="decision" rows="3">
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="annee_scolaire_id" class="form-control-label d-none">
+                                            Anneé :
+                                        </label>
+                                        <input type="hidden" class="form-control" id="annee_scolaire_id" name="annee_scolaire_id" value="{{ $activeYear->id }}">
                                     </div>
                                 </div>
                             </div>

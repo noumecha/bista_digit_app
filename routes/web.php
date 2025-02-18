@@ -192,8 +192,7 @@ Route::put('/education/discipline/update/{id}', [DisciplineController::class, 'u
 Route::get('/education/discipline/{id}/edit', [DisciplineController::class, 'edit'])->name('discipline.edit')->middleware('auth');
 Route::delete('/education/discipline/{id}', [DisciplineController::class, 'destroy'])->name('discipline.destroy')->middleware('auth');
 Route::get('/education/discipline/students/{classe_id}', [DisciplineController::class, 'getStudents']); // gettting students base on classe_id filtering
-
-
+Route::get('/education/discipline/student/{user_id}', [DisciplineController::class, 'getStudent']); // getting user when editing
 
 ## education -> devoirs routes
 Route::post('/education/devoirs/save', [DevoirController::class, 'store'])->name('devoir.store')->middleware('auth');

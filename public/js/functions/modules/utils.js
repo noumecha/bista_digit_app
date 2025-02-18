@@ -48,12 +48,14 @@ function fillInputForm(res, form) {
     const data = res[object];
     form.find('input, select, textarea, checkbox').each(function () {
         const inputName = $(this).attr('name');
+        // doing nothing for input type = file
         if ($(this).is('input[type=file]')) return true;
-
+        // for personnel function purpose
         if ($(this).attr('name') === 'fonction_id') {
             $(this).val(res.fonction_id);
             return true;
         }
+        // for classe purpose
         if ($(this).attr('name') === 'classe_id') {
             if(res.classe_id)
                 $(this).val(res.classe_id);
@@ -61,23 +63,36 @@ function fillInputForm(res, form) {
                 $(this).val(data.classe_id);
             return true;
         }
+        // for ckeditor content
         if ($(this).attr('name') === 'content') {
             if(res.content && window.editor)
                 window.editor.setData(res.content);
             return true;
         }
+        // for coefficient purpose
         if($(this).attr('name') === 'coefficient') {
             if(res.coefficient)
                 $(this).val(res.coefficient);
             return true;
         }
-
+        // for discipline purpose :
+        if($(this).attr('name') === 'user_id') {
+            if(data.user_id) {
+                $.get('discipline/student/' + data.user_id, function(data) {
+                    data.forEach(student => {
+                        $('#user_id').html(`<option value="${student.id}">${student.name}</option>`);
+                    });
+                });
+            }
+            return true;
+        }
+        // for matiere
         if($(this).attr('name') === 'groupe_matiere') {
             if(res.groupe_matiere)
                 $(this).val(res.groupe_matiere);
             return true;
         }
-
+        // for date inut type
         if ($(this).is('input[type=date]') && inputName in data) {
             const rawDate = data[inputName];
             if (rawDate) {
@@ -85,6 +100,7 @@ function fillInputForm(res, form) {
             }
             return true;
         }
+        // for all default input type without constraints
         if (inputName in data) {
             if ($(this).is('input[type=checkbox]') || $(this).is('input[type=radio]')) {
                 $(this).prop('checked', data[inputName]);
@@ -121,7 +137,6 @@ function fillInputForm(res, form) {
             $('#reponses-container').append(reponseHtml);
         });
     }
-
 }
 
 
