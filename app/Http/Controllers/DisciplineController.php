@@ -35,13 +35,12 @@ class DisciplineController extends Controller
                 });
             })->orWhere('total_absences',$searchDiscipline);
         }
-        if (!empty($monthFilter)) {
+        if(!empty($monthFilter)) {
             $query->where('mois', $monthFilter);
         }
         if(!empty($classeFilter)) {
-            $query->where('classe_id',"%{$classeFilter}%");
+            $query->where('classe_id', $classeFilter);
         }
-
         $disciplines = $query->paginate(10);
 
         if($request->ajax()) {
@@ -79,22 +78,34 @@ class DisciplineController extends Controller
      * saving discipline datas
      */
     public function store(Request $request) {
-        $request->validate([
+        $rules = [
             'user_id' => 'required|exists:users,id',
             'classe_id' => 'required|exists:classes,id',
             'annee_scolaire_id' => 'required|exists:annee_scolaires,id',
             'mois' => 'required|integer|min:1|max:10',
             'heures_absence' => 'required|integer|min:0',
-            'heures_justifiees' => 'required|integer|min:0',
+            'heures_justifiees' => [
+                'required',
+                'integer',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value > $request->heures_absence) {
+                        $fail("Le nombre d'heures justifiées ne peut pas être supérieur au nombre d'heures d'absences.");
+                    }
+                },
+            ],
             'decision' => 'nullable|string|max:255'
-        ], [
+        ];
+        $messages = [
             'user_id' => 'Veuillez Selectionnez un élève',
             'classe_id' => 'Veuillez Selectionnez une classe',
             'annee_scolaire_id' => 'Veuillez activez une année scolaire',
             'mois' => 'Veuillez Selectionnez un mois',
             'heures_absence' => 'Veuillez entrées le total des heures d\'absences',
-            'heures_justifiees' => 'Veuillez entrées le total des heures d\'absences justifiées',
-        ]);
+            'heures_justifiees' => $request->heures_justifiees > $request->heures_absence
+            ? 'Le nombre d\'heures justifiées ne peut pas être supérieur au nombre d\'heures d\'absences.'
+            : 'Veuillez entrées le total des heures d\'absences justifiées',
+        ];
 
         // check if the configuration already exists
         $existingDiscipline = Discipline::where('classe_id', $request->classe_id)
@@ -107,15 +118,22 @@ class DisciplineController extends Controller
 
         $totalAbsences = $request->heures_absence - $request->heures_justifiees;
 
+        // somes rules
+        if($totalAbsences > 40) {
+            $rules['decision'] ='required|string';
+            $messages['decision.required'] = "Veuillez renseigner la décision";
+        }
+
+        $request->validate($rules, $messages);
+
         $avertissement = null;
         if ($totalAbsences == 40) {
             $avertissement = "Avertissement Conduite";
-        } elseif ($totalAbsences >= 30) {
+        } elseif ($totalAbsences >= 30 && $totalAbsences < 40) {
             $avertissement = "Blâme";
         } elseif ($totalAbsences > 40) {
             $avertissement = "Avertisement Blâme";
         }
-
         $discipline = Discipline::create([
             'user_id' => $request->user_id,
             'mois' => $request->mois,
@@ -149,33 +167,45 @@ class DisciplineController extends Controller
      * update specific discipline datas
      */
     public function update(Request $request, $id) {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'classe_id' => 'required|exists:classes,id',
-            'annee_scolaire_id' => 'required|exists:annee_scolaires,id',
-            'mois' => 'required|integer|min:1|max:10',
+        $rules = [
             'heures_absence' => 'required|integer|min:0',
-            'heures_justifiees' => 'required|integer|min:0',
+            'heures_justifiees' => [
+                'required',
+                'integer',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($value > $request->heures_absence) {
+                        $fail("Le nombre d'heures justifiées ne peut pas être supérieur au nombre d'heures d'absences.");
+                    }
+                },
+            ],
             'decision' => 'nullable|string|max:255'
-        ], [
-            'user_id' => 'Veuillez Selectionnez un élève',
-            'classe_id' => 'Veuillez Selectionnez une classe',
-            'annee_scolaire_id' => 'Veuillez activez une année scolaire',
-            'mois' => 'Veuillez Selectionnez un mois',
+        ];
+        $messages = [
             'heures_absence' => 'Veuillez entrées le total des heures d\'absences',
-            'heures_justifiees' => 'Veuillez entrées le total des heures d\'absences justifiées',
-        ]);
+            'heures_justifiees' => $request->heures_justifiees > $request->heures_absence
+            ? 'Le nombre d\'heures justifiées ne peut pas être supérieur au nombre d\'heures d\'absences.'
+            : 'Veuillez entrées le total des heures d\'absences justifiées',
+        ];
 
         $totalAbsences = $request->heures_absence - $request->heures_justifiees;
 
         $avertissement = null;
         if ($totalAbsences == 40) {
             $avertissement = "Avertissement Conduite";
-        } elseif ($totalAbsences >= 30) {
+        } elseif ($totalAbsences >= 30 && $totalAbsences < 40) {
             $avertissement = "Blâme";
         } elseif ($totalAbsences > 40) {
             $avertissement = "Avertisement Blâme";
         }
+
+        // some rules
+        if($totalAbsences > 40) {
+            $rules['decision'] ='required|string';
+            $messages['decision.required'] = "Veuillez renseigner la décision";
+        }
+
+        $request->validate($rules, $messages);
 
         $discipline = Discipline::find($id);
         $discipline->update([
@@ -187,7 +217,7 @@ class DisciplineController extends Controller
         ]);
 
         if($discipline) {
-            return response()->json(['success' => 'Données de discipline ajoutées avec succès']);
+            return response()->json(['success' => 'Données de discipline mises à jour avec succès']);
         } else {
             return response()->json(['error' => 'Erreur inconue lors de l\'enregistrement des données de discipline']);
         }

@@ -52,6 +52,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <select id="monthFilter" name="monthFilter" class="form-select">
+                                            <option value="">Tout les mois</option>
                                             <option value="1">Septembre</option>
                                             <option value="2">Octobre</option>
                                             <option value="3">Novembre</option>
@@ -146,7 +147,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="form-group">
+                                    <div class="form-group" id="decision_container">
                                         <label for="decision" class="form-control-label">
                                             Entrez la décision :
                                         </label>

@@ -1,4 +1,6 @@
 $(function(){
+    // load function to enable or disable decision field :
+    enableDecision("#heures_absence", "#heures_justifiees", "#decision_container");
     // filtering student base on classe change :
     $('#classe_id').on('change', function() {
         let classeId = $(this).val();
@@ -10,6 +12,10 @@ $(function(){
                 });
             });
         }
+    });
+    // showing or unshow decision :
+    $("#heures_absence, #heures_justifiees").on("input", function() {
+        enableDecision("#heures_absence", "#heures_justifiees", "#decision_container");
     });
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-discipline-modal"]', function(e) {
@@ -40,8 +46,9 @@ $(function(){
             button.addClass('btn-outline-success');
             button.children('span#submit-discipline-form-button-text').text('Mettre à jour');
             headerText.text('Mettre à jour l\'état disciplinaire de l\'élève : '+ studentName);
-            $('#classe_id').prop('disabled', true);
-            $('#mois').prop('disabled', true);
+            $('#classe_id').prop("disabled", true);
+            $('#mois').prop("disabled", true);
+            $('#user_id').prop("disabled", true);
             disciplineIdInput.val(disciplineId);
             $.ajax({
                 url: "discipline/" + disciplineId + "/edit",
@@ -82,6 +89,7 @@ $(function(){
                     if(formAction === 'discipline/save') {
                         resetForm(form);
                     }
+                    $('#user_id').html('<option value="">Sélectionner Un élève</option>');
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
@@ -116,8 +124,9 @@ $(function(){
         $('#submit-discipline-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-discipline-form-buuton').children('span#submit-discipline-form-button-text').text('');
         $('#user_id').html('<option value="">Sélectionner Un élève</option>');
-        $('#classe_id').prop('disabled', false);
-        $('#mois').prop('disabled', false);
+        $('#classe_id').attr("disabled", false);
+        $('#mois').attr("disabled", false);
+        $('#user_id').attr("disabled", false);
     });
 
     // fetching disciplines dynamically with filters
@@ -125,7 +134,7 @@ $(function(){
         fetchDisciplines();
     });
 
-    // default data :
+    // on page load :
     fetchDisciplines();
 
     // fetching all disciplines :

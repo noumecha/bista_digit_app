@@ -160,3 +160,18 @@ function resetForm(form) {
         form.reset();
     }, 4000);
 }
+
+// function for enable or disable some input base on calcul
+function enableDecision(totalAbs , totalJust, field) {
+    // disabled by default
+    $(field).hide();
+    // lets calculate to enable or disable the field
+    let absences = parseInt($(totalAbs).val()) || 0;
+    let justifiees = parseInt($(totalJust).val()) || 0;
+    let totalAbsences = absences - justifiees;
+    if (totalAbsences > 40) {
+        $(field).show();
+    } else {
+        $(field).hide();
+    }
+}
