@@ -85,7 +85,7 @@
                                         <label for="dateDeDebut" class="form-control-label">
                                             Date de début :
                                         </label>
-                                        <input type="date" id="dateDeDebut" name="dateDeDebut" class="form-control" value="{{old("dateNaiss")}}">
+                                        <input type="date" id="dateDeDebut" name="dateDeDebut" class="form-control" value="{{old("dateDeDebut")}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -93,7 +93,7 @@
                                         <label for="dateDeFin" class="form-control-label">
                                             Date de fin :
                                         </label>
-                                        <input type="date" id="dateDeFin" name="dateDeFin" class="form-control" value="{{old("dateNaiss")}}">
+                                        <input type="date" id="dateDeFin" name="dateDeFin" class="form-control" value="{{old("dateDeFin")}}">
                                     </div>
                                 </div>
                             </div>

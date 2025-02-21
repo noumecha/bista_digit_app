@@ -7,7 +7,6 @@ use App\Models\Classe;
 use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Discipline;
 use App\Models\User;
-use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 
 class DisciplineController extends Controller

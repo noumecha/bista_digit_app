@@ -53,16 +53,9 @@
                                     <div class="form-group">
                                         <select id="monthFilter" name="monthFilter" class="form-select">
                                             <option value="">Tout les mois</option>
-                                            <option value="1">Septembre</option>
-                                            <option value="2">Octobre</option>
-                                            <option value="3">Novembre</option>
-                                            <option value="4">Décembre</option>
-                                            <option value="5">Janvier</option>
-                                            <option value="6">Février</option>
-                                            <option value="7">Mars</option>
-                                            <option value="8">Avril</option>
-                                            <option value="9">Mai</option>
-                                            <option value="10">Juin</option>
+                                            @foreach (\App\Month::cases() as $month)
+                                                <option value="{{ $month->value }}">{{ $month->name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>

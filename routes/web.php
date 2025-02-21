@@ -32,6 +32,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RemplissageController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\TrimestreController;
 use App\Http\Controllers\TypeEpreuveController;
 use App\Http\Controllers\UtilisateurController;
 use App\Models\CategorieActualite;
@@ -226,12 +227,12 @@ Route::delete('education/enseignement/{id}', [EnseignementController::class, 'de
 Route::post('education/enseignement/migrate', [EnseignementController::class, 'migrate'])->name('enseignement.migrate')->middleware('auth');
 Route::post('education/enseignement/delete-ens-in-year', [EnseignementController::class, 'deleteEnsCurrentYear'])->name('enseignement.deleteEnsCurrentYear')->middleware('auth');
 
-# evaluation routes
-Route::get('/evaluation/trimestres', [EvaluationController::class, 'trimestres'])->name('evaluation.trimestres')->middleware('auth');
-Route::post('/evaluation/trimestres/save', [EvaluationController::class, 'trimestresStore'])->name('evaluation.trimestresStore')->middleware('auth');
-Route::put('/evaluation/trimestres/{id}', [EvaluationController::class, 'trimestresUpdate'])->name('evaluation.trimestresUpdate')->middleware('auth');
-Route::get('/evaluation/trimestres/{id}/edit', [EvaluationController::class, 'trimestresEdit'])->name('evaluation.trimestresEdit')->middleware('auth');
-Route::delete('/evaluation/trimestres/{id}', [EvaluationController::class, 'trimestresDestroy'])->name('evaluation.trimestresDestroy')->middleware('auth');
+# evaluation - trimestres routes
+Route::get('/evaluation/trimestres', [TrimestreController::class, 'index'])->name('evaluation.trimestres')->middleware('auth');
+Route::post('/evaluation/trimestres/save', [TrimestreController::class, 'store'])->name('trimestre.store')->middleware('auth');
+Route::put('/evaluation/trimestres/update/{id}', [TrimestreController::class, 'update'])->name('trimestre.update')->middleware('auth');
+Route::get('/evaluation/trimestres/{id}/edit', [TrimestreController::class, 'edit'])->name('trimestre.edit')->middleware('auth');
+Route::delete('/evaluation/trimestres/{id}', [TrimestreController::class, 'destroy'])->name('trimestre.destroy')->middleware('auth');
 
 # evaluation - notes routes
 Route::get('/evaluation/notes', [NoteController::class, 'index'])->name('evaluation.notes')->middleware('auth');

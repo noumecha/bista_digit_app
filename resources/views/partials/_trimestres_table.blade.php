@@ -1,32 +1,21 @@
-<table class="table text-secondary text-center table-hover">
+<table class="table text-secondary text-center">
     <thead>
         <tr>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Elèves</th>
-            <th
-                class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Mois
+                Libelle
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Heures Absences
+                Date de debut
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Justifiées
+                Date de fin
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Total
-            </th>
-            <th
-                class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Avertissement
-            </th>
-            <th
-                class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Decision
+                Statut
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -35,47 +24,35 @@
         </tr>
     </thead>
     <tbody>
-        @if (empty($disciplines->items()))
-            <td class="text" colspan="8">
+        @if (empty($trimestres->items()))
+            <td class="text" colspan="5">
                 Aucune donnée disponible
             </td>
         @else
-            @foreach ($disciplines as $discipline)
-                <tr class="{{ $discipline->total_absences >= 30 ? 'table-danger bg-danger text-white' : '' }}">
+            @foreach ($trimestres as $trimestre)
+                <tr>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $discipline->eleve->name }}
+                        {{ $trimestre->libelleTrimestre }}
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        @foreach (\App\Month::cases() as $month)
-                            @if ($discipline->mois == $month->value)
-                                {{ $month->name; }}
-                            @endif
-                        @endforeach
+                    <td class="align-middle bg-transparent border-bottom">
+                        {{ $trimestre->dateDeDebut }}
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        {{ $discipline->heures_absence }}
+                    <td class="align-middle bg-transparent border-bottom">
+                        {{ $trimestre->dateDeFin }}
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        {{ $discipline->heures_justifiees }}
-                    </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        {{ $discipline->total_absences }}
-                    </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        {{ $discipline->avertissement }}
-                    </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        {{ $discipline->decision }}
+                    <td class="align-middle bg-transparent border-bottom">
+                        <span class="badge rounded-pill {{ $trimestre->statut === "en cours" ? 'bg-success' : 'bg-danger'}}">
+                            {{ $trimestre->statut }}
+                        </span>
                     </td>
                     <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                         <a
                             data-bs-toggle="modal"
                             id="edit-button"
-                            data-bs-target="#create-discipline-modal"
+                            data-bs-target="#create-trimestre-modal"
                             data-action="edit"
-                            data-discipline-id = "{{ $discipline->id }}"
-                            data-student-name = "{{ $discipline->eleve->name }}"
-                            data-url="{{ route('discipline.store', $discipline->id) }}"
+                            data-trimestre-id = "{{ $trimestre->id }}"
+                            data-url="{{ route('trimestre.store', $trimestre->id) }}"
                             class="btn btn-primary mt-3 p-2"
                             href="#"
                         >
@@ -85,13 +62,13 @@
                             type="button"
                             class="btn btn-danger ml-2 mt-3 p-2"
                             data-bs-toggle="modal"
-                            data-bs-target="#confirmDelete-{{ $discipline->id }}">
+                            data-bs-target="#confirmDelete-{{ $trimestre->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                         <!-- modal for delete confirmation -->
-                        <div class="modal fade" id="confirmDelete-{{ $discipline->id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                        <div class="modal fade" id="confirmDelete-{{ $trimestre->id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
                             <div class="modal-dialog">
-                                <form role="form" class="form" method="POST" action="{{ route('discipline.destroy', $discipline->id) }}">
+                                <form role="form" class="form" method="POST" action="{{ route('trimestre.destroy', $trimestre->id) }}">
                                     @csrf
                                     @method('DELETE')
                                     <div class="modal-content">
@@ -100,7 +77,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body text-wrap text-justify">
-                                            Voulez-vous vraiment supprimée les informations sur la discipline de {{ $discipline->eleve->name }}
+                                            Voulez-vous vraiment supprimée les informations du trimestre : {{ $trimestre->libelleTrimestre }}
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
                                             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
@@ -120,5 +97,5 @@
     </tbody>
 </table>
 <div class="d-flex justify-content-center">
-    {{ $disciplines->appends(request()->query())->links() }}
+    {{ $trimestres->appends(request()->query())->links() }}
 </div>

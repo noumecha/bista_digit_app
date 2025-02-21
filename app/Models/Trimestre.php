@@ -11,7 +11,13 @@ class Trimestre extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['libelleTrimestre','annee_scolaire_id'];
+    protected $fillable = [
+        'libelleTrimestre',
+        'annee_scolaire_id',
+        'dateDeDebut',
+        'dateDeFin',
+        'statut',
+    ];
 
     /**
      *

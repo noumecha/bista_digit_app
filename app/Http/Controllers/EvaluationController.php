@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AnneeScolaire;
 use App\Models\Evaluation;
 use App\Models\Trimestre;
 use App\Models\User;
@@ -19,82 +18,6 @@ class EvaluationController extends Controller
         $user = User::find(Auth::id());
 
         return view('evaluation.notes', compact('user'));
-    }
-
-    /**
-     *
-     */
-    public function trimestres() {
-        $trimestres = Trimestre::all();
-        $anneeScolaires = AnneeScolaire::all();
-
-        $query = Trimestre::query();
-        $trimestres = $query->paginate(10);
-
-        return view('evaluation.trimestres', compact('trimestres', 'anneeScolaires'));
-    }
-
-    /**
-     *
-     */
-    public function trimestresStore(Request $request) {
-        $request->validate([
-            'libelleTrimestre' => 'required|min:3|max:255',
-            'annee_scolaire_id' => 'required',
-        ], [
-            'libelleTrimestre.required' => 'Veuillez entrez un libelle pour le trimestre',
-            'annee_scolaire_id.required' => 'Selectionnez une année scolaire',
-        ]);
-
-        Trimestre::create([
-            'libelleTrimestre' => $request->libelleTrimestre,
-            'annee_scolaire_id' => $request->annee_scolaire_id,
-        ]);
-
-        return redirect()->route('evaluation.trimestres')->with('success', 'Trimestre ajouté avec succès');
-    }
-
-    /**
-     *
-     */
-    public function trimestresEdit(Request $request, $id) {
-        $trimestres = Trimestre::all();
-        $anneeScolaires = AnneeScolaire::all();
-        $trimestreToEdit = Trimestre::findOrFail($id);
-
-        $query = Trimestre::query();
-        $trimestres = $query->paginate(10);
-
-        return view('evaluation.trimestres', compact('trimestres', 'anneeScolaires','trimestreToEdit'));
-    }
-
-    /**
-     *
-     */
-    public function trimestresUpdate(Request $request, $id) {
-        $request->validate([
-            'libelleTrimestre' => 'required|min:3|max:255',
-            'annee_scolaire_id' => 'required',
-        ], [
-            'libelleTrimestre.required' => 'Veuillez entrez un libelle pour le trimestre',
-            'annee_scolaire_id.required' => 'Selectionnez une année scolaire',
-        ]);
-        $trimestre = Trimestre::findOrFail($id);
-
-        $trimestre->update($request->all());
-
-        return redirect()->route('evaluation.trimestres')->with('success', 'Trimestre mis à jour avec succès');
-    }
-
-
-    /**
-     *
-     */
-    public function trimestresDestroy($id) {
-        $trimestre = Trimestre::findOrFail($id);
-        $trimestre->delete();
-
-        return redirect()->route('evaluation.trimestres')->with('success', 'Trimestre supprimé avec succès');
     }
 
     /**
