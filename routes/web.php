@@ -244,11 +244,11 @@ Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->nam
 
 
 #evaluation - evaluations routes
-Route::get('/evaluation/evaluations', [EvaluationController::class, 'evaluations'])->name('evaluation.evaluations')->middleware('auth');
-Route::post('/evaluation/evaluations', [EvaluationController::class, 'evaluationsStore'])->name('evaluation.evaluationsStore')->middleware('auth');
-Route::get('/evaluation/evaluations/{id}/edit', [EvaluationController::class, 'evaluationsEdit'])->name('evaluation.evaluationsEdit')->middleware('auth');
-Route::put('/evaluation/evaluations/{id}', [EvaluationController::class, 'evaluationsUpdate'])->name('evaluation.evaluationsUpdate')->middleware('auth');
-Route::delete('/evaluation/evaluations/{id}', [EvaluationController::class, 'evaluationsDestroy'])->name('evaluation.evaluationsDestroy')->middleware('auth');
+Route::get('/evaluation/evaluations', [EvaluationController::class, 'index'])->name('evaluation.evaluations')->middleware('auth');
+Route::post('/evaluation/evaluations/save', [EvaluationController::class, 'store'])->name('evaluation.store')->middleware('auth');
+Route::get('/evaluation/evaluations/{id}/edit', [EvaluationController::class, 'ddit'])->name('evaluation.edit')->middleware('auth');
+Route::put('/evaluation/evaluations/{id}', [EvaluationController::class, 'update'])->name('evaluation.update')->middleware('auth');
+Route::delete('/evaluation/evaluations/{id}', [EvaluationController::class, 'destroy'])->name('evaluation.destroy')->middleware('auth');
 
 # evaluations - remplissage :
 Route::get('/evaluation/remplissages', [RemplissageController::class, 'index'])->name('evaluation.remplissages')->middleware('auth');

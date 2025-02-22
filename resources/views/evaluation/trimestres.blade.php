@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="pb-0 card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
@@ -47,7 +47,7 @@
         </div>
         <!-- modal for creating or updating a trimestre datas -->
         <div class="modal fade" id="create-trimestre-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered">
                 <form enctype="multipart/form-data" role="form" id="trimestreForm" class="form row">
                     @csrf
                     <input type="hidden" name="trimestreId" id="trimestreId" value="">

@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center success-message" id="">
+                                <div class="row alert alert-success text-center success-message">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif

@@ -15,15 +15,6 @@ class EvaluationController extends Controller
      */
     public function index(Request $request)
     {
-        $user = User::find(Auth::id());
-
-        return view('evaluation.notes', compact('user'));
-    }
-
-    /**
-     *
-     */
-    public function evaluations() {
         $evaluations = Evaluation::all();
         $trimestres = Trimestre::all();
 
@@ -36,7 +27,7 @@ class EvaluationController extends Controller
     /**
      *
      */
-    public function evaluationsStore(Request $request) {
+    public function store(Request $request) {
         $request->validate([
             'libelleEvaluation' => 'required|min:3|max:255',
             'trimestre_id' => 'required',
@@ -54,23 +45,17 @@ class EvaluationController extends Controller
     }
 
     /**
-     *
+     * edit specific evaluation
      */
-    public function evaluationsEdit($id) {
-        $evaluations = Evaluation::all();
-        $trimestres = Trimestre::all();
+    public function edit($id) {
         $evaluationToEdit = Evaluation::findOrFail($id);
-
-        $query = Evaluation::query();
-        $evaluations = $query->paginate(10);
-
-        return view('evaluation.evaluations', compact('evaluation', 'trimestres','evaluationToEdit'));
+        return response()->json(['evaluationToEdit' => $evaluationToEdit]);
     }
 
     /**
-     *
+     * udpate specific evaluation
      */
-    public function evaluationsUpdate(Request $request, $id) {
+    public function update(Request $request, $id) {
         $request->validate([
             'libelleEvaluation' => 'required|min:3|max:255',
             'trimestre_id' => 'required',
@@ -87,9 +72,9 @@ class EvaluationController extends Controller
 
 
     /**
-     *
+     * delete specific evaluationf
      */
-    public function evaluationsDestroy($id) {
+    public function destroy($id) {
         $evaluation = Evaluation::findOrFail($id);
         $evaluation->delete();
 
