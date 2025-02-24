@@ -6,10 +6,8 @@ use App\Models\AnneeScolaire;
 use App\Models\Classe;
 use App\Models\ClasseEffectif;
 use App\Models\FonctionAnneeScolaireUser;
-use App\Models\User;
 use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use DateTime;
 
@@ -19,21 +17,19 @@ class AnneeScolaireController extends Controller
     /**
      * first function to show the datas
      */
-    public function show(Request $request) {
-        $user = User::find(Auth::id());
+    public function index(Request $request) {
         $searchYear = $request->input('searchYear');
         $query = AnneeScolaire::query();
 
         if(!empty($searchYear)) {
-            $query->where(function($q) use ($searchYear) {
-                $q->where('libelleAnneeScolaire', 'LIKE', "%{$searchYear}%");
-            });
+            $query->where('libelleAnneeScolaire', 'LIKE', "%{$searchYear}%");
         }
+
         $years = $query->paginate(10);
         if($request->ajax()) {
-            return view('partials._year_table', compact('user','years','searchYear'));
+            return view('partials._year_table', compact('years'));
         } else {
-            return view('annee_scolaire.show', compact('user','years','searchYear'));
+            return view('anneescolaire.years', compact('years'));
         }
     }
 
@@ -47,12 +43,6 @@ class AnneeScolaireController extends Controller
                 'required',
                 'unique:annee_scolaires',
                 'regex:/^[0-9]{4}\/[0-9]{4}$/',
-                /*function ($attribute, $value, $fail) {
-                    $years = explode('/', $value);
-                    if (count($years) !== 2 || !checkdate(1, 1, $years[0]) || !checkdate(1, 1, $years[1])) {
-                        $fail('Le libellé doit être au format XXXX/XXXX -> exemple 2024/2025');
-                    }
-                },*/
             ],
             'dateDeDebut' => [
                 'required',
@@ -152,14 +142,7 @@ class AnneeScolaireController extends Controller
         $request->validate([
             'libelleAnneeScolaire' => [
                 'required',
-                //'unique:annee_scolaires',
                 'regex:/^[0-9]{4}\/[0-9]{4}$/',
-                /*function ($attribute, $value, $fail) {
-                    $years = explode('/', $value);
-                    if (count($years) !== 2 || !checkdate(1, 1, $years[0]) || !checkdate(1, 1, $years[1])) {
-                        $fail('Le libellé doit être au format XXXX/XXXX -> exemple 2024/2025');
-                    }
-                },*/
                 Rule::unique('annee_scolaires')->ignore($id)
             ],
             'dateDeDebut' => [
@@ -209,12 +192,17 @@ class AnneeScolaireController extends Controller
      */
     public function destroy($id) {
         $year = AnneeScolaire::findOrFail($id);
-        $userYears = UserAnneeScolaire::where('annee_scolaire_id', '=', $id);
-        $fonctionYearUser = FonctionAnneeScolaireUser::where('annee_scolaire_id', '=', $id);
-        $year->delete();
-        $userYears->delete();
-        $fonctionYearUser->delete();
-
-        return redirect()->route('annee_scolaire.show')->with('listSuccess', 'Année supprimée avec succès');
+        $userYears = UserAnneeScolaire::where('annee_scolaire_id',$year->id);
+        $fonctionYearUser = FonctionAnneeScolaireUser::where('annee_scolaire_id',$year->id);
+        $classeEffectifs = ClasseEffectif::where('annee_scolaire_id', $year->id);
+        try {
+            $year->delete();
+            $userYears->delete();
+            $fonctionYearUser->delete();
+            $classeEffectifs->delete();
+            return redirect()->route('anneescolaire.years')->with('deleteSuccess', 'Année supprimée avec succès');
+        } catch (\Exception $ex) {
+            dd($ex->getMessage());
+        }
     }
 }

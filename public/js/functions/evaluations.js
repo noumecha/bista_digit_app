@@ -1,4 +1,18 @@
 $(function(){
+    // filtering trimestre dates base on the selected trimestre
+    $('#trimestre_id').on('change', function() {
+        let trimId = $(this).val();
+        if (trimId) {
+            $.get('evaluations/trimsdate/' + trimId, function(data) {
+                var startDate = new Date(data.dateDeDebutTrim);
+                var endDate = new Date(data.dateDeFinTrim);
+                $('#dateDeDebut').attr('min', formatDate(startDate));
+                $('#dateDeDebut').attr('max', formatDate(endDate));
+                $('#dateDeFin').attr('min', formatDate(startDate));
+                $('#dateDeFin').attr('max', formatDate(endDate));
+            });
+        }
+    });
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-evaluation-modal"]', function(e) {
         e.preventDefault();
@@ -32,8 +46,15 @@ $(function(){
                 url: "evaluations/"+evaluationId+"/edit",
                 type: "GET",
                 success: function(res) {
-                    //fillInputForm(res, form);
+                    // filling form base on the data res
                     fillInputForm(res, form);
+                    // Set date picker range based on trimester dates
+                    var startDate = new Date(res.dateDeDebutTrim);
+                    var endDate = new Date(res.dateDeFinTrim);
+                    $('#dateDeDebut').attr('min', formatDate(startDate));
+                    $('#dateDeDebut').attr('max', formatDate(endDate));
+                    $('#dateDeFin').attr('min', formatDate(startDate));
+                    $('#dateDeFin').attr('max', formatDate(endDate));
                 },
                 error: function(xhr) {
                     console.log(xhr);
@@ -122,6 +143,7 @@ $(function(){
             data : formData,
             success : function(data) {
                 $('#evaluationsTable').html(data);
+                initializeCountdowns();
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);

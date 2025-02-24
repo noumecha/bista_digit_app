@@ -54,16 +54,21 @@
                             data-action="edit"
                             data-year-id="{{ $year->id }}"
                             data-year-libelle="{{ $year->libelleAnneeScolaire }}"
-                            data-url="{{ route('annee_scolaire.store', $year->id) }}"
+                            data-url="{{ route('anneescolaire.store', $year->id) }}"
                             class="btn btn-primary mt-3 p-2"
                             href="#"
                         >
                             <i class="fa-solid fa-pen"></i>
                         </a>
-                        <button type="button" class="btn btn-danger ml-2 mt-3 p-2" data-bs-toggle="modal" data-bs-target="#confirmDelete-{{ $year->id }}">
+                        <button
+                            type="button"
+                            class="btn btn-danger ml-2 mt-3 p-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmDelete-{{ $year->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
-                        <form role="form" class="activation-form" method="POST" action="{{ !$year->statut ? route('annee_scolaire.activate', $year->id) : route('annee_scolaire.desactivate', $year->id) }}">
+                        <!-- form for activate of desactivate year -->
+                        <form role="form" class="activation-form" method="POST" action="{{ !$year->statut ? route('anneescolaire.activate', $year->id) : route('anneescolaire.desactivate', $year->id) }}">
                             @csrf
                             @method('PUT')
                             <button type="" class="spinner-submit-button btn {{ !$year->statut ? 'btn-success' : 'btn-danger'}} mt-3 p-2">
@@ -72,9 +77,9 @@
                             </button>
                         </form>
                         <!-- modal for delete confirmation -->
-                        <div class="modal fade" id="confirmDelete-{{ $year->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="confirmDelete-{{ $year->id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
                             <div class="modal-dialog">
-                                <form class="form" method="POST" action="{{ route('annee_scolaire.destroy', $year->id) }}">
+                                <form role="form" class="form" method="POST" action="{{ route('anneescolaire.destroy', $year->id) }}">
                                     @csrf
                                     @method('DELETE')
                                     <div class="modal-content">
@@ -87,8 +92,8 @@
                                             avec toutes ses données ? (Cette action est irreversible)
                                         </div>
                                         <div class="modal-footer flex-row-reverse">
-                                            <button type="reset" class="btn btn-outline-danger" data-bs-dismiss="modal">Annuler</button>
-                                            <button type="submit" class="spinner-submit-modal-button btn btn-danger">
+                                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                            <button type="submit" class="spinner-submit-button btn btn-danger">
                                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
                                                 Confirmer
                                             </button>

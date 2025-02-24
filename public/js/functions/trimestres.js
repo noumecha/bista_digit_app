@@ -1,6 +1,18 @@
 $(function(){
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-trimestre-modal"]', function(e) {
+        // filtering trimestre dates base on the selected current year
+        let yearId = $('#annee_scolaire_id').val();
+        if (yearId) {
+            $.get('trimestres/years/' + yearId, function(data) {
+                var startDate = new Date(data.dateDeDebutYear);
+                var endDate = new Date(data.dateDeFinYear);
+                $('#dateDeDebut').attr('min', formatDate(startDate));
+                $('#dateDeDebut').attr('max', formatDate(endDate));
+                $('#dateDeFin').attr('min', formatDate(startDate));
+                $('#dateDeFin').attr('max', formatDate(endDate));
+            });
+        }
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
@@ -32,8 +44,15 @@ $(function(){
                 url: "trimestres/"+trimestreId+"/edit",
                 type: "GET",
                 success: function(res) {
-                    //fillInputForm(res, form);
+                    // filling form base on the res data
                     fillInputForm(res, form);
+                    // Set date picker range based on trimester dates
+                    var startDate = new Date(res.dateDeDebutYear);
+                    var endDate = new Date(res.dateDeFinYear);
+                    $('#dateDeDebut').attr('min', formatDate(startDate));
+                    $('#dateDeDebut').attr('max', formatDate(endDate));
+                    $('#dateDeFin').attr('min', formatDate(startDate));
+                    $('#dateDeFin').attr('max', formatDate(endDate));
                 },
                 error: function(xhr) {
                     console.log(xhr);
@@ -122,6 +141,7 @@ $(function(){
             data : formData,
             success : function(data) {
                 $('#trimestresTable').html(data);
+                initializeCountdowns();
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);

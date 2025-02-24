@@ -175,3 +175,34 @@ function enableDecision(totalAbs , totalJust, field) {
         $(field).hide();
     }
 }
+// function for formating date :
+function formatDate(date) {
+    return date.toISOString().split('T')[0];
+}
+// countdown section
+function initializeCountdowns() {
+    $('.countdown-timer').each(function() {
+        var endDate = new Date($(this).data('end-date')).getTime();
+        var timerElement = $(this);
+
+        var countdown = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = endDate - now;
+
+            if (distance <= 0) {
+                clearInterval(countdown);
+                timerElement.html(
+                    "<span class='badge rounded-pill bg-danger'>terminé</span>"
+                );
+                return;
+            }
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            timerElement.html("<span class='badge rounded-pill bg-success'>"+days + 'j '+ hours + 'h ' + minutes + 'm ' + seconds + 's'+ "</span>" );
+        }, 1000);
+    });
+}

@@ -31,7 +31,7 @@ $(function(){
             headerText.text('Mettre à jour les configurations de l\'année : ' + yearLibelle);
             schoolYearIdInput.val(yearId);
             $.ajax({
-                url: "/annee_scolaire/edit/"+yearId,
+                url: "/anneescolaire/edit/"+yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -49,6 +49,7 @@ $(function(){
         spinner.removeClass('d-none');
         var buttonText = $(this).children('span#submit-year-form-button-text');
         var schoolYearId = $('#schoolYearId').val();
+        var form = $(this).closest('form')[0];
         var formDatas = $(this).closest('form').serialize();
         var formMethod = buttonText.text() === 'Mettre à jour' ? 'PUT' : 'POST';
         var formAction = buttonText.text() === 'Mettre à jour' ? 'update/' + schoolYearId : 'save';
@@ -66,6 +67,10 @@ $(function(){
                     setTimeout(function() {
                         spinner.addClass('d-none');
                     }, 4000);
+                    // reset form after creation
+                    if(formAction === 'save') {
+                        resetForm(form);
+                    }
                     fetchYears();
                 },
                 error: function(xhr) {
@@ -111,7 +116,7 @@ $(function(){
     function fetchYears() {
         var formDatas = $('#filterYearForm').serialize();
         $.ajax({
-            url : "/annee_scolaire/list",
+            url : "/anneescolaire/years",
             type : 'GET',
             data : formDatas,
             success : function(data) {

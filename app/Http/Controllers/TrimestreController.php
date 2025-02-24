@@ -15,6 +15,15 @@ class TrimestreController extends Controller
      *
      */
     public function index(Request $request) {
+        // on initialize :
+        $trims = Evaluation::all();
+        foreach ($trims as $trim) {
+            $endDate = new DateTime($trim->dateDeFin);
+            $currentDate = new DateTime();
+            if ($currentDate > $endDate && $trim->statut !== 'terminé') {
+                $trim->update(['statut' => 'terminé']);
+            }
+        }
         $activeYear = AnneeScolaire::all()->where('statut', true)->first();
         // filter vars
         $searchTrimestre = $request->input('searchTrimestre');
@@ -104,11 +113,27 @@ class TrimestreController extends Controller
     }
 
     /**
+     *  get trimestres date
+    */
+    public function getYearsDate($yearId) {
+        $anneeScolaire = AnneeScolaire::findOrFail($yearId);
+        return response()->json([
+            'dateDeDebutYear' => $anneeScolaire->dateDeDebut,
+            'dateDeFinYear' => $anneeScolaire->dateDeFin,
+        ]);
+    }
+
+    /**
      * edit specific trimestre
      */
     public function edit($id) {
         $trimestreToEdit = Trimestre::findOrFail($id);
-        return response()->json(['trimestreToEdit' => $trimestreToEdit]);
+        $anneeScolaire = AnneeScolaire::findOrFail($trimestreToEdit->annee_scolaire_id);
+        return response()->json([
+            'trimestreToEdit' => $trimestreToEdit,
+            'dateDeDebutYear' => $anneeScolaire->dateDeDebut,
+            'dateDeFinYear' => $anneeScolaire->dateDeFin,
+        ]);
     }
 
     /**

@@ -15,7 +15,7 @@
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Statut
+                Temps restant
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -25,7 +25,7 @@
     </thead>
     <tbody>
         @if (empty($trimestres->items()))
-            <td class="text" colspan="5">
+            <td class="text" colspan="6">
                 Aucune donnée disponible
             </td>
         @else
@@ -35,15 +35,12 @@
                         {{ $trimestre->libelleTrimestre }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $trimestre->dateDeDebut }}
+                        {{ formatDate($trimestre->dateDeDebut, 'd/m/Y') }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $trimestre->dateDeFin }}
+                        {{ formatDate($trimestre->dateDeFin, 'd/m/Y') }}
                     </td>
-                    <td class="align-middle bg-transparent border-bottom">
-                        <span class="badge rounded-pill {{ $trimestre->statut === "en cours" ? 'bg-success' : 'bg-danger'}}">
-                            {{ $trimestre->statut }}
-                        </span>
+                    <td class="countdown-timer align-middle bg-transparent border-bottom" data-end-date="{{ $trimestre->dateDeFin }}">
                     </td>
                     <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                         <a

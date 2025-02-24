@@ -16,8 +16,8 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  {{ is_current_route('annee_scolaire.show') ? 'active' : '' }}"
-                    href="{{ route('annee_scolaire.show') }}">
+                <a class="nav-link  {{ is_current_route('anneescolaire.years') ? 'active' : '' }}"
+                    href="{{ route('anneescolaire.years') }}">
                     <i class="fa-solid fa-school fa-sm"></i>
                     <span class="nav-link-text text-md ml-n5">Année</span>
                 </a>

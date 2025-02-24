@@ -6,9 +6,9 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="pb-0 card-header">
-                            @if (session('listSuccess'))
-                                <div class="alert alert-success success-message" role="alert" id="">
-                                    {{ session('listSuccess') }}
+                            @if (session('deleteSuccess'))
+                                <div class="row alert alert-success text-center success-message">
+                                    {{ session('deleteSuccess') }}
                                 </div>
                             @endif
                             <div class="row">
@@ -76,7 +76,7 @@
                                             name="libelleAnneeScolaire"
                                             class="form-control"
                                             placeholder="exemple : 2024/2025"
-                                            value="{{ isset($yearToEdit) ? $yearToEdit->libelleAnneeScolaire : old("libelleAnneeScolaire")}}"
+                                            value="{{ old("libelleAnneeScolaire") }}"
                                         >
                                     </div>
                                 </div>

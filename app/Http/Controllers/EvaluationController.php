@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\AnneeScolaire;
 use App\Models\Evaluation;
 use App\Models\Trimestre;
-use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class EvaluationController extends Controller
 {
@@ -17,6 +15,15 @@ class EvaluationController extends Controller
      */
     public function index(Request $request)
     {
+        // on initialize :
+        $evals = Evaluation::all();
+        foreach ($evals as $eval) {
+            $endDate = new DateTime($eval->dateDeFin);
+            $currentDate = new DateTime();
+            if ($currentDate > $endDate && $eval->statut !== 'terminé') {
+                $eval->update(['statut' => 'terminé']);
+            }
+        }
         // useful variables
         $trimestres = Trimestre::all();
         $activeYear = AnneeScolaire::all()->where('statut',true)->first();
@@ -89,7 +96,7 @@ class EvaluationController extends Controller
                 },
             ],
         ], [
-            'libelleEvaluation.required' => 'Veuillez entrez un libelle pour le trimestre',
+            'libelleEvaluation.required' => 'Veuillez entrez un libelle pour l\'évaluation',
             'trimestre_id.required' => 'Selectionnez une année scolaire',
             'dateDeDebut.required' => 'Définissez une date de debut de l\'évaluation',
             'dateDeFin.required' => 'Définissez une date de fin de l\'évaluation',
@@ -100,6 +107,8 @@ class EvaluationController extends Controller
         $state = '';
         if(new DateTime($request->dateDeDebut) >= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
             $state = 'en cours';
+        } elseif ($currentDate > new DateTime($request->dateDeDebut)) {
+            $state = 'programmé';
         } else {
             $state = 'terminé';
         }
@@ -116,13 +125,28 @@ class EvaluationController extends Controller
             return response()->json(['success' => 'Evaluation ajoutée avec succès']);
         }
     }
+    /**
+     *  get trimestres date
+    */
+    public function getTrimsDate($trimId) {
+        $trimestre = Trimestre::findOrFail($trimId);
+        return response()->json([
+            'dateDeDebutTrim' => $trimestre->dateDeDebut,
+            'dateDeFinTrim' => $trimestre->dateDeFin,
+        ]);
+    }
 
     /**
      * edit specific evaluation
      */
     public function edit($id) {
         $evaluationToEdit = Evaluation::findOrFail($id);
-        return response()->json(['evaluationToEdit' => $evaluationToEdit]);
+        $trimestre = Trimestre::findOrFail($evaluationToEdit->trimestre_id);
+        return response()->json([
+            'evaluationToEdit' => $evaluationToEdit,
+            'dateDeDebutTrim' => $trimestre->dateDeDebut,
+            'dateDeFinTrim' => $trimestre->dateDeFin,
+        ]);
     }
 
     /**
@@ -163,7 +187,7 @@ class EvaluationController extends Controller
                 },
             ],
         ], [
-            'libelleEvaluation.required' => 'Veuillez entrez un libelle pour le trimestre',
+            'libelleEvaluation.required' => 'Veuillez entrez un libelle pour l\'évaluation',
             'trimestre_id.required' => 'Selectionnez une année scolaire',
             'dateDeDebut.required' => 'Définissez une date de debut de l\'évaluation',
             'dateDeFin.required' => 'Définissez une date de fin de l\'évaluation',

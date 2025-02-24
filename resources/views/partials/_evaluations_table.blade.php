@@ -15,11 +15,11 @@
             </th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Trimestre
+                Temps restant
             </th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Statut
+                Trimestre
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -38,19 +38,16 @@
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $evaluation->libelleEvaluation }}
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        {{ $evaluation->dateDeDebut }}
+                    <td class="align-middle bg-transparent border-bottom">
+                        {{ formatDate($evaluation->dateDeDebut, 'd/m/Y') }}
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        {{ $evaluation->dateDeFin }}
+                    <td class="align-middle bg-transparent border-bottom">
+                        {{ formatDate($evaluation->dateDeFin, 'd/m/Y') }}
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
+                    <td class="countdown-timer align-middle bg-transparent border-bottom" data-end-date="{{ $evaluation->dateDeFin }}">
+                    </td>
+                    <td class="align-middle bg-transparent border-bottom">
                         {{ $evaluation->trimestre->libelleTrimestre }}
-                    </td>
-                    <td class="align-middle bg-transparent borer-bottom">
-                        <span class="badge rounded-pill {{ $evaluation->statut === "en cours" ? 'bg-success' : 'bg-danger'}}">
-                            {{ $evaluation->statut }}
-                        </span>
                     </td>
                     <td class="text-center align-middle bg-transparent border-bottom">
                         <a

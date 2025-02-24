@@ -192,8 +192,8 @@ Route::post('/education/discipline/save', [DisciplineController::class, 'store']
 Route::put('/education/discipline/update/{id}', [DisciplineController::class, 'update'])->name('discipline.update')->middleware('auth');
 Route::get('/education/discipline/{id}/edit', [DisciplineController::class, 'edit'])->name('discipline.edit')->middleware('auth');
 Route::delete('/education/discipline/{id}', [DisciplineController::class, 'destroy'])->name('discipline.destroy')->middleware('auth');
-Route::get('/education/discipline/students/{classe_id}', [DisciplineController::class, 'getStudents']); // gettting students base on classe_id filtering
-Route::get('/education/discipline/student/{user_id}', [DisciplineController::class, 'getStudent']); // getting user when editing
+Route::get('/education/discipline/students/{classe_id}', [DisciplineController::class, 'getStudents'])->middleware('auth');
+Route::get('/education/discipline/student/{user_id}', [DisciplineController::class, 'getStudent'])->middleware('auth');
 
 ## education -> devoirs routes
 Route::post('/education/devoirs/save', [DevoirController::class, 'store'])->name('devoir.store')->middleware('auth');
@@ -233,6 +233,7 @@ Route::post('/evaluation/trimestres/save', [TrimestreController::class, 'store']
 Route::put('/evaluation/trimestres/update/{id}', [TrimestreController::class, 'update'])->name('trimestre.update')->middleware('auth');
 Route::get('/evaluation/trimestres/{id}/edit', [TrimestreController::class, 'edit'])->name('trimestre.edit')->middleware('auth');
 Route::delete('/evaluation/trimestres/{id}', [TrimestreController::class, 'destroy'])->name('trimestre.destroy')->middleware('auth');
+Route::get('/evaluation/trimestres/years/{yearId}', [TrimestreController::class, 'getYearsDate'])->middleware('auth');
 
 # evaluation - notes routes
 Route::get('/evaluation/notes', [NoteController::class, 'index'])->name('evaluation.notes')->middleware('auth');
@@ -249,6 +250,7 @@ Route::post('/evaluation/evaluations/save', [EvaluationController::class, 'store
 Route::get('/evaluation/evaluations/{id}/edit', [EvaluationController::class, 'edit'])->name('evaluation.edit')->middleware('auth');
 Route::put('/evaluation/evaluations/update/{id}', [EvaluationController::class, 'update'])->name('evaluation.update')->middleware('auth');
 Route::delete('/evaluation/evaluations/{id}', [EvaluationController::class, 'destroy'])->name('evaluation.destroy')->middleware('auth');
+Route::get('/evaluation/evaluations/trimsdate/{trimId}', [EvaluationController::class, 'getTrimsDate'])->middleware('auth');
 
 # evaluations - remplissage :
 Route::get('/evaluation/remplissages', [RemplissageController::class, 'index'])->name('evaluation.remplissages')->middleware('auth');
@@ -295,13 +297,16 @@ Route::post('/utilisateur/personnels/migrate', [PersonnelController::class, 'mig
 Route::post('/utilisateur/personnels/delete-user-in-year', [PersonnelController::class, 'deleteUserCurrentYear'])->name('utilisateur.personnelDeleteUserCurrentYear')->middleware('auth');
 
 # annee_scolaire routes
-Route::get('/annee_scolaire/list', [AnneeScolaireController::class, 'show'])->name('annee_scolaire.show')->middleware('auth');
-Route::post('/annee_scolaire/save', [AnneeScolaireController::class, 'store'])->name('annee_scolaire.store')->middleware('auth');
-Route::put('/annee_scolaire/update/{id}', [AnneeScolaireController::class, 'update'])->name('annee_scolaire.update')->middleware('auth');
-Route::get('/annee_scolaire/edit/{id}', [AnneeScolaireController::class, 'edit'])->name('annee_scolaire.edit')->middleware('auth');
-Route::delete('/annee_scolaire/delete/{id}', [AnneeScolaireController::class, 'destroy'])->name('annee_scolaire.destroy')->middleware('auth');
-Route::put('/annee_scolaire/activate/{id}', [AnneeScolaireController::class, 'activate'])->name('annee_scolaire.activate')->middleware('auth');
-Route::put('/annee_scolaire/desactivate/{id}', [AnneeScolaireController::class, 'desactivate'])->name('annee_scolaire.desactivate')->middleware('auth');
+Route::get('/anneescolaire', function () {
+    return redirect('/anneescolaire/years');
+})->middleware('auth');
+Route::get('/anneescolaire/years', [AnneeScolaireController::class, 'index'])->name('anneescolaire.years')->middleware('auth');
+Route::post('/anneescolaire/save', [AnneeScolaireController::class, 'store'])->name('anneescolaire.store')->middleware('auth');
+Route::put('/anneescolaire/update/{id}', [AnneeScolaireController::class, 'update'])->name('anneescolaire.update')->middleware('auth');
+Route::get('/anneescolaire/edit/{id}', [AnneeScolaireController::class, 'edit'])->name('anneescolaire.edit')->middleware('auth');
+Route::delete('/anneescolaire/delete/{id}', [AnneeScolaireController::class, 'destroy'])->name('anneescolaire.destroy')->middleware('auth');
+Route::put('/anneescolaire/activate/{id}', [AnneeScolaireController::class, 'activate'])->name('anneescolaire.activate')->middleware('auth');
+Route::put('/anneescolaire/desactivate/{id}', [AnneeScolaireController::class, 'desactivate'])->name('anneescolaire.desactivate')->middleware('auth');
 
 
 # actualites routes

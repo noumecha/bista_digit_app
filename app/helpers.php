@@ -23,3 +23,12 @@ use Illuminate\Support\Facades\Route;
         return $currentYear;
     }
 
+    /**
+     * for formating date in the blade template
+     */
+    function formatDate($date = '', $format = 'Y-m-d') {
+        if ($date == '' || $date == null) {
+            return;
+        }
+        return date($format, strtotime($date));
+    }

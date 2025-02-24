@@ -54,6 +54,7 @@
                                         <select name="statutFilter" id="statutFilter" class="form-select">
                                             <option value="">Tout les statuts</option>
                                             <option value="terminé">terminé</option>
+                                            <option value="programmé">programmé</option>
                                             <option value="en cours">en cours</option>
                                         </select>
                                     </div>
