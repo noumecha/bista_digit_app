@@ -107,7 +107,7 @@ class EvaluationController extends Controller
         $state = '';
         if(new DateTime($request->dateDeDebut) >= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
             $state = 'en cours';
-        } elseif ($currentDate > new DateTime($request->dateDeDebut)) {
+        } elseif (new DateTime($request->dateDeDebut) <= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
             $state = 'programmé';
         } else {
             $state = 'terminé';
