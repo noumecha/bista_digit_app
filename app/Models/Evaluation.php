@@ -11,7 +11,13 @@ class Evaluation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['libelleEvaluation','trimestre_id'];
+    protected $fillable = [
+        'libelleEvaluation',
+        'trimestre_id',
+        'dateDeDebut',
+        'dateDeFin',
+        'statut',
+    ];
 
     /**
      *
@@ -31,7 +37,7 @@ class Evaluation extends Model
 
 
     /**
-     *
+     * an evaluation have manys notes
      */
     public function notes(): HasMany {
         return $this->hasMany(Note::class);

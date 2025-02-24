@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnneeScolaire;
 use App\Models\Evaluation;
 use App\Models\Trimestre;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,13 +17,38 @@ class EvaluationController extends Controller
      */
     public function index(Request $request)
     {
-        $evaluations = Evaluation::all();
+        // useful variables
         $trimestres = Trimestre::all();
+        $activeYear = AnneeScolaire::all()->where('statut',true)->first();
 
-        $query = Evaluation::query();
+        // filters
+        $searchEvaluation = $request->input('searchEvaluation');
+        $trimestreFilter = $request->input('trimestreFilter');
+        $statutFilter = $request->input('statutFilter');
+
+        // querying
+        $trimestresYears = Trimestre::all()->where('annee_scolaire_id', $activeYear->id)->pluck('id');
+        $query = Evaluation::query()->whereIn('trimestre_id', $trimestresYears);
+
+        // filtering
+        if(!empty($searchEvaluation)) {
+            $query->where('libelleEvaluation', 'LIKE', "%{$searchEvaluation}%");
+        }
+        if(!empty($trimestreFilter)) {
+            $query->where('trimestre_id',$trimestreFilter);
+        }
+        if(!empty($statutFilter)) {
+            $query->where('statut',$statutFilter);
+        }
+
         $evaluations = $query->paginate(10);
 
-        return view('evaluation.evaluations', compact('evaluations', 'trimestres'));
+        if($request->ajax()) {
+            return view('partials._evaluations_table', compact('evaluations','trimestres'));
+        } else {
+            return view('evaluation.evaluations', compact('evaluations','trimestres'));
+        }
+
     }
 
     /**
@@ -31,17 +58,63 @@ class EvaluationController extends Controller
         $request->validate([
             'libelleEvaluation' => 'required|min:3|max:255',
             'trimestre_id' => 'required',
+            'dateDeDebut' => [
+                'required',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $year = AnneeScolaire::all()->where('statut',true)->first();
+                    $startDate = new DateTime($value);
+                    $yearStart = new DateTime($year->dateDeDebut);
+                    $yearEnd = new DateTime($year->dateDeFin);
+                    if ($startDate < $yearStart || $startDate > $yearEnd) {
+                        $fail('La date de début doit être comprise entre Septembre '
+                        . $yearStart->format('Y') . ' et Juillet '
+                        . $yearEnd->format('Y'));
+                    }
+                },
+            ],
+            'dateDeFin' => [
+                'required',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $year = AnneeScolaire::all()->where('statut',true)->first();
+                    $endDate = new DateTime($value);
+                    $yearStart = new DateTime($year->dateDeDebut);
+                    $yearEnd = new DateTime($year->dateDeFin);
+                    if ($endDate < $yearStart || $endDate > $yearEnd) {
+                        $fail('La date de fin doit être comprise entre Septembre '
+                        . $yearStart->format('Y') . ' et Juillet '
+                        . $yearEnd->format('Y'));
+                    }
+                },
+            ],
         ], [
             'libelleEvaluation.required' => 'Veuillez entrez un libelle pour le trimestre',
             'trimestre_id.required' => 'Selectionnez une année scolaire',
+            'dateDeDebut.required' => 'Définissez une date de debut de l\'évaluation',
+            'dateDeFin.required' => 'Définissez une date de fin de l\'évaluation',
+            'annee_scolaire_id.required' => 'Selectionnez une année scolaire',
         ]);
 
-        Evaluation::create([
+        $currentDate = new DateTime();
+        $state = '';
+        if(new DateTime($request->dateDeDebut) >= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
+            $state = 'en cours';
+        } else {
+            $state = 'terminé';
+        }
+
+        $evaluation = Evaluation::create([
             'libelleEvaluation' => $request->libelleEvaluation,
             'trimestre_id' => $request->trimestre_id,
+            'dateDeDebut' => $request->dateDeDebut,
+            'dateDeFin' => $request->dateDeFin,
+            'statut' => $state,
         ]);
 
-        return redirect()->route('evaluation.evaluations')->with('success', 'Evaluation ajoutée avec succès');
+        if ($evaluation) {
+            return response()->json(['success' => 'Evaluation ajoutée avec succès']);
+        }
     }
 
     /**
@@ -59,25 +132,73 @@ class EvaluationController extends Controller
         $request->validate([
             'libelleEvaluation' => 'required|min:3|max:255',
             'trimestre_id' => 'required',
+            'dateDeDebut' => [
+                'required',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $year = AnneeScolaire::all()->where('statut',true)->first();
+                    $startDate = new DateTime($value);
+                    $yearStart = new DateTime($year->dateDeDebut);
+                    $yearEnd = new DateTime($year->dateDeFin);
+                    if ($startDate < $yearStart || $startDate > $yearEnd) {
+                        $fail('La date de début doit être comprise entre Septembre '
+                        . $yearStart->format('Y') . ' et Juillet '
+                        . $yearEnd->format('Y'));
+                    }
+                },
+            ],
+            'dateDeFin' => [
+                'required',
+                'max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $year = AnneeScolaire::all()->where('statut',true)->first();
+                    $endDate = new DateTime($value);
+                    $yearStart = new DateTime($year->dateDeDebut);
+                    $yearEnd = new DateTime($year->dateDeFin);
+                    if ($endDate < $yearStart || $endDate > $yearEnd) {
+                        $fail('La date de fin doit être comprise entre Septembre '
+                        . $yearStart->format('Y') . ' et Juillet '
+                        . $yearEnd->format('Y'));
+                    }
+                },
+            ],
         ], [
             'libelleEvaluation.required' => 'Veuillez entrez un libelle pour le trimestre',
             'trimestre_id.required' => 'Selectionnez une année scolaire',
+            'dateDeDebut.required' => 'Définissez une date de debut de l\'évaluation',
+            'dateDeFin.required' => 'Définissez une date de fin de l\'évaluation',
+            'annee_scolaire_id.required' => 'Selectionnez une année scolaire',
         ]);
+
+        $currentDate = new DateTime();
+        $state = '';
+        if(new DateTime($request->dateDeDebut) >= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
+            $state = 'en cours';
+        } else {
+            $state = 'terminé';
+        }
+
         $evaluation = Evaluation::findOrFail($id);
 
-        $evaluation->update($request->all());
+        $evaluation->update([
+            'libelleEvaluation' => $request->libelleEvaluation,
+            'trimestre_id' => $request->trimestre_id,
+            'dateDeDebut' => $request->dateDeDebut,
+            'dateDeFin' => $request->dateDeFin,
+            'statut' => $state,
+        ]);
 
-        return redirect()->route('evaluation.evaluations')->with('success', 'Evaluation mis à jour avec succès');
+        return response()->json(['success' => 'Evaluation mise à jour avec succès']);
+
     }
 
 
     /**
-     * delete specific evaluationf
+     * delete specific evaluation
      */
     public function destroy($id) {
         $evaluation = Evaluation::findOrFail($id);
         $evaluation->delete();
-
         return redirect()->route('evaluation.evaluations')->with('success', 'Evaluation supprimée avec succès');
     }
 }

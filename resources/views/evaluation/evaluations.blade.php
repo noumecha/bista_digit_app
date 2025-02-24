@@ -7,7 +7,7 @@
                     <div class="card">
                         <div class="pb-0 card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
@@ -31,6 +31,34 @@
                                     </button>
                                 </div>
                             </div>
+                            <form class="form form-inline row mt-3" id="filterEvaluationForm">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" name="searchEvaluation" value="" id="searchEvaluation" class="form-control" placeholder="Rechercher par libellé"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="trimestreFilter" id="trimestreFilter" class="form-select">
+                                            <option value="">Tout les trimestres</option>
+                                            @foreach ($trimestres as $trimestre)
+                                                <option value="{{ $trimestre->id }}">
+                                                    {{ $trimestre->libelleTrimestre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="statutFilter" id="statutFilter" class="form-select">
+                                            <option value="">Tout les statuts</option>
+                                            <option value="terminé">terminé</option>
+                                            <option value="en cours">en cours</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="table-responsive" id="evaluationsTable" style="overflow-x: visible;">
                         </div>
@@ -43,7 +71,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <form enctype="multipart/form-data" role="form" id="evaluationForm" class="form row">
                     @csrf
-                    <input type="hidden" name="trimestreId" id="trimestreId" value="">
+                    <input type="hidden" name="evaluationId" id="evaluationId" value="">
                     <div class="modal-content p-0">
                         <div class="modal-header" id="modal-evaluation-header">
                             <div class="modal-title row">
@@ -56,7 +84,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="titre" class="form-control-label">
                                             Libellé :
@@ -71,12 +99,13 @@
                                         />
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="trimestre_id" class="form-control-label">
                                             Trimestre :
                                         </label>
                                         <select name="trimestre_id" id="trimestre_id" class="form-select">
+                                            <option value="">Selectionner un trimestre</option>
                                             @foreach ($trimestres as $trimestre)
                                                 <option value="{{ $trimestre->id }}">
                                                     {{ $trimestre->libelleTrimestre }}
@@ -85,6 +114,26 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="dateDeDebut" class="form-control-label">
+                                            Date de début :
+                                        </label>
+                                        <input type="date" id="dateDeDebut" name="dateDeDebut" class="form-control" value="{{old("dateDeDebut")}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="dateDeFin" class="form-control-label">
+                                            Date de fin :
+                                        </label>
+                                        <input type="date" id="dateDeFin" name="dateDeFin" class="form-control" value="{{old("dateDeFin")}}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
                             </div>
                         </div>
                         <div class="modal-footer flex-row-reverse">

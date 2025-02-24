@@ -18,6 +18,10 @@
                 Trimestre
             </th>
             <th
+                class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                Statut
+            </th>
+            <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Action
             </th>
@@ -25,7 +29,7 @@
     </thead>
     <tbody>
         @if (empty($evaluations->items()))
-            <td class="text" colspan="5">
+            <td class="text" colspan="6">
                 Aucune donnée disponible
             </td>
         @else
@@ -35,36 +39,63 @@
                         {{ $evaluation->libelleEvaluation }}
                     </td>
                     <td class="align-middle bg-transparent borer-bottom">
-                        {{ $evaluation->trimestre->libelleTrimestre }}
+                        {{ $evaluation->dateDeDebut }}
+                    </td>
+                    <td class="align-middle bg-transparent borer-bottom">
+                        {{ $evaluation->dateDeFin }}
                     </td>
                     <td class="align-middle bg-transparent borer-bottom">
                         {{ $evaluation->trimestre->libelleTrimestre }}
                     </td>
                     <td class="align-middle bg-transparent borer-bottom">
-                        {{ $evaluation->trimestre->libelleTrimestre }}
+                        <span class="badge rounded-pill {{ $evaluation->statut === "en cours" ? 'bg-success' : 'bg-danger'}}">
+                            {{ $evaluation->statut }}
+                        </span>
                     </td>
                     <td class="text-center align-middle bg-transparent border-bottom">
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('evaluation.evaluationsEdit', $evaluation->id) }}">
-                                        <i class="fas fa-user-edit" aria-hidden="true"></i>
-                                        modifier
-                                    </a>
-                                </li>
-                                <li>
-                                    <div class="dropdown-item">
-                                        <i class="fas fa-trash" aria-hidden="true"></i>
-                                        <form role="form" class="form" method="POST" action="{{ route('evaluation.evaluationsDestroy', $evaluation->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="submit" value="Supprimer">
-                                        </form>
+                        <a
+                            data-bs-toggle="modal"
+                            id="edit-button"
+                            data-bs-target="#create-evaluation-modal"
+                            data-action="edit"
+                            data-evaluation-id = "{{ $evaluation->id }}"
+                            data-url="{{ route('evaluation.store', $evaluation->id) }}"
+                            class="btn btn-primary mt-3 p-2"
+                            href="#"
+                        >
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <button
+                            type="button"
+                            class="btn btn-danger ml-2 mt-3 p-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmDelete-{{ $evaluation->id }}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                        <!-- modal for delete confirmation -->
+                        <div class="modal fade" id="confirmDelete-{{ $evaluation->id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                            <div class="modal-dialog">
+                                <form role="form" class="form" method="POST" action="{{ route('evaluation.destroy', $evaluation->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Confirmation de suppression</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-wrap text-justify">
+                                            Voulez-vous vraiment supprimée les informations de l'évaluation : {{ $evaluation->libelleEvaluation }}
+                                        </div>
+                                        <div class="modal-footer flex-row-reverse">
+                                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                            <button type="submit" class="spinner-submit-button btn btn-danger">
+                                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                                Confirmer
+                                            </button>
+                                        </div>
                                     </div>
-                                </li>
-                            </ul>
+                                </form>
+                            </div>
                         </div>
                     </td>
                 </tr>

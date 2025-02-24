@@ -41,10 +41,10 @@
                         {{ $devoir->titre_devoir }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $devoir->classe->libClasse }}
+                        {{ $devoir->matiere->libelleMatiere }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $devoir->matiere->libelleMatiere }}
+                        {{ $devoir->classe->libClasse }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $devoir->enseignant->name }}

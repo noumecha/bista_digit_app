@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
+use App\Models\Evaluation;
 use App\Models\Trimestre;
 use Illuminate\Http\Request;
 use DateTime;
@@ -14,7 +15,7 @@ class TrimestreController extends Controller
      *
      */
     public function index(Request $request) {
-        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $activeYear = AnneeScolaire::all()->where('statut', true)->first();
         // filter vars
         $searchTrimestre = $request->input('searchTrimestre');
         // querying
@@ -81,7 +82,7 @@ class TrimestreController extends Controller
 
         $currentDate = new DateTime();
         $state = '';
-        if(new DateTime($request->dateDeDebut) < $currentDate->format('Y-m-d') || new DateTime($request->dateDeFin) < $currentDate->format('Y-m-d')) {
+        if(new DateTime($request->dateDeDebut) >= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
             $state = 'en cours';
         } else {
             $state = 'terminé';
@@ -157,7 +158,7 @@ class TrimestreController extends Controller
 
         $currentDate = new DateTime();
         $state = '';
-        if(new DateTime($request->dateDeDebut) < $currentDate->format('Y-m-d') || new DateTime($request->dateDeFin) < $currentDate->format('Y-m-d')) {
+        if(new DateTime($request->dateDeDebut) >= $currentDate->format('Y-m-d') && new DateTime($request->dateDeFin) <= $currentDate->format('Y-m-d')) {
             $state = 'en cours';
         } else {
             $state = 'terminé';
@@ -182,8 +183,9 @@ class TrimestreController extends Controller
      */
     public function destroy($id) {
         $trimestre = Trimestre::findOrFail($id);
+        $evaluation = Evaluation::where('trimestre_id', $trimestre->id);
+        $evaluation->delete();
         $trimestre->delete();
-
         return redirect()->route('evaluation.trimestres')->with('success', 'Trimestre supprimé avec succès');
     }
 }

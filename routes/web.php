@@ -246,8 +246,8 @@ Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->nam
 #evaluation - evaluations routes
 Route::get('/evaluation/evaluations', [EvaluationController::class, 'index'])->name('evaluation.evaluations')->middleware('auth');
 Route::post('/evaluation/evaluations/save', [EvaluationController::class, 'store'])->name('evaluation.store')->middleware('auth');
-Route::get('/evaluation/evaluations/{id}/edit', [EvaluationController::class, 'ddit'])->name('evaluation.edit')->middleware('auth');
-Route::put('/evaluation/evaluations/{id}', [EvaluationController::class, 'update'])->name('evaluation.update')->middleware('auth');
+Route::get('/evaluation/evaluations/{id}/edit', [EvaluationController::class, 'edit'])->name('evaluation.edit')->middleware('auth');
+Route::put('/evaluation/evaluations/update/{id}', [EvaluationController::class, 'update'])->name('evaluation.update')->middleware('auth');
 Route::delete('/evaluation/evaluations/{id}', [EvaluationController::class, 'destroy'])->name('evaluation.destroy')->middleware('auth');
 
 # evaluations - remplissage :

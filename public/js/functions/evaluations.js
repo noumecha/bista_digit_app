@@ -106,7 +106,7 @@ $(function(){
     });
 
     // fetching evaluations dynamically with filters
-    $('#searchEvaluation,#trimestreFilter').on('change keyup', function () {
+    $('#searchEvaluation,#trimestreFilter,#statutFilter').on('change keyup', function () {
         fetchEvaluations();
     });
 
