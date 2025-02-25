@@ -11,7 +11,14 @@ class Remplissage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date_debut','date_fin','statut','evaluation_id'];
+    protected $fillable = [
+        'date_debut',
+        'date_fin',
+        'duree',
+        'openDays',
+        'statut',
+        'evaluation_id'
+    ];
 
     /**
      *

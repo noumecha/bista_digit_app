@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
 use App\Models\Evaluation;
+use App\Models\Remplissage;
 use App\Models\Trimestre;
 use DateTime;
 use Illuminate\Http\Request;
@@ -60,7 +61,6 @@ class EvaluationController extends Controller
         } else {
             return view('evaluation.evaluations', compact('evaluations','trimestres'));
         }
-
     }
 
     /**
@@ -229,6 +229,8 @@ class EvaluationController extends Controller
      */
     public function destroy($id) {
         $evaluation = Evaluation::findOrFail($id);
+        $rempliassage = Remplissage::where('evaluation_id', $evaluation->id);
+        $rempliassage->delete();
         $evaluation->delete();
         return redirect()->route('evaluation.evaluations')->with('success', 'Evaluation supprimée avec succès');
     }
