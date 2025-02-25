@@ -19,9 +19,14 @@ class EvaluationController extends Controller
         $evals = Evaluation::all();
         foreach ($evals as $eval) {
             $endDate = new DateTime($eval->dateDeFin);
+            $startDate = new DateTime($eval->dateDeDebut);
             $currentDate = new DateTime();
-            if ($currentDate > $endDate && $eval->statut !== 'terminé') {
-                $eval->update(['statut' => 'terminé']);
+            if ($currentDate > $endDate && $eval->statut !== 'terminée') {
+                $eval->update(['statut' => 'terminée']);
+            } elseif ($currentDate >= $startDate && $currentDate <= $endDate) {
+                $eval->update(['statut' => 'en cours']);
+            } elseif ($currentDate < $startDate) {
+                $eval->update(['statut' => 'programmée']);
             }
         }
         // useful variables
@@ -105,12 +110,12 @@ class EvaluationController extends Controller
 
         $currentDate = new DateTime();
         $state = '';
-        if(new DateTime($request->dateDeDebut) >= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
+        if($currentDate >= new DateTime($request->dateDeDebut) && $currentDate <= new DateTime($request->dateDeFin)) {
             $state = 'en cours';
-        } elseif (new DateTime($request->dateDeDebut) <= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
-            $state = 'programmé';
+        } elseif ($currentDate < new DateTime($request->dateDeDebut)) {
+            $state = 'programmée';
         } else {
-            $state = 'terminé';
+            $state = 'terminée';
         }
 
         $evaluation = Evaluation::create([
@@ -196,10 +201,12 @@ class EvaluationController extends Controller
 
         $currentDate = new DateTime();
         $state = '';
-        if(new DateTime($request->dateDeDebut) >= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
+        if($currentDate >= new DateTime($request->dateDeDebut) && $currentDate <= new DateTime($request->dateDeFin)) {
             $state = 'en cours';
+        } elseif ($currentDate < new DateTime($request->dateDeDebut)) {
+            $state = 'programmée';
         } else {
-            $state = 'terminé';
+            $state = 'terminée';
         }
 
         $evaluation = Evaluation::findOrFail($id);

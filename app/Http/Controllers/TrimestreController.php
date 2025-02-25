@@ -16,23 +16,32 @@ class TrimestreController extends Controller
      */
     public function index(Request $request) {
         // on initialize :
-        $trims = Evaluation::all();
+        $trims = Trimestre::all();
         foreach ($trims as $trim) {
             $endDate = new DateTime($trim->dateDeFin);
+            $startDate = new DateTime($trim->dateDeDebut);
             $currentDate = new DateTime();
             if ($currentDate > $endDate && $trim->statut !== 'terminé') {
                 $trim->update(['statut' => 'terminé']);
+            } elseif ($currentDate >= $startDate && $currentDate <= $endDate) {
+                $trim->update(['statut' => 'en cours']);
+            } elseif ($currentDate < $startDate) {
+                $trim->update(['statut' => 'programmé']);
             }
         }
         $activeYear = AnneeScolaire::all()->where('statut', true)->first();
         // filter vars
         $searchTrimestre = $request->input('searchTrimestre');
+        $statutFilter = $request->input('statutFilter');
         // querying
         $query = Trimestre::query()->where('annee_scolaire_id', $activeYear->id);
 
         // filtering
         if(!empty($searchTrimestre)) {
             $query->where('libelleTrimestre', 'LIKE', "%{$searchTrimestre}%");
+        }
+        if(!empty($statutFilter)) {
+            $query->where('statut',$statutFilter);
         }
 
         $trimestres = $query->paginate(10);
@@ -91,8 +100,10 @@ class TrimestreController extends Controller
 
         $currentDate = new DateTime();
         $state = '';
-        if(new DateTime($request->dateDeDebut) >= $currentDate && new DateTime($request->dateDeFin) <= $currentDate) {
+        if($currentDate >= new DateTime($request->dateDeDebut) && $currentDate <= new DateTime($request->dateDeFin)) {
             $state = 'en cours';
+        } elseif ($currentDate < new DateTime($request->dateDeDebut)) {
+            $state = 'programmé';
         } else {
             $state = 'terminé';
         }
@@ -183,8 +194,10 @@ class TrimestreController extends Controller
 
         $currentDate = new DateTime();
         $state = '';
-        if(new DateTime($request->dateDeDebut) >= $currentDate->format('Y-m-d') && new DateTime($request->dateDeFin) <= $currentDate->format('Y-m-d')) {
+        if($currentDate >= new DateTime($request->dateDeDebut) && $currentDate <= new DateTime($request->dateDeFin)) {
             $state = 'en cours';
+        } elseif ($currentDate < new DateTime($request->dateDeDebut)) {
+            $state = 'programmé';
         } else {
             $state = 'terminé';
         }
@@ -211,6 +224,6 @@ class TrimestreController extends Controller
         $evaluation = Evaluation::where('trimestre_id', $trimestre->id);
         $evaluation->delete();
         $trimestre->delete();
-        return redirect()->route('evaluation.trimestres')->with('success', 'Trimestre supprimé avec succès');
+        return redirect()->route('evaluation.trimestres')->with('deleteSuccess', 'Trimestre supprimé avec succès');
     }
 }

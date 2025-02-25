@@ -15,7 +15,7 @@
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Temps restant
+                Statut
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -40,7 +40,11 @@
                     <td class="align-middle bg-transparent border-bottom">
                         {{ formatDate($trimestre->dateDeFin, 'd/m/Y') }}
                     </td>
-                    <td class="countdown-timer align-middle bg-transparent border-bottom" data-end-date="{{ $trimestre->dateDeFin }}">
+                    <td
+                        class="countdown-timer align-middle bg-transparent border-bottom"
+                        data-start-date="{{ $trimestre->dateDeDebut }}"
+                        data-end-date="{{ $trimestre->dateDeFin }}"
+                    >
                     </td>
                     <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                         <a

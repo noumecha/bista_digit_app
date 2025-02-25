@@ -32,9 +32,19 @@
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterTrimestreForm">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="text" name="searchTrimestre" value="" id="searchTrimestre" class="form-control" placeholder="Rechercher par libellé"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="statutFilter" id="statutFilter" class="form-select">
+                                            <option value="">Tout les statuts</option>
+                                            <option value="terminé">terminé</option>
+                                            <option value="programmé">programmé</option>
+                                            <option value="en cours">en cours</option>
+                                        </select>
                                     </div>
                                 </div>
                             </form>

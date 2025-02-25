@@ -183,6 +183,7 @@ function formatDate(date) {
 function initializeCountdowns() {
     $('.countdown-timer').each(function() {
         var endDate = new Date($(this).data('end-date')).getTime();
+        var startDate = new Date($(this).data('start-date')).getTime();
         var timerElement = $(this);
 
         var countdown = setInterval(function() {
@@ -192,17 +193,29 @@ function initializeCountdowns() {
             if (distance <= 0) {
                 clearInterval(countdown);
                 timerElement.html(
-                    "<span class='badge rounded-pill bg-danger'>terminé</span>"
+                    "<span class='badge rounded-pill bg-danger'>terminé(e)</span>"
                 );
                 return;
+            } else if (now < startDate) {
+                distance = startDate - now;
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                timerElement.html(
+                    "<span class='badge rounded-pill bg-primary'> Commence dans : "+days + 'j '+ hours +
+                    'h ' + minutes + 'm ' + seconds + 's'+ "</span>"
+                );
+            } else {
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                timerElement.html(
+                    "<span class='badge rounded-pill bg-success'> Se termine dans : "+days + 'j '+ hours + 'h ' + minutes + 'm '
+                    + seconds + 's'+ "</span>"
+                );
             }
-
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            timerElement.html("<span class='badge rounded-pill bg-success'>"+days + 'j '+ hours + 'h ' + minutes + 'm ' + seconds + 's'+ "</span>" );
         }, 1000);
     });
 }

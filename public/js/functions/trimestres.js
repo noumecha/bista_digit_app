@@ -125,7 +125,7 @@ $(function(){
     });
 
     // fetching trimestres dynamically with filters
-    $('#searchTrimestre').on('change keyup', function () {
+    $('#searchTrimestre,#statutFilter').on('change keyup', function () {
         fetchTrimestres();
     });
 
