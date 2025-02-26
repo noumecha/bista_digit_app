@@ -253,11 +253,15 @@ Route::delete('/evaluation/evaluations/{id}', [EvaluationController::class, 'des
 Route::get('/evaluation/evaluations/trimsdate/{trimId}', [EvaluationController::class, 'getTrimsDate'])->middleware('auth');
 
 # evaluations - remplissage :
+Route::get('/remplissages', function () {
+    return redirect('/evaluation/remplissages');
+})->middleware('auth');
 Route::get('/evaluation/remplissages', [RemplissageController::class, 'index'])->name('evaluation.remplissages')->middleware('auth');
 Route::post('/evaluation/remplissages', [RemplissageController::class, 'store'])->name('evaluation.remplissagesStore')->middleware('auth');
 Route::get('/evaluation/remplissages/{id}/edit', [RemplissageController::class, 'edit'])->name('evaluation.remplissagesEdit')->middleware('auth');
-Route::put('/evaluation/remplissages/{id}', [RemplissageController::class, 'update'])->name('evaluation.remplissagesUpdate')->middleware('auth');
+Route::put('/evaluation/remplissages/update/{id}', [RemplissageController::class, 'update'])->name('evaluation.remplissagesUpdate')->middleware('auth');
 Route::delete('/evaluation/remplissages/{id}', [RemplissageController::class, 'destroy'])->name('evaluation.remplissagesDestroy')->middleware('auth');
+Route::get('/evaluation/remplissages/evalsdate/{evalId}', [RemplissageController::class, 'getEvalsDate'])->middleware('auth');
 
 # users routes
 Route::get('/utilisateur/teachers', [EnseignantController::class, 'index'])->name('utilisateur.teachers')->middleware('auth');

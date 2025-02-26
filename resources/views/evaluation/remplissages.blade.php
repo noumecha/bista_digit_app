@@ -35,10 +35,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <select name="evaluationFilter" id="evaluationFilter" class="form-select">
-                                            <option value="">Tout les trimestres</option>
-                                            @foreach ($evaluationsas $remplissage)
-                                                <option value="{{ $remplissage->id }}">
-                                                    {{ $remplissage->libelleEvaluation }}
+                                            <option value="">Toutes les évaluations</option>
+                                            @foreach ($evaluations as $evaluation)
+                                                <option value="{{ $evaluation->id }}">
+                                                    {{ $evaluation->libelleEvaluation }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -48,8 +48,8 @@
                                     <div class="form-group">
                                         <select name="statutFilter" id="statutFilter" class="form-select">
                                             <option value="">Tout les statuts</option>
-                                            <option value="terminé">terminée</option>
-                                            <option value="programmé">programmée</option>
+                                            <option value="terminé">terminé</option>
+                                            <option value="programmé">programmé</option>
                                             <option value="en cours">en cours</option>
                                         </select>
                                     </div>
@@ -86,9 +86,10 @@
                                             Evaluation :
                                         </label>
                                         <select name="evaluation_id" id="evaluation_id" class="form-select">
-                                            @foreach ($evaluations as $remplissage)
-                                                <option value="{{ $remplissage->id }}" {{ isset($remplissageToEdit) && $remplissageToEdit->evaluation_id === $remplissage->id ? 'selected' : '' }}>
-                                                    {{ $remplissage->libelleEvaluation}}
+                                            <option value="">Toutes les évaluations</option>
+                                            @foreach ($evaluations as $evaluation)
+                                                <option value="{{ $evaluation->id }}">
+                                                    {{ $evaluation->libelleEvaluation}}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -125,9 +126,16 @@
                                         <label for="openDays" class="form-control-label">
                                             Inclure les weekends :
                                         </label>
-                                        <input type="checkbox" id="openDays" name="openDays" class="form-control">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="openDays" value="" id="openDays" checked="">
+                                            <label class="custom-control-label" for="openDays">oui</label>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
                             </div>
                         </div>
                         <div class="modal-footer flex-row-reverse">

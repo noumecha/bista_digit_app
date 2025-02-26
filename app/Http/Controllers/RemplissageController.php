@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Evaluation;
 use App\Models\Remplissage;
 use Illuminate\Http\Request;
+use DateTime;
 
 class RemplissageController extends Controller
 {
@@ -12,6 +13,20 @@ class RemplissageController extends Controller
      *
      */
     public function index(Request $request) {
+        // on initialize :
+        $remps = Remplissage::all();
+        foreach ($remps as $remp) {
+            $endDate = new DateTime($remp->date_fin);
+            $startDate = new DateTime($remp->date_debut);
+            $currentDate = new DateTime();
+            if ($currentDate > $endDate && $remp->statut !== 'terminé') {
+                $remp->update(['statut' => 'terminé']);
+            } elseif ($currentDate >= $startDate && $currentDate <= $endDate) {
+                $remp->update(['statut' => 'en cours']);
+            } elseif ($currentDate < $startDate) {
+                $remp->update(['statut' => 'programmé']);
+            }
+        }
         //
         $evaluations = Evaluation::all();
 
@@ -44,7 +59,6 @@ class RemplissageController extends Controller
         $request->validate([
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_debut',
-            'statut' => 'required',
             'duree' => 'required|numeric|integer',
             'openDays' => 'required',
             'evaluation_id' => 'required',
@@ -56,10 +70,22 @@ class RemplissageController extends Controller
             'evaluation_id.unique' => 'Un remplissage est déja configurer pour cette évaluation',
         ]);
 
+        $currentDate = new DateTime();
+        $state = '';
+        if($currentDate >= new DateTime($request->date_debut) && $currentDate <= new DateTime($request->date_fin)) {
+            $state = 'en cours';
+        } elseif ($currentDate < new DateTime($request->date_debut)) {
+            $state = 'programmé';
+        } else {
+            $state = 'terminé';
+        }
+
         $remplissage = Remplissage::create([
             'date_debut' => $request->date_debut,
             'date_fin' => $request->date_fin,
-            'statut' => $request->statut,
+            'duree' => $request->duree,
+            'openDays' => $request->openDays,
+            'statut' => $state,
             'evaluation_id' => $request->evaluation_id,
         ]);
 
@@ -77,26 +103,51 @@ class RemplissageController extends Controller
     }
 
     /**
+     *  get evaluations dates
+    */
+    public function getEvalsDate($evalId) {
+        $evaluation = Evaluation::findOrFail($evalId);
+        return response()->json([
+            'dateDeDebutEval' => $evaluation->dateDeDebut,
+            'dateDeFinEval' => $evaluation->dateDeFin,
+        ]);
+    }
+
+    /**
      * update specific remplissage configuration
      */
     public function update(Request $request, $id) {
         $request->validate([
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_debut',
-            'statut' => 'required',
             'duree' => 'required|numeric|integer',
             'openDays' => 'required',
-            'evaluation_id' => 'required',
         ], [
             'date_debut.required' => 'Veuillez selectionner la date debut du remplissage',
             'date_fin.required' => 'Veuillez selectionner la date de fin du remplissage pour cette évaluation',
             'evaluation_id.required' => 'Selectionnez une année scolaire',
             'duree' => 'Veuillez définier la durée du remplissage',
-            'evaluation_id.unique' => 'Un remplissage est déja configurer pour cette évaluation',
         ]);
+
+        $currentDate = new DateTime();
+        $state = '';
+        if($currentDate >= new DateTime($request->date_debut) && $currentDate <= new DateTime($request->date_fin)) {
+            $state = 'en cours';
+        } elseif ($currentDate < new DateTime($request->date_debut)) {
+            $state = 'programmé';
+        } else {
+            $state = 'terminé';
+        }
+
         $remplissage = Remplissage::findOrFail($id);
 
-        $remplissage->update($request->all());
+        $remplissage->update([
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
+            'duree' => $request->duree,
+            'openDays' => $request->openDays,
+            'statut' => $state,
+        ]);
 
         return response()->json(['success','Remplissage mis à jour avec succès']);
     }

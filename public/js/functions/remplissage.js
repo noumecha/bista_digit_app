@@ -1,15 +1,20 @@
 $(function(){
+    // on change durree - update date fin
+    $('#duree').on('change', function() {
+        let d = $(this).val();
+        console.log("duree : " , d);
+    });
     // filtering remplissage dates base on the selected remplissage
     $('#evaluation_id').on('change', function() {
-        let trimId = $(this).val();
-        if (trimId) {
-            $.get('remplissages/trimsdate/' + trimId, function(data) {
-                var startDate = new Date(data.dateDeDebutTrim);
-                var endDate = new Date(data.dateDeFinTrim);
-                $('#dateDeDebut').attr('min', formatDate(startDate));
-                $('#dateDeDebut').attr('max', formatDate(endDate));
-                $('#dateDeFin').attr('min', formatDate(startDate));
-                $('#dateDeFin').attr('max', formatDate(endDate));
+        let evalId = $(this).val();
+        if (evalId) {
+            $.get('remplissages/evalsdate/' + evalId, function(data) {
+                var startDate = new Date(data.dateDeDebutEval);
+                var endDate = new Date(data.dateDeFinEval);
+                $('#date_debut').attr('min', formatDate(startDate));
+                $('#date_debut').attr('max', formatDate(endDate));
+                $('#date_fin').attr('min', formatDate(startDate));
+                $('#date_fin').attr('max', formatDate(endDate));
             });
         }
     });
@@ -42,6 +47,7 @@ $(function(){
             button.children('span#submit-remplissage-form-button-text').text('Mettre à jour');
             headerText.text('Mettre à jour le délais de remplissage');
             remplissageIdInput.val(remplissageId);
+            $('#evaluation_id').prop("disabled", true);
             $.ajax({
                 url: "remplissages/"+remplissageId+"/edit",
                 type: "GET",
@@ -124,6 +130,7 @@ $(function(){
         $('#modal-remplissage-header').removeClass('bg-primary bg-success');
         $('#submit-remplissage-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-remplissage-form-buuton').children('span#submit-remplissage-form-button-text').text('');
+        $('#evaluation_id').prop("disabled", false);
     });
 
     // fetching remplissages dynamically with filters
