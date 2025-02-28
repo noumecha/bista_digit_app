@@ -1,7 +1,8 @@
 $(function(){
+    console.log($('#openDays').is(':checked'));
     // on change durree - update date fin
     $('#duree, #date_debut').on('input', function() {
-        updateEndDate($('#date_debut'), $('#duree'), $('#opensDays').is(':checked'), $('#date_fin'));
+        updateEndDate($('#date_debut'), $('#duree'), $('#openDays').is(':checked'), $('#date_fin'));
     });
     // Event listener for openDays checkbox
     $('#openDays').on('change', function() {
@@ -40,7 +41,7 @@ $(function(){
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
             button.children('span#submit-remplissage-form-button-text').text('Enregistrer');
-            $('#date_fin').prop("disabled", true);
+            $('#date_fin').prop("readOnly", true);
             headerText.text('Creer un nouveau délai de remplissage des notes pour une séquence');
         } else if (action == "edit") {
             header.addClass('bg-success');
@@ -48,7 +49,7 @@ $(function(){
             button.children('span#submit-remplissage-form-button-text').text('Mettre à jour');
             headerText.text('Mettre à jour le délais de remplissage');
             remplissageIdInput.val(remplissageId);
-            $('#date_fin').prop("disabled", true);
+            $('#date_fin').prop("readOnly", true);
             $('#evaluation_id').prop("disabled", true);
             $.ajax({
                 url: "remplissages/"+remplissageId+"/edit",
@@ -58,7 +59,7 @@ $(function(){
                     fillInputForm(res, form);
                     // Set date picker range based on evaluation dates
                     var endDate = new Date(res.dateDeFinEval);
-                    endDate.setDate(endDate.getDate() + parseInt(1));
+                    endDate.setDate(endDate.getDate() + parseInt(2));
                     $('#date_debut').attr('min', formatDate(endDate));
                 },
                 error: function(xhr) {
@@ -130,7 +131,7 @@ $(function(){
         $('#submit-remplissage-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-remplissage-form-buuton').children('span#submit-remplissage-form-button-text').text('');
         $('#evaluation_id').prop("disabled", false);
-        $('#date_fin').prop("disabled", false);
+        $('#date_fin').prop("readOnly", false);
     });
 
     // fetching remplissages dynamically with filters

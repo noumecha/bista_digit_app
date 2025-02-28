@@ -19,7 +19,7 @@ class RemplissageController extends Controller
             $endDate = new DateTime($remp->date_fin);
             $startDate = new DateTime($remp->date_debut);
             $currentDate = new DateTime();
-            if ($currentDate > $endDate && $remp->statut !== 'terminé') {
+            if ($currentDate >= $endDate && $remp->statut !== 'terminé') {
                 $remp->update(['statut' => 'terminé']);
             } elseif ($currentDate >= $startDate && $currentDate <= $endDate) {
                 $remp->update(['statut' => 'en cours']);
@@ -32,7 +32,7 @@ class RemplissageController extends Controller
 
         // filter vars
         $evaluationFilter = $request->input('evaluationFilter');
-        $statutFilterr = $request->input('statutFilter');
+        $statutFilter = $request->input('statutFilter');
         // querying
         $query = Remplissage::query();
         // filtering
@@ -40,7 +40,7 @@ class RemplissageController extends Controller
             $query->where('evaluation_id', $evaluationFilter);
         }
         if(!empty($statutFilter)) {
-            $query->where('statut', $statutFilter);
+            $query->where('statut',$statutFilter);
         }
 
         $remplissages = $query->paginate(10);
@@ -97,7 +97,7 @@ class RemplissageController extends Controller
         ]);
 
         if ($remplissage) {
-            return response()->json(["success", "Remplissage configuré avec succès"]);
+            return response()->json(["success" => "Remplissage configuré avec succès"]);
         }
     }
 
@@ -159,7 +159,7 @@ class RemplissageController extends Controller
             'statut' => $state,
         ]);
 
-        return response()->json(['success','Remplissage mis à jour avec succès']);
+        return response()->json(['success' => 'Remplissage mis à jour avec succès']);
     }
 
 
