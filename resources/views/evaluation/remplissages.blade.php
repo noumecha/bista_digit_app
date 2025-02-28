@@ -127,7 +127,8 @@
                                             Inclure les weekends :
                                         </label>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="openDays" value="" id="openDays" checked="">
+                                            <input type="hidden" name="openDays" value="0">
+                                            <input class="form-check-input" type="checkbox" name="openDays" value="1" id="openDays">
                                             <label class="custom-control-label" for="openDays">oui</label>
                                         </div>
                                     </div>

@@ -60,13 +60,13 @@ class RemplissageController extends Controller
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_debut',
             'duree' => 'required|numeric|integer',
-            'openDays' => 'required',
+            'openDays' => 'required|boolean',
             'evaluation_id' => 'required',
         ], [
             'date_debut.required' => 'Veuillez selectionner la date debut du remplissage',
             'date_fin.required' => 'Veuillez selectionner la date de fin du remplissage pour cette évaluation',
             'evaluation_id.required' => 'Selectionnez une année scolaire',
-            'duree' => 'Veuillez définier la durée du remplissage',
+            'duree' => 'Veuillez définir la durée du remplissage',
             'evaluation_id.unique' => 'Un remplissage est déja configurer pour cette évaluation',
         ]);
 
@@ -80,11 +80,18 @@ class RemplissageController extends Controller
             $state = 'terminé';
         }
 
+        $exists = Remplissage::where('evaluation_id', $request->evaluation_id)->exists();
+        if($exists) {
+            return response()->json([
+                'error' => 'Une configuration de remplissage pour cette évaluation existe déjà!'
+            ]);
+        }
+
         $remplissage = Remplissage::create([
             'date_debut' => $request->date_debut,
             'date_fin' => $request->date_fin,
             'duree' => $request->duree,
-            'openDays' => $request->openDays,
+            'openDays' => $request->openDays ? 1 : 0,
             'statut' => $state,
             'evaluation_id' => $request->evaluation_id,
         ]);
@@ -99,7 +106,11 @@ class RemplissageController extends Controller
      */
     public function edit($id) {
         $remplissageToEdit = Remplissage::findOrFail($id);
-        return response()->json(['remplissageToEdit' => $remplissageToEdit]);
+        $evaluation = Evaluation::findOrFail($remplissageToEdit->evaluation_id);
+        return response()->json([
+            'remplissageToEdit' => $remplissageToEdit,
+            'dateDeFinEval' => $evaluation->dateDeFin
+        ]);
     }
 
     /**
@@ -108,7 +119,6 @@ class RemplissageController extends Controller
     public function getEvalsDate($evalId) {
         $evaluation = Evaluation::findOrFail($evalId);
         return response()->json([
-            'dateDeDebutEval' => $evaluation->dateDeDebut,
             'dateDeFinEval' => $evaluation->dateDeFin,
         ]);
     }
@@ -121,12 +131,12 @@ class RemplissageController extends Controller
             'date_debut' => 'required|date',
             'date_fin' => 'required|date|after_or_equal:date_debut',
             'duree' => 'required|numeric|integer',
-            'openDays' => 'required',
+            'openDays' => 'required|boolean',
         ], [
             'date_debut.required' => 'Veuillez selectionner la date debut du remplissage',
             'date_fin.required' => 'Veuillez selectionner la date de fin du remplissage pour cette évaluation',
             'evaluation_id.required' => 'Selectionnez une année scolaire',
-            'duree' => 'Veuillez définier la durée du remplissage',
+            'duree' => 'Veuillez définir la durée du remplissage',
         ]);
 
         $currentDate = new DateTime();
@@ -145,7 +155,7 @@ class RemplissageController extends Controller
             'date_debut' => $request->date_debut,
             'date_fin' => $request->date_fin,
             'duree' => $request->duree,
-            'openDays' => $request->openDays,
+            'openDays' => $request->openDays ? 1 : 0,
             'statut' => $state,
         ]);
 

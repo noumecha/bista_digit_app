@@ -1,20 +1,20 @@
 $(function(){
     // on change durree - update date fin
-    $('#duree').on('change', function() {
-        let d = $(this).val();
-        console.log("duree : " , d);
+    $('#duree, #date_debut').on('input', function() {
+        updateEndDate($('#date_debut'), $('#duree'), $('#opensDays').is(':checked'), $('#date_fin'));
+    });
+    // Event listener for openDays checkbox
+    $('#openDays').on('change', function() {
+        updateEndDate($('#date_debut'), $('#duree'), $('#openDays').is(':checked'), $('#date_fin'));
     });
     // filtering remplissage dates base on the selected remplissage
     $('#evaluation_id').on('change', function() {
         let evalId = $(this).val();
         if (evalId) {
             $.get('remplissages/evalsdate/' + evalId, function(data) {
-                var startDate = new Date(data.dateDeDebutEval);
-                var endDate = new Date(data.dateDeFinEval);
-                $('#date_debut').attr('min', formatDate(startDate));
-                $('#date_debut').attr('max', formatDate(endDate));
-                $('#date_fin').attr('min', formatDate(startDate));
-                $('#date_fin').attr('max', formatDate(endDate));
+                var evalEndDate = new Date(data.dateDeFinEval);
+                evalEndDate.setDate(evalEndDate.getDate() + parseInt(2));
+                $('#date_debut').attr('min', formatDate(evalEndDate));
             });
         }
     });
@@ -40,6 +40,7 @@ $(function(){
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
             button.children('span#submit-remplissage-form-button-text').text('Enregistrer');
+            $('#date_fin').prop("disabled", true);
             headerText.text('Creer un nouveau délai de remplissage des notes pour une séquence');
         } else if (action == "edit") {
             header.addClass('bg-success');
@@ -47,6 +48,7 @@ $(function(){
             button.children('span#submit-remplissage-form-button-text').text('Mettre à jour');
             headerText.text('Mettre à jour le délais de remplissage');
             remplissageIdInput.val(remplissageId);
+            $('#date_fin').prop("disabled", true);
             $('#evaluation_id').prop("disabled", true);
             $.ajax({
                 url: "remplissages/"+remplissageId+"/edit",
@@ -54,13 +56,10 @@ $(function(){
                 success: function(res) {
                     // filling form base on the data res
                     fillInputForm(res, form);
-                    // Set date picker range based on trimester dates
-                    var startDate = new Date(res.dateDeDebutTrim);
-                    var endDate = new Date(res.dateDeFinTrim);
-                    $('#dateDeDebut').attr('min', formatDate(startDate));
-                    $('#dateDeDebut').attr('max', formatDate(endDate));
-                    $('#dateDeFin').attr('min', formatDate(startDate));
-                    $('#dateDeFin').attr('max', formatDate(endDate));
+                    // Set date picker range based on evaluation dates
+                    var endDate = new Date(res.dateDeFinEval);
+                    endDate.setDate(endDate.getDate() + parseInt(1));
+                    $('#date_debut').attr('min', formatDate(endDate));
                 },
                 error: function(xhr) {
                     console.log(xhr);
@@ -131,6 +130,7 @@ $(function(){
         $('#submit-remplissage-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-remplissage-form-buuton').children('span#submit-remplissage-form-button-text').text('');
         $('#evaluation_id').prop("disabled", false);
+        $('#date_fin').prop("disabled", false);
     });
 
     // fetching remplissages dynamically with filters

@@ -257,7 +257,7 @@ Route::get('/remplissages', function () {
     return redirect('/evaluation/remplissages');
 })->middleware('auth');
 Route::get('/evaluation/remplissages', [RemplissageController::class, 'index'])->name('evaluation.remplissages')->middleware('auth');
-Route::post('/evaluation/remplissages', [RemplissageController::class, 'store'])->name('evaluation.remplissagesStore')->middleware('auth');
+Route::post('/evaluation/remplissages/save', [RemplissageController::class, 'store'])->name('evaluation.remplissagesStore')->middleware('auth');
 Route::get('/evaluation/remplissages/{id}/edit', [RemplissageController::class, 'edit'])->name('evaluation.remplissagesEdit')->middleware('auth');
 Route::put('/evaluation/remplissages/update/{id}', [RemplissageController::class, 'update'])->name('evaluation.remplissagesUpdate')->middleware('auth');
 Route::delete('/evaluation/remplissages/{id}', [RemplissageController::class, 'destroy'])->name('evaluation.remplissagesDestroy')->middleware('auth');

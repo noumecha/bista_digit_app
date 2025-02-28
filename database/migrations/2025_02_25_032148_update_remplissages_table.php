@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('remplissages', function (Blueprint $table) {
-            $table->text('statut');
             $table->integer('duree')->nullable();
             $table->boolean('openDays')->nullable();
         });

@@ -79,7 +79,9 @@ class EnseignementController extends Controller
         $exists = Enseignement::where('classe_id', '=', $request->classe_id)->where('enseignant_matiere_id','=',$request->enseignant_matiere_id)->exists();
 
         if($exists) {
-            return response()->json(['error'=>'La matière est déjà attribuée à un enseignant dans cette classe']);
+            return response()->json([
+                'error' => 'La matière est déjà attribuée à un enseignant dans cette classe'
+            ]);
         }
 
         $enseignement = Enseignement::create([

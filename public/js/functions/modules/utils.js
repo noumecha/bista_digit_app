@@ -219,3 +219,28 @@ function initializeCountdowns() {
         }, 1000);
     });
 }
+
+function calculateEndDate(startDate, duration, weekInclude) {
+    let endDateValue = new Date(startDate);
+    let dayToAdd = 0;
+    if (!duration || !startDate) return;
+    while(dayToAdd < duration) {
+        endDateValue.setDate(endDateValue.getDate() + 1);
+        if (weekInclude || (endDateValue.getDay() !== 0 && endDateValue.getDay() !== 6)) {
+            dayToAdd++;
+        }
+    }
+    return endDateValue;
+}
+
+// Function to update the end date input
+function updateEndDate(startDateInput, durationInput, weekInclude, endDateInput) {
+    if (startDateInput.val() && durationInput.val()) {
+        let endDate = calculateEndDate(
+            startDateInput.val(),
+            parseInt(durationInput.val()),
+            weekInclude
+        );
+        endDateInput.val(formatDate(endDate));
+    }
+}
