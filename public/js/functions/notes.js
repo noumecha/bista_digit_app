@@ -12,22 +12,57 @@ $(function() {
         }
     });
 
-    // onclick for edit
-    $(document).on('click', '#edit-note-button', function() {
-        var studentId = $(this).data('student-id');
-        $('#note-'+ studentId).prop('disabled', false);
-    })
     // fetching note dynamically throw filters
     $('#searchNote,#matiereFilter,#classeFilter,#remplissageFilter').on('change keyup', function () {
         fetchNotes();
     });
 
+    // create note
+    $(document).on('click', '#save-note-button', function() {
+        var icon = $(this).children('i#button-icon');
+        var spinner = $(this).children('span.spinner-border');
+        spinner.removeClass('d-none');
+        icon.addClass('d-none');
+        var form = $(this).closest('form')[0];
+        var studentId = $(this).data('student-id');
+        var noteValue = $('#note-'+studentId).val();
+        var appreciationValue = $('#appreciation-'+studentId).val();
+        $('#note-input-'+studentId).val(noteValue);
+        $('#appreciation-input-'+studentId).val(appreciationValue);
+        var formData = new FormData(form);
+        $.ajax({
+            url: "note/save",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                setSuccessMessage(response.success, '#modal-form-alert-success');
+                setTimeout(function() {
+                    spinner.addClass('d-none');
+                    icon.removeClass('d-none');
+                    fetchNotes();
+                }, 4000);
+            },
+            error: function(xhr) {
+                var datas = Object.entries(xhr.responseJSON.errors);
+                var errors = datas.map(error => error[1][0]);
+                setSuccessMessage(errors, '#modal-form-alert-errors');
+                setTimeout(function() {
+                    spinner.addClass('d-none');
+                    icon.removeClass('d-none');
+                }, 4000);
+            }
+        });
+    });
+
     // change appreciation
+    // on create
     $(document).on('input', '.note-input', function () {
         var studentId = $(this).data('student-id');
         var noteVal = $(this).val();
         var appreciationVal = $('#appreciation-'+studentId);
-        // prevent text input on note input
+
         var validPattern = /^\d*(\.\d{0,2})?$/;
         if (!validPattern.test(noteVal) || noteVal > 20 || noteVal < 0) {
             $(this).val(noteVal.slice(0, -1));
@@ -54,45 +89,35 @@ $(function() {
         }
         appreciationVal.val(appreciationText);
     });
+    // on update modal
+    changeAppreciation('#new_value', '#update-appreciation-');
 
-    // update or create note
-    $(document).on('click', '#save-note-button', function() {
-        var icon = $(this).children('i#button-icon');
+    // update note
+    $(document).on('click', '.spinner-submit-update-note-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        icon.addClass('d-none');
         var form = $(this).closest('form')[0];
-        var studentId = $(this).data('student-id');
-        var noteValue = $('#note-'+studentId).val();
-        var appreciationValue = $('#appreciation-'+studentId).val();
-        $('#note-input-'+studentId).val(noteValue);
-        $('#appreciation-input-'+studentId).val(appreciationValue);
+        var noteId = $('#noteId').val();
         var formData = new FormData(form);
         $.ajax({
-            url: "note/save",
+            url: "note/update/"+noteId,
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function(response) {
-                if(response.error)
-                    setSuccessMessage(response.error, '#modal-form-alert-errors');
-                if(response.success) {
-                    setSuccessMessage(response.success, '#modal-form-alert-success');
-                }
+                setSuccessMessage(response.success, '#modal-form-alert-success');
                 setTimeout(function() {
                     spinner.addClass('d-none');
-                    icon.removeClass('d-none');
+                    fetchNotes();
                 }, 4000);
-                fetchNotes();
             },
-            error: function(xhr, status, error) {
+            error: function(xhr) {
                 var datas = Object.entries(xhr.responseJSON.errors);
                 var errors = datas.map(error => error[1][0]);
                 setSuccessMessage(errors, '#modal-form-alert-errors');
                 setTimeout(function() {
                     spinner.addClass('d-none');
-                    icon.removeClass('d-none');
                 }, 4000);
             }
         });

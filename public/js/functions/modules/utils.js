@@ -254,3 +254,39 @@ function showSpinner(el) {
     }, 3000);
     el.closest('form').submit();
 }
+
+// function for changing appreciation
+function changeAppreciation(noteSelector, appreciationSelector) {
+    $(document).on('input', noteSelector, function () {
+        var noteVal = $(this).val();
+        var appreciationVal = $(appreciationSelector);
+        console.log(appreciationSelector);
+
+        var validPattern = /^\d*(\.\d{0,2})?$/;
+        if (!validPattern.test(noteVal) || noteVal > 20 || noteVal < 0) {
+            $(this).val(noteVal.slice(0, -1));
+            return;
+        }
+
+        noteVal = parseFloat(noteVal);
+        var appreciationText = '';
+        if (parseFloat(noteVal) < 10) {
+            appreciationText = "D (CNA)";
+        } else if (parseFloat(noteVal) >= 10 && parseFloat(noteVal) < 12) {
+            appreciationText = "CMA (C)";
+        } else if (parseFloat(noteVal) >= 12 && parseFloat(noteVal) < 14) {
+            appreciationText = "CA (C+)";
+        } else if (parseFloat(noteVal) >= 14 && parseFloat(noteVal) < 15) {
+            appreciationText = "CBA (B)";
+        } else if (parseFloat(noteVal) >= 15 && parseFloat(noteVal) < 16) {
+            appreciationText = "CBA (B+)";
+        } else if (parseFloat(noteVal) >= 16 && parseFloat(noteVal) < 18) {
+            appreciationText = "CTBA (A)";
+        } else if (parseFloat(noteVal) >= 18 && parseFloat(noteVal) <= 20) {
+            appreciationText = "CTBA (A+)";
+        } else {
+            appreciationText = "NOTE INVALIDE";
+        }
+        appreciationVal.val(appreciationText);
+    });
+}

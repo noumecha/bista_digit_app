@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Note extends Model
 {
@@ -58,5 +59,12 @@ class Note extends Model
     public function classe(): BelongsTo
     {
         return $this->belongsTo(Classe::class, 'classe_id');
+    }
+    /**
+     * a note has many notes histories
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(NoteHistory::class);
     }
 }

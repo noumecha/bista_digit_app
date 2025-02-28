@@ -241,6 +241,7 @@ Route::get('/notes', function () {
 })->middleware('auth');
 Route::get('/evaluation/notes', [NoteController::class, 'index'])->name('evaluation.notes')->middleware('auth');
 Route::post('/evaluation/note/save', [NoteController::class, 'store'])->name('evaluation.noteStore')->middleware('auth');
+Route::put('/evaluation/note/update/{id}', [NoteController::class, 'update'])->name('evaluation.noteUpdate')->middleware('auth');
 Route::delete('/evaluation/notes/delete/{id}', [NoteController::class, 'destroy'])->name('evaluation.notesDestroy')->middleware('auth');
 Route::get('/evaluation/notes/matieres/{classId}', [NoteController::class, 'getMatieres'])->middleware('auth');
 

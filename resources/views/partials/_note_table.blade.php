@@ -63,7 +63,7 @@
                             disabled
                         >
                     </td>
-                    <td class="text-center align-middle bg-transparent border-bottom">
+                    <td class="align-middle bg-transparent border-bottom">
                         <form id="note-form">
                             @csrf
                             <input type="hidden" id="note_id" name="note_id" value="{{ isset($studentNote) ? $studentNote->id : '' }}">
@@ -96,8 +96,11 @@
                             <button
                                 type="button"
                                 id="edit-note-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#update-note-modal-{{ isset($studentNote) ? $studentNote->id : '' }}"
                                 class="btn btn-secondary p-2 mb-0"
                                 data-student-id="{{ $student->id }}"
+                                {{ !isset($matiereFilter) || !isset($remplissageFilter) || !isset($classeFilter)  || !isset($studentNote) ? 'disabled' : '' }}
                             >
                                 <i class="fa-solid fa-pen"></i>
                             </button>
@@ -133,6 +136,86 @@
                                                 <button type="submit" class="spinner-submit-button btn btn-danger">
                                                     <span class="spinner-border spinner-border-sm d-none" role="status"></span>
                                                     Confirmer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
+                        <!-- modal for updating a note -->
+                        @if(isset($studentNote))
+                            <div class="modal fade" id="update-note-modal-{{ isset($studentNote) ? $studentNote->id : '' }}" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <form enctype="multipart/form-data" role="form" id="updateNoteForm" class="form row">
+                                        @csrf
+                                        <input type="hidden" name="noteId" id="noteId" value="{{ $studentNote->id }}">
+                                        <div class="modal-content p-0">
+                                            <div class="modal-header bg-success">
+                                                <div class="modal-title row">
+                                                    <div class="col-12">
+                                                        <h5 class="text-white text-justify text-wrap">
+                                                            Vous modifier la note de {{ $student->name }} {{ $student->surname }}
+                                                            en {{ $studentNote->matiere->libelleMatiere }} pour le compte de
+                                                            l'évaluation : {{ $studentNote->evaluation->libelleEvaluation }}.
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-12 text-start">
+                                                        <div class="form-group">
+                                                            <label for="new_value" class="form-control-label">
+                                                                Nouvelle note :
+                                                            </label>
+                                                            <input
+                                                                type="number"
+                                                                name="new_value"
+                                                                id="new_value-{{ $student->id }}"
+                                                                data-student-id="{{ $student->id }}"
+                                                                class="form-control new_value"
+                                                                max="20"
+                                                                step="0.25"
+                                                                min="0"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 text-start">
+                                                        <div class="form-group">
+                                                            <label for="date_debut" class="form-control-label">
+                                                                Nouvelle appréciation :
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                id="appreciation-{{ $student->id }}"
+                                                                name="appreciation"
+                                                                class="form-control"
+                                                                value=""
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 text-start">
+                                                        <div class="form-group">
+                                                            <label for="reason" class="form-control-label">
+                                                                Raison du changement de la note :
+                                                            </label>
+                                                            <input type="text" id="reason" name="reason" class="form-control" value=""/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                                                </div>
+                                                <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer flex-row-reverse">
+                                                <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                                <button type="button" id="submit-udpate-note-form-button" class="spinner-submit-update-note-form-button btn-outline-success btn btn-lg">
+                                                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                                    Mettre à jour
                                                 </button>
                                             </div>
                                         </div>

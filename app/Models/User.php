@@ -199,4 +199,12 @@ class User extends Authenticatable
 
         return $classes;
     }
+
+    /**
+     * a user can make many NoteHistory
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(NoteHistory::class);
+    }
 }

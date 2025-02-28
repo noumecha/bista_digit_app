@@ -62,6 +62,8 @@
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                        <div>
                             <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
                             </div>
                             <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
@@ -79,4 +81,3 @@
         <script src="{{ asset('js/functions/notes.js') }}"></script>
     @endsection
 </x-app-layout>
-
