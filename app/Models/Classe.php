@@ -58,7 +58,7 @@ class Classe extends Model
     }
 
     /**
-     *
+     * A classe must have many notes in many subjects
      */
     public function notes(): HasMany {
         return $this->hasMany(Note::class);

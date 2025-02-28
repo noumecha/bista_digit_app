@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classe;
+use App\Models\Coefficient;
 use App\Models\Evaluation;
 use App\Models\Matiere;
 use App\Models\Note;
 use App\Models\Remplissage;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 
 class NoteController extends Controller
@@ -17,10 +19,9 @@ class NoteController extends Controller
      */
     public function index(Request $request) {
         // datas
-        $notes = Note::all();
-        $matieres = Matiere::all();
-        $remplissages = Remplissage::all()->where('statut','=','activé');
-        $evaluations = Evaluation::all();
+        $remplissages = Remplissage::all()->where('statut','=','en cours');
+        //$rempsEvalsIds = Remplissage::all()->where('statut','=','en cours')->pluck('evaluation_id');
+        //$evaluations = Evaluation::all()->whereIn('id', $rempsEvalsIds);
         $classes = Classe::all();
         //$students = User::query()->where('typeUser','=','eleve')->paginate(10);
 
@@ -32,11 +33,7 @@ class NoteController extends Controller
 
         $query = Note::query();
         $studentQuery = User::query()->where('typeUser','=','eleve');
-
         if(!empty($searchNote)) {
-            /*$query->whereHas('user', function($q) use ($searchNote) {
-                $q->where('name','LIKE',"%{$searchNote}%");
-            });*/
             $studentQuery->where('name','LIKE',"%{$searchNote}%");
         }
         if (!empty($classeFilter)) {
@@ -53,14 +50,14 @@ class NoteController extends Controller
         $students = $studentQuery->paginate(10);
 
         if($request->ajax()) {
-            return view('partials._note_table', compact('students','notes','remplissages','classes','evaluations','matieres','classeFilter','matiereFilter','remplissageFilter'));
+            return view('partials._note_table', compact('students','notes','remplissages','classes','classeFilter','matiereFilter','remplissageFilter'));
         } else {
-            return view('evaluation.notes', compact('remplissages','searchNote','classeFilter','matiereFilter','remplissageFilter','classes','evaluations','matieres','students','evaluations','notes'));
+            return view('evaluation.notes', compact('remplissages','classes','students','notes','classeFilter','matiereFilter','remplissageFilter'));
         }
     }
 
     /**
-     *
+     * create or update note
      */
     public function store(Request $request) {
         $request->validate([
@@ -74,16 +71,15 @@ class NoteController extends Controller
         ], [
             'user_id.required' => 'Aucun élève selectionner',
             'matiere_id.required' => 'Veuillez selectionner une matière',
-            'evaluation_id.required' => 'Veuillez selctionner un remplisage pour la définition de l\'évaluation',
-            'remplissage_id.required' => 'Veuillez selctionner un remplisage pour la définition de l\'évaluation',
+            'evaluation_id.required' => 'Veuillez selctionner une évaluation',
+            'remplissage_id.required' => 'Vérifiez bien qu\'une configuration de remplissage est [en cours]',
             'classe_id.required' => 'Veuillez slectionner une classe',
-            'appreciation.required' => 'Veuillez définir une note pour la définition de l\'appreciation',
+            'appreciation.required' => 'Veuillez entre une note pour la définition de l\'appreciation',
             'note.required' => 'Veuillez entrez une note',
             'note.numeric' => 'La note doite etre un nombre',
             'note.min' => 'La note doit etre égale au moins à 0',
             'note.max' => 'La note doit etre égale au plus à 20'
         ]);
-
         $noteId = $request->note_id;
         if($noteId !== null) {
             $note = Note::findOrFail($noteId);
@@ -107,33 +103,24 @@ class NoteController extends Controller
     }
 
     /**
-     *
+     * getting matiere in coefficient classe base on the classe selection
      */
-    public function destroy(Request $request, $id) {
-        $request->validate([
-            'user_id' => 'required',
-            'matiere_id' => 'required',
-            'evaluation_id' => 'required',
-            'remplissage_id' => 'required',
-            'classe_filter_id' => 'required',
-        ], [
-            'user_id.required' => 'Aucun élève selectionner',
-            'matiere_id.required' => 'Veuillez selectionner une matière',
-            'evaluation_id.required' => 'Veuillez selctionner un remplisage pour la définition de l\'évaluation',
-            'remplissage_id.required' => 'Veuillez selctionner un remplisage pour la définition de l\'évaluation',
-            'classe_filter_id.required' => 'Veuillez slectionner une classe',
-        ]);
+    public function getMatieres($classe_id) {
+        $coefficients = Coefficient::where('classe_id', $classe_id)->pluck('matiere_id');
+        $matieres = Matiere::whereIn('id', $coefficients)->get();
+        return response()->json($matieres->values());
+    }
+
+    /**
+     * delete a specific note
+     */
+    public function destroy($id) {
         $note = Note::findOrFail($id);
-        if($note && $request->classe_filter_id
-            && $request->user_id
-            && $request->matiere_id
-            && $request->evaluation_id
-            && $request->remplissage_id
-        )
-        {
+        try {
             $note->delete();
-            return response()->json(['success' => 'Note supprimé avec succès']);
+            return redirect()->route('evaluation.notes')->with('deleteSuccess', 'Note supprimé avec succès');
+        } catch (Exception $ex) {
+            dd($ex);
         }
-        return response()->json(['error' => 'Note introuvable']);
     }
 }

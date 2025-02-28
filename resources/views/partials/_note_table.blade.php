@@ -1,7 +1,3 @@
-<div class="row alert alert-success text-center" id="msg" style="display: none;">
-</div>
-<div class="alert-danger" id="errors" style="display: none;">
-</div>
 <table class="table text-secondary text-center">
     <thead>
         <tr>
@@ -27,88 +23,127 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($students as $student)
-            <tr>
-                <td class="align-middle bg-transparent border-bottom">
-                    {{ $student->name }}
-                </td>
-                <td class="align-middle bg-transparent border-bottom">
-                    {{ $student->surname }}
-                </td>
-                <td class="align-middle bg-transparent borer-bottom">
-                    <!-- @ dd($notes) -->
-                    @php
-                        $studentNote = $notes->firstWhere('user_id', $student->id);
-                    @endphp
-                    <input
-                        type="number"
-                        class="note-input"
-                        name="note"
-                        max="20"
-                        step="0.25"
-                        min="0"
-                        id="note-{{ $student->id }}"
-                        value="{{ isset($studentNote) ? $studentNote->note : '' }}"
-                        data-student-id="{{ $student->id }}"
-                        {{ isset($studentNote) ? 'disabled' : '' }}
-                    >
-                </td>
-                <td class="align-middle bg-transparent borer-bottom">
-                    <input
-                        type="text"
-                        name="appreciation"
-                        class="form-control appreciation-input"
-                        id="appreciation-{{ $student->id }}"
-                        value="{{ $studentNote->appreciation ?? '' }}"
-                        disabled
-                    >
-                </td>
-                <td class="text-center align-middle bg-transparent border-bottom">
-                    <form data-student-id="{{ $student->id }}" id="note-form">
-                        @csrf
-                        <input type="hidden" id="note_id" name="note_id" value="{{ isset($studentNote) ? $studentNote->id : '' }}">
-                        <input type="hidden" name="user_id" value="{{ $student->id }}">
-                        <input type="hidden" name="matiere_id" value="{{ $matiereFilter }}">
+        @if (empty($students->items()))
+            <td class="text" colspan="5">
+                Aucune donnée disponible
+            </td>
+        @else
+            @foreach ($students as $student)
+                <tr>
+                    <td class="align-middle bg-transparent border-bottom">
+                        {{ $student->name }}
+                    </td>
+                    <td class="align-middle bg-transparent border-bottom">
+                        {{ $student->surname }}
+                    </td>
+                    <td class="align-middle bg-transparent borer-bottom">
+                        @php
+                            $studentNote = $notes->firstWhere('user_id', $student->id);
+                        @endphp
                         <input
-                            type="hidden"
-                            name="evaluation_id"
-                            @php
-                                if(isset($remplissageFilter)) {
-                                    $evaluationId = $remplissages->firstWhere('id', $remplissageFilter);
-                                }
-                            @endphp
-                            value="{{ isset($evaluationId) ? $evaluationId->evaluation->id : '' }}"
-                        >
-                        <input type="hidden" name="remplissage_id" value="{{ isset($remplissageFilter) ? $remplissageFilter : '' }}">
-                        <input type="hidden" name="classe_id" value="{{ $student->classe_id }}">
-                        <button
-                            id="save-note-button"
-                            type="submit"
-                            class="btn btn-primary p-2 mb-0"
-                        >
-                            <i class="fa-solid fa-floppy-disk"></i>
-                        </button>
-                        <button
-                            type="button"
-                            id="edit-note-button"
-                            class="btn btn-secondary p-2 mb-0"
+                            type="number"
+                            class="note-input"
+                            name="note"
+                            max="20"
+                            step="0.25"
+                            min="0"
+                            id="note-{{ $student->id }}"
+                            value="{{ isset($studentNote) ? $studentNote->note : '' }}"
                             data-student-id="{{ $student->id }}"
+                            {{ isset($studentNote) ? 'disabled' : '' }}
                         >
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button
-                            id="delete-note-button"
-                            type="button"
-                            class="delete-note btn btn-danger p-2 mb-0"
-                            data-student-id="{{ $student->id }}"
-                            data-note-id="{{ isset($studentNote) ? $studentNote->id : '' }}"
+                    </td>
+                    <td class="align-middle bg-transparent borer-bottom">
+                        <input
+                            type="text"
+                            name="appreciation"
+                            class="form-control appreciation-input"
+                            id="appreciation-{{ $student->id }}"
+                            value="{{ $studentNote->appreciation ?? '' }}"
+                            disabled
                         >
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        @endforeach
+                    </td>
+                    <td class="text-center align-middle bg-transparent border-bottom">
+                        <form id="note-form">
+                            @csrf
+                            <input type="hidden" id="note_id" name="note_id" value="{{ isset($studentNote) ? $studentNote->id : '' }}">
+                            <input type="hidden" name="user_id" value="{{ $student->id }}">
+                            <input type="hidden" name="matiere_id" value="{{ $matiereFilter }}">
+                            <input
+                                type="hidden"
+                                name="evaluation_id"
+                                @php
+                                    if(isset($remplissageFilter)) {
+                                        $evaluationId = $remplissages->firstWhere('id', $remplissageFilter);
+                                    }
+                                @endphp
+                                value="{{ isset($evaluationId) ? $evaluationId->evaluation->id : '' }}"
+                            >
+                            <input type="hidden" name="remplissage_id" value="{{ isset($remplissageFilter) ? $remplissageFilter : '' }}">
+                            <input type="hidden" name="classe_id" value="{{ $student->classe_id }}">
+                            <input type="hidden" id="note-input-{{ $student->id }}" name="note" value="">
+                            <input type="hidden" id="appreciation-input-{{ $student->id }}" name="appreciation" value="">
+                            <button
+                                id="save-note-button"
+                                type="button"
+                                data-student-id="{{ $student->id }}"
+                                class="btn btn-primary p-2 mb-0"
+                                {{ !isset($matiereFilter) || !isset($remplissageFilter) || !isset($classeFilter) ? 'disabled' : '' }}
+                            >
+                                <i class="fa-solid fa-floppy-disk" id="button-icon"></i>
+                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                            </button>
+                            <button
+                                type="button"
+                                id="edit-note-button"
+                                class="btn btn-secondary p-2 mb-0"
+                                data-student-id="{{ $student->id }}"
+                            >
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-danger ml-2 mt-3 p-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDelete-{{ isset($studentNote) ? $studentNote->id : '' }}"
+                                {{ !isset($studentNote) ? 'disabled' : '' }}
+                            >
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                        <!-- modal for delete confirmation if note exist -->
+                        @if(isset($studentNote))
+                            <div class="modal fade" id="confirmDelete-{{ isset($studentNote) ? $studentNote->id : '' }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                                <div class="modal-dialog">
+                                    <form role="form" class="form" method="POST" action="{{ route('evaluation.notesDestroy', $studentNote->id) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger">
+                                                <h5 class="modal-title text-white" id="exampleModalLabel">Supprimer la note</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-wrap text-justify">
+                                                Voulez-vous vraiment supprimée la note de {{ $student->name }}
+                                                {{ $student->surname }} en {{ $studentNote->matiere->libelleMatiere }} de
+                                                l' {{ $studentNote->evaluation->libelleEvaluation }} ?
+                                            </div>
+                                            <div class="modal-footer flex-row-reverse">
+                                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                                                <button type="submit" class="spinner-submit-button btn btn-danger">
+                                                    <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                                    Confirmer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        @endif
     </tbody>
 </table>
 <div class="d-flex justify-content-center">

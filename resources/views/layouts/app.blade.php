@@ -419,7 +419,6 @@
         <script src="{{ asset('js/functions/dashboard-menu.js') }}"></script>
         <script src="{{ asset('js/functions/success.js') }}"></script>
         <script src="{{ asset('js/functions/modules/utils.js') }}"></script>
-        <script src="{{ asset('js/functions/notes.js') }}"></script>
         <script src="{{ asset('js/functions/spinner.js') }}"></script>
         <script src="{{ asset('js/functions/toggle-eye.js') }}"></script>
         <script src="{{ asset('js/functions/error-input.js') }}"></script>

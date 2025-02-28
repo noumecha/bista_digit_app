@@ -10,10 +10,18 @@ class Note extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['note','appreciation','user_id','matiere_id','evaluation_id','remplissage_id','classe_id'];
+    protected $fillable = [
+        'note',
+        'appreciation',
+        'user_id',
+        'matiere_id',
+        'evaluation_id',
+        'remplissage_id',
+        'classe_id'
+    ];
 
     /**
-     *
+     * a note correspond to a student
      */
     public function eleve(): BelongsTo
     {
@@ -21,7 +29,7 @@ class Note extends Model
     }
 
     /**
-     *
+     * a note correspond to a subject
      */
     public function matiere(): BelongsTo
     {
@@ -29,7 +37,7 @@ class Note extends Model
     }
 
     /**
-     *
+     * a note correspond to a specific evaluation
      */
     public function evaluation(): BelongsTo
     {
@@ -37,7 +45,7 @@ class Note extends Model
     }
 
     /**
-     *
+     * a note is create by a specific remplissage configuration
      */
     public function remplissage(): BelongsTo
     {
@@ -45,7 +53,7 @@ class Note extends Model
     }
 
     /**
-     *
+     * a note correspond to a specific classe
      */
     public function classe(): BelongsTo
     {

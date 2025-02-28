@@ -109,7 +109,14 @@
                                         <label for="duree" class="form-control-label">
                                             Durée (en jours) :
                                         </label>
-                                        <input type="number" id="duree" name="duree" class="form-control" value="{{ old("duree") }}">
+                                        <input
+                                            type="number"
+                                            id="duree"
+                                            name="duree"
+                                            min="0"
+                                            class="form-control"
+                                            value="{{ old("duree") }}"
+                                        >
                                     </div>
                                 </div>
                                 <div class="col-md-6">

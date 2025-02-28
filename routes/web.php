@@ -236,9 +236,13 @@ Route::delete('/evaluation/trimestres/{id}', [TrimestreController::class, 'destr
 Route::get('/evaluation/trimestres/years/{yearId}', [TrimestreController::class, 'getYearsDate'])->middleware('auth');
 
 # evaluation - notes routes
+Route::get('/notes', function () {
+    return redirect('/evaluation/notes');
+})->middleware('auth');
 Route::get('/evaluation/notes', [NoteController::class, 'index'])->name('evaluation.notes')->middleware('auth');
 Route::post('/evaluation/note/save', [NoteController::class, 'store'])->name('evaluation.noteStore')->middleware('auth');
-Route::delete('/evaluation/notes/{id}', [NoteController::class, 'destroy'])->name('evaluation.notesDestroy')->middleware('auth');
+Route::delete('/evaluation/notes/delete/{id}', [NoteController::class, 'destroy'])->name('evaluation.notesDestroy')->middleware('auth');
+Route::get('/evaluation/notes/matieres/{classId}', [NoteController::class, 'getMatieres'])->middleware('auth');
 
 # evaluation - bulleting routes
 Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->name('evaluation.bulletins')->middleware('auth');

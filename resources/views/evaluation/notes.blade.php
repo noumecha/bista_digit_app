@@ -5,9 +5,9 @@
             <div class="mt-4 row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="pb-0 card-header">
+                        <div class="card-header">
                             @if (session('deleteSuccess'))
-                                <div class="row alert alert-success text-center" id="success-message">
+                                <div class="row alert alert-success text-center success-message">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
@@ -25,29 +25,17 @@
                                 </div>
                             </div>
                             <form id="filterNoteForm" class="form form-inline row mt-3">
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <input type="text" name="searchNote" value="{{ isset($searchNote) ? $searchNote : '' }}" id="searchNote" class="form-control" placeholder="Rechercher une note (nom de l'élève)"/>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" name="searchNote" id="searchNote" class="form-control" placeholder="Rechercher une note (nom de l'élève)"/>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="input-group">
-                                        <select name="matiereFilter" class="form-select" id="matiereFilter">
-                                            <option value="">Toutes les matières</option>
-                                            @foreach ($matieres as $mat)
-                                                <option value="{{$mat->id}}" {{ request('matiereFilter') == $mat->id ? 'selected' : '' }}>
-                                                    {{ $mat->libelleMatiere }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="input-group">
+                                    <div class="form-group">
                                         <select name="classeFilter" class="form-select" id="classeFilter">
                                             <option value="">Toutes les classes</option>
                                             @foreach ($classes as $classe)
-                                                <option value="{{$classe->id}}" {{ request('classeFilter') == $classe->id ? 'selected' : '' }}>
+                                                <option value="{{$classe->id}}">
                                                     {{ $classe->libClasse }}
                                                 </option>
                                             @endforeach
@@ -55,11 +43,18 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="input-group">
+                                    <div class="form-group">
+                                        <select name="matiereFilter" class="form-select" id="matiereFilter">
+                                            <option value="">Sélectionner une matière</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <select name="remplissageFilter" class="form-select" id="remplissageFilter">
                                             <option value="">Toutes les évaluations</option>
                                             @foreach ($remplissages as $remplissage)
-                                                <option value="{{$remplissage->id}}" {{ request('remplissageFilter') == $remplissage->id ? 'selected' : '' }}>
+                                                <option value="{{ $remplissage->id }}">
                                                     {{ $remplissage->evaluation->libelleEvaluation }}
                                                 </option>
                                             @endforeach
@@ -67,8 +62,11 @@
                                     </div>
                                 </div>
                             </form>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            </div>
                         </div>
-
                         <div class="table-responsive mt-3" id="notesTable">
                         </div>
                     </div>
@@ -77,6 +75,8 @@
         </div>
         <x-app.footer />
     </main>
-
+    @section('scripts')
+        <script src="{{ asset('js/functions/notes.js') }}"></script>
+    @endsection
 </x-app-layout>
 

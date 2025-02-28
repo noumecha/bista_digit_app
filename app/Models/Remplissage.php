@@ -30,7 +30,7 @@ class Remplissage extends Model
 
 
     /**
-     *
+     * A remplissage helps to set many notes
      */
     public function notes(): HasMany {
         return $this->hasMany(Note::class);

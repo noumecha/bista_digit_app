@@ -43,7 +43,7 @@ class Matiere extends Model
     }
 
     /**
-     *
+     * A subject has many notes
      */
     public function notes(): HasMany {
         return $this->hasMany(Note::class);

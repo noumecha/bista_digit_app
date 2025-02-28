@@ -244,3 +244,13 @@ function updateEndDate(startDateInput, durationInput, weekInclude, endDateInput)
         endDateInput.val(formatDate(endDate));
     }
 }
+
+// function to show spinner :
+function showSpinner(el) {
+    el.children('span.spinner-border').removeClass('d-none');
+    el.disabled = true;
+    setTimeout(function() {
+        el.children('span.spinner-border').addBack('d-none');
+    }, 3000);
+    el.closest('form').submit();
+}
