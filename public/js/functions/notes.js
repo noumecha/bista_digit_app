@@ -18,7 +18,9 @@ $(function() {
     });
 
     // create note
-    $(document).on('click', '#save-note-button', function() {
+    $(document).on('click', '#save-note-button', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         var icon = $(this).children('i#button-icon');
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
@@ -37,12 +39,17 @@ $(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                setSuccessMessage(response.success, '#modal-form-alert-success');
+                if(response.error)
+                    setSuccessMessage(response.error, '#modal-form-alert-errors');
+                if(response.success)
+                    setSuccessMessage(response.success, '#modal-form-alert-success');
                 setTimeout(function() {
                     spinner.addClass('d-none');
                     icon.removeClass('d-none');
                     fetchNotes();
-                }, 4000);
+                }, 3000);
+                // Remove any lingering backdrop
+                $('.modal-backdrop').remove();
             },
             error: function(xhr) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -69,12 +76,15 @@ $(function() {
     });
 
     // update note
-    $(document).on('click', '.spinner-submit-update-note-form-button', function() {
+    $(document).on('click', '.spinner-submit-update-note-form-button', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
         var form = $(this).closest('form')[0];
         var noteId = $(form).find('[name="noteId"]').val();
         var modalId = $(this).closest('div.modal').prop('id');
+        var modalFade = $('.modal-backdrop');
         var studentId = $(this).closest('div.modal').data('student-id');
         var formData = new FormData(form);
         formData.append('_method', 'PUT');
@@ -91,8 +101,10 @@ $(function() {
                     setSuccessMessage(response.success, '#note-modal-form-alert-success-'+noteId);
                 setTimeout(function() {
                     spinner.addClass('d-none');
+                    $('#'+modalId).hide();
+                    modalFade.hide();
                     fetchNotes();
-                }, 4000);
+                }, 8000);
             },
             error: function(xhr) {
                 var errors = []
@@ -130,7 +142,7 @@ $(function() {
             success : function(data) {
                 $('#notesTable').html(data);
             },
-            error: function(xhr, status, error) {
+            error: function(xhr) {
                 var datas = Object.entries(xhr.responseJSON.errors);
                 var errors = datas.map(error => error[1][0]);
                 setSuccessMessage(errors, '#modal-form-alert-errors');
@@ -140,4 +152,12 @@ $(function() {
 
     // default function running :
     fetchNotes();
+
+    // handle pagination :
+    $(document).on('click', '.pagination a', function (event) {
+        event.preventDefault();
+
+        var page = $(this).attr('href').split('page=')[1];
+        fetchPage(page, '#notesTable');
+    });
 });

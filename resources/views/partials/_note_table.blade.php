@@ -36,7 +36,7 @@
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $student->surname }}
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
+                    <td class="align-middle bg-transparent border-bottom">
                         @php
                             $studentNote = $notes->firstWhere('user_id', $student->id);
                         @endphp
@@ -53,7 +53,7 @@
                             {{ isset($studentNote) ? 'disabled' : '' }}
                         >
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
+                    <td class="align-middle bg-transparent border-bottom">
                         <input
                             type="text"
                             name="appreciation"
@@ -63,8 +63,8 @@
                             disabled
                         >
                     </td>
-                    <td class="align-middle bg-transparent border-bottom">
-                        <form id="note-form">
+                    <td class="text-center d-flex justify-content-evenly align-items-center align-middle bg-transparent border-bottom">
+                        <form role="form" class="form" id="note-form">
                             @csrf
                             <input type="hidden" id="note_id" name="note_id" value="{{ isset($studentNote) ? $studentNote->id : '' }}">
                             <input type="hidden" name="user_id" value="{{ $student->id }}">
@@ -88,32 +88,32 @@
                                 type="button"
                                 data-student-id="{{ $student->id }}"
                                 class="btn btn-primary p-2 mb-0"
-                                {{ !isset($matiereFilter) || !isset($remplissageFilter) || !isset($classeFilter) ? 'disabled' : '' }}
+                                {{ !isset($matiereFilter) || !isset($remplissageFilter) || !isset($classeFilter) || isset($studentNote) ? 'disabled' : '' }}
                             >
                                 <i class="fa-solid fa-floppy-disk" id="button-icon"></i>
                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
                             </button>
-                            <button
-                                type="button"
-                                id="edit-note-button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#update-note-modal-{{ isset($studentNote) ? $studentNote->id : '' }}"
-                                class="btn btn-secondary p-2 mb-0"
-                                data-student-id="{{ $student->id }}"
-                                {{ !isset($matiereFilter) || !isset($remplissageFilter) || !isset($classeFilter)  || !isset($studentNote) ? 'disabled' : '' }}
-                            >
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-danger ml-2 mt-3 p-2"
-                                data-bs-toggle="modal"
-                                data-bs-target="#confirmDelete-{{ isset($studentNote) ? $studentNote->id : '' }}"
-                                {{ !isset($studentNote) ? 'disabled' : '' }}
-                            >
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
                         </form>
+                        <button
+                            type="button"
+                            id="edit-note-button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#update-note-modal-{{ isset($studentNote) ? $studentNote->id : '' }}"
+                            class="btn btn-secondary p-2 mb-0"
+                            data-student-id="{{ $student->id }}"
+                            {{ !isset($matiereFilter) || !isset($remplissageFilter) || !isset($classeFilter)  || !isset($studentNote) ? 'disabled' : '' }}
+                        >
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-danger ml-2 mt-3 p-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmDelete-{{ isset($studentNote) ? $studentNote->id : '' }}"
+                            {{ !isset($studentNote) ? 'disabled' : '' }}
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
                         <!-- modal for delete confirmation if note exist -->
                         @if(isset($studentNote))
                             <div class="modal fade" id="confirmDelete-{{ isset($studentNote) ? $studentNote->id : '' }}" tabindex="-1" aria-labelledby="exampleModalLabel">

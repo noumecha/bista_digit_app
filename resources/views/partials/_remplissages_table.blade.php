@@ -36,7 +36,7 @@
                     <td class="align-middle bg-transparent border-bottom">
                         {{ formatDate($remplissage->date_fin , 'd/m/Y') }}
                     </td>
-                    <td class="align-middle bg-transparent borer-bottom">
+                    <td class="align-middle bg-transparent border-bottom">
                         {{ $remplissage->evaluation->libelleEvaluation }}
                     </td>
                     <td

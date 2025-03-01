@@ -122,7 +122,8 @@ $(function(){
             }
         });
     });
-    // reseting form title and color :
+
+    // reseting form title and color when closing modal :
     $('#create-remplissage-modal').on('hidden.bs.modal', function () {
         const form = $('#remplissageForm');
         form.trigger('reset');
@@ -159,6 +160,7 @@ $(function(){
             }
         });
     }
+
     // handle pagination :
     $(document).on('click', '.pagination a', function (event) {
         event.preventDefault();
@@ -166,5 +168,4 @@ $(function(){
         var page = $(this).attr('href').split('page=')[1];
         fetchPage(page, '#remplissagesTable');
     });
-
 });

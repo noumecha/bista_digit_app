@@ -94,17 +94,29 @@ class NoteController extends Controller
             'note.min' => 'La note doit etre égale au moins à 0',
             'note.max' => 'La note doit etre égale au plus à 20'
         ]);
-        $note = Note::create([
-            'matiere_id' => $request->matiere_id,
-            'user_id' => $request->user_id,
-            'classe_id' => $request->classe_id,
-            'evaluation_id' => $request->evaluation_id,
-            'remplissage_id' => $request->remplissage_id,
-            'note' => $request->note,
-            'appreciation' => $request->appreciation
-        ]);
-        if($note) {
-            return response()->json(['success' => 'Note enregistrée avec succès']);
+        $existNote = Note::where('user_id', $request->user_id)
+            ->where('matiere_id',$request->matiere_id,)
+            ->where('classe_id',$request->classe_id,)
+            ->where('evaluation_id',$request->evaluation_id,)
+            ->where('remplissage_id',$request->remplissage_id,)
+            ->exists();
+        if($existNote) {
+            return response()->json([
+                'error' => 'La note existe déjà !'
+            ]);
+        } else {
+            $note = Note::create([
+                'matiere_id' => $request->matiere_id,
+                'user_id' => $request->user_id,
+                'classe_id' => $request->classe_id,
+                'evaluation_id' => $request->evaluation_id,
+                'remplissage_id' => $request->remplissage_id,
+                'note' => $request->note,
+                'appreciation' => $request->appreciation
+            ]);
+            if($note) {
+                return response()->json(['success' => 'Note enregistrée avec succès']);
+            }
         }
     }
 
@@ -171,8 +183,10 @@ class NoteController extends Controller
      */
     public function destroy($id) {
         $note = Note::findOrFail($id);
+        $noteHistory = NoteHistory::where('note_id', $note->id);
         try {
             $note->delete();
+            $noteHistory->delete();
             return redirect()->route('evaluation.notes')->with('deleteSuccess', 'Note supprimé avec succès');
         } catch (Exception $ex) {
             dd($ex);
