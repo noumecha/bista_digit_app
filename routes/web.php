@@ -246,7 +246,12 @@ Route::delete('/evaluation/notes/delete/{id}', [NoteController::class, 'destroy'
 Route::get('/evaluation/notes/matieres/{classId}', [NoteController::class, 'getMatieres'])->middleware('auth');
 
 # evaluation - bulleting routes
-Route::get('/evaluation/bulletins', [EvaluationController::class, 'index'])->name('evaluation.bulletins')->middleware('auth');
+
+Route::get('/bulletins', function () {
+    return redirect('/bulletins/list');
+})->middleware('auth');
+Route::get('/bulletins/list', [BullettinController::class, 'index'])->name('bulletins.list')->middleware('auth');
+Route::get('/bulletins/configuration', [BullettinController::class, 'configs'])->name('bulletins.configuration')->middleware('auth');
 
 
 #evaluation - evaluations routes

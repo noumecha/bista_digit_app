@@ -29,3 +29,9 @@ ck editor error
     position: absolute;
     cursor: pointer;
 }
+/** logo bulletin template */
+.logo-bulletin {
+    height: 150px;
+    width: 100%;
+    object-fit: contain;
+}
