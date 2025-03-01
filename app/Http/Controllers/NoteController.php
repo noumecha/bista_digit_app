@@ -114,7 +114,6 @@ class NoteController extends Controller
      */
     public function update(Request $request, $id) {
         $request->validate([
-            'note_id' => 'required',
             'appreciation' => 'required',
             'new_value' => 'required|numeric|min:0|max:20',
             'reason' => 'required|string',
@@ -123,6 +122,7 @@ class NoteController extends Controller
             'new_value.numeric' => 'La note doite etre un nombre',
             'new_value.min' => 'La note doit etre égale au moins à 0',
             'new_value.max' => 'La note doit etre égale au plus à 20',
+            'new_value.required' => 'Entrez la nouvelle valeur de la note',
             'reason.required' => 'Entrez la raison de la modification de la note'
         ]);
 
@@ -137,7 +137,7 @@ class NoteController extends Controller
         // saving history note
         $noteHistory = NoteHistory::create([
             'note_id' => $note->id,
-            'teacher_id' => Auth::id(),
+            'user_id' => Auth::id(),
             'old_value' => $oldValue,
             'new_value' => $request->new_value,
             'reason' => $request->reason,

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('note_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('note_id')->constrained()->onDelete('cascade');
-            $table->foreignId('teacher_id')->constrained('users');
-            $table->decimal('old_value', 5, 2);
-            $table->decimal('new_value', 5, 2);
-            $table->text('reason')->nullable();
+            $table->foreignId('user_id')->constrained('users');
+            $table->double('old_value');
+            $table->double('new_value');
+            $table->text('reason');
             $table->timestamps();
         });
     }

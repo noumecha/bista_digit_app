@@ -2,7 +2,6 @@
 function setSuccessMessage(msg, id) {
     const msgBlock = $(id);
     msgBlock.stop(true, true).empty();
-
     if (Array.isArray(msg)) {
         const list = $('<ul></ul>');
         msg.forEach((m) => list.append($('<li></li>').text(m)));
@@ -16,7 +15,7 @@ function setSuccessMessage(msg, id) {
 }
 
 // mark the input border of the form in red when some error occurs
-function stylingErrors(errs) {
+function stylingErrors(errs, id) {
     $('input').removeClass('is-invalid');
     for (let field in errs) {
         if (errs.hasOwnProperty(field)) {
@@ -32,7 +31,10 @@ function stylingErrors(errs) {
                     setTimeout(() => inputElement.removeClass('is-invalid'), 4000);
                 }
             } else {
-                const inputElement = $('#' + field);
+                let inputElement = $('#' + field);
+                if(id) {
+                    inputElement = $('#' + field + '-' + id);
+                }
                 if (inputElement.length) {
                     inputElement.addClass('is-invalid');
                     setTimeout(() => inputElement.removeClass('is-invalid'), 4000);
@@ -256,37 +258,39 @@ function showSpinner(el) {
 }
 
 // function for changing appreciation
-function changeAppreciation(noteSelector, appreciationSelector) {
-    $(document).on('input', noteSelector, function () {
-        var noteVal = $(this).val();
-        var appreciationVal = $(appreciationSelector);
-        console.log(appreciationSelector);
+function changeAppreciation(noteInput, appreciationInput) {
+    var noteVal = $(noteInput).val();
+    var appreciationVal = $(appreciationInput);
 
-        var validPattern = /^\d*(\.\d{0,2})?$/;
-        if (!validPattern.test(noteVal) || noteVal > 20 || noteVal < 0) {
-            $(this).val(noteVal.slice(0, -1));
-            return;
-        }
-
-        noteVal = parseFloat(noteVal);
-        var appreciationText = '';
-        if (parseFloat(noteVal) < 10) {
-            appreciationText = "D (CNA)";
-        } else if (parseFloat(noteVal) >= 10 && parseFloat(noteVal) < 12) {
-            appreciationText = "CMA (C)";
-        } else if (parseFloat(noteVal) >= 12 && parseFloat(noteVal) < 14) {
-            appreciationText = "CA (C+)";
-        } else if (parseFloat(noteVal) >= 14 && parseFloat(noteVal) < 15) {
-            appreciationText = "CBA (B)";
-        } else if (parseFloat(noteVal) >= 15 && parseFloat(noteVal) < 16) {
-            appreciationText = "CBA (B+)";
-        } else if (parseFloat(noteVal) >= 16 && parseFloat(noteVal) < 18) {
-            appreciationText = "CTBA (A)";
-        } else if (parseFloat(noteVal) >= 18 && parseFloat(noteVal) <= 20) {
-            appreciationText = "CTBA (A+)";
-        } else {
-            appreciationText = "NOTE INVALIDE";
-        }
-        appreciationVal.val(appreciationText);
-    });
+    // Validate the note value
+    var validPattern = /^\d*(\.\d{0,2})?$/;
+    if (!validPattern.test(noteVal) || noteVal > 20 || noteVal < 0) {
+        $(this).val(noteVal.slice(0, -1));
+        return;
+    }
+    noteVal = parseFloat(noteVal);
+    var appreciationText = '';
+    if (parseFloat(noteVal) < 10) {
+        appreciationText = "D (CNA)";
+    } else if (parseFloat(noteVal) >= 10 && parseFloat(noteVal) < 12) {
+        appreciationText = "CMA (C)";
+    } else if (parseFloat(noteVal) >= 12 && parseFloat(noteVal) < 14) {
+        appreciationText = "CA (C+)";
+    } else if (parseFloat(noteVal) >= 14 && parseFloat(noteVal) < 15) {
+        appreciationText = "CBA (B)";
+    } else if (parseFloat(noteVal) >= 15 && parseFloat(noteVal) < 16) {
+        appreciationText = "CBA (B+)";
+    } else if (parseFloat(noteVal) >= 16 && parseFloat(noteVal) < 18) {
+        appreciationText = "CTBA (A)";
+    } else if (parseFloat(noteVal) >= 18 && parseFloat(noteVal) <= 20) {
+        appreciationText = "CTBA (A+)";
+    } else {
+        appreciationText = "NOTE INVALIDE";
+    }
+    appreciationVal.val(appreciationText);
+}
+// this function is use to change appreciation base on section type
+// anglophone or francophone section
+function changeAppreciationForAll() {
+    console.log("change appreciation base on section type");
 }

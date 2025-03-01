@@ -1,5 +1,4 @@
 $(function(){
-    console.log($('#openDays').is(':checked'));
     // on change durree - update date fin
     $('#duree, #date_debut').on('input', function() {
         updateEndDate($('#date_debut'), $('#duree'), $('#openDays').is(':checked'), $('#date_fin'));

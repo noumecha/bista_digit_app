@@ -145,7 +145,7 @@
                         @endif
                         <!-- modal for updating a note -->
                         @if(isset($studentNote))
-                            <div class="modal fade" id="update-note-modal-{{ isset($studentNote) ? $studentNote->id : '' }}" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+                            <div class="modal fade" data-student-id="{{ $student->id }}" id="update-note-modal-{{ isset($studentNote) ? $studentNote->id : '' }}" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <form enctype="multipart/form-data" role="form" id="updateNoteForm" class="form row">
                                         @csrf
@@ -190,10 +190,11 @@
                                                             </label>
                                                             <input
                                                                 type="text"
-                                                                id="appreciation-{{ $student->id }}"
+                                                                id="update-appreciation-{{ $student->id }}"
                                                                 name="appreciation"
                                                                 class="form-control"
                                                                 value=""
+                                                                readonly
                                                             />
                                                         </div>
                                                     </div>
@@ -202,13 +203,19 @@
                                                             <label for="reason" class="form-control-label">
                                                                 Raison du changement de la note :
                                                             </label>
-                                                            <input type="text" id="reason" name="reason" class="form-control" value=""/>
+                                                            <input
+                                                                type="text"
+                                                                id="reason-{{ $student->id }}"
+                                                                name="reason"
+                                                                class="form-control"
+                                                                value=""
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                                                <div class="alert text-start alert-success" style="display: none;" id="note-modal-form-alert-success-{{ $studentNote->id }}">
                                                 </div>
-                                                <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                                                <div class="alert text-start alert-danger" style="display: none;" id="note-modal-form-alert-errors-{{ $studentNote->id }}">
                                                 </div>
                                             </div>
                                             <div class="modal-footer flex-row-reverse">

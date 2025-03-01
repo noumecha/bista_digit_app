@@ -56,49 +56,28 @@ $(function() {
         });
     });
 
-    // change appreciation
-    // on create
+    // change appreciation on create
     $(document).on('input', '.note-input', function () {
         var studentId = $(this).data('student-id');
-        var noteVal = $(this).val();
-        var appreciationVal = $('#appreciation-'+studentId);
-
-        var validPattern = /^\d*(\.\d{0,2})?$/;
-        if (!validPattern.test(noteVal) || noteVal > 20 || noteVal < 0) {
-            $(this).val(noteVal.slice(0, -1));
-            return ;
-        }
-        noteVal = parseFloat(noteVal);
-        var appreciationText = '';
-        if (parseFloat(noteVal) < 10) {
-            appreciationText = "D (CNA)";
-        } else if (parseFloat(noteVal) >= 10 && parseFloat(noteVal) < 12) {
-            appreciationText = "CMA (C)";
-        } else if (parseFloat(noteVal) >= 12 && parseFloat(noteVal) < 14) {
-            appreciationText = "CA (C+)";
-        } else if (parseFloat(noteVal) >= 14 && parseFloat(noteVal) < 15) {
-            appreciationText = "CBA (B)";
-        } else if (parseFloat(noteVal) >= 15 && parseFloat(noteVal) < 16) {
-            appreciationText = "CBA (B+)";
-        } else if (parseFloat(noteVal) >= 16 && parseFloat(noteVal) < 18) {
-            appreciationText = "CTBA (A)";
-        } else if (parseFloat(noteVal) >= 18 && parseFloat(noteVal) <= 20) {
-            appreciationText = "CTBA (A+)";
-        } else {
-            appreciationText = "NOTE INVALIDE";
-        }
-        appreciationVal.val(appreciationText);
+        changeAppreciation(this, '#appreciation-' + studentId);
     });
-    // on update modal
-    changeAppreciation('#new_value', '#update-appreciation-');
+
+    // change appreciation on update modal
+    $(document).on('input', '.new_value', function () {
+        var studentId = $(this).data('student-id');
+        changeAppreciation(this, '#update-appreciation-' + studentId);
+    });
 
     // update note
     $(document).on('click', '.spinner-submit-update-note-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
         var form = $(this).closest('form')[0];
-        var noteId = $('#noteId').val();
+        var noteId = $(form).find('[name="noteId"]').val();
+        var modalId = $(this).closest('div.modal').prop('id');
+        var studentId = $(this).closest('div.modal').data('student-id');
         var formData = new FormData(form);
+        formData.append('_method', 'PUT');
         $.ajax({
             url: "note/update/"+noteId,
             type: 'POST',
@@ -106,19 +85,31 @@ $(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                setSuccessMessage(response.success, '#modal-form-alert-success');
+                if(response.error)
+                    setSuccessMessage(response.error, '#note-modal-form-alert-errors-'+noteId);
+                if(response.success)
+                    setSuccessMessage(response.success, '#note-modal-form-alert-success-'+noteId);
                 setTimeout(function() {
                     spinner.addClass('d-none');
                     fetchNotes();
                 }, 4000);
             },
             error: function(xhr) {
-                var datas = Object.entries(xhr.responseJSON.errors);
-                var errors = datas.map(error => error[1][0]);
-                setSuccessMessage(errors, '#modal-form-alert-errors');
+                var errors = []
+                if(xhr.responseJSON && xhr.responseJSON.errors) {
+                    stylingErrors(xhr.responseJSON.errors, studentId);
+                    var datas = Object.entries(xhr.responseJSON.errors);
+                    errors = datas.map(error => error[1][0]);
+                    $('#'+modalId).on('hidden.bs.modal', function() {
+                        return false;
+                    });
+                } else {
+                    setSuccessMessage('Erreur inconue' , '#note-modal-form-alert-errors-'+noteId);
+                }
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
+                setSuccessMessage(errors, '#note-modal-form-alert-errors-'+noteId);
             }
         });
     });
