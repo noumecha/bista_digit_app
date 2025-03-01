@@ -31,7 +31,6 @@ class CoefficientController extends Controller
         if(isset($coefSchoolYears)) {
             $query = Coefficient::query()->whereIn('id', $coefSchoolYearsIds);
         }
-        //$query = Coefficient::query();
 
         // filtering
         if(!empty($searchCoef)) {
@@ -40,7 +39,9 @@ class CoefficientController extends Controller
             });
         }
         if(!empty($groupFilter)) {
-            $query->where('groupe_matiere', 'LIKE', "%{$groupFilter}%");
+            $query->whereHas('coefAnneeScolaire', function ($q) use ($groupFilter) {
+                $q->where('groupe_matiere', 'LIKE', "%{$groupFilter}%");
+            });
         }
         if(!empty($classeFilter)) {
             $query->whereHas('classe', function ($q) use ($classeFilter) {
@@ -53,7 +54,6 @@ class CoefficientController extends Controller
             });
         }
 
-        //dd($query);
         $coefficients = $query->paginate(10);
 
         if($request->ajax()) {
@@ -63,6 +63,9 @@ class CoefficientController extends Controller
         }
     }
 
+    /**
+     * create a specific matieres configuration for a specific class
+     */
     public function store(Request $request) {
         $request->validate([
             'classe_id' => 'required|exists:classes,id',
