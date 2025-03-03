@@ -264,6 +264,54 @@
                     </a>
                 </li>
             </ul>
+            <!-- Clubs -->
+            <ul class="navbar-nav submenu">
+                <li data-submenu="clubs" class="submenu-click-link nav-item mt-2">
+                    <div class="d-flex align-items-center nav-link">
+                        <i class="fa-solid fa-kaaba"></i>
+                        <span class="font-weight-normal text-md ml-n5">Clubs</span>
+                    </div>
+                </li>
+                <li data-submenu="clubs" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.booster') ? 'active' : '' }}"
+                        href="{{ route('programme.booster') }}">
+                        <span class="nav-link-text ms-1">Liste des clubs</span>
+                    </a>
+                </li>
+                <li data-submenu="clubs" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Articles</span>
+                    </a>
+                </li>
+                <li data-submenu="clubs" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Configuration</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- App configuration menu -->
+            <ul class="navbar-nav submenu">
+                <li data-submenu="app_configuration" class="submenu-click-link nav-item mt-2">
+                    <div class="d-flex align-items-center nav-link">
+                        <i class="fa-solid fa-gear fa-sm"></i>
+                        <span class="font-weight-normal text-md ml-n5">Configuration globale</span>
+                    </div>
+                </li>
+                <li data-submenu="app_configuration" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.booster') ? 'active' : '' }}"
+                        href="{{ route('programme.booster') }}">
+                        <span class="nav-link-text ms-1">Informations génériques</span>
+                    </a>
+                </li>
+                <li data-submenu="app_configuration" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Front</span>
+                    </a>
+                </li>
+            </ul>
             <!-- Profile on Dashboard -->
             <ul class="navbar-nav">
                 <li class="nav-item">

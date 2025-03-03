@@ -129,7 +129,7 @@ $(function(){
         form.trigger('reset');
         $('#modal-remplissage-header').removeClass('bg-primary bg-success');
         $('#submit-remplissage-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-remplissage-form-buuton').children('span#submit-remplissage-form-button-text').text('');
+        $('#submit-remplissage-form-button').children('span#submit-remplissage-form-button-text').text('');
         $('#evaluation_id').prop("disabled", false);
         $('#date_fin').prop("readOnly", false);
     });
