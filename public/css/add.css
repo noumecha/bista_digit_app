@@ -38,3 +38,6 @@ ck editor error
     width: 100%;
     object-fit: contain;
 }
+.bulletin-date-footer {
+    margin-top: 150px !important;
+}

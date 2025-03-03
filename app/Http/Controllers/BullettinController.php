@@ -64,6 +64,7 @@ class BullettinController extends Controller
     {
         $user = User::find(Auth::id());
 
-        return view('bulletin.template', compact('user'));
+        //return view('bulletin.annual', compact('user'));
+        return view('bulletin.trimestrielle', compact('user'));
     }
 }
