@@ -3,9 +3,9 @@ $(function(){
     $(document).on('click', '[data-bs-target="#update-appconfiguration-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
-        var appconfigurationId = $(this).data('appconfiguration-id');
-        var action = appconfigurationId.val() !== "" ? "edit" : "create";
+        var appconfigurationId = $('#appconfigurationId');
         var appconfigurationIdInput = $('#appconfigurationId');
+        var action = appconfigurationId.val() !== "" ? "edit" : "create";
         var form = $('#appconfigurationForm');
         var button = $('#submit-appconfiguration-form-button');
         var header = $('#modal-appconfiguration-header');
@@ -27,7 +27,6 @@ $(function(){
             button.addClass('btn-outline-success');
             button.children('span#submit-appconfiguration-form-button-text').text('Mettre à jour');
             headerText.text('Modifier les informations de l\'établissement');
-            appconfigurationIdInput.val(appconfigurationId);
             $.ajax({
                 url: "app_configuration/"+appconfigurationId+"/edit",
                 type: "GET",
@@ -47,12 +46,11 @@ $(function(){
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
         var buttonText = $(this).children('span#submit-appconfiguration-form-button-text');
-        var appconfigurationId = $('#appconfigurationId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
 
         // Kind of action
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'app_configuration/update/' + appconfigurationId + "/update": 'app_configuration/update/' + appconfigurationId + "/create";
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'app_configuration/update' : 'app_configuration/create';
         var modalId = $(this).closest('div.modal').prop('id');
         $.ajax({
             url: formAction,
@@ -105,16 +103,17 @@ $(function(){
     // fetching all remplissages :
     function fetchAppConfigurations() {
         $.ajax({
-            url : "configurations/app_configuration",
+            url : "app_configuration",
             type : 'GET',
-            data : formData,
-            success : function(data) {
-                $('#remplissagesTable').html(data);
+            success : function() {
+                console.log("app configuration loaded !");
             },
             error: function(xhr, status, error) {
-                var datas = Object.entries(xhr.responseJSON.errors);
-                var errors = datas.map(error => error[1][0]);
-                setSuccessMessage(errors, '#modal-form-alert-errors');
+                if (xhr && xhr.responseJSON.errors) {
+                    var datas = Object.entries(xhr.responseJSON.errors);
+                    var errors = datas.map(error => error[1][0]);
+                    setSuccessMessage(errors, '#modal-form-alert-errors');
+                }
             }
         });
     }

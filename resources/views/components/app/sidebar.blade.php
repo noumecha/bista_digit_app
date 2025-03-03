@@ -300,8 +300,8 @@
                     </div>
                 </li>
                 <li data-submenu="app_configuration" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.booster') ? 'active' : '' }}"
-                        href="{{ route('programme.booster') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('app_configuration.index') ? 'active' : '' }}"
+                        href="{{ route('app_configuration.index') }}">
                         <span class="nav-link-text ms-1">Informations génériques</span>
                     </a>
                 </li>

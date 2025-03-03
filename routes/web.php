@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ActusController;
 use App\Http\Controllers\AnneeScolaireController;
+use App\Http\Controllers\AppConfigurationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -252,6 +253,14 @@ Route::get('/bulletins', function () {
 })->middleware('auth');
 Route::get('/bulletins/list', [BullettinController::class, 'index'])->name('bulletins.list')->middleware('auth');
 Route::get('/bulletins/configuration', [BullettinController::class, 'configs'])->name('bulletins.configuration')->middleware('auth');
+
+# configuration routes - app configuration
+
+Route::get('/configurations', function () {
+    return redirect('/configurations/app_configuration');
+})->middleware('auth');
+Route::get('/configurations/app_configuration', [AppConfigurationController::class, 'index'])->name('app_configuration.index')->middleware('auth');
+Route::get('/configurations/app_configuration/{action}', [AppConfigurationController::class, 'update'])->name('app_configuration.update')->middleware('auth');
 
 
 #evaluation - evaluations routes

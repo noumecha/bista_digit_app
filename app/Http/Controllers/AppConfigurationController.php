@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppConfiguration;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AppConfigurationController extends Controller
 {
     /**
-     * index functions to manage app confiuration
+     * index functions to manage app configuration
      */
     public function index() {
-        $appconfiguration = AppConfiguration::all()->first();
-        return view('configurations.app_configuration', compact('appconfiguration'));
+        $appconfiguration = AppConfiguration::all()->last();
+        return view('configurations.app_configuration');
     }
 
     /**
      * index function to create or update configuration
      */
-    public function update(Request $request) {
+    public function update(Request $request, $action) {
         $request->validate([
             'school_name' => 'required|string|min:26|max:255',
             'school_motor' => 'required|string|min:26|max:255',
@@ -43,21 +45,34 @@ class AppConfigurationController extends Controller
             'contact_phone_1.required' => 'Le numero de téléphone 1 de l\'établissement est requis',
         ]);
 
-        $appconfiguration = AppConfiguration::createOrUpdate([
-            'school_name' => $request->school_name,
-            'school_motor' => $request->school_motor,
-            'school_postal_box' => $request->school_postal_box,
-            'school_logo' => $request->hasFile('school_logo') ? $request->file('school_logo')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
-            'description' => $request->content,
-            'school_town' => $request->school_town,
-            'school_location' => $request->school_location,
-            'contact_phone_1' => $request->contact_phone_1,
-            'contact_phone_2' => $request->contact_phone_2,
-            'school_email' => $request->school_email,
-        ]);
-
-        if ($appconfiguration) {
+        try {
+            if($action === 'update' && isset($request->appconfigurationId)) {
+                $appconfiguration = AppConfiguration::findOrFail($request->appconfigurationId);
+                if($request->hasFile('school_logo')) {
+                    $imagePath = $request->file('school_logo')->store('profiles', 'public');
+                    if ($appconfiguration->school_logo) {
+                        Storage::disk('public')->delete($appconfiguration->school_logo);
+                    }
+                    $appconfiguration->school_logo = $imagePath;
+                }
+                $appconfiguration->update($request->except('school_logo'));
+            } else {
+                $appconfiguration = AppConfiguration::create([
+                    'school_name' => $request->school_name,
+                    'school_motor' => $request->school_motor,
+                    'school_postal_box' => $request->school_postal_box,
+                    'school_logo' => $request->hasFile('school_logo') ? $request->file('school_logo')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
+                    'description' => $request->content,
+                    'school_town' => $request->school_town,
+                    'school_location' => $request->school_location,
+                    'contact_phone_1' => $request->contact_phone_1,
+                    'contact_phone_2' => $request->contact_phone_2,
+                    'school_email' => $request->school_email,
+                ]);
+            }
             return response()->json(['success' => 'Configuration de l\'établissement mis à jour avec succès']);
+        } catch (Exception $ex) {
+            dd($ex);
         }
     }
 }
