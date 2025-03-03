@@ -260,7 +260,8 @@ Route::get('/configurations', function () {
     return redirect('/configurations/app_configuration');
 })->middleware('auth');
 Route::get('/configurations/app_configuration', [AppConfigurationController::class, 'index'])->name('app_configuration.index')->middleware('auth');
-Route::get('/configurations/app_configuration/{action}', [AppConfigurationController::class, 'update'])->name('app_configuration.update')->middleware('auth');
+Route::get('/configurations/app_configuration/{id}/edit', [AppConfigurationController::class, 'edit'])->name('app_configuration.edit')->middleware('auth');
+Route::post('/configurations/app_configuration/{action}', [AppConfigurationController::class, 'update'])->name('app_configuration.update')->middleware('auth');
 
 
 #evaluation - evaluations routes

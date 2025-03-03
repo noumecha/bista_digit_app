@@ -11,16 +11,31 @@
                         <div class="col-auto">
                             <div
                                 class="overflow-hidden avatar avatar-2xl bg-white rounded-circle position-relative mt-n7 border border-2 border-dark">
-                                <img src="{{ asset('front/images/logo.png') }}" alt="profile_image" class="w-100">
+                                <img
+                                    @if (isset($appconfiguration) && isset($appconfiguration->school_logo))
+                                        src="{{ asset('storage/' . $appconfiguration->school_logo) }}"
+                                    @else
+                                        src="{{ asset('front/images/logo.png') }}"
+                                    @endif
+                                    alt="school_logo" class="w-100"
+                                />
                             </div>
                         </div>
                         <div class="col-auto my-auto">
                             <div class="h-100">
                                 <h3 class="mb-0 font-weight-bold">
-                                    Noah Mclaren
+                                    @if (isset($appconfiguration) && isset($appconfiguration->school_name))
+                                        {{ $appconfiguration->school_name }}
+                                    @else
+                                        Non défini
+                                    @endif
                                 </h3>
                                 <p class="mb-0">
-                                    noah_mclaren@mail.com
+                                    @if (isset($appconfiguration) && isset($appconfiguration->school_motor))
+                                        {{ $appconfiguration->school_motor }}
+                                    @else
+                                        Non défini
+                                    @endif
                                 </p>
                             </div>
                         </div>
@@ -30,9 +45,11 @@
                                 class="btn btn-lg btn-dark btn-primary text-white"
                                 data-bs-toggle="modal"
                                 data-action="create"
+                                data-appconfiguration-id = "{{ isset($appconfiguration) ? $appconfiguration->id : ''}}"
                                 data-bs-target="#update-appconfiguration-modal"
-                                class="btn btn-sm btn-white">
-                                Modifier
+                                class="btn btn-sm btn-white"
+                            >
+                                <i class="fas fa-pen me-2"></i> Modifier
                             </a>
                         </div>
                     </div>
@@ -51,31 +68,69 @@
                                 </div>
                             </div>
                             <div class="card-body p-3">
-                                <p class="text-sm mb-4">
-                                    {!! Str::limit($appconfiguration->description , $limit=50, $end="...") !!}
-                                </p>
+                                <h6 class="mb-0 font-weight-semibold text-lg">A propos de l'établissement</h6>
+                                @if (isset($appconfiguration) && isset($appconfiguration->description))
+                                    {!! Str::limit($appconfiguration->description , $limit=300, $end="...") !!}
+                                @else
+                                    <p class="text-sm mb-4">aucune description ...</p>
+                                @endif
                                 <ul class="list-group">
                                     <li
                                         class="list-group-item border-0 ps-0 text-dark font-weight-semibold pt-0 pb-1 text-sm">
-                                        <span class="text-secondary">Nom de l'établissement :</span> Noah
+                                        <span class="text-secondary">Nom de l'établissement :</span>
+                                        @if (isset($appconfiguration) && isset($appconfiguration->school_name))
+                                            {{ $appconfiguration->school_name }}
+                                        @else
+                                            Non défini
+                                        @endif
                                     </li>
                                     <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm">
-                                        <span class="text-secondary">Dévise :</span> Mclaren
+                                        <span class="text-secondary">Dévise :</span>
+                                        @if (isset($appconfiguration) && isset($appconfiguration->school_motor))
+                                            {{ $appconfiguration->school_motor}}
+                                        @else
+                                            Non défini
+                                        @endif
                                     </li>
                                     <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm">
-                                        <span class="text-secondary">Telephone 1 :</span> +(44) 123 1234 123
+                                        <span class="text-secondary">Telephone 1 :</span>
+                                        @if (isset($appconfiguration) && isset($appconfiguration->contact_phone_1))
+                                            {{ $appconfiguration->contact_phone_1 }}
+                                        @else
+                                            Non défini
+                                        @endif
                                     </li>
                                     <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm">
-                                        <span class="text-secondary">Telephone 2 :</span> +(44) 123 1234 123
+                                        <span class="text-secondary">Telephone 2 :</span>
+                                        @if (isset($appconfiguration) && isset($appconfiguration->contact_phone_2))
+                                            {{ $appconfiguration->contact_phone_2 }}
+                                        @else
+                                            Non défini
+                                        @endif
                                     </li>
                                     <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm">
-                                        <span class="text-secondary">Email :</span> +(44) 123 1234 123
+                                        <span class="text-secondary">Email :</span>
+                                        @if (isset($appconfiguration) && isset($appconfiguration->school_email))
+                                            {{ $appconfiguration->school_email }}
+                                        @else
+                                            Non défini
+                                        @endif
                                     </li>
                                     <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm">
-                                        <span class="text-secondary">Code Postal :</span> Manager - Organization
+                                        <span class="text-secondary">Code Postal :</span>
+                                        @if (isset($appconfiguration) && isset($appconfiguration->school_postal_box))
+                                            {{ $appconfiguration->school_postal_box }}
+                                        @else
+                                            Non défini
+                                        @endif
                                     </li>
                                     <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm">
-                                        <span class="text-secondary">Localisation :</span> [school_town] - [school_location]
+                                        <span class="text-secondary">Localisation :</span>
+                                        @if (isset($appconfiguration) && isset($appconfiguration->school_town) && isset($appconfiguration->school_location))
+                                            {{ $appconfiguration->school_town }} - {{ $appconfiguration->school_location }}
+                                        @else
+                                            Non défini
+                                        @endif
                                     </li>
                                 </ul>
                             </div>
@@ -129,7 +184,12 @@
             <div class="modal-dialog modal-xl modal-dialog-centered">
                 <form enctype="multipart/form-data" role="form" id="appconfigurationForm" class="form row">
                     @csrf
-                    <input type="hidden" name="appconfigurationId" id="appconfigurationId" value="">
+                    <input
+                        type="hidden"
+                        name="appconfigurationId"
+                        id="appconfigurationId"
+                        value=""
+                    />
                     <div class="modal-content p-0">
                         <div class="modal-header" id="modal-appconfiguration-header">
                             <div class="modal-title row">

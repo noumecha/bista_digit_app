@@ -14,7 +14,7 @@ class AppConfigurationController extends Controller
      */
     public function index() {
         $appconfiguration = AppConfiguration::all()->last();
-        return view('configurations.app_configuration');
+        return view('configurations.app_configuration', compact('appconfiguration'));
     }
 
     /**
@@ -22,15 +22,15 @@ class AppConfigurationController extends Controller
      */
     public function update(Request $request, $action) {
         $request->validate([
-            'school_name' => 'required|string|min:26|max:255',
-            'school_motor' => 'required|string|min:26|max:255',
+            'school_name' => 'required|string|min:3|max:255',
+            'school_motor' => 'required|string|min:3|max:255',
             'school_postal_box' => 'required|integer|min:4|max:255',
             'school_logo' => 'image|mimes:jpeg,png,gif|max:4096',
             'content' => 'required',
             'school_town' => 'required|min:3|max:255',
             'school_location' => 'required|min:3|max:255',
             'contact_phone_1' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
-            'contact_phone_2' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
+            'contact_phone_2' => ['nullable','regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
             'school_email' => 'nullable|email|max:255',
         ], [
             'school_name.required' => 'Veuillez entrez le nom de l\'établissement',
@@ -56,6 +56,7 @@ class AppConfigurationController extends Controller
                     $appconfiguration->school_logo = $imagePath;
                 }
                 $appconfiguration->update($request->except('school_logo'));
+                return response()->json(['success' => 'Configuration de l\'établissement mise à jour avec succès']);
             } else {
                 $appconfiguration = AppConfiguration::create([
                     'school_name' => $request->school_name,
@@ -69,10 +70,21 @@ class AppConfigurationController extends Controller
                     'contact_phone_2' => $request->contact_phone_2,
                     'school_email' => $request->school_email,
                 ]);
+                return response()->json(['success' => 'Configuration de l\'établissement enregistrée avec succès']);
             }
-            return response()->json(['success' => 'Configuration de l\'établissement mis à jour avec succès']);
         } catch (Exception $ex) {
             dd($ex);
         }
+    }
+
+    /**
+     * edit appconfiguration
+     */
+    public function edit($id) {
+        $appconfiguration = AppConfiguration::findOrFail($id);
+        return response()->json([
+            'appconfiguration' => $appconfiguration,
+            'content' => $appconfiguration->description
+        ]);
     }
 }
