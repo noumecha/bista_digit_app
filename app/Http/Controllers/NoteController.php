@@ -95,16 +95,30 @@ class NoteController extends Controller
             'note.max' => 'La note doit etre égale au plus à 20'
         ]);
         $existNote = Note::where('user_id', $request->user_id)
-            ->where('matiere_id',$request->matiere_id,)
-            ->where('classe_id',$request->classe_id,)
-            ->where('evaluation_id',$request->evaluation_id,)
-            ->where('remplissage_id',$request->remplissage_id,)
+            ->where('matiere_id',$request->matiere_id)
+            ->where('classe_id',$request->classe_id)
+            ->where('evaluation_id',$request->evaluation_id)
+            ->where('remplissage_id',$request->remplissage_id)
             ->exists();
         if($existNote) {
             return response()->json([
                 'error' => 'La note existe déjà !'
             ]);
         } else {
+            // calculate the note range and gcma(general class matiere average on a subject)
+            $notes = [];
+            $notesData = Note::all()->where('matiere_id',$request->matiere_id,)
+            ->where('classe_id',$request->classe_id)->where('evaluation_id',$request->evaluation_id);
+            foreach($notesData as $noteData) {
+                array_push($noteData->note, $notes);
+            }
+            array_push($notes, $request->note); // adding the request note
+            $range = getRange($request->note, $notes); // finally get the range
+            $gcma = getGeneralMoy($notes); // get the general class average of the subject
+            $minValue = min($notes);
+            $maxValue = max($notes);
+
+            // then save the note in the db
             $note = Note::create([
                 'matiere_id' => $request->matiere_id,
                 'user_id' => $request->user_id,
@@ -112,6 +126,10 @@ class NoteController extends Controller
                 'evaluation_id' => $request->evaluation_id,
                 'remplissage_id' => $request->remplissage_id,
                 'note' => $request->note,
+                'range' => $range,
+                'mgc' => $gcma,
+                'min_value' => $minValue,
+                'max_value' => $maxValue,
                 'appreciation' => $request->appreciation
             ]);
             if($note) {
@@ -140,9 +158,32 @@ class NoteController extends Controller
 
         // update note before creating history
         $note = Note::findOrFail($id);
+        // update the note range and gcma(general class matiere average on a subject)
+        $notes = [];
+        $notesData = Note::all()->where('matiere_id',$request->matiere_id,)
+        ->where('classe_id',$request->classe_id)->where('evaluation_id',$request->evaluation_id);
+        foreach($notesData as $noteData) {
+            array_push($noteData->note, $notes);
+        }
+        // remove the old value in the array and add the new_value
+        $noteToRemoveValue = $note->note;
+        $noteToRemoveKey = array_search($noteToRemoveValue, $notes);
+        if($noteToRemoveKey) {
+            unset($notes[$noteToRemoveKey]);
+            array_values($notes);
+        }
+        array_push($notes, $request->new_value); // adding the request note
+        $range = getRange($request->new_value, $notes); // finally get the range
+        $gcma = getGeneralMoy($notes); // get the general class average of the subject
+        $minValue = min($notes);
+        $maxValue = max($notes);
         $oldValue = $note->note;
         $note->update([
             'note' => $request->new_value,
+            'range' => $range,
+            'gcma' => $gcma,
+            'min_value' => $minValue,
+            'max_value' => $maxValue,
             'appreciation' => $request->appreciation
         ]);
 

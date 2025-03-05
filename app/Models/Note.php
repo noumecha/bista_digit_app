@@ -18,7 +18,11 @@ class Note extends Model
         'matiere_id',
         'evaluation_id',
         'remplissage_id',
-        'classe_id'
+        'classe_id',
+        'range',
+        'gcma',
+        'min_value',
+        'max_value',
     ];
 
     /**

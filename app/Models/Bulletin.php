@@ -15,10 +15,11 @@ class Bulletin extends Model
      */
     protected $fillable = [
         'user_id',
-        'evaluation_id',
-        'trimestre_id',
         'classe_id',
         'annee_scolaire_id',
+        'bulletin_file',
+        'evaluation_id',
+        'trimestre_id',
     ];
 
     /**

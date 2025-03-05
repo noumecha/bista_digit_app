@@ -7,6 +7,7 @@ use App\Models\AppConfiguration;
 use App\Models\Bulletin;
 use App\Models\Classe;
 use App\Models\Evaluation;
+use App\Models\Note;
 use App\Models\Trimestre;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -59,9 +60,84 @@ class BullettinController extends Controller
         }
     }
 
+    /**
+     * generate bulletin for a specific student
+     */
+    public function generate(Request $request) {
+        dd($request);
+        $request->validate([
+            'evaluation_id' => 'required',
+            'trimestre_id' => 'required',
+            'classe_id' => 'required',
+        ], [
+            'classe_id.required' => 'Veuillez selectionnez une classe',
+            'evaluation_id.required' => 'Veuillez selectionnez une évaluation',
+            'trimestre_id.required' => 'Veuillez selectionnez une trimestre',
+        ]);
+    }
 
     /**
-     * Bulletin configuration
+     * generate bulletin for all students in specific classe
+     */
+    public function generateAll(Request $request) {
+        // checking on
+        dd($request);
+        // load schoolYear
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        // load appConfiguration
+        $appConfig = AppConfiguration::first();
+
+        $request->validate([
+            'evaluation_id' => 'required',
+            'trimestre_id' => 'required',
+            'classe_id' => 'required',
+        ], [
+            'classe_id.required' => 'Veuillez selectionnez une classe',
+            'evaluation_id.required' => 'Veuillez selectionnez une évaluation',
+            'trimestre_id.required' => 'Veuillez selectionnez une trimestre',
+        ]);
+        // Vérifier que l'utilisateur est un administrateur
+        if (!Auth::user()->typeUser === 'admin') {
+            return back()->with('error', 'Vous n\'avez pas les autorisations.');
+        }
+
+        // Récupérer la classe et l’évaluation
+        $classe = Classe::findOrFail($request->classe_id);
+        $evaluation = Evaluation::findOrFail($request->evaluation_id);
+
+        // Vérifier que chaque élève a une note dans toutes les matières
+        foreach ($classe->eleves as $eleve) {
+            foreach ($classe->matieres as $matiere) {
+                if (!Note::where('user_id', $eleve->id)
+                         ->where('matiere_id', $matiere->id)
+                         ->where('evaluation_id', $evaluation->id)
+                         ->exists()) {
+                    return back()->with('error', "L'élève {$eleve->name} n'a pas de note en {$matiere->libelle}.");
+                }
+            }
+        }
+
+        // Générer les PDF pour chaque élève
+        foreach ($classe->eleves as $eleve) {
+            $data = [
+                'config' => $appConfig,
+                'eleve' => $eleve,
+                'classe' => $classe,
+                'evaluation' => $evaluation,
+                'notes' => Note::where('user_id', $eleve->id)
+                               ->where('evaluation_id', $evaluation->id)
+                               ->get()
+            ];
+            dd($data);
+            /*$pdf = PDF::loadView('bulletins.template', $data);
+            $pdf->save(storage_path("app/bulletins/{$eleve->id}_{$evaluation->id}.pdf"));*/
+        }
+
+        return back()->with('success', "Les bulletins ont été générés avec succès !");
+    }
+
+    /**
+     * Bulletin configuration - only for test purpose
      */
     public function configs()
     {

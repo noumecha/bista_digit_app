@@ -32,3 +32,28 @@ use Illuminate\Support\Facades\Route;
         }
         return date($format, strtotime($date));
     }
+
+    /**
+     * function to determine range of an element in array
+     */
+    function getRange($el, $table) {
+        $r = 1;
+        foreach ($table as $t) {
+            if($t > $el) {
+                $r++;
+            }
+        }
+        return $r;
+    }
+
+    /**
+     * function to determine the general average of an array
+     */
+    function getGeneralMoy($datas) {
+        $s = 0;
+        foreach ($datas as $data) {
+            $s += $data;
+        }
+        $gcma = $s/count($datas);
+        return $gcma;
+    }
