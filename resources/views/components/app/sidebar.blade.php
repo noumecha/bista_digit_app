@@ -315,7 +315,7 @@
             <!-- Profile on Dashboard -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link  {{ is_current_route('dashboard') ? 'active' : '' }}"
+                    <a class="nav-link  {{ is_current_route('users.profile') ? 'active' : '' }}"
                         href="{{ route('users.profile') }}">
                         <i class="fa-solid fa-gear fa-sm"></i>
                         <span class="nav-link-text text-md ml-n5">Configuration du profil</span>

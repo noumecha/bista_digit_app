@@ -55,7 +55,17 @@ class AppConfigurationController extends Controller
                     }
                     $appconfiguration->school_logo = $imagePath;
                 }
-                $appconfiguration->update($request->except('school_logo'));
+                $appconfiguration->update([
+                    'school_name' => $request->school_name,
+                    'school_motor' => $request->school_motor,
+                    'school_postal_box' => $request->school_postal_box,
+                    'description' => $request->content,
+                    'school_town' => $request->school_town,
+                    'school_location' => $request->school_location,
+                    'contact_phone_1' => $request->contact_phone_1,
+                    'contact_phone_2' => $request->contact_phone_2,
+                    'school_email' => $request->school_email,
+                ]);
                 return response()->json(['success' => 'Configuration de l\'établissement mise à jour avec succès']);
             } else {
                 $appconfiguration = AppConfiguration::create([

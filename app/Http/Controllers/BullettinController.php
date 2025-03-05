@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
+use App\Models\AppConfiguration;
 use App\Models\Bulletin;
 use App\Models\Classe;
 use App\Models\Evaluation;
@@ -23,6 +24,8 @@ class BullettinController extends Controller
         $evaluations = Evaluation::all();
         $trimestres = Trimestre::all();
         $classes = Classe::all();
+        // loading app configuration :
+        $appconfiguration = AppConfiguration::all()->last();
         // filter vars
         $evaluationFilter = $request->input('evaluationFilter');
         $trimestreFilter = $request->input('trimestreFilter');
@@ -50,9 +53,9 @@ class BullettinController extends Controller
         $bulletins = $query->paginate(10);
 
         if($request->ajax()) {
-            return view('partials._bulletins_table', compact('bulletins','trimestres','evaluations','classes','user'));
+            return view('partials._bulletins_table', compact('bulletins','appconfiguration','trimestres','evaluations','classes','user'));
         } else {
-            return view('bulletin.bulletins', compact('bulletins','trimestres','evaluations','classes','user'));
+            return view('bulletin.bulletins', compact('bulletins','appconfiguration','trimestres','evaluations','classes','user'));
         }
     }
 
@@ -65,6 +68,6 @@ class BullettinController extends Controller
         $user = User::find(Auth::id());
 
         //return view('bulletin.annual', compact('user'));
-        return view('bulletin.trimestrielle', compact('user'));
+        return view('bulletin.evaluation', compact('user'));
     }
 }

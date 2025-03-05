@@ -8,7 +8,7 @@
                     document.write(new Date().getFullYear())
                 </script>
                 <a href="#" class="text-secondary text-bold" target="_blank">
-                    Byt3lab
+                    POWEREDUCATION
                 </a>
             </div>
         </div>

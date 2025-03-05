@@ -44,7 +44,13 @@
                                     </ul>
                                 </li>
                                 <li><a href="{{ route('home.epreuves') }}">Epreuves</a></li>
-                                <li><a href="{{ route('sign-in') }}">Connexion</a></li>
+                                <li>
+                                    @if (Auth::check())
+                                        <a href="{{ route('dashboard') }}">Administration</a>
+                                    @else
+                                        <a href="{{ route('sign-in') }}">Connexion</a>
+                                    @endif
+                                </li>
                             </ul>
                         </div>
                     </div>

@@ -68,7 +68,7 @@
 
             <div class="col-12">
                 <div class="copy-right">
-                    <p>© {{ Date('Y') }} All Rights Reserved <a href="#">BYT3LAB</a></p>
+                    <p>© {{ Date('Y') }} All Rights Reserved <a href="#">POWEREDUCATION</a></p>
                 </div>
             </div>
         </div>

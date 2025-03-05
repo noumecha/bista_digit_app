@@ -120,7 +120,12 @@ class ActusController extends Controller
             $actualite->image = $imagePath;
         }
 
-        $actualite->update($request->except('image'));
+        $actualite->update([
+            'titre' => $request->titre,
+            'contenu' => $request->content,
+            'user_id' => Auth::id(),
+            'categorie_actualites_id' => $request->categorie_actualites_id,
+        ]);
 
         return response()->json(['success' => 'Actualité mise à jour avec succès']);
     }
