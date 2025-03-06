@@ -27,7 +27,7 @@
                                         id="add-button"
                                         data-bs-target="#create-matiere-modal"
                                     >
-                                        <i class="fas fa-user-plus me-2"></i> Ajouter
+                                        <i class="fa-solid fa-book-atlas me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>

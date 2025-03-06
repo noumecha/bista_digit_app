@@ -14,12 +14,22 @@ class Bulletin extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'user_id', // get base on evaluation and classe id
         'classe_id',
+        'app_configuration_id',
         'annee_scolaire_id',
         'bulletin_file',
+        'type_bulletin',
         'evaluation_id',
         'trimestre_id',
+        'discipline_id',
+        'appreciation',
+        'average',
+        'min_average',
+        'max_average',
+        'general_average',
+        'standard_deviation',
+        'range',
     ];
 
     /**
@@ -36,6 +46,14 @@ class Bulletin extends Model
     public function evaluation(): BelongsTo
     {
         return $this->belongsTo(Evaluation::class, 'evaluation_id');
+    }
+
+    /**
+     * a Bulletin content a specifif discipline datas
+     */
+    public function discipline(): BelongsTo
+    {
+        return $this->belongsTo(Evaluation::class, 'discipline_id');
     }
 
     /**

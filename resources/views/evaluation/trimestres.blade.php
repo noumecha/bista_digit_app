@@ -27,7 +27,7 @@
                                         id="add-button"
                                         data-bs-target="#create-trimestre-modal"
                                     >
-                                        <i class="fas fa-user-plus me-2"></i> Ajouter
+                                        <i class="fa-solid fa-calendar-days me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>

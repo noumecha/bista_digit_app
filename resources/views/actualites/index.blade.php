@@ -27,7 +27,7 @@
                                         id="add-button"
                                         data-bs-target="#create-actualite-modal"
                                     >
-                                        <i class="fas fa-user-plus me-2"></i> Ajouter
+                                        <i class="fa-solid fa-newspaper me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>

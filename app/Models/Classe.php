@@ -51,7 +51,7 @@ class Classe extends Model
     }
 
     /**
-     *
+     * A classe have many epreuves
      */
     public function epreuves(): HasMany {
         return $this->hasMany(Epreuve::class);
@@ -66,6 +66,7 @@ class Classe extends Model
 
     /**
      * A user belongs to one classe in a year.
+     * So then a classe have many students in a year
      */
     public function students()
     {

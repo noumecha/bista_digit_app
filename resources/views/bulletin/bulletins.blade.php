@@ -13,9 +13,9 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Remplissages de notes configurés</h5>
+                                    <h5 class="">Liste des Bulletins générés dans l'application</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer les configurations de remplissage de notes(Ajouter, Supprimer, Mettre à jour)
+                                        D'ici vous pouvez gérer les bulletins (générer , regénérer[mise à jour] , supprimer)
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -25,9 +25,9 @@
                                         data-bs-toggle="modal"
                                         data-action="create"
                                         id="add-button"
-                                        data-bs-target="#create-remplissage-modal"
+                                        data-bs-target="#create-bulletin-modal"
                                     >
-                                        <i class="fas fa-user-plus me-2"></i> Ajouter
+                                        <i class="fa-solid fa-sheet-plastic me-2"></i> Générer
                                     </button>
                                 </div>
                             </div>
@@ -67,6 +67,18 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="classFilter" id="classFilter" class="form-select">
+                                            <option value="">Toutes les classes</option>
+                                            @foreach ($classes as $classe)
+                                                <option value="{{ $classe->id }}">
+                                                    {{ $classe->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                         <div class="table-responsive" id="bulletinsTable" style="overflow-x: visible;">
@@ -76,16 +88,16 @@
             </div>
         </div>
         <!-- modal for creating or updating a bulletins datas -->
-        <div class="modal fade" id="create-remplissage-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal fade" id="create-bulletin-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-dialog-centered">
-                <form enctype="multipart/form-data" role="form" id="remplissageForm" class="form row">
+                <form enctype="multipart/form-data" role="form" id="bulletinForm" class="form row">
                     @csrf
-                    <input type="hidden" name="remplissageId" id="remplissageId" value="">
+                    <input type="hidden" name="bulletinId" id="bulletinId" value="">
                     <div class="modal-content p-0">
-                        <div class="modal-header" id="modal-remplissage-header">
+                        <div class="modal-header" id="modal-bulletin-header">
                             <div class="modal-title row">
                                 <div class="col-12">
-                                    <h5 id="header-remplissage-text" class="text-white"></h5>
+                                    <h5 id="header-bulletin-text" class="text-white"></h5>
                                 </div>
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -95,14 +107,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="evaluation_id" class="form-control-label">
-                                            Evaluation :
+                                        <label for="trimestre_id" class="form-control-label">
+                                            Trimestre :
                                         </label>
-                                        <select name="evaluation_id" id="evaluation_id" class="form-select">
-                                            <option value="">Toutes les évaluations</option>
-                                            @foreach ($evaluations as $evaluation)
-                                                <option value="{{ $evaluation->id }}">
-                                                    {{ $evaluation->libelleEvaluation}}
+                                        <select name="trimestre_id" id="trimestre_id" class="form-select">
+                                            <option value="">Tout les trimestres</option>
+                                            @foreach ($trimestres as $trimestre)
+                                                <option value="{{ $trimestre->id }}">
+                                                    {{ $trimestre->libelleTrimestre }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -110,47 +122,45 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="date_debut" class="form-control-label">
-                                            Date de debut :
+                                        <label for="evaluation_id" class="form-control-label">
+                                            Evaluation :
                                         </label>
-                                        <input type="date" id="date_debut" name="date_debut" class="form-control"
-                                            placeholder="Entrez la date de la date debut de remplissage de note" value="{{ old("date_debut") }}">
+                                        <select name="evaluation_id" id="evaluation_id" class="form-select">
+                                            <option value="">Toutes les évaluations</option>
+                                            @foreach ($evaluations as $evaluation)
+                                                <option value="{{ $evaluation->id }}">
+                                                    {{ $evaluation->libelleEvaluation }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="duree" class="form-control-label">
-                                            Durée (en jours) :
+                                        <label for="classe_id" class="form-control-label">
+                                            Classe :
                                         </label>
-                                        <input
-                                            type="number"
-                                            id="duree"
-                                            name="duree"
-                                            min="0"
-                                            class="form-control"
-                                            value="{{ old("duree") }}"
-                                        >
+                                        <select name="classe_id" id="classe_id" class="form-select">
+                                            <option value="">Toutes les classes</option>
+                                            @foreach ($classes as $classe)
+                                                <option value="{{ $classe->id }}">
+                                                    {{ $classe->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="date_fin" class="form-control-label">
-                                            Date de fin du remplissage :
+                                        <label for="type_bulletin" class="form-control-label">
+                                            Chosir le type de bulletin :
                                         </label>
-                                        <input type="date" id="date_fin" name="date_fin" class="form-control"
-                                            placeholder="Entrez la date de la date fin de remplissage de note" value="{{ old("date_fin") }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="openDays" class="form-control-label">
-                                            Inclure les weekends :
-                                        </label>
-                                        <div class="form-check">
-                                            <input type="hidden" name="openDays" value="0">
-                                            <input class="form-check-input" type="checkbox" name="openDays" value="1" id="openDays">
-                                            <label class="custom-control-label" for="openDays">oui</label>
-                                        </div>
+                                        <select name="type_bulletin" id="type_bulletin" class="form-select">
+                                            <option value="">Tout les types</option>
+                                            <option value="evaluation">Evaluation</option>
+                                            <option value="trimestre">Trimestriel</option>
+                                            <option value="annuel">Annuel</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -161,9 +171,9 @@
                         </div>
                         <div class="modal-footer flex-row-reverse">
                             <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="button" id="submit-remplissage-form-button" class="spinner-submit-remplissage-form-button btn btn-lg">
+                            <button type="button" id="submit-bulletin-form-button" class="spinner-submit-bulletin-form-button btn btn-lg">
                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                <span id="submit-remplissage-form-button-text"></span>
+                                <span id="submit-bulletin-form-button-text"></span>
                             </button>
                         </div>
                     </div>

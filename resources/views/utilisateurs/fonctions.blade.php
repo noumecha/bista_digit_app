@@ -27,7 +27,7 @@
                                         id="add-button"
                                         data-bs-target="#create-fonction-modal"
                                     >
-                                        <i class="fas fa-user-plus me-2"></i> Ajouter
+                                        <i class="fa-brands fa-creative-commons-nd me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>

@@ -27,7 +27,7 @@
                                         id="add-button"
                                         data-bs-target="#create-question-modal"
                                     >
-                                        <i class="fas fa-user-plus me-2"></i> Ajouter
+                                        <i class="fa-solid fa-clipboard-question me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>

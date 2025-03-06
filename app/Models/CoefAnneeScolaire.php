@@ -13,7 +13,12 @@ class CoefAnneeScolaire extends Model
     /**
      * @var array
      */
-    protected $fillable = ['annee_scolaire_id','coefficient_id','groupe_matiere','coefficient_value'];
+    protected $fillable = [
+        'annee_scolaire_id',
+        'coefficient_id',
+        'groupe_matiere',
+        'coefficient_value'
+    ];
 
     /**
      *
