@@ -139,6 +139,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="statutRedoublance" class="form-control-label">
+                                            Redoublant(e) :
+                                        </label>
+                                        <div class="form-check">
+                                            <input type="hidden" name="statutRedoublance" value="0">
+                                            <input class="form-check-input" type="checkbox" name="statutRedoublance" value="1" id="statutRedoublance">
+                                            <label class="custom-control-label" for="statutRedoublance">oui</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="email" class="form-control-label">
                                             Email :
                                         </label>

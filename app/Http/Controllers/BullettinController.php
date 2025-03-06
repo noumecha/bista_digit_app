@@ -6,6 +6,7 @@ use App\Models\AnneeScolaire;
 use App\Models\AppConfiguration;
 use App\Models\Bulletin;
 use App\Models\Classe;
+use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\CoefAnneeScolaire;
 use App\Models\Coefficient;
 use App\Models\Evaluation;
@@ -83,8 +84,6 @@ class BullettinController extends Controller
      * generate bulletin for all students in specific classe
      */
     public function generateAll(Request $request) {
-        // checking on
-        dd($request);
         // load schoolYear
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         // load appConfiguration
@@ -105,6 +104,7 @@ class BullettinController extends Controller
         $classe = Classe::findOrFail($request->classe_id);
         $evaluation = Evaluation::findOrFail($request->evaluation_id)
         ->where('trimestre_id', $request->trimestre_id);
+        $trimestre = Trimestre::findOrFail($request->trimestre_id);
         $matieres = Matiere::all()->whereIn('id', getCurrentYearCoefConfigurationMatId($activeYear->id));
         // check if all user in the specified class as note in every corresponding evaluation matiere
         foreach ($classe->students as $student) {
@@ -169,7 +169,7 @@ class BullettinController extends Controller
             $sd = getStandardDeviation($averages);
 
             // create bulletin base on the selected type
-            if($request->type_bulletin === 'evaluation') {
+            if($request->type_bulletin === 'sequenciel') {
                 $data = [
                     'config' => $appConfig,
                     'annee_scolaire' => $activeYear,
@@ -191,8 +191,10 @@ class BullettinController extends Controller
                     'general_average' => $gcma,
                     'standard_deviation' => $sd,
                 ];
-            } else if ($request->type_bulletin === 'trimestre') {
-            } else {
+            }
+            if ($request->type_bulletin === 'trimestre') {
+            }
+            if ($request->type_bulletin === 'annuel') {
             }
 
             // starting the Bulletin generation
@@ -244,5 +246,27 @@ class BullettinController extends Controller
         $bulletin = Bulletin::findOrFail($id);
         $bulletin->delete();
         return response()->json(['deleteSuccess' => 'Bulletin supprimé avec succès!']);
+    }
+
+    /**
+     * get students base on a specific class id
+     */
+    public function getStudents($classeId) {
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $studentsIds = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeId)
+            ->where('annee_scolaire_id', $activeYear->id)->pluck('user_id');
+        $students = User::where('typeUser','eleve')->whereIn('id', $studentsIds)->get();
+        return response()->json($students);
+    }
+
+    /**
+     * get evaluations base on a specific trimestre id
+     */
+    public function getEvaluations($trimId) {
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $trim = Trimestre::all()->where('id', $trimId)
+            ->where('annee_scolaire_id', $activeYear->id)->first();
+        $evaluations = Evaluation::where('trimestre_id', $trim->id)->get();
+        return response()->json($evaluations);
     }
 }

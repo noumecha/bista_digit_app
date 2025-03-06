@@ -20,7 +20,7 @@
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
                                     <a href="#personnelform" class="btn btn-lg btn-dark btn-primary">
-                                        <i class="fas fa-user-plus me-2"></i> Ajouter
+                                        <i class="fa-solid fa-note-sticky me-2"></i> Ajouter
                                     </a>
                                 </div>
                             </div>

@@ -253,6 +253,8 @@ Route::get('/bulletins', function () {
 })->middleware('auth');
 Route::get('/bulletins/list', [BullettinController::class, 'index'])->name('bulletins.list')->middleware('auth');
 Route::get('/bulletins/configuration', [BullettinController::class, 'configs'])->name('bulletins.configuration')->middleware('auth');
+Route::get('/bulletins/students/{classeId}', [BullettinController::class, 'getStudents'])->name('bulletins.students')->middleware('auth');
+Route::get('/bulletins/evaluations/{trimestreId}', [BullettinController::class, 'getEvaluations'])->name('bulletins.evaluations')->middleware('auth');
 Route::put('/bulletins/update/{id}', [BullettinController::class, 'update'])->name('bulletins.update')->middleware('auth');
 Route::post('/bulletins/save', [BullettinController::class, 'generateAll'])->name('bulletins.update')->middleware('auth');
 Route::delete('/bulletins/{id}/delete', [BullettinController::class, 'destroy'])->name('bulletins.destroy')->middleware('auth');

@@ -90,6 +90,7 @@ class EleveController extends Controller
             'dateNaiss' => 'required|max:255',
             'location' => 'required|min:3|max:255',
             'active_year_id' => 'required',
+            'statutRedoublance' => 'required|boolean',
             'classe_id' => 'required|exists:classes,id',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
@@ -131,6 +132,7 @@ class EleveController extends Controller
             'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'eleve',
             'password' => Hash::make($request->password),
+            'statutRedoublance' => $request->statutRedoublance ? 1 : 0,
             'sex' => $request->sex,
         ]);
 
@@ -176,6 +178,7 @@ class EleveController extends Controller
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
+            'statutRedoublance' => 'required|boolean',
         ], [
             'name.required' => 'Entrez le nom de l\'élève',
             'surname.required' => 'Entrez le prenom de l\'élève',
@@ -220,7 +223,10 @@ class EleveController extends Controller
             $student->profile = $imagePath;
         }
 
-        $student->update($request->except('profile'));
+        $student->update([
+            'statutRedoublance' => $request->statutRedoublance ? 1 : 0,
+        ]);
+        $student->update($request->except(['profile','statutRedoublance']));
 
         return response()->json(['success' => 'Informations de l\'élève mis à jour avec succès']);
     }

@@ -38,7 +38,7 @@ class User extends Authenticatable
         'diplome1',
         'diplome2',
         'matricule',
-        'statutRedoublanc',
+        'statutRedoublance',
         'typeUser',
         'name',
         'email',

@@ -32,7 +32,7 @@
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterBulletinForm">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <input
                                             type="text"
@@ -89,7 +89,7 @@
         </div>
         <!-- modal for creating or updating a bulletins datas -->
         <div class="modal fade" id="create-bulletin-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-xl">
                 <form enctype="multipart/form-data" role="form" id="bulletinForm" class="form row">
                     @csrf
                     <input type="hidden" name="bulletinId" id="bulletinId" value="">
@@ -127,11 +127,6 @@
                                         </label>
                                         <select name="evaluation_id" id="evaluation_id" class="form-select">
                                             <option value="">Toutes les évaluations</option>
-                                            @foreach ($evaluations as $evaluation)
-                                                <option value="{{ $evaluation->id }}">
-                                                    {{ $evaluation->libelleEvaluation }}
-                                                </option>
-                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -152,12 +147,22 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="classe_id" class="form-control-label">
+                                            Elève(s):
+                                        </label>
+                                        <select name="user_id" id="user_id" class="form-select">
+                                            <option value="">Tout les élèves</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="type_bulletin" class="form-control-label">
                                             Chosir le type de bulletin :
                                         </label>
                                         <select name="type_bulletin" id="type_bulletin" class="form-select">
                                             <option value="">Tout les types</option>
-                                            <option value="evaluation">Evaluation</option>
+                                            <option value="sequenciel">Séquenciel</option>
                                             <option value="trimestre">Trimestriel</option>
                                             <option value="annuel">Annuel</option>
                                         </select>

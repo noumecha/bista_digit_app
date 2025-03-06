@@ -2,9 +2,24 @@ $(function(){
     // filtering student base on the classe id
     $('#classe_id').on('change', function() {
         let classeId = $(this).val();
+        $('#user_id').html('<option value="">Tout les élèves</option>');
         if (classeId) {
-            $.get('bulletins/students/' + classeId, function(data) {
-                console.log(data);
+            $.get('/bulletins/students/' + classeId, function(data) {
+                data.forEach(student => {
+                    $('#user_id').append(`<option value="${student.id}">${student.name}</option>`);
+                });
+            });
+        }
+    });
+    // filtering evaluation base on the trimestre id
+    $('#trimestre_id').on('change', function() {
+        let triemstreId = $(this).val();
+        $('#evaluation_id').html('<option value="">Toutes les évaluations</option>');
+        if (triemstreId) {
+            $.get('/bulletins/evaluations/' + triemstreId, function(data) {
+                data.forEach(evaluation => {
+                    $('#evaluation_id').append(`<option value="${evaluation.id}">${evaluation.libelleEvaluation}</option>`);
+                });
             });
         }
     });
@@ -37,6 +52,8 @@ $(function(){
             button.children('span#submit-bulletin-form-button-text').text('Regénérer');
             headerText.text('Mettre à jour le bulletin en le regénérant !');
             bulletinIdInput.val(bulletinId);
+            $('#user_id').prop("disabled", true);
+            $('#evaluation_id').prop("disabled", true);
             $.ajax({
                 url: "bulletins/"+bulletinId+"/edit",
                 type: "GET",
@@ -84,6 +101,8 @@ $(function(){
                 if(formAction === '/bulletins/save') {
                     resetForm(form);
                 }
+                $('#user_id').html('<option value="">Tout les élèves</option>');
+                $('#evaluation_id').html('<option value="">Toutes les évaluations</option>');
                 fetchBulletins();
             },
             error: function(xhr) {
@@ -113,6 +132,8 @@ $(function(){
         $('#modal-bulletin-header').removeClass('bg-primary bg-success');
         $('#submit-bulletin-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-bulletin-form-button').children('span#submit-bulletin-form-button-text').text('');
+        $('#user_id').html('<option value="">Tout les élèves</option>');
+        $('#evaluation_id').html('<option value="">Toutes les évaluations</option>');
     });
 
     // fetching bulletins dynamically with filters
