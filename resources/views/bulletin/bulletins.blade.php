@@ -107,6 +107,18 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="option_type" class="form-control-label">
+                                            Option de génération :
+                                        </label>
+                                        <select name="option_type" id="option_type" class="form-select">
+                                            <option value="">Selectionnez une option</option>
+                                            <option value="all">Toute la classe</option>
+                                            <option value="one">Individuelle</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="trimestre_id" class="form-control-label">
                                             Trimestre :
                                         </label>

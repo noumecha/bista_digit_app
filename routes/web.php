@@ -263,7 +263,7 @@ Route::get('/bulletins/configuration', [BullettinController::class, 'configs'])-
 Route::get('/bulletins/students/{classeId}', [BullettinController::class, 'getStudents'])->name('bulletins.students')->middleware('auth');
 Route::get('/bulletins/evaluations/{trimestreId}', [BullettinController::class, 'getEvaluations'])->name('bulletins.evaluations')->middleware('auth');
 Route::put('/bulletins/update/{id}', [BullettinController::class, 'update'])->name('bulletins.update')->middleware('auth');
-Route::post('/bulletins/save', [BullettinController::class, 'generateAll'])->name('bulletins.update')->middleware('auth');
+Route::post('/bulletins/save', [BullettinController::class, 'generate'])->name('bulletins.generate')->middleware('auth');
 Route::delete('/bulletins/{id}/delete', [BullettinController::class, 'destroy'])->name('bulletins.destroy')->middleware('auth');
 
 # configuration routes - app configuration

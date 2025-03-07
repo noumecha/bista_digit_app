@@ -3,6 +3,8 @@
 use App\Models\AnneeScolaire;
 use App\Models\CoefAnneeScolaire;
 use App\Models\Coefficient;
+use App\Models\EnseignantPrincipal;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
     if(!function_exists('is_current_route')) {
@@ -180,4 +182,16 @@ use Illuminate\Support\Facades\Route;
         $coefsAnneeScolaires = CoefAnneeScolaire::all()->where('annee_scolaire_id', $yearId)->pluck('coefficient_id');
         $coefficients = Coefficient::all()->whereIn('id', $coefsAnneeScolaires)->pluck('matiere_id');
         return $coefficients;
+    }
+
+    /**
+     * get the principal teacher base on the classe id
+     */
+    function getPrincipalClassTeacher($id, $yearId) {
+        $teacherId = EnseignantPrincipal::all()
+            ->where('class_id', $id)
+            ->where('annee_scolaire_id', $yearId)
+            ->pluck('user_id')->first();
+        $pct = User::where('id', $teacherId);
+        return $pct->name;
     }

@@ -14,7 +14,7 @@ class Bulletin extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', // get base on evaluation and classe id
+        'user_id', // student id
         'classe_id',
         'app_configuration_id',
         'annee_scolaire_id',
@@ -30,6 +30,7 @@ class Bulletin extends Model
         'general_average',
         'standard_deviation',
         'range',
+        'principal_class_teacher'
     ];
 
     /**

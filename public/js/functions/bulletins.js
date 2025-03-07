@@ -11,6 +11,15 @@ $(function(){
             });
         }
     });
+    // disabled the user input base on a selected option
+    $('#option_type').on('change', function() {
+        let option = $(this).val();
+        if(option === "all") {
+            $('#user_id').attr('disabled', true);
+        } else {
+            $('#user_id').attr('disabled', false);
+        }
+    })
     // filtering evaluation base on the trimestre id
     $('#trimestre_id').on('change', function() {
         let triemstreId = $(this).val();
@@ -44,7 +53,7 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-bulletin-form-button-text').text('Générer pour toute la classe');
+            button.children('span#submit-bulletin-form-button-text').text('Générer le(s) bulletin(s)');
             headerText.text('Générer de nouveaux bulletins pour toute la classe ou pour un élève en particulier');
         } else if (action == "edit") {
             header.addClass('bg-success');

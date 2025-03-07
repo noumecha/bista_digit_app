@@ -84,6 +84,7 @@ $(function(){
                 if(formAction === 'enseignantprincipal/save') {
                     resetForm(form);
                 }
+                $('#user_id').html('<option value="">Veuillez selectionnez un enseignant</option>');
                 fetchEnseignantPrincipals();
             },
             error: function(xhr) {
@@ -112,6 +113,7 @@ $(function(){
         $('#modal-enseignantprincipal-header').removeClass('bg-primary bg-success');
         $('#submit-enseignantprincipal-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-enseignantprincipal-form-buuton').children('span#submit-enseignantprincipal-form-button-text').text('');
+        $('#user_id').html('<option value="">Veuillez selectionnez un enseignant</option>');
     });
 
     // fetching enseignements dynamically with filters
