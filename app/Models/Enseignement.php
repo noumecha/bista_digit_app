@@ -12,7 +12,11 @@ class Enseignement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['classe_id', 'enseignant_matiere_id','create_year_id'];
+    protected $fillable = [
+        'classe_id',
+        'enseignant_matiere_id',
+        'create_year_id'
+    ];
 
     /**
      *

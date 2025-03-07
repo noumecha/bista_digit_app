@@ -9,7 +9,6 @@ use App\Models\EnseignantMatiereModel;
 use App\Models\EnseignementAnneeScolaire;
 use App\Models\EnsMatAnneeScolaire;
 use App\Models\Matiere;
-use App\Models\User;
 use App\Models\UserAnneeScolaire;
 use Illuminate\Http\Request;
 

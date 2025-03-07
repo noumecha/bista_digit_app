@@ -20,6 +20,7 @@ use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\EnseignantMatiereModelController;
+use App\Http\Controllers\EnseignantPrincipalController;
 use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\EvaluationController;
@@ -35,10 +36,6 @@ use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\TrimestreController;
 use App\Http\Controllers\TypeEpreuveController;
-use App\Http\Controllers\UtilisateurController;
-use App\Models\CategorieActualite;
-use App\Models\Enseignant;
-use App\Models\Personnel;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -227,6 +224,16 @@ Route::get('education/enseignement/{id}/edit/{yearId}', [EnseignementController:
 Route::delete('education/enseignement/{id}', [EnseignementController::class, 'destroy'])->name('enseignement.destroy')->middleware('auth');
 Route::post('education/enseignement/migrate', [EnseignementController::class, 'migrate'])->name('enseignement.migrate')->middleware('auth');
 Route::post('education/enseignement/delete-ens-in-year', [EnseignementController::class, 'deleteEnsCurrentYear'])->name('enseignement.deleteEnsCurrentYear')->middleware('auth');
+
+## education -> enseignement principale routes
+Route::get('/education/enseignantprincipal', [EnseignantPrincipalController::class, 'index'])->name('education.enseignantprincipal')->middleware('auth');
+Route::post('education/enseignantprincipal/save', [EnseignantPrincipalController::class, 'store'])->name('enseignantprincipal.store')->middleware('auth');
+Route::put('education/enseignantprincipal/update/{edit}', [EnseignantPrincipalController::class, 'update'])->name('enseignantprincipal.update')->middleware('auth');
+Route::get('education/enseignantprincipal/{id}/edit/{yearId}', [EnseignantPrincipalController::class, 'edit'])->name('enseignantprincipal.edit')->middleware('auth');
+Route::delete('education/enseignantprincipal/{id}', [EnseignantPrincipalController::class, 'destroy'])->name('enseignantprincipal.destroy')->middleware('auth');
+Route::post('education/enseignantprincipal/migrate', [EnseignantPrincipalController::class, 'migrate'])->name('enseignantprincipal.migrate')->middleware('auth');
+Route::post('education/enseignantprincipal/delete-ensprinc-in-year', [EnseignantPrincipalController::class, 'deleteEnsPrincCurrentYear'])->name('enseignantprincipal.deleteEnsPrincCurrentYear')->middleware('auth');
+Route::get('/enseignantprincipals/teachers/{classeId}', [EnseignantPrincipalController::class, 'getTeachers'])->name('enseignantprincipals.teachers')->middleware('auth');
 
 # evaluation - trimestres routes
 Route::get('/evaluation/trimestres', [TrimestreController::class, 'index'])->name('evaluation.trimestres')->middleware('auth');

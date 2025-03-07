@@ -120,7 +120,7 @@ class AnneeScolaireController extends Controller
             'statut' => true,
         ]);
 
-        return redirect()->route('annee_scolaire.show')->with('listSuccess', 'Année scolaire activé avec succès!');
+        return redirect()->route('anneescolaire.years')->with('listSuccess', 'Année scolaire activé avec succès!');
     }
 
     /**
@@ -132,7 +132,7 @@ class AnneeScolaireController extends Controller
             'statut' => false,
         ]);
 
-        return redirect()->route('annee_scolaire.show')->with('listSuccess', 'Année scolaire désactivé avec succès!');
+        return redirect()->route('anneescolaire.years')->with('listSuccess', 'Année scolaire désactivé avec succès!');
     }
 
     /**
