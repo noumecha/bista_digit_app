@@ -97,18 +97,17 @@ class BullettinController extends Controller
         // getting classe and evaluation
         $classe = Classe::findOrFail($request->classe_id);
         $evaluation = Evaluation::findOrFail($request->evaluation_id)
-        ->where('trimestre_id', $request->trimestre_id);
+            ->where('trimestre_id', $request->trimestre_id)->first();
         $trimestre = Trimestre::findOrFail($request->trimestre_id);
         $matieres = Matiere::all()->whereIn('id', getCurrentYearCoefConfigurationMatId($activeYear->id));
         // check if all or a user in the specified class as note in every corresponding evaluation matiere
         if($request->option_type === "one" && isset($request->user_id)) {
-            $student = User::where('id', $request->user_id)->where('typeUser','eleve');
+            $student = User::where('id', $request->user_id)->where('typeUser','eleve')->first();
             foreach ($matieres as $matiere) {
-                if (!Note::where('user_id', $student->id)
-                        ->where('matiere_id', $matiere->id)
-                        ->where('evaluation_id', $evaluation->id)
-                        ->exists()) {
-                    return back()->with('error', "L'élève {$student->name} n'a pas de note en {$matiere->libelleMatiere}.");
+                $note = Note::where('user_id', $student->id)->where('matiere_id', $matiere->id)
+                    ->where('evaluation_id', $evaluation->id)->exists();
+                if(!$note) {
+                    return response()->json(["error" => "L'élève {$student->name} n'a pas de note en {$matiere->libelleMatiere}."]);
                 }
             }
         } else {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
 use App\Models\Classe;
+use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Coefficient;
 use App\Models\EnseignantMatiereModel;
 use App\Models\Enseignement;
@@ -46,7 +47,9 @@ class NoteController extends Controller
         $remplissageFilter = $request->input('remplissageFilter');
 
         $query = Note::query();
-        $studentQuery = User::query()->where('typeUser','=','eleve');
+        $studentsIds = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', $activeYear->id)
+            ->pluck('user_id');
+        $studentQuery = User::query()->where('typeUser','eleve')->whereIn('id',$studentsIds);
         if(!empty($searchNote)) {
             $studentQuery->where('name','LIKE',"%{$searchNote}%");
         }
