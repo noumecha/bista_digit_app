@@ -4,6 +4,7 @@ use App\Models\AnneeScolaire;
 use App\Models\CoefAnneeScolaire;
 use App\Models\Coefficient;
 use App\Models\EnseignantPrincipal;
+use App\Models\Note;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -40,14 +41,14 @@ use Illuminate\Support\Facades\Route;
     /**
      * function to determine range of an element in array
      */
-    function getRange($el, $table) {
-        $r = 1;
-        foreach ($table as $t) {
-            if($t > $el) {
-                $r++;
+    function getRange($note, $notes) {
+        $range = 1;
+        foreach ($notes as $n) {
+            if($n > $note) {
+                $range++;
             }
         }
-        return $r;
+        return $range;
     }
 
     /**
@@ -194,4 +195,19 @@ use Illuminate\Support\Facades\Route;
             ->pluck('user_id')->first();
         $pct = User::where('id', $teacherId);
         return $pct->name;
+    }
+
+    /**
+     * function to update all notes min max values
+     */
+    function updateAllMinMaxNotes($min, $max, $gcma, $classeId, $evaluationId, $rempId, $matiereId) {
+        $notes = Note::where('classe_id', $classeId)->where('evaluation_id', $evaluationId)
+            ->where('remplissage_id', $rempId)->where('matiere_id', $matiereId);
+        foreach($notes as $note) {
+            $note->update([
+                'min_value' => $min,
+                'max_value' => $max,
+                'mgc' => $gcma
+            ]);
+        }
     }

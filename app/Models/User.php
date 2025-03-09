@@ -42,7 +42,6 @@ class User extends Authenticatable
         'typeUser',
         'name',
         'email',
-        'classe_id',
         'password',
         'phone',
         'location',
@@ -138,6 +137,27 @@ class User extends Authenticatable
         return $this->belongsToMany(Classe::class, 'classe_annee_scolaire_students')
                     ->withPivot('annee_scolaire_id')
                     ->withTimestamps();
+    }
+
+    /**
+     * current year student classe
+     */
+    public function getCurrentYearClasse($activeYearId)
+    {
+        $studentYearClasseId = ClasseAnneeScolaireStudent::all()
+            ->where('user_id', $this->id)
+            ->where('annee_scolaire_id', $activeYearId)
+            ->pluck('classe_id');
+        $classe = Classe::where('id',$studentYearClasseId)->first();
+        return $classe->id;
+    }
+
+    /**
+     * A user must be in different classes throw years
+     */
+    public function classeAnneeScolaire()
+    {
+        return $this->hasMany(ClasseAnneeScolaireStudent::class, 'user_id');
     }
 
     /**

@@ -47,15 +47,21 @@ class NoteController extends Controller
         $remplissageFilter = $request->input('remplissageFilter');
 
         $query = Note::query();
-        $studentsIds = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', $activeYear->id)
-            ->pluck('user_id');
-        $studentQuery = User::query()->where('typeUser','eleve')->whereIn('id',$studentsIds);
+        $studentQuery = User::query()->where('typeUser','eleve');
         if(!empty($searchNote)) {
             $studentQuery->where('name','LIKE',"%{$searchNote}%");
         }
         if (!empty($classeFilter)) {
-            $query->where('classe_id', $classeFilter);
-            $studentQuery->where('classe_id', $classeFilter);
+            // filtering by different classe Id throw years
+            $studentsYearClassseId = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', $activeYear->id)
+                ->where('classe_id', $classeFilter)
+                ->pluck('classe_id');
+            $query->whereIn('classe_id', $studentsYearClassseId);
+            // filtering by different classe Id throw years
+            $studentsYearClassseIds = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', $activeYear->id)
+                ->where('classe_id', $classeFilter)
+                ->pluck('user_id');
+            $studentQuery->whereIn('id', $studentsYearClassseIds);
         }
         if (!empty($matiereFilter)) {
             $query->where('matiere_id', $matiereFilter);
@@ -67,9 +73,9 @@ class NoteController extends Controller
         $students = $studentQuery->paginate(10);
 
         if($request->ajax()) {
-            return view('partials._note_table', compact('students','notes','remplissages','classes','classeFilter','matiereFilter','remplissageFilter'));
+            return view('partials._note_table', compact('students','notes','activeYear','remplissages','classes','classeFilter','matiereFilter','remplissageFilter'));
         } else {
-            return view('evaluation.notes', compact('remplissages','classes','students','notes','classeFilter','matiereFilter','remplissageFilter'));
+            return view('evaluation.notes', compact('remplissages','classes','activeYear','students','notes','classeFilter','matiereFilter','remplissageFilter'));
         }
     }
 
@@ -113,7 +119,7 @@ class NoteController extends Controller
             $notesData = Note::all()->where('matiere_id',$request->matiere_id,)
             ->where('classe_id',$request->classe_id)->where('evaluation_id',$request->evaluation_id);
             foreach($notesData as $noteData) {
-                array_push($noteData->note, $notes);
+                array_push($notes, $noteData->note);
             }
             array_push($notes, $request->note); // adding the request note
             $range = getRange($request->note, $notes); // finally get the range
@@ -135,6 +141,10 @@ class NoteController extends Controller
                 'max_value' => $maxValue,
                 'appreciation' => $request->appreciation
             ]);
+            // update all the notes with the corresponding new min value and max value
+            updateAllMinMaxNotes($minValue, $maxValue,
+                $gcma, $request->classe_id, $request->evaluation_id,$request->remplissage_id,$request->matiere_id
+            );
             if($note) {
                 return response()->json(['success' => 'Note enregistrée avec succès']);
             }
@@ -166,7 +176,7 @@ class NoteController extends Controller
         $notesData = Note::all()->where('matiere_id',$request->matiere_id,)
         ->where('classe_id',$request->classe_id)->where('evaluation_id',$request->evaluation_id);
         foreach($notesData as $noteData) {
-            array_push($noteData->note, $notes);
+            array_push($notes,$noteData->note);
         }
         // remove the old value in the array and add the new_value
         $noteToRemoveValue = $note->note;
@@ -184,11 +194,15 @@ class NoteController extends Controller
         $note->update([
             'note' => $request->new_value,
             'range' => $range,
-            'gcma' => $gcma,
-            'min_value' => $minValue,
-            'max_value' => $maxValue,
+            //'gcma' => $gcma,
+            //'min_value' => $minValue,
+            //'max_value' => $maxValue,
             'appreciation' => $request->appreciation
         ]);
+        // update all the notes with the corresponding new min value and max value
+        updateAllMinMaxNotes($minValue, $maxValue,
+            $gcma, $note->classe_id, $note->evaluation_id,$note->remplissage_id,$note->matiere_id
+        );
 
         // saving history note
         $noteHistory = NoteHistory::create([
@@ -198,7 +212,6 @@ class NoteController extends Controller
             'new_value' => $request->new_value,
             'reason' => $request->reason,
         ]);
-
         if($noteHistory) {
             return response()->json(['success' => 'Note mise à jour avec succès']);
         }

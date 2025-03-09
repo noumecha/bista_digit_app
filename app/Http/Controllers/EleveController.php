@@ -128,7 +128,6 @@ class EleveController extends Controller
             'dateNaiss' => $request->dateNaiss,
             'numCni' => $request->numCni,
             'create_year_id' => $request->active_year_id,
-            'classe_id' => $request->classe_id,
             'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'eleve',
             'password' => Hash::make($request->password),

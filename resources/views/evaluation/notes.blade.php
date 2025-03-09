@@ -18,11 +18,11 @@
                                         D'ici vous pouvez gérer les notes (par classe, par matière et par évaluation)
                                     </p>
                                 </div>
-                                <div class="col-md-12 col-lg-6 text-end">
+                                <!--div class="col-md-12 col-lg-6 text-end">
                                     <a href="#personnelform" class="btn btn-lg btn-dark btn-primary">
                                         <i class="fa-solid fa-square-poll-horizontal me-2"></i> Ajouter
                                     </a>
-                                </div>
+                                </div-->
                             </div>
                             <form id="filterNoteForm" class="form form-inline row mt-3">
                                 <div class="col-md-12">

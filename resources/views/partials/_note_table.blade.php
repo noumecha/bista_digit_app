@@ -80,7 +80,7 @@
                                 value="{{ isset($evaluationId) ? $evaluationId->evaluation->id : '' }}"
                             >
                             <input type="hidden" name="remplissage_id" value="{{ isset($remplissageFilter) ? $remplissageFilter : '' }}">
-                            <input type="hidden" name="classe_id" value="{{ $student->classe_id }}">
+                            <input type="hidden" name="classe_id" value="{{ $student->getCurrentYearClasse($activeYear->id) }}">
                             <input type="hidden" id="note-input-{{ $student->id }}" name="note" value="">
                             <input type="hidden" id="appreciation-input-{{ $student->id }}" name="appreciation" value="">
                             <button
