@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignId('annee_scolaire_id')->constrained()->onDelete('cascade');
             $table->foreignId('evaluation_id')->constrained()->onDelete('cascade')->nullable();
             $table->foreignId('trimestre_id')->constrained()->onDelete('cascade')->nullable();
-            $table->foreignId('discipline_id')->constrained()->onDelete('cascade')->nullable();
             $table->string('bulletin_file');
             $table->string('appreciation');
             $table->double('average');

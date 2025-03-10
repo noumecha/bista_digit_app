@@ -101,7 +101,8 @@ class BullettinController extends Controller
             $evaluation = Evaluation::findOrFail($request->evaluation_id)
                 ->where('trimestre_id', $request->trimestre_id)->first();
             $trimestre = Trimestre::findOrFail($request->trimestre_id);
-            $matieres = Matiere::whereIn('id', getCurrentYearCoefConfigurationMatId($activeYear->id, $classe->id));
+            $matieres = Matiere::whereIn('id', getCurrentYearCoefConfigurationMatId($activeYear->id, $classe->id))
+                ->get();
             // check if all or a user in the specified class as note in every corresponding evaluation matiere
             $userIds = ClasseAnneeScolaireStudent::where('user_id', $request->user_id)
                 ->where('annee_scolaire_id', $activeYear->id)->where('classe_id', $classe->id)->pluck('user_id');
@@ -109,9 +110,11 @@ class BullettinController extends Controller
                 $student = User::where('id', $request->user_id)->where('typeUser','eleve')
                     ->whereIn('id', $userIds)->first();
                 foreach ($matieres as $matiere) {
-                    if(!Note::where('user_id', $student->id)
-                        ->where('matiere_id', $matiere->id)
-                        ->where('evaluation_id', $evaluation->id)->exists()) {
+                    $note = Note::where('user_id', $student->id)
+                    ->where('matiere_id', $matiere->id)
+                    ->where('classe_id', $classe->id)
+                    ->where('evaluation_id', $evaluation->id)->exists();
+                    if(!$note) {
                         return response()->json(["error" => "L'élève {$student->name} n'a pas de note en {$matiere->libelleMatiere}."]);
                     }
                 }
@@ -134,10 +137,10 @@ class BullettinController extends Controller
             if($request->option_type === "one" && isset($request->user_id)) {
                 $student = User::where('id', $request->user_id)->where('typeUser','eleve')
                 ->whereIn('id', $userIds)->first();
-                // create the pdf file first
                 /* getting all notes & all notes by matiere group */
                 $notes = Note::where('user_id', $student->id)
                 ->where('evaluation_id', $evaluation->id)
+                ->where('classe_id', $classe->id)
                 ->get();
                 $studentNotesFirstGroup = Note::where('user_id', $student->id)
                     ->where('evaluation_id', $evaluation->id)
@@ -152,51 +155,36 @@ class BullettinController extends Controller
                     ->whereIn('matiere_id', $thirdGroupMatiereIds)
                     ->get();
                 /** make the necessary calculation */
-                $coefsValues = getCoefValues($activeYear->id, $notes);
-                $notesValues = getNoteValues($notes);
-                dd($notesValues);
-                $average = getAverage($coefsValues, $notesValues); // calculate the current student average
-                $appreciation = getAppreciation($average); // define the appreciation base on the average
-                $averages = [];
-                $averagesData = Bulletin::all()->where('classe_id',$request->classe_id)
-                    ->where('evaluation_id',$request->evaluation_id)
-                    ->where('trimestre_id',$request->trimestre_id);
-                foreach($averagesData as $averageData) {
-                    array_push($averageData->average, $notes);
-                }
-                array_push($averages, $average); // adding the new average
-                $range = getRange($average, $averages); // finally get the range
-                $gcma = getGeneralMoy($averages); // get the general class average of the subject
-                $minValue = min($averages);
-                $maxValue = max($averages);
-                $sd = getStandardDeviation($averages);
+                $average = getAverage($activeYear->id, $notes);
+                $appreciation = getAppreciation($average);
                 $princClassTeacherName = getPrincipalClassTeacher($request->classe_id, $activeYear->id);
+                $displineStats = getDisciplinesStats($student->disciplines);
                 // create bulletin base on the selected type
                 if($request->type_bulletin === 'sequenciel') {
-                    $data = [
-                        'config' => $appConfig,
-                        'annee_scolaire' => $activeYear,
-                        'student' => $student,
-                        'classe' => $classe,
-                        'evaluation' => $evaluation,
-                        'trimestre' => $trimestre,
-                        'notes' => $notes,
-                        'notesFirstGroup' => $studentNotesFirstGroup,
-                        'notesSndGroup' => $studentNotesSndGroup,
-                        'notesThirdGroup' => $studentNotesThirdGroup,
+                    // generate the bulletin data for db
+                    $bulletin = Bulletin::create([
+                        'user_id' => $student->id,
+                        'classe_id' => $request->classe_id,
+                        'app_configuration_id' => $appConfig->id,
+                        'annee_scolaire_id' => $activeYear->id,
+                        'bulletin_file' => $student->bulletin_file,
                         'type_bulletin' => $request->type_bulletin,
-                        'discipline' => $student->discipline,
-                        'avg' => $average,
+                        'evaluation_id' => $request->evaluation_id,
+                        'trimestre_id' => $request->trimestre_id,
+                        'discipline_stats' => json_encode($displineStats),
                         'appreciation' => $appreciation,
-                        'range' => $range,
-                        'min_average' => $minValue,
-                        'max_average' => $maxValue,
-                        'general_average' => $gcma,
-                        'standard_deviation' => $sd,
-                        'principal_class_teacher' => $princClassTeacherName,
-                    ];
+                        'average' => $average,
+                        'principal_class_teacher' => $princClassTeacherName
+                    ]);
+                    // update bulletins stats
+                    updateAllReportCardStats(
+                        $classe->id,
+                        $request->evaluation_id,
+                        $request->trimestre_id,
+                        $activeYear->id
+                    );
                     // Load the view with bulletin data
-                    $pdf = Pdf::loadView('bulletin.evaluation', $data);
+                    $pdf = Pdf::loadView('bulletin.evaluation', $bulletin);
                     // Return as response to show in browser
                     return $pdf->stream("
                         Bulletin-{$evaluation->libelleEvaluation}-{$student->name}
@@ -208,26 +196,6 @@ class BullettinController extends Controller
                 }
                 if ($request->type_bulletin === 'annuel') {
                 }
-                // generate the bulletin data for db
-                Bulletin::create([
-                    'user_id' => $student->id,
-                    'classe_id' => $request->classe_id,
-                    'app_configuration_id' => $appConfig->id,
-                    'annee_scolaire_id' => $activeYear->id,
-                    'bulletin_file' => $student->bulletin_file, // to manage
-                    'type_bulletin' => $request->type_bulletin,
-                    'evaluation_id' => $request->evaluation_id,
-                    'trimestre_id' => $request->trimestre_id,
-                    'discipline_id' => $student->discipline->id,
-                    'appreciation' => $appreciation,
-                    'average' => $average,
-                    'min_average' => $minValue,
-                    'max_average' => $maxValue,
-                    'general_average' => $gcma,
-                    'standard_deviation' => $sd,
-                    'range' => $range,
-                    'principal_class_teacher' => $princClassTeacherName
-                ]);
             } else {
                 // generate many user bulletins
                 foreach ($classe->students as $student) {

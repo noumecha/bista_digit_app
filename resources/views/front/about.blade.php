@@ -17,15 +17,27 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-12">
-                        <div class="text-justify">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis voluptatibus neque, assumenda maxime. Eaque libero unde corrupti deleniti maxime ratione doloremque suscipit perferendis aperiam labore debitis atque odit neque, possimus, aspernatur dicta nobis recusandae numquam provident porro, quam suscipit quibusdam. Commodi eum, optio quo.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis voluptatibus neque, assumenda maxime. Eaque libero unde corrupti deleniti maxime ratione doloremque suscipit perferendis aperiam labore debitis atque odit neque, possimus, aspernatur dicta nobis recusandae numquam provident porro, quam suscipit quibusdam. Commodi eum, optio quo.</p>
+                        @if (isset($appconfiguration) && isset($appconfiguration->school_name))
+                            <h1>{{ $appconfiguration->school_name }}</h1>
+                        @endif
+                        <div class="text-justify mt-3">
+                            @if (isset($appconfiguration) && isset($appconfiguration->description))
+                                {!! $appconfiguration->description !!}
+                            @else
+                                <p>Aucune description disponible ....</p>
+                            @endif
                         </div>
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-12">
                         <div class="_Ol_er_qw yu">
-                            <img src="{{ asset('front/images/slider/about-test.jpeg') }}">
+                            <img
+                                @if (isset($appconfiguration) && isset($appconfiguration->school_logo))
+                                    src="{{ asset('storage/' . $appconfiguration->school_logo) }}"
+                                @else
+                                    src="{{ asset('front/images/logo.png') }}"
+                                @endif
+                            >
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\AppConfiguration;
 
 class AboutController extends Controller
 {
@@ -10,6 +10,7 @@ class AboutController extends Controller
      * index function
      */
     public function index () {
-        return view('front.about');
+        $appconfiguration = AppConfiguration::all()->first();
+        return view('front.about',compact('appconfiguration'));
     }
 }

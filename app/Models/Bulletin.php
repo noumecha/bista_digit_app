@@ -22,7 +22,7 @@ class Bulletin extends Model
         'type_bulletin',
         'evaluation_id',
         'trimestre_id',
-        'discipline_id',
+        'discipline_stats',
         'appreciation',
         'average',
         'min_average',
@@ -47,14 +47,6 @@ class Bulletin extends Model
     public function evaluation(): BelongsTo
     {
         return $this->belongsTo(Evaluation::class, 'evaluation_id');
-    }
-
-    /**
-     * a Bulletin content a specifif discipline datas
-     */
-    public function discipline(): BelongsTo
-    {
-        return $this->belongsTo(Evaluation::class, 'discipline_id');
     }
 
     /**

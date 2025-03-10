@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\AnneeScolaire;
+use App\Models\Bulletin;
 use App\Models\CoefAnneeScolaire;
 use App\Models\Coefficient;
 use App\Models\EnseignantPrincipal;
@@ -90,6 +91,39 @@ use Illuminate\Support\Facades\Route;
             throw $ex;
         }
     }
+
+    /**
+     * function to update report card stats
+     */
+    function updateAllReportCardStats($classeId, $evaluationId, $trimestreId, $yearId) {
+        try {
+            $bulletins = Bulletin::where('classe_id',$classeId)
+                ->where('evaluation_id',$evaluationId)
+                ->where('annee_scolaire_id',$yearId)
+                ->where('trimestre_id',$trimestreId)->get();
+            $bulletinValues = [];
+            foreach($bulletins as $bulletin) {
+                array_push($bulletinValues, $bulletin->average);
+            }
+            $minValue = min($bulletinValues);
+            $maxValue = max($bulletinValues);
+            $gcma = getGeneralMoy($bulletinValues);
+            $sd = getStandardDeviation($bulletinValues);
+            foreach($bulletins as $bulletin) {
+                $range = getRange($bulletin->average, $bulletinValues);
+                $bulletin->update([
+                    'min_average' => $minValue,
+                    'max_average' => $maxValue,
+                    'general_average' => $gcma,
+                    'standard_deviation' => $sd,
+                    'range' => $range,
+                ]);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
     /**
      * function to determine reussite percent
      */
@@ -120,19 +154,6 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
-     * function to calculate total Note x Coef
-     */
-    function totalNoteCoef($coefs, $notes) {
-        $totalNoteCoef = 0;
-        foreach ($notes as $note) {
-            foreach ($coefs as $coef) {
-                $totalNoteCoef += ($coef * $note);
-            }
-        }
-        return $totalNoteCoef;
-    }
-
-    /**
      * function to determine the total of coefs
      */
     function totalCoefs ($coefs) {
@@ -141,16 +162,6 @@ use Illuminate\Support\Facades\Route;
             $totalCoefs += $coef;
         }
         return $totalCoefs;
-    }
-
-    /**
-     * function to determine average
-     */
-    function getAverage($coefs, $notes) {
-        $totalNoteCoefs = totalNoteCoef($coefs, $notes);
-        $totalCoefs = totalCoefs($coefs);
-        $avg = $totalNoteCoefs / $totalCoefs;
-        return $avg;
     }
 
     /**
@@ -193,28 +204,22 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
-     * function to determinate coefsValues
+     * function to determine average
      */
-    function getCoefValues($yearId, $datas) {
+    function getAverage($yearId, $notes) {
+        $avg = 0;
+        $totalNoteCoefs = 0;
         $coefs = [];
-        foreach ($datas as $data) {
-            $coef = Coefficient::all()->where('matiere_id', $data->matiere_id)->
-                where('annee_scolaire_id', $yearId)->first();
+        foreach ($notes as $note) {
+            $coef = Coefficient::all()->where('matiere_id', $note->matiere_id)
+                ->where('annee_scolaire_id', $yearId)->first();
             $coefValue = CoefAnneeScolaire::all()->where('coefficient_id', $coef->id)->first();
+            $totalNoteCoefs += ($note->note * $coefValue->coefficient_value);
             array_push($coefs, $coefValue->coefficient_value);
         }
-        return $coefs;
-    }
-
-    /**
-     * function to create notes values array
-     */
-    function getNoteValues($notes) {
-        $data = [];
-        foreach ($notes as $note) {
-            array_push($data, $note->note);
-        }
-        return $data;
+        $totalCoefs = totalCoefs($coefs);
+        $avg = $totalNoteCoefs / $totalCoefs;
+        return $avg;
     }
 
     /**
@@ -242,9 +247,26 @@ use Illuminate\Support\Facades\Route;
      */
     function getPrincipalClassTeacher($id, $yearId) {
         $teacherId = EnseignantPrincipal::all()
-            ->where('class_id', $id)
+            ->where('classe_id', $id)
             ->where('annee_scolaire_id', $yearId)
             ->pluck('user_id')->first();
-        $pct = User::where('id', $teacherId);
-        return $pct->name;
+        $teacher = User::where('id', $teacherId)->first();
+        return $teacher->name;
+    }
+
+    /**
+     * student displinces stats
+     */
+    function getDisciplinesStats($datas) {
+        $absJust = 0;
+        $absNonJust = 0;
+        foreach($datas as $data) {
+            $absJust += $data->heures_justifiees;
+            $absNonJust += $data->total_absences;
+        }
+        $stats = [
+            "absJust" => $absJust,
+            "absNonJust" => $absNonJust
+        ];
+        return $stats;
     }
