@@ -41,10 +41,10 @@ use Illuminate\Support\Facades\Route;
     /**
      * function to determine range of an element in array
      */
-    function getRange($note, $notes) {
+    function getRange($data, $datas) {
         $range = 1;
-        foreach ($notes as $n) {
-            if($n > $note) {
+        foreach ($datas as $n) {
+            if($n > $data) {
                 $range++;
             }
         }
@@ -63,6 +63,33 @@ use Illuminate\Support\Facades\Route;
         return $gcma;
     }
 
+    /**
+     * function to automatically update notes
+     */
+    function updateNoteMinMaxRange($matiereId, $classeId, $evaluationId) {
+        try {
+            $notes = Note::all()->where('matiere_id',$matiereId)
+                ->where('classe_id',$classeId)->where('evaluation_id',$evaluationId);
+            $noteValues = [];
+            foreach($notes as $note) {
+                array_push($noteValues, $note->note);
+            }
+            $minValue = min($noteValues);
+            $maxValue = max($noteValues);
+            $gcma = getGeneralMoy($noteValues);
+            foreach($notes as $note) {
+                $range = getRange($note->note, $noteValues);
+                $note->update([
+                    'range' => $range,
+                    'min_value' => $minValue,
+                    'max_value' => $maxValue,
+                    'gcma' => $gcma,
+                ]);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
     /**
      * function to determine reussite percent
      */
@@ -166,7 +193,32 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
-     * function to return matieres ids base on group
+     * function to determinate coefsValues
+     */
+    function getCoefValues($yearId, $datas) {
+        $coefs = [];
+        foreach ($datas as $data) {
+            $coef = Coefficient::all()->where('matiere_id', $data->matiere_id)->
+                where('annee_scolaire_id', $yearId)->first();
+            $coefValue = CoefAnneeScolaire::all()->where('coefficient_id', $coef->id)->first();
+            array_push($coefs, $coefValue->coefficient_value);
+        }
+        return $coefs;
+    }
+
+    /**
+     * function to create notes values array
+     */
+    function getNoteValues($notes) {
+        $data = [];
+        foreach ($notes as $note) {
+            array_push($data, $note->note);
+        }
+        return $data;
+    }
+
+    /**
+     * function to return matieres ids base on group name
      */
     function getGroupeMatieresIds($group, $yearId) {
         $coefsAnneeScolairesFistGroup = CoefAnneeScolaire::all()->where('annee_scolaire_id',$yearId)
@@ -179,9 +231,9 @@ use Illuminate\Support\Facades\Route;
     /**
      * function that return configuration_matiere of a current year - pluck by matiere_id
      */
-    function getCurrentYearCoefConfigurationMatId($yearId) {
+    function getCurrentYearCoefConfigurationMatId($yearId, $classeId) {
         $coefsAnneeScolaires = CoefAnneeScolaire::all()->where('annee_scolaire_id', $yearId)->pluck('coefficient_id');
-        $coefficients = Coefficient::all()->whereIn('id', $coefsAnneeScolaires)->pluck('matiere_id');
+        $coefficients = Coefficient::all()->where('classe_id', $classeId)->whereIn('id', $coefsAnneeScolaires)->pluck('matiere_id');
         return $coefficients;
     }
 
@@ -195,19 +247,4 @@ use Illuminate\Support\Facades\Route;
             ->pluck('user_id')->first();
         $pct = User::where('id', $teacherId);
         return $pct->name;
-    }
-
-    /**
-     * function to update all notes min max values
-     */
-    function updateAllMinMaxNotes($min, $max, $gcma, $classeId, $evaluationId, $rempId, $matiereId) {
-        $notes = Note::where('classe_id', $classeId)->where('evaluation_id', $evaluationId)
-            ->where('remplissage_id', $rempId)->where('matiere_id', $matiereId);
-        foreach($notes as $note) {
-            $note->update([
-                'min_value' => $min,
-                'max_value' => $max,
-                'mgc' => $gcma
-            ]);
-        }
     }

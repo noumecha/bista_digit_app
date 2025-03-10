@@ -114,19 +114,6 @@ class NoteController extends Controller
                 'error' => 'La note existe déjà !'
             ]);
         } else {
-            // calculate the note range and gcma(general class matiere average on a subject)
-            $notes = [];
-            $notesData = Note::all()->where('matiere_id',$request->matiere_id,)
-            ->where('classe_id',$request->classe_id)->where('evaluation_id',$request->evaluation_id);
-            foreach($notesData as $noteData) {
-                array_push($notes, $noteData->note);
-            }
-            array_push($notes, $request->note); // adding the request note
-            $range = getRange($request->note, $notes); // finally get the range
-            $gcma = getGeneralMoy($notes); // get the general class average of the subject
-            $minValue = min($notes);
-            $maxValue = max($notes);
-
             // then save the note in the db
             $note = Note::create([
                 'matiere_id' => $request->matiere_id,
@@ -135,15 +122,13 @@ class NoteController extends Controller
                 'evaluation_id' => $request->evaluation_id,
                 'remplissage_id' => $request->remplissage_id,
                 'note' => $request->note,
-                'range' => $range,
-                'mgc' => $gcma,
-                'min_value' => $minValue,
-                'max_value' => $maxValue,
                 'appreciation' => $request->appreciation
             ]);
             // update all the notes with the corresponding new min value and max value
-            updateAllMinMaxNotes($minValue, $maxValue,
-                $gcma, $request->classe_id, $request->evaluation_id,$request->remplissage_id,$request->matiere_id
+            updateNoteMinMaxRange(
+                $request->matiere_id,
+                $request->classe_id,
+                $request->evaluation_id,
             );
             if($note) {
                 return response()->json(['success' => 'Note enregistrée avec succès']);
@@ -168,42 +153,13 @@ class NoteController extends Controller
             'new_value.required' => 'Entrez la nouvelle valeur de la note',
             'reason.required' => 'Entrez la raison de la modification de la note'
         ]);
-
         // update note before creating history
         $note = Note::findOrFail($id);
-        // update the note range and gcma(general class matiere average on a subject)
-        $notes = [];
-        $notesData = Note::all()->where('matiere_id',$request->matiere_id,)
-        ->where('classe_id',$request->classe_id)->where('evaluation_id',$request->evaluation_id);
-        foreach($notesData as $noteData) {
-            array_push($notes,$noteData->note);
-        }
-        // remove the old value in the array and add the new_value
-        $noteToRemoveValue = $note->note;
-        $noteToRemoveKey = array_search($noteToRemoveValue, $notes);
-        if($noteToRemoveKey) {
-            unset($notes[$noteToRemoveKey]);
-            array_values($notes);
-        }
-        array_push($notes, $request->new_value); // adding the request note
-        $range = getRange($request->new_value, $notes); // finally get the range
-        $gcma = getGeneralMoy($notes); // get the general class average of the subject
-        $minValue = min($notes);
-        $maxValue = max($notes);
         $oldValue = $note->note;
         $note->update([
             'note' => $request->new_value,
-            'range' => $range,
-            //'gcma' => $gcma,
-            //'min_value' => $minValue,
-            //'max_value' => $maxValue,
             'appreciation' => $request->appreciation
         ]);
-        // update all the notes with the corresponding new min value and max value
-        updateAllMinMaxNotes($minValue, $maxValue,
-            $gcma, $note->classe_id, $note->evaluation_id,$note->remplissage_id,$note->matiere_id
-        );
-
         // saving history note
         $noteHistory = NoteHistory::create([
             'note_id' => $note->id,
@@ -212,6 +168,12 @@ class NoteController extends Controller
             'new_value' => $request->new_value,
             'reason' => $request->reason,
         ]);
+        // update all the notes with the corresponding new min value and max value
+        updateNoteMinMaxRange(
+            $note->matiere_id,
+            $note->classe_id,
+            $note->evaluation_id
+        );
         if($noteHistory) {
             return response()->json(['success' => 'Note mise à jour avec succès']);
         }
