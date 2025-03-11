@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Bulletin de [nom]</title>
         <link rel="stylesheet" href="{{ asset('front/css/bootstrap.min.css') }}"/>
+        <link rel="stylesheet" href="{{ public_path('front/css/boostrap.min.css') }}"/>
         <link rel="stylesheet" href="{{ asset('front/css/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('front/css/owl.carousel.min.css') }}">
         <link rel="stylesheet" href="{{ asset('front/css/owl.carousel.css') }}">

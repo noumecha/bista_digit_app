@@ -351,4 +351,26 @@ class BullettinController extends Controller
         $evaluations = Evaluation::where('trimestre_id', $trim->id)->get();
         return response()->json($evaluations);
     }
+
+    /**
+     * preview bulletin
+     */
+    public function preview($id)
+    {
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $bulletin = Bulletin::findOrFail($id);
+        $data = $bulletin->getAttributes();
+        $schoolYear = explode('/', $activeYear->libelleAnneeScolaire);
+        //dd($bulletin->getAttributes());
+        if($bulletin->type_bulletin === 'sequenciel') {
+            // Load the view with bulletin data
+            $pdf = Pdf::loadView('bulletin.evaluation', $data);
+            // Return as response to show in browser
+            return $pdf->stream("
+                Bulletin_{$bulletin->evaluation->libelleEvaluation}_{$bulletin->student->name}
+                _{$schoolYear[0]}_{$schoolYear[1]}.pdf
+            ");
+        }
+    }
+
 }

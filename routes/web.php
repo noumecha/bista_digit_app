@@ -265,6 +265,8 @@ Route::get('/bulletins/evaluations/{trimestreId}', [BullettinController::class, 
 Route::put('/bulletins/update/{id}', [BullettinController::class, 'update'])->name('bulletins.update')->middleware('auth');
 Route::post('/bulletins/save', [BullettinController::class, 'generate'])->name('bulletins.generate')->middleware('auth');
 Route::delete('/bulletins/{id}/delete', [BullettinController::class, 'destroy'])->name('bulletins.destroy')->middleware('auth');
+Route::get('/bulletins/preview/{id}', [BullettinController::class, 'preview'])->name('bulletins.preview');
+
 
 # configuration routes - app configuration
 
