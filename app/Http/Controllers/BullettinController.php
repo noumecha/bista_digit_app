@@ -360,10 +360,16 @@ class BullettinController extends Controller
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $bulletin = Bulletin::findOrFail($id);
         $data = $bulletin->getAttributes();
+        $appconfig = $bulletin->configuration;
+        $data = [
+            'appconfig' => $appconfig->getAttributes(),
+            'bulletin' => $bulletin->getAttributes(),
+        ];
         $schoolYear = explode('/', $activeYear->libelleAnneeScolaire);
         //dd($bulletin->getAttributes());
         if($bulletin->type_bulletin === 'sequenciel') {
             // Load the view with bulletin data
+            // dd($data);
             $pdf = Pdf::loadView('bulletin.evaluation', $data);
             // Return as response to show in browser
             return $pdf->stream("

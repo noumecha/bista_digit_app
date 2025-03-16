@@ -97,7 +97,7 @@
                             </div>
                         </div>
                         <!-- modal for preview -->
-                        <div class="modal fade" id="bulletinModal-{{ $bulletin->id }}" tabindex="-1" aria-labelledby="bulletinModalLabel">
+                        <div class="modal fade" style="z-index: 30000" id="bulletinModal-{{ $bulletin->id }}" tabindex="-1" aria-labelledby="bulletinModalLabel">
                             <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
                                     <div class="modal-header bg-dark">

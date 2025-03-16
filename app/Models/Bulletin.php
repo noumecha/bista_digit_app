@@ -72,4 +72,12 @@ class Bulletin extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * a Bulletin to app configuration
+     */
+    public function configuration(): BelongsTo
+    {
+        return $this->belongsTo(AppConfiguration::class, 'app_configuration_id');
+    }
 }

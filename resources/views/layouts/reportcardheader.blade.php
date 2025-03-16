@@ -5,7 +5,9 @@
             <h6 class="m-0 text-center text-uppercase">Republique du cameroun</h6>
             <p class="fs-6 mb-0 text-center">paix-travail-patrie</p>
             <h6 class="text-center text-uppercase">Ministère des enseignements secondaire</h6>
-            <h5 class="text-center fw-bold text-uppercase">[nom-etablissement]</h5>
+            <h5 class="text-center fw-bold text-uppercase">
+                [nom de l'établissement]
+            </h5>
             <p class="fs-6 mb-0 text-center text-uppercase">[devise-etablissement]</p>
             <p class="fs-6 mb-0 text-center text-uppercase">P.B.[boite postal] Tel.[contact1]/[contact2] [ville]</p>
         </div>
