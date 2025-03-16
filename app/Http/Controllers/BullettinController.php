@@ -369,7 +369,7 @@ class BullettinController extends Controller
         //dd($bulletin->getAttributes());
         if($bulletin->type_bulletin === 'sequenciel') {
             // Load the view with bulletin data
-            // dd($data);
+            //dd($data);
             $pdf = Pdf::loadView('bulletin.evaluation', $data);
             // Return as response to show in browser
             return $pdf->stream("
