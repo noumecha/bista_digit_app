@@ -130,7 +130,7 @@ class BullettinController extends Controller
                     }
                 }
             }
-            // genrate bulletin and pdf for each student
+            // determinate the notes by group
             $firstGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('1er groupe', $activeYear->id))->pluck('id');
             $sndGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('2e groupe', $activeYear->id))->pluck('id');
             $thirdGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('3e groupe', $activeYear->id))->pluck('id');
@@ -162,7 +162,7 @@ class BullettinController extends Controller
                 // create bulletin base on the selected type
                 if($request->type_bulletin === 'sequenciel') {
                     // generate the bulletin data for db
-                    $bulletin = Bulletin::create([
+                    Bulletin::create([
                         'user_id' => $student->id,
                         'classe_id' => $request->classe_id,
                         'app_configuration_id' => $appConfig->id,
@@ -183,119 +183,12 @@ class BullettinController extends Controller
                         $request->trimestre_id,
                         $activeYear->id
                     );
-                    // Load the view with bulletin data
-                    $pdf = Pdf::loadView('bulletin.evaluation', $bulletin);
-                    // Return as response to show in browser
-                    return $pdf->stream("
-                        Bulletin-{$evaluation->libelleEvaluation}-{$student->name}
-                        -{$activeYear->libelleAnneeScolaire}.pdf
-                    ");
-
                 }
                 if ($request->type_bulletin === 'trimestre') {
                 }
                 if ($request->type_bulletin === 'annuel') {
                 }
             } else {
-                // generate many user bulletins
-                foreach ($classe->students as $student) {
-                    // create the pdf file first
-                    /* getting all notes & all notes by matiere group */
-                    $notes = Note::where('user_id', $student->id)
-                    ->where('evaluation_id', $evaluation->id)
-                    ->get();
-                    $studentNotesFirstGroup = Note::where('user_id', $student->id)
-                        ->where('evaluation_id', $evaluation->id)
-                        ->whereIn('matiere_id', $firstGroupMatiereIds)
-                        ->get();
-                    $studentNotesSndGroup = Note::where('user_id', $student->id)
-                        ->where('evaluation_id', $evaluation->id)
-                        ->whereIn('matiere_id', $sndGroupMatiereIds)
-                        ->get();
-                    $studentNotesThirdGroup = Note::where('user_id', $student->id)
-                        ->where('evaluation_id', $evaluation->id)
-                        ->whereIn('matiere_id', $thirdGroupMatiereIds)
-                        ->get();
-                    /** make the necessary calculation */
-                    $coefsValues = [];
-                    foreach ($notes as $note) {
-                        $coef = Coefficient::all()->where('matiere_id', $note->matiere_id)->
-                            where('annee_scolaire_id', $activeYear->id);
-                        $coefValue = CoefAnneeScolaire::where('coefficient_id', $coef->id)->get();
-                        array_push($coefsValues, $coefValue->coefficient_value);
-                    }
-                    $notesValues = [];
-                    foreach ($notes as $note) {
-                        array_push($notesValues, $note->note);
-                    }
-                    $average = getAverage($coefsValues, $notesValues); // calculate the current student average
-                    $appreciation = getAppreciation($average); // define the appreciation base on the average
-                    $averages = [];
-                    $averagesData = Bulletin::all()->where('classe_id',$request->classe_id)
-                        ->where('evaluation_id',$request->evaluation_id)
-                        ->where('trimestre_id',$request->trimestre_id);
-                    foreach($averagesData as $averageData) {
-                        array_push($averageData->average, $notes);
-                    }
-                    array_push($averages, $average); // adding the new average
-                    $range = getRange($average, $averages); // finally get the range
-                    $gcma = getGeneralMoy($averages); // get the general class average of the subject
-                    $minValue = min($averages);
-                    $maxValue = max($averages);
-                    $sd = getStandardDeviation($averages);
-                    $princClassTeacherName = getPrincipalClassTeacher($request->classe_id, $activeYear->id);
-                    // create bulletin base on the selected type
-                    if($request->type_bulletin === 'sequenciel') {
-                        $data = [
-                            'config' => $appConfig,
-                            'annee_scolaire' => $activeYear,
-                            'student' => $student,
-                            'classe' => $classe,
-                            'evaluation' => $evaluation,
-                            'trimestre' => $trimestre,
-                            'notes' => $notes,
-                            'notesFirstGroup' => $studentNotesFirstGroup,
-                            'notesSndGroup' => $studentNotesSndGroup,
-                            'notesThirdGroup' => $studentNotesThirdGroup,
-                            'type_bulletin' => $request->type_bulletin,
-                            'discipline' => $student->discipline,
-                            'avg' => $average,
-                            'appreciation' => $appreciation,
-                            'range' => $range,
-                            'min_average' => $minValue,
-                            'max_average' => $maxValue,
-                            'general_average' => $gcma,
-                            'standard_deviation' => $sd,
-                            'principal_class_teacher' => $princClassTeacherName,
-                        ];
-                    }
-                    if ($request->type_bulletin === 'trimestre') {
-                    }
-                    if ($request->type_bulletin === 'annuel') {
-                    }
-
-                    // starting the Bulletin generation
-                    Bulletin::create([
-                        'user_id' => $student->id,
-                        'classe_id' => $request->classe_id,
-                        'app_configuration_id' => $appConfig->id,
-                        'annee_scolaire_id' => $activeYear->id,
-                        'bulletin_file' => $student->bulletin_file,
-                        'type_bulletin' => $request->type_bulletin,
-                        'evaluation_id' => $request->evaluation_id,
-                        'trimestre_id' => $request->trimestre_id,
-                        'discipline_id' => $student->discipline->id,
-                        'appreciation' => $appreciation,
-                        'average' => $average,
-                        'min_average' => $minValue,
-                        'max_average' => $maxValue,
-                        'general_average' => $gcma,
-                        'standard_deviation' => $sd,
-                        'range' => $range,
-                        'principal_class_teacher' => $princClassTeacherName
-                    ]);
-                }
-
             }
             return back()->with('success', "Bulletin(s) généré(s) avec succès !");
         } catch (Exception $ex) {
@@ -357,26 +250,34 @@ class BullettinController extends Controller
      */
     public function preview($id)
     {
-        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $bulletin = Bulletin::findOrFail($id);
-        $data = $bulletin->getAttributes();
-        $appconfig = $bulletin->configuration;
-        $data = [
-            'appconfig' => $appconfig->getAttributes(),
-            'bulletin' => $bulletin->getAttributes(),
-        ];
-        $schoolYear = explode('/', $activeYear->libelleAnneeScolaire);
-        //dd($bulletin->getAttributes());
-        if($bulletin->type_bulletin === 'sequenciel') {
-            // Load the view with bulletin data
-            //dd($data);
-            $pdf = Pdf::loadView('bulletin.evaluation', $data);
-            // Return as response to show in browser
-            return $pdf->stream("
-                Bulletin_{$bulletin->evaluation->libelleEvaluation}_{$bulletin->student->name}
-                _{$schoolYear[0]}_{$schoolYear[1]}.pdf
-            ");
-        }
+        // load schoolYear
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        // determinate the notes by group
+        $firstGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('1er groupe', $activeYear->id))->pluck('id');
+        $sndGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('2e groupe', $activeYear->id))->pluck('id');
+        $thirdGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('3e groupe', $activeYear->id))->pluck('id');
+        // gettings notes by groups
+        $userIds = ClasseAnneeScolaireStudent::where('user_id', $bulletin->user_id)
+                ->where('annee_scolaire_id', $activeYear->id)->where('classe_id', $bulletin->classe_id)->pluck('user_id');
+        $student = User::where('id', $bulletin->user_id)->where('typeUser','eleve')
+                ->whereIn('id', $userIds)->first();
+        $studentNotesFirstGroup = Note::where('user_id', $student->id)
+                    ->where('evaluation_id', $bulletin->evaluation_id)
+                    ->whereIn('matiere_id', $firstGroupMatiereIds)
+                    ->get();
+        $studentNotesSndGroup = Note::where('user_id', $student->id)
+                    ->where('evaluation_id', $bulletin->evaluation_id)
+                    ->whereIn('matiere_id', $sndGroupMatiereIds)
+                    ->get();
+        $studentNotesThirdGroup = Note::where('user_id', $student->id)
+                    ->where('evaluation_id', $bulletin->evaluation_id)
+                    ->whereIn('matiere_id', $thirdGroupMatiereIds)
+                    ->get();
+        return view(
+            'bulletin.user-report-card',
+            compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup')
+        );
     }
 
 }

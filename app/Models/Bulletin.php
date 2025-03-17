@@ -74,9 +74,9 @@ class Bulletin extends Model
     }
 
     /**
-     * a Bulletin to app configuration
+     * a Bulletinn configuration belongs to a app configuration
      */
-    public function configuration(): BelongsTo
+    public function appconfiguration():BelongsTo
     {
         return $this->belongsTo(AppConfiguration::class, 'app_configuration_id');
     }

@@ -58,9 +58,7 @@
                         <a
                             class="btn btn-primary mt-3 p-2"
                             id="bulletin-preview"
-                            data-bs-toggle="modal"
-                            href="#"
-                            data-bs-target="#bulletinModal-{{ $bulletin->id }}"
+                            href="{{ route('bulletins.preview', $bulletin->id) }}"
                         >
                             <i class="fa-solid fa-eye"></i>
                         </a>
@@ -94,20 +92,6 @@
                                         </div>
                                     </div>
                                 </form>
-                            </div>
-                        </div>
-                        <!-- modal for preview -->
-                        <div class="modal fade" style="z-index: 30000" id="bulletinModal-{{ $bulletin->id }}" tabindex="-1" aria-labelledby="bulletinModalLabel">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-dark">
-                                        <h5 class="modal-title text-white">Prévisualisation du Bulletin de l'élève {{ $bulletin->student->name }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <iframe src="/bulletins/preview/{{ $bulletin->id }}" width="100%" height="600px"></iframe>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </td>

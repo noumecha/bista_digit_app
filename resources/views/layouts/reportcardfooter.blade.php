@@ -99,13 +99,13 @@
         </div>
     </div>
 </div>
-<div class="container-flex header-bulletin bulletin-date-footer border-top border-dark border-3">
+<div class="mt-3 container-flex header-bulletin bulletin-date-footer border-top border-dark border-3">
     <div class="row mt-2">
         <div class="col-md-6 col-lg-6 d-flex justify-content-start align-items-start flex-column">
             <p class="fs-6">&copy; {{ Date('Y') }} - POWEREDUCATION</p>
         </div>
         <div class="col-md-6 col-lg-6 d-flex justify-content-end align-items-end flex-column">
-            <p class="fs-6">Imprimé le : {{ Date('d/m/y') }} à {{ Date('hh:mm:ss') }}</p>
+            <p class="fs-6">Imprimé le : {{ Date('d/m/y') }} à {{ Date('h:m:s') }}</p>
         </div>
     </div>
 </div>

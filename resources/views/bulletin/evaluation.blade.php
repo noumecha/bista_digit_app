@@ -1,4 +1,4 @@
-<x-report-card-layout>
+<x-report-card-layout :bulletin="$bulletin">
     <!-- bulletin content -->
     <div class="container-flex header-bulletin">
         <div class="row">
@@ -10,7 +10,7 @@
                                 Matieres
                             </th>
                             <th class="border-2 bg-body-secondary text-center p-2" colspan="7">
-                                [Note]
+                                Note
                             </th>
                             <th class="border-2 bg-body-secondary text-center p-2">
                                 Coef
@@ -37,40 +37,42 @@
                     </thead>
                     <tbody>
                         <!-- group 1 data -->
-                        <tr>
-                            <td colspan="8" class="border-2 text-center p-2">
-                                <h6 class="text-left text-uppercase">
-                                    Informatique
-                                </h6>
-                                <h6 class="text-left text-uppercase">
-                                    M. Noumecha
-                                </h6>
-                            </td>
-                            <td class="border-2 bg-body-secondary text-center p-2" colspan="7">
-                                10
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                3
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                5
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                13
-                            </td>
-                            <td class="border-2 bg-body-secondary text-center p-2">
-                                13
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                5
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                15
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                CNA
-                            </td>
-                        </tr>
+                        @foreach ($studentNotesFirstGroup as $firstGroupeNotes)
+                            <tr>
+                                <td colspan="8" class="border-2 text-center p-2">
+                                    <h6 class="text-left text-uppercase">
+                                        Informatique
+                                    </h6>
+                                    <h6 class="text-left text-uppercase">
+                                        M. Noumecha
+                                    </h6>
+                                </td>
+                                <td class="border-2 bg-body-secondary text-center p-2" colspan="7">
+                                    {{ $firstGroupeNotes->note }}
+                                </td>
+                                <td class="border-2 text-center p-2">
+                                    3
+                                </td>
+                                <td class="border-2 text-center p-2">
+                                    5
+                                </td>
+                                <td class="border-2 text-center p-2">
+                                    13
+                                </td>
+                                <td class="border-2 bg-body-secondary text-center p-2">
+                                    13
+                                </td>
+                                <td class="border-2 text-center p-2">
+                                    5
+                                </td>
+                                <td class="border-2 text-center p-2">
+                                    15
+                                </td>
+                                <td class="border-2 text-center p-2">
+                                    CNA
+                                </td>
+                            </tr>
+                        @endforeach
                         <!-- group 1 resume -->
                         <tr>
                             <td colspan="8" class="text-center p-2">
