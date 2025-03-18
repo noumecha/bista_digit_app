@@ -264,14 +264,17 @@ class BullettinController extends Controller
                 ->whereIn('id', $userIds)->first();
         $studentNotesFirstGroup = Note::where('user_id', $student->id)
                     ->where('evaluation_id', $bulletin->evaluation_id)
+                    ->where('classe_id', $bulletin->classe_id)
                     ->whereIn('matiere_id', $firstGroupMatiereIds)
                     ->get();
         $studentNotesSndGroup = Note::where('user_id', $student->id)
                     ->where('evaluation_id', $bulletin->evaluation_id)
+                    ->where('classe_id', $bulletin->classe_id)
                     ->whereIn('matiere_id', $sndGroupMatiereIds)
                     ->get();
         $studentNotesThirdGroup = Note::where('user_id', $student->id)
                     ->where('evaluation_id', $bulletin->evaluation_id)
+                    ->where('classe_id', $bulletin->classe_id)
                     ->whereIn('matiere_id', $thirdGroupMatiereIds)
                     ->get();
         return view(

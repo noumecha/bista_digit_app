@@ -56,4 +56,33 @@ class Matiere extends Model
     {
         return $this->hasMany(Devoir::class);
     }
+
+    /**
+     * gettting current matiere year classe coefficient value
+     */
+    public function getCoef($classeId) {
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $coef = Coefficient::where('matiere_id', $this->id)
+            ->where('classe_id', $classeId)
+            ->where('annee_scolaire_id', $activeYear->id)->first();
+        $yearCoef = CoefAnneeScolaire::where('annee_scolaire_id', $activeYear->id)
+        ->where('coefficient_id', $coef->id)->first();
+        return $yearCoef->coefficient_value;
+    }
+
+    /**
+     * getting the teacher who teach the matiere in the specified classe for the current year
+     */
+    public function getTeacher($classeId) {
+        $activeYear = AnneeScolaire::all()->where('statut', true)->first();
+        $teacherClasseIds = Enseignement::where('classe_id', $classeId)->pluck('enseignant_matiere_id');
+        $teacherClassesIds = Enseignement::where('classe_id', $classeId)->pluck('id');
+        $teacherClassesYearIds = EnseignementAnneeScolaire::where('annee_scolaire_id', $activeYear->id)
+            ->whereIn('enseignement_id', $teacherClassesIds);
+        $teacherMatiere = EnseignantMatiereModel::all()->where('matiere_id', $this->id)
+            ->whereIn('id', $teacherClasseIds)
+            ->whereIn('id', $teacherClassesYearIds);
+        dd($teacherMatiere);
+        return $teacherMatiere;
+    }
 }

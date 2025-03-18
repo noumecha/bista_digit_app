@@ -17,13 +17,6 @@ class EnseignantMatiereModel extends Model
     ];
 
     /**
-     * all matiere
-     */
-    public function matieres() {
-        return $this->belongsTo(Matiere::class);
-    }
-
-    /**
      * corresponding specific matiere for teacher
      */
     public function matiere() {
