@@ -80,4 +80,40 @@ class Bulletin extends Model
     {
         return $this->belongsTo(AppConfiguration::class, 'app_configuration_id');
     }
+
+    /***
+     * function for getting total moyenne that elder or equal to 10
+     */
+    public function totalNumberOfMoy() {
+        $total = 0;
+        $bulletins = Bulletin::all()->where('classe_id', $this->classe_id)
+            ->where('annee_scolaire_id',$this->annee_scolaire_id)
+            ->where('evaluation_id',$this->evaluation_id)
+            ->where('trimestre_id',$this->trimestre_id);
+        foreach($bulletins as $bulletin) {
+            if ($bulletin->average >= 10)
+                $total++;
+        }
+        return $total;
+    }
+
+    /**
+     * function to determine reussite percent
+     */
+    function getWinPercent() {
+        $percent = 0;
+        $bulletins = Bulletin::all()->where('classe_id', $this->classe_id)
+            ->where('annee_scolaire_id',$this->annee_scolaire_id)
+            ->where('evaluation_id',$this->evaluation_id)
+            ->where('trimestre_id',$this->trimestre_id);
+        $totalBulletins = count($bulletins);
+        $totalWinData = 0;
+        foreach ($bulletins as $bulletin) {
+            if ($bulletin->average >= 10) {
+                $totalWinData++;
+            }
+        }
+        $percent = ($totalWinData / $totalBulletins) * 100;
+        return $percent;
+    }
 }

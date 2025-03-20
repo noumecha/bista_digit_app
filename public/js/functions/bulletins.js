@@ -1,14 +1,11 @@
 $(function(){
     // when printing the report card
-    $('#print-report').on('click', function() {
-        let printContent = document.getElementById("report-card").innerHTML;
-        let originalContent = document.body.innerHTML;
+    $(document).on('click','#printReport',function() {
+        let reportCard = document.getElementById("report-card");
+        var doc = new jsPDF;
+        console.log(doc);
+    });
 
-        document.body.innerHTML = printContent;
-        window.print();
-        document.body.innerHTML = originalContent;
-        /*window.location.reload();*/
-    })
     // filtering student base on the classe id
     $('#classe_id').on('change', function() {
         let classeId = $(this).val();

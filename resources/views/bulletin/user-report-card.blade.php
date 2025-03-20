@@ -43,6 +43,7 @@
                                     <div class="col-lg-1 col-md-1">
                                         <a
                                             type="button"
+                                            title="télécharger"
                                             id="download-report"
                                             class="btn btn-dark mb-0 p-0 text-white"
                                         >
@@ -52,7 +53,8 @@
                                     <div class="col-lg-1 col-md-1">
                                         <a
                                             type="button"
-                                            id="print-report"
+                                            title="imprimer"
+                                            id="printReport"
                                             class="btn btn-dark mb-0 p-0 text-white"
                                         >
                                             <i class="fas fa-print me-2"></i>
@@ -67,7 +69,8 @@
                                         'bulletin' => $bulletin,
                                         'studentNotesFirstGroup' => $studentNotesFirstGroup,
                                         'studentNotesSndGroup' => $studentNotesSndGroup,
-                                        'studentNotesThirdGroup' => $studentNotesThirdGroup
+                                        'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                                        'disciplines' => $disciplines
                                     ]
                                 )
                             </div>

@@ -277,9 +277,11 @@ class BullettinController extends Controller
                     ->where('classe_id', $bulletin->classe_id)
                     ->whereIn('matiere_id', $thirdGroupMatiereIds)
                     ->get();
+        // decode discplines
+        $disciplines = json_decode($bulletin->discipline_stats);
         return view(
             'bulletin.user-report-card',
-            compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup')
+            compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
         );
     }
 

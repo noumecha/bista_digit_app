@@ -75,12 +75,23 @@ class Matiere extends Model
      */
     public function getTeacher($classeId) {
         $activeYear = AnneeScolaire::all()->where('statut', true)->first();
-        $teacherClassesIds = Enseignement::all()->where('classe_id', $classeId)
-            ->where('create_year_id', $activeYear->id);//->pluck('enseignant_matiere_id');
-        dd($teacherClassesIds);
-        $teacherMatiere = EnseignantMatiereModel::all()->where('matiere_id', $this->id);
-            //->whereIn('id', $teacherClassesIds);
-        dd($teacherMatiere);
-        return $teacherMatiere;
+        $ensMatYearIds = EnsMatAnneeScolaire::all()
+            ->where('annee_scolaire_id',$activeYear->id)
+            ->pluck('enseignant_matiere_models_id');
+        $enseignementIds = Enseignement::all()->where('classe_id',$classeId)
+            ->whereIn('enseignant_matiere_id',$ensMatYearIds)->pluck('enseignant_matiere_id');
+        $teacherSubject = EnseignantMatiereModel::all()->where('matiere_id',$this->id)
+            ->whereIn('id',$enseignementIds)->first();
+        if ($teacherSubject !== null) {
+            $teacher = User::all()->where('id', $teacherSubject->user_id)->first();
+            if ($teacher->sex->value === "F") {
+                $response = "Mme ".$teacher->name;
+            } else {
+                $response = "M. ".$teacher->name;
+            }
+        } else {
+            $response = "Aucun enseignant pour la matière";
+        }
+        return $response;
     }
 }

@@ -165,6 +165,28 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
+     * function for calculate total of a coefs of matiere group
+     */
+    function totalCoefGroup($datas) {
+        $total = 0;
+        foreach($datas as $data) {
+            $total += $data->matiere->getCoef($data->classe_id);
+        }
+        return $total;
+    }
+
+    /**
+     * function for calculate total of a notes of matiere group
+     */
+    function totalNoteCoefGroup($datas) {
+        $total = 0;
+        foreach($datas as $data) {
+            $total += ($data->note * $data->matiere->getCoef($data->classe_id));
+        }
+        return $total;
+    }
+
+    /**
      * function to determine standard deviation of moyennes
      */
     function getStandardDeviation($notes) {

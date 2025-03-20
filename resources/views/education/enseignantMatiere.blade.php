@@ -85,6 +85,7 @@
                                             Selectionner l'enseignant :
                                         </label>
                                         <select name="user_id" id="user_id" class="form-select">
+                                            <option value="">Choisir un enseignant</option>
                                         @foreach ($enseignants as $enseignant)
                                             <option value="{{ $enseignant->id }}">{{ $enseignant->name }}</option>
                                         @endforeach
@@ -97,6 +98,7 @@
                                             Selectionner la matiere :
                                         </label>
                                         <select name="matiere_id" id="matiere_id" class="form-select">
+                                            <option value="">Choisir une matière</option>
                                             @foreach ($matieres as $matiere)
                                                 <option value="{{ $matiere->id }}">{{ $matiere->libelleMatiere }}</option>
                                             @endforeach

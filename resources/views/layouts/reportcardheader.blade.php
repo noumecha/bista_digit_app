@@ -93,7 +93,7 @@
                     </div>
                     <div class="pl-0 col-lg-8 d-flex">
                         <h6 class="text-center fw-bold mr-2">Noms & prénoms : </h6>
-                        <h6 class="m-5 mb-0 mt-0 mr-0 text-center border p-2 pr-4 pl-4 border-3 text-uppercase bg-body-secondary fw-bold border-dark">
+                        <h6 class="m-5 mb-0 mt-0 mr-0 text-center border p-2 pr-4 pl-4 border-3 text-uppercase bg-light fw-bold border-dark">
                             {{ $bulletin->student->name }} {{ $bulletin->student->surname }}
                         </h6>
                     </div>
@@ -107,7 +107,7 @@
                     </div>
                     <div class="pl-0 col-lg-3 align-items-start d-flex">
                         <p class="fs-6 text-center">
-                            Redoublant :
+                            Redoublant(e) :
                             @if ($bulletin->student->statutRedoublance === 1)
                                 oui
                             @else

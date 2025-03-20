@@ -5,7 +5,7 @@
             <table border="2" class="w-100 h-100">
                 <thead>
                     <tr>
-                        <th class="text-capitalize text-center p-2 bg-body-secondary">
+                        <th class="text-capitalize text-center p-2 bg-light">
                             Décision du conseil de classe
                         </th>
                     </tr>
@@ -32,7 +32,7 @@
             <table border="2" class="w-100">
                 <thead>
                     <tr>
-                        <th class="text-capitalize p-2 text-center bg-body-secondary">
+                        <th class="text-capitalize p-2 text-center bg-light">
                             Appréciation du travail
                         </th>
                     </tr>
@@ -40,7 +40,7 @@
                 <tbody>
                     <tr>
                         <td class="text-uppercase text-left p-2">
-                            [Appréciation du travail]
+                            {{ $bulletin->appreciation }}
                         </td>
                     </tr>
                 </tbody>
@@ -48,7 +48,7 @@
             <table border="2" class="w-100 h-100">
                 <thead>
                     <tr>
-                        <th class="text-capitalize p-2 text-center bg-body-secondary">
+                        <th class="text-capitalize p-2 text-center bg-light">
                             Visa professeur principal
                         </th>
                     </tr>
@@ -74,7 +74,7 @@
             <table border="2" class="w-100 h-100">
                 <thead>
                     <tr>
-                        <th class="text-capitalize p-2 text-center bg-body-secondary">
+                        <th class="text-capitalize p-2 text-center bg-light">
                             Visa du chef d'établissement
                         </th>
                     </tr>
@@ -82,7 +82,7 @@
                 <tbody>
                     <tr>
                         <td class="text-center pt-0 align-top p-2">
-                            [localisation-etablissement] le [update-date-(d/m/y)]
+                            {{ $bulletin->appconfiguration->school_town }} le {{ Date('d/m/y') }}
                         </td>
                     </tr>
                     <tr>
@@ -92,7 +92,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td class="text-center">[Le principal]</td>
+                        <td class="text-center">Le principal</td>
                     </tr>
                 </tbody>
             </table>
