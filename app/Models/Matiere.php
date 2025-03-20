@@ -75,13 +75,11 @@ class Matiere extends Model
      */
     public function getTeacher($classeId) {
         $activeYear = AnneeScolaire::all()->where('statut', true)->first();
-        $teacherClasseIds = Enseignement::where('classe_id', $classeId)->pluck('enseignant_matiere_id');
-        $teacherClassesIds = Enseignement::where('classe_id', $classeId)->pluck('id');
-        $teacherClassesYearIds = EnseignementAnneeScolaire::where('annee_scolaire_id', $activeYear->id)
-            ->whereIn('enseignement_id', $teacherClassesIds);
-        $teacherMatiere = EnseignantMatiereModel::all()->where('matiere_id', $this->id)
-            ->whereIn('id', $teacherClasseIds)
-            ->whereIn('id', $teacherClassesYearIds);
+        $teacherClassesIds = Enseignement::all()->where('classe_id', $classeId)
+            ->where('create_year_id', $activeYear->id);//->pluck('enseignant_matiere_id');
+        dd($teacherClassesIds);
+        $teacherMatiere = EnseignantMatiereModel::all()->where('matiere_id', $this->id);
+            //->whereIn('id', $teacherClassesIds);
         dd($teacherMatiere);
         return $teacherMatiere;
     }

@@ -97,6 +97,7 @@
                                             Selectionner l'enseignant :
                                         </label>
                                         <select name="enseignant_matiere_id" id="enseignant_matiere_id" class="form-select">
+                                            <option value="">Choisir l'enseignant</option>
                                         @foreach ($enseignantsMatieres as $enseignantMatiere)
                                             <option value="{{ $enseignantMatiere->id }}">
                                                 {{ $enseignantMatiere->enseignant->name }} ({{ $enseignantMatiere->matiere->libelleMatiere }})
@@ -111,6 +112,7 @@
                                             Selectionnez la classe :
                                         </label>
                                         <select name="classe_id" id="classe_id" class="form-select">
+                                            <option value="">Choisir la classe</option>
                                             @foreach ($classes as $classe)
                                                 <option value="{{ $classe->id }}">{{ $classe->libClasse }}</option>
                                             @endforeach

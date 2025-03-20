@@ -43,10 +43,9 @@
                                     <h6 class="text-left text-uppercase">
                                         {{ $firstGroupeNotes->matiere->libelleMatiere }}
                                     </h6>
-                                    <h6 class="text-left text-uppercase">
-                                        @dd($firstGroupeNotes->matiere->getTeacher($firstGroupeNotes->classe_id))
-                                        {{ $firstGroupeNotes->matiere->getTeacher($firstGroupeNotes->classe_id) }}
-                                    </h6>
+                                    <!--h6 class="text-left text-uppercase">
+                                        { { $firstGroupeNotes->matiere->getTeacher($firstGroupeNotes->classe_id) }}
+                                    </h6-->
                                 </td>
                                 <td class="border-2 bg-body-secondary text-center p-0" colspan="7">
                                     {{ $firstGroupeNotes->note }}
