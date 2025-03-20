@@ -2,8 +2,8 @@ $(function(){
     // when printing the report card
     $(document).on('click','#printReport',function() {
         let reportCard = document.getElementById("report-card");
-        var doc = new jsPDF;
-        console.log(doc);
+        // using html2pdf libs
+        // html2pdf().from(reportCard).save();
     });
 
     // filtering student base on the classe id
