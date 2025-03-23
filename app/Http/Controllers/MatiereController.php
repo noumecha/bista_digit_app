@@ -9,6 +9,7 @@ use App\Models\EnseignementAnneeScolaire;
 use App\Models\EnsMatAnneeScolaire;
 use App\Models\Epreuve;
 use App\Models\Matiere;
+use App\Models\Note;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -104,6 +105,10 @@ class MatiereController extends Controller
     public function destroy($id) {
         $matiere = Matiere::findOrFail($id);
         $epreuves = Epreuve::all()->where('matiere_id',$matiere->id);
+        $notes = Note::all()->where('matiere_id',$matiere->id);
+        foreach($notes as $note) {
+            $note->delete();
+        }
         foreach ($epreuves as $epreuve) {
             $epreuve->delete();
         }

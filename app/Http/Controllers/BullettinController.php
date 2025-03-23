@@ -94,7 +94,7 @@ class BullettinController extends Controller
             'option_type.required' => 'Veuillez sélectionner une option',
             'user_id.required' => 'Veuillez sélectionner élève',
         ]);
-
+        // now create new bulletin base on data :
         try {
             // getting classe and evaluation
             $classe = Classe::findOrFail($request->classe_id);
@@ -130,10 +130,7 @@ class BullettinController extends Controller
                     }
                 }
             }
-            // determinate the notes by group
-            $firstGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('1er groupe', $activeYear->id))->pluck('id');
-            $sndGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('2e groupe', $activeYear->id))->pluck('id');
-            $thirdGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('3e groupe', $activeYear->id))->pluck('id');
+            // if user select the option one for individual generation
             if($request->option_type === "one" && isset($request->user_id)) {
                 $student = User::where('id', $request->user_id)->where('typeUser','eleve')
                 ->whereIn('id', $userIds)->first();
@@ -149,6 +146,17 @@ class BullettinController extends Controller
                 $displineStats = getDisciplinesStats($student->disciplines);
                 // create bulletin base on the selected type
                 if($request->type_bulletin === 'sequenciel') {
+                // checking if the bulletin already exists :
+                    $exists = Bulletin::where('classe_id', $request->classe_id)
+                        ->where('user_id',$request->user_id)
+                        ->where('trimestre_id', $request->trimestre_id)
+                        ->where('evaluation_id', $request->evaluation_id)->exists();
+                    if($exists) {
+                        return response()->json([
+                            "error" => "l'élève ".$student->name." a déjà un bulletin pour cette séquence"
+                        ]);
+                    }
+                    // create new sequenciel bulletin
                     Bulletin::create([
                         'user_id' => $student->id,
                         'classe_id' => $request->classe_id,
@@ -202,12 +210,12 @@ class BullettinController extends Controller
     }
 
     /**
-     * Bulletin deletion
+     * delete bulletin forever
      */
     public function destroy($id) {
         $bulletin = Bulletin::findOrFail($id);
         $bulletin->delete();
-        return response()->json(['deleteSuccess' => 'Bulletin supprimé avec succès!']);
+        return redirect()->route('bulletins.list')->with('deleteSuccess', 'Bulletin supprimé avec succès!');
     }
 
     /**

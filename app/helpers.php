@@ -234,6 +234,7 @@ use Illuminate\Support\Facades\Route;
         $coefs = [];
         foreach ($notes as $note) {
             $coef = Coefficient::all()->where('matiere_id', $note->matiere_id)
+                ->where('classe_id', $note->classe->id)
                 ->where('annee_scolaire_id', $yearId)->first();
             $coefValue = CoefAnneeScolaire::all()->where('coefficient_id', $coef->id)->first();
             $totalNoteCoefs += ($note->note * $coefValue->coefficient_value);

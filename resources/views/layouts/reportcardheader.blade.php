@@ -81,7 +81,7 @@
                     </div>
                     <div class="pl-0 col-lg-4 align-items-start d-flex">
                         <p class="fs-6 text-center">
-                            Prof. Princ : {{ $bulletin->principal_class_teacher }}
+                            Prof. Princ : {{ getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id) }}
                         </p>
                     </div>
                 </div>

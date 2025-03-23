@@ -4,17 +4,17 @@ $(function(){
         let reportCard = document.getElementById("report-card");
         // html2canvas + jspdf
         html2canvas(reportCard, {
-            scale: 1,
+            scale: 2,
             useCORS: true,
         }).then((canvas) => {
             let imgData = canvas.toDataURL("image/png");
-            let pdf = new jspdf.jsPDF("p", "mm", "a4");
+            let pdf = new jspdf.jsPDF("p", "mm", "a4", true);
 
             let imgWidth = 210;
             let imgHeight = 297;
             //let imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
+            pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
             pdf.save("bulletin.pdf");
         });
     });
@@ -74,7 +74,7 @@ $(function(){
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
             button.children('span#submit-bulletin-form-button-text').text('Générer le(s) bulletin(s)');
-            headerText.text('Générer de nouveaux bulletins pour toute la classe ou pour un élève en particulier');
+            headerText.text('Générer de nouveaux bulletins pour toute une classe ou pour un élève en particulier');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');

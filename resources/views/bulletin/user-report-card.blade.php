@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="border border-3 row">
-                    <div id="report-card">
+                    <div id="report-card" class="bg-white">
                         @include(
                             'bulletin.evaluation',
                             [
