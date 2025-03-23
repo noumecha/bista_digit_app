@@ -1,5 +1,9 @@
 $(function(){
-
+    // change value when checked
+    $('#statutRedoublance').on('change', function() {
+        $(this).is(':checked') ? $(this).val(1) : $(this).val(0);
+        console.log($(this).val());
+    });
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-student-modal"]', function(e) {
         e.preventDefault();

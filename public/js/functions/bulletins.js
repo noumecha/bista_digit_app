@@ -2,8 +2,21 @@ $(function(){
     // when printing the report card
     $(document).on('click','#printReport',function() {
         let reportCard = document.getElementById("report-card");
-        // using html2pdf libs
-        // html2pdf().from(reportCard).save();
+        // html2canvas + jspdf
+        html2canvas(reportCard, {
+            scale: 1,
+            useCORS: true,
+        }).then((canvas) => {
+            let imgData = canvas.toDataURL("image/png");
+            let pdf = new jspdf.jsPDF("p", "mm", "a4");
+
+            let imgWidth = 210;
+            let imgHeight = 297;
+            //let imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
+            pdf.save("bulletin.pdf");
+        });
     });
 
     // filtering student base on the classe id

@@ -57,10 +57,16 @@
                                     {{ $firstGroupeNotes->note * $firstGroupeNotes->matiere->getCoef($firstGroupeNotes->classe_id) }}
                                 </td>
                                 <td class="border-2 text-center p-0">
-                                    {{ $firstGroupeNotes->range }}
+                                    @if ($bulletin->student->sex->value === "F" && $firstGroupeNotes->range === 1)
+                                        {{ $firstGroupeNotes->range }}<sup>ère</sup>
+                                    @elseif ($bulletin->student->sex->value === "M" && $firstGroupeNotes->range === 1)
+                                        {{ $firstGroupeNotes->range }}<sup>er</sup>
+                                    @else
+                                        {{ $firstGroupeNotes->range }}<sup>e</sup>
+                                    @endif
                                 </td>
                                 <td class="border-2 bg-light text-center p-0">
-                                    {{ $firstGroupeNotes->gcma }}
+                                    {{ bcdiv($firstGroupeNotes->gcma,1,2) }}
                                 </td>
                                 <td class="border-2 text-center p-0">
                                     {{ $firstGroupeNotes->min_value }}
@@ -143,10 +149,16 @@
                                     {{ $sndGroupeNotes->note * $sndGroupeNotes->matiere->getCoef($sndGroupeNotes->classe_id) }}
                                 </td>
                                 <td class="border-2 text-center p-0">
-                                    {{ $sndGroupeNotes->range }}
+                                    @if ($bulletin->student->sex->value === "F" && $sndGroupeNotes->range === 1)
+                                        {{ $sndGroupeNotes->range }}<sup>ère</sup>
+                                    @elseif ($bulletin->student->sex->value === "M" && $sndGroupeNotes->range === 1)
+                                        {{ $sndGroupeNotes->range }}<sup>er</sup>
+                                    @else
+                                        {{ $sndGroupeNotes->range }}<sup>e</sup>
+                                    @endif
                                 </td>
                                 <td class="border-2 bg-light text-center p-0">
-                                    {{ $sndGroupeNotes->gcma }}
+                                    {{ bcdiv($sndGroupeNotes->gcma,1,2) }}
                                 </td>
                                 <td class="border-2 text-center p-0">
                                     {{ $sndGroupeNotes->min_value }}
@@ -229,19 +241,25 @@
                                     {{ $thirdGroupeNotes->note * $thirdGroupeNotes->matiere->getCoef($firstGroupeNotes->classe_id) }}
                                 </td>
                                 <td class="border-2 text-center p-0">
-                                    {{ $thirdGroupeNotes->range }}
+                                    @if ($bulletin->student->sex->value === "F" && $thirdGroupeNotes->range === 1)
+                                        {{ $thirdGroupeNotes->range }}<sup>ère</sup>
+                                    @elseif ($bulletin->student->sex->value === "M" && $thirdGroupeNotes->range === 1)
+                                        {{ $thirdGroupeNotes->range }}<sup>er</sup>
+                                    @else
+                                        {{ $thirdGroupeNotes->range }}<sup>e</sup>
+                                    @endif
                                 </td>
                                 <td class="border-2 bg-light text-center p-0">
-                                    {{ $ThirdGroupeNotes->gcma }}
+                                    {{ bcdiv($thirdGroupeNotes->gcma,1,2) }}
                                 </td>
                                 <td class="border-2 text-center p-0">
-                                    {{ $ThirdGroupeNotes->min_value }}
+                                    {{ $thirdGroupeNotes->min_value }}
                                 </td>
                                 <td class="border-2 text-center p-0">
-                                    {{ $ThirdGroupeNotes->max_value }}
+                                    {{ $thirdGroupeNotes->max_value }}
                                 </td>
                                 <td class="border-2 text-center p-0">
-                                    {{ $ThirdGroupeNotes->appreciation }}
+                                    {{ $thirdGroupeNotes->appreciation }}
                                 </td>
                             </tr>
                         @endforeach
@@ -302,10 +320,10 @@
     <div class="container-flex mt-3 header-bulletin">
         <div class="row">
             <div class="col-md-4 col-lg-4">
-                <table border="2" class="w-100 h-100">
+                <table class="border-2 w-100 h-100">
                     <thead>
                         <tr>
-                            <th colspan="8" class="bg-light text-center p-0">
+                            <th colspan="8" class="border-2 bg-light text-center p-0">
                                 Discipline
                             </th>
                         </tr>
@@ -313,57 +331,57 @@
                     <tbody>
                         <tr>
                             <td class="p-0 border-2" colspan="4"></td>
-                            <td class="p-0 border-2">{{ $bulletin->evaluation->libelleEvaluation }}</td>
-                            <td class="p-0 border-2">Total</td>
+                            <td class="p-0 text-center border-2">{{ $bulletin->evaluation->libelleEvaluation }}</td>
+                            <td class="p-0 text-center border-2">Total</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Abs. non Just. (h)</td>
-                            <td class="p-0 border-2">{{ $disciplines->absNonJust }}</td>
-                            <td class="p-0 border-2">{{ $disciplines->absNonJust }}</td>
+                            <td class="p-0 text-center border-2">{{ $disciplines->absNonJust }}</td>
+                            <td class="p-0 text-center border-2">{{ $disciplines->absNonJust }}</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Abs. Just. (h)</td>
-                            <td class="p-0 border-2">{{ $disciplines->absJust }}</td>
-                            <td class="p-0 border-2">{{ $disciplines->absJust }}</td>
+                            <td class="p-0 text-center border-2">{{ $disciplines->absJust }}</td>
+                            <td class="p-0 text-center border-2">{{ $disciplines->absJust }}</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Retards (h)</td>
-                            <td class="p-0 border-2">[0]</td>
-                            <td class="p-0 border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Consignes (h)</td>
-                            <td class="p-0 border-2">[0]</td>
-                            <td class="p-0 border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Avert.</td>
-                            <td class="p-0 border-2">[0]</td>
-                            <td class="p-0 border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Blâme </td>
-                            <td class="p-0 border-2">[0]</td>
-                            <td class="p-0 border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Excl. (j)</td>
-                            <td class="p-0 border-2">[0]</td>
-                            <td class="p-0 border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">CD</td>
-                            <td class="p-0 border-2">[0]</td>
-                            <td class="p-0 border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
+                            <td class="p-0 text-center border-2">[0]</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="col-md-4 col-lg-4 d-flex flex-column">
-                <table border="2" class="w-100 h-100">
+                <table class="border-2 w-100 h-100">
                     <thead>
                         <tr>
-                            <th colspan="5" class="bg-light text-center p-0">
+                            <th colspan="5" class="bg-light border-2 text-center p-0">
                                 Travail de l'élève
                             </th>
                         </tr>
@@ -375,40 +393,48 @@
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">{{ $bulletin->evaluation->libelleEvaluation }}</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{ $bulletin->average }}</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->average,1,2) }}</td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="d-flex flex-column">
                     <h5 class="text-center fw-bold">
-                        Moyenne {{ $bulletin->evaluation->libelleEvaluation }} : {{ $bulletin->average }}
+                        Moyenne Séquentielle : {{  bcdiv($bulletin->average,1,2) }}
                     </h5>
                     <h5 class="text-center fw-bold">
-                        Rang {{ $bulletin->evaluation->libelleEvaluation }} : {{ $bulletin->range }}
+                        Rang Séquentiel :
+                        @if ($bulletin->student->sex->value === "F" && $bulletin->range === 1)
+                            {{ $bulletin->range }}<sup>ère</sup>
+                        @elseif ($bulletin->student->sex->value === "M" && $bulletin->range === 1)
+                            {{ $bulletin->range }}<sup>er</sup>
+                        @else
+                            {{ $bulletin->range }}<sup>ème</sup>
+                        @endif
+                        /{{ $bulletin->classe->effectif->getEffectif() }}
                     </h5>
                 </div>
             </div>
             <div class="col-md-4 col-lg-4">
-                <table border="2" class="w-100 h-100">
+                <table class="border-2 w-100 h-100">
                     <thead>
                         <tr>
-                            <th colspan="5" class="bg-light text-center p-0">
+                            <th colspan="5" class="border-2 bg-light text-center p-0">
                                 Profil de la classe
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="p-0 border-2" colspan="4">Moy. gen. classe</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{ $bulletin->general_average }}</td>
+                            <td class="p-0 m-0 border-2" colspan="4">Moy. gen. classe</td>
+                            <td class="p-0 m-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->general_average,1,2) }}</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Moy. dernier</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{ $bulletin->min_average }}</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->min_average,1,2) }}</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Moy. premier</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{ $bulletin->max_average }}</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->max_average,1,2) }}</td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Taux R.</td>
@@ -420,7 +446,7 @@
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Ecart-type</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{ $bulletin->standard_deviation }}</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->standard_deviation,1,2) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -431,9 +457,9 @@
     <div class="container-flex mt-3">
         <div class="row">
             <div class="col-md-4 col-lg-4">
-                <h5 class="text-left">
+                <h6 class="text-left">
                     - Moy. Eval. = SOMME(Coef x Matiere )/SOMME(coefs)
-                </h5>
+                </h6>
             </div>
         </div>
     </div>

@@ -33,7 +33,7 @@
             <!-- bulletin tempate goes here -->
             <div class="container my-3 py-3">
                 <div class="row">
-                    <div class="col-12 col-xl-12 mb-4">
+                    <div class="col-12 col-xl-12 p-0">
                         <div class="card border shadow-xs h-100">
                             <div class="card-header text-white bg-dark p-3">
                                 <div class="row">
@@ -62,19 +62,21 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-body p-3" id="report-card">
-                                @include(
-                                    'bulletin.evaluation',
-                                    [
-                                        'bulletin' => $bulletin,
-                                        'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                                        'studentNotesSndGroup' => $studentNotesSndGroup,
-                                        'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                                        'disciplines' => $disciplines
-                                    ]
-                                )
-                            </div>
                         </div>
+                    </div>
+                </div>
+                <div class="border border-3 row">
+                    <div id="report-card">
+                        @include(
+                            'bulletin.evaluation',
+                            [
+                                'bulletin' => $bulletin,
+                                'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                                'studentNotesSndGroup' => $studentNotesSndGroup,
+                                'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                                'disciplines' => $disciplines
+                            ]
+                        )
                     </div>
                 </div>
             </div>
@@ -82,7 +84,9 @@
         <x-app.footer />
     </main>
     @section('scripts')
-        <!--script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></!--script-->
+        <!-- adding html2canvas & jspdf cdn -->
+        <script src="{{ asset('js/functions/modules/jspdf.js') }}"></script>
+        <script src="{{ asset('js/functions/modules/html2canvas.js') }}"></script>
         <script src="{{ asset('js/functions/html2pdf.bundle.min.js') }}"></script>
         <script src="{{ asset('js/functions/bulletins.js') }}"></script>
     @endsection

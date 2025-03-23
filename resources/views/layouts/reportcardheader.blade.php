@@ -124,7 +124,7 @@
             </div>
         </div>
         <div class="col-md-2 col-lg-2">
-            <div class="p-0 m-0">
+            <div class="p-0 m-0 mb-2">
                 <img
                     class="logo-bulletin"
                     src="{{ asset('storage/' . $bulletin->student->profile) }}"

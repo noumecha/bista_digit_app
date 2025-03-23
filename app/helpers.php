@@ -273,7 +273,9 @@ use Illuminate\Support\Facades\Route;
             ->where('annee_scolaire_id', $yearId)
             ->pluck('user_id')->first();
         $teacher = User::where('id', $teacherId)->first();
-        return $teacher->name;
+        $name = "";
+        $teacher->sex->value === "F" ? $name = "Mme ".$teacher->name : $name = "M. ".$teacher->name;
+        return $name;
     }
 
     /**

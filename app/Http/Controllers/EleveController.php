@@ -90,7 +90,7 @@ class EleveController extends Controller
             'dateNaiss' => 'required|max:255',
             'location' => 'required|min:3|max:255',
             'active_year_id' => 'required',
-            'statutRedoublance' => 'required|boolean',
+            'statutRedoublance' => 'boolean',
             'classe_id' => 'required|exists:classes,id',
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
@@ -131,7 +131,7 @@ class EleveController extends Controller
             'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'eleve',
             'password' => Hash::make($request->password),
-            'statutRedoublance' => $request->statutRedoublance ? 1 : 0,
+            'statutRedoublance' => $request->statutRedoublance === null ? 0 : 1,
             'sex' => $request->sex,
         ]);
 
@@ -155,13 +155,22 @@ class EleveController extends Controller
         }
     }
 
+    /***
+     * edit function
+     */
     public function edit($id, $yearId) {
         $studentToEdit = User::findOrFail($id);
         $currentStudentClasseYear = ClasseAnneeScolaireStudent::where('user_id', '=', $id)
         ->where('annee_scolaire_id', '=', (int)$yearId)->first();
-        return response()->json(['student' => $studentToEdit,'classe_id' => $currentStudentClasseYear->classe_id]);
+        return response()->json([
+            'student' => $studentToEdit,
+            'classe_id' => $currentStudentClasseYear->classe_id
+        ]);
     }
 
+    /**
+     * update function
+     */
     public function update(Request $request, $id) {
         $request->validate([
             'name' => 'required|min:3|max:255',
@@ -177,7 +186,7 @@ class EleveController extends Controller
             'numCni' => 'max:255',
             'sex' => ['required', Rule::in(['M','F'])],
             'profile' => 'image|mimes:jpeg,png,gif|max:4096',
-            'statutRedoublance' => 'required|boolean',
+            'statutRedoublance' => 'boolean',
         ], [
             'name.required' => 'Entrez le nom de l\'élève',
             'surname.required' => 'Entrez le prenom de l\'élève',
@@ -196,8 +205,6 @@ class EleveController extends Controller
             'sex.required' => 'Choisissez le sexe',
             'classe_id.required' => 'Veuillez chosir une classe',
         ]);
-
-
         $student = User::findOrFail($id);
         $currentClasseYearStudent = ClasseAnneeScolaireStudent::where('user_id', '=', $id)
         ->where('annee_scolaire_id', '=', $request->active_year_id)->first();
@@ -223,7 +230,7 @@ class EleveController extends Controller
         }
 
         $student->update([
-            'statutRedoublance' => $request->statutRedoublance ? 1 : 0,
+            'statutRedoublance' => $request->statutRedoublance === null ? 0 : 1,
         ]);
         $student->update($request->except(['profile','statutRedoublance']));
 

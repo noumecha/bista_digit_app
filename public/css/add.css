@@ -35,7 +35,7 @@ ck editor error
 /** logo bulletin template */
 .logo-bulletin {
     height: 150px;
-    width: 100%;
+    width: 150px;
     object-fit: contain;
 }
 .bulletin-date-footer {

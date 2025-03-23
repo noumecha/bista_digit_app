@@ -131,6 +131,7 @@
                                             Classe :
                                         </label>
                                         <select name="classe_id" id="classe_id" class="form-select">
+                                            <option value="">Selectionnez la classe</option>
                                             @foreach ($classes as $classe)
                                                 <option value="{{ $classe->id }}">{{ $classe->libClasse }}</option>
                                             @endforeach
@@ -143,8 +144,7 @@
                                             Redoublant(e) :
                                         </label>
                                         <div class="form-check">
-                                            <input type="hidden" name="statutRedoublance" value="0">
-                                            <input class="form-check-input" type="checkbox" name="statutRedoublance" value="1" id="statutRedoublance">
+                                            <input class="form-check-input" type="checkbox" name="statutRedoublance" value="0" id="statutRedoublance">
                                             <label class="custom-control-label" for="statutRedoublance">oui</label>
                                         </div>
                                     </div>

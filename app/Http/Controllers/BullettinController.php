@@ -137,23 +137,11 @@ class BullettinController extends Controller
             if($request->option_type === "one" && isset($request->user_id)) {
                 $student = User::where('id', $request->user_id)->where('typeUser','eleve')
                 ->whereIn('id', $userIds)->first();
-                /* getting all notes & all notes by matiere group */
+                /* getting all notes of the specific student */
                 $notes = Note::where('user_id', $student->id)
                 ->where('evaluation_id', $evaluation->id)
                 ->where('classe_id', $classe->id)
                 ->get();
-                $studentNotesFirstGroup = Note::where('user_id', $student->id)
-                    ->where('evaluation_id', $evaluation->id)
-                    ->whereIn('matiere_id', $firstGroupMatiereIds)
-                    ->get();
-                $studentNotesSndGroup = Note::where('user_id', $student->id)
-                    ->where('evaluation_id', $evaluation->id)
-                    ->whereIn('matiere_id', $sndGroupMatiereIds)
-                    ->get();
-                $studentNotesThirdGroup = Note::where('user_id', $student->id)
-                    ->where('evaluation_id', $evaluation->id)
-                    ->whereIn('matiere_id', $thirdGroupMatiereIds)
-                    ->get();
                 /** make the necessary calculation */
                 $average = getAverage($activeYear->id, $notes);
                 $appreciation = getAppreciation($average);
@@ -161,7 +149,6 @@ class BullettinController extends Controller
                 $displineStats = getDisciplinesStats($student->disciplines);
                 // create bulletin base on the selected type
                 if($request->type_bulletin === 'sequenciel') {
-                    // generate the bulletin data for db
                     Bulletin::create([
                         'user_id' => $student->id,
                         'classe_id' => $request->classe_id,
@@ -190,7 +177,7 @@ class BullettinController extends Controller
                 }
             } else {
             }
-            return back()->with('success', "Bulletin(s) généré(s) avec succès !");
+            return response()->json(["success" => "Bulletin(s) généré(s) avec succès !"]);
         } catch (Exception $ex) {
             throw $ex;
         }
