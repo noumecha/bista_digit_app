@@ -119,6 +119,19 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="type_bulletin" class="form-control-label">
+                                            Chosir le type de bulletin :
+                                        </label>
+                                        <select name="type_bulletin" id="type_bulletin" class="form-select">
+                                            <option value="">Tout les types</option>
+                                            <option value="sequenciel">Séquenciel</option>
+                                            <option value="trimestre">Trimestriel</option>
+                                            <option value="annuel">Annuel</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="trimestre_id" class="form-control-label">
                                             Trimestre :
                                         </label>
@@ -164,19 +177,6 @@
                                         </label>
                                         <select name="user_id" id="user_id" class="form-select">
                                             <option value="">Tout les élèves</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="type_bulletin" class="form-control-label">
-                                            Chosir le type de bulletin :
-                                        </label>
-                                        <select name="type_bulletin" id="type_bulletin" class="form-select">
-                                            <option value="">Tout les types</option>
-                                            <option value="sequenciel">Séquenciel</option>
-                                            <option value="trimestre">Trimestriel</option>
-                                            <option value="annuel">Annuel</option>
                                         </select>
                                     </div>
                                 </div>

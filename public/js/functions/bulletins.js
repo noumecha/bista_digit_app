@@ -31,13 +31,22 @@ $(function(){
             });
         }
     });
-    // disabled the user input base on a selected option
+    // disabled the user_id select input base on a selected option
     $('#option_type').on('change', function() {
         let option = $(this).val();
         if(option === "all") {
             $('#user_id').attr('disabled', true);
         } else {
             $('#user_id').attr('disabled', false);
+        }
+    })
+    // disabled the evaluation input base on a bulletin type
+    $('#type_bulletin').on('change', function() {
+        let option = $(this).val();
+        if(option === "trimestre" || option === "annuel") {
+            $('#evaluation_id').attr('disabled', true);
+        } else {
+            $('#evaluation_id').attr('disabled', false);
         }
     })
     // filtering evaluation base on the trimestre id

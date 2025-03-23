@@ -130,7 +130,7 @@ class BullettinController extends Controller
                     }
                 }
             }
-            // if user select the option one for individual generation
+            // generate for a user
             if($request->option_type === "one" && isset($request->user_id)) {
                 $student = User::where('id', $request->user_id)->where('typeUser','eleve')
                 ->whereIn('id', $userIds)->first();
@@ -183,9 +183,65 @@ class BullettinController extends Controller
                 }
                 if ($request->type_bulletin === 'annuel') {
                 }
-            } else {
+                return response()->json(["success" => "Bulletin(s) généré(s) avec succès !"]);
             }
-            return response()->json(["success" => "Bulletin(s) généré(s) avec succès !"]);
+            // generate for a class
+            if($request->option_type === "all") {
+                // all userIds
+                $allUsersIds = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', $activeYear->id)
+                    ->where('classe_id', $classe->id)->pluck('user_id');
+                // generate for all student :
+                $students = User::all()->where('typeUser','eleve')
+                    ->whereIn('id', $allUsersIds);
+                foreach ($students as $student) {
+                    $notes = Note::where('user_id', $student->id)
+                        ->where('evaluation_id', $evaluation->id)
+                        ->where('classe_id', $classe->id)
+                        ->get();
+                    /** make the necessary calculation */
+                    $average = getAverage($activeYear->id, $notes);
+                    $appreciation = getAppreciation($average);
+                    $princClassTeacherName = getPrincipalClassTeacher($request->classe_id, $activeYear->id);
+                    $displineStats = getDisciplinesStats($student->disciplines);
+                    // create bulletin base on the selected type
+                    // create bulletin base on the selected type
+                    if($request->type_bulletin === 'sequenciel') {
+                        // checking if the bulletin already exists :
+                        $exists = Bulletin::where('classe_id', $request->classe_id)
+                            ->where('user_id',$student->id)
+                            ->where('trimestre_id', $request->trimestre_id)
+                            ->where('evaluation_id', $request->evaluation_id)->exists();
+                        if($exists) {
+                            return response()->json([
+                                "error" => "l'élève ".$student->name." a déjà un bulletin pour cette séquence"
+                            ]);
+                        }
+                        // create new sequenciel bulletin
+                        Bulletin::create([
+                            'user_id' => $student->id,
+                            'classe_id' => $request->classe_id,
+                            'app_configuration_id' => $appConfig->id,
+                            'annee_scolaire_id' => $activeYear->id,
+                            'bulletin_file' => $student->bulletin_file,
+                            'type_bulletin' => $request->type_bulletin,
+                            'evaluation_id' => $request->evaluation_id,
+                            'trimestre_id' => $request->trimestre_id,
+                            'discipline_stats' => json_encode($displineStats),
+                            'appreciation' => $appreciation,
+                            'average' => $average,
+                            'principal_class_teacher' => $princClassTeacherName
+                        ]);
+                        // update bulletins stats
+                        updateAllReportCardStats(
+                            $classe->id,
+                            $request->evaluation_id,
+                            $request->trimestre_id,
+                            $activeYear->id
+                        );
+                    }
+                }
+                return response()->json(["success" => "Bulletin(s) généré(s) avec succès !"]);
+            }
         } catch (Exception $ex) {
             throw $ex;
         }
