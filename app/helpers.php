@@ -125,6 +125,38 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
+     * update trimestrial report card stats
+     */
+    function updateAllTrimReportCardStats($classeId, $trimestreId, $typeBulltin, $yearId) {
+        try {
+            $bulletins = Bulletin::where('classe_id',$classeId)
+                ->where('type_bulletin',$typeBulltin)
+                ->where('annee_scolaire_id',$yearId)
+                ->where('trimestre_id',$trimestreId)->get();
+            $bulletinValues = [];
+            foreach($bulletins as $bulletin) {
+                array_push($bulletinValues, $bulletin->average);
+            }
+            $minValue = min($bulletinValues);
+            $maxValue = max($bulletinValues);
+            $gcma = getGeneralMoy($bulletinValues);
+            $sd = getStandardDeviation($bulletinValues);
+            foreach($bulletins as $bulletin) {
+                $range = getRange($bulletin->average, $bulletinValues);
+                $bulletin->update([
+                    'min_average' => $minValue,
+                    'max_average' => $maxValue,
+                    'general_average' => $gcma,
+                    'standard_deviation' => $sd,
+                    'range' => $range,
+                ]);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
      * function to determine reussite percent
      */
     function getWinPercent($datas) {
@@ -245,6 +277,19 @@ use Illuminate\Support\Facades\Route;
         return $avg;
     }
 
+    /**
+     * calculate trim average
+     */
+    function getTrimAverage($datas) {
+        $avg = 0;
+        $som = 0;
+        $total = count($datas);
+        foreach ($datas as $data) {
+            $som += $data->averge;
+        }
+        $avg = ($som / $total);
+        return $avg;
+    }
     /**
      * function to return matieres ids base on group name
      */

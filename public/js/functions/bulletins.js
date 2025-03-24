@@ -40,13 +40,17 @@ $(function(){
             $('#user_id').attr('disabled', false);
         }
     })
-    // disabled the evaluation input base on a bulletin type
+    // disabled some input base on type_bulletin selection
     $('#type_bulletin').on('change', function() {
         let option = $(this).val();
-        if(option === "trimestre" || option === "annuel") {
+        if(option === "trimestre") {
             $('#evaluation_id').attr('disabled', true);
+        } else if(option === "annuel") {
+            $('#evaluation_id').attr('disabled', true);
+            $('#trimestre_id').attr('disabled', true);
         } else {
             $('#evaluation_id').attr('disabled', false);
+            $('#trimestre_id').attr('disabled', false);
         }
     })
     // filtering evaluation base on the trimestre id

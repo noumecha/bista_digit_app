@@ -14,7 +14,6 @@ use App\Models\Matiere;
 use App\Models\Note;
 use App\Models\Trimestre;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -70,14 +69,11 @@ class BullettinController extends Controller
      * generate bulletin for all students in specific classe
      */
     public function generate(Request $request) {
-        // load schoolYear
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
-        // load appConfiguration
         $appConfig = AppConfiguration::first();
-        //$request->validate(
         $rules = [
-            'evaluation_id' => 'required',
-            'trimestre_id' => 'required',
+            'evaluation_id' => 'nullable',
+            'trimestre_id' => 'nullable',
             'classe_id' => 'required',
             'type_bulletin' => 'required',
             'option_type' => 'required',
@@ -85,7 +81,10 @@ class BullettinController extends Controller
         ];
 
         $request->validate(array_merge($rules, [
-            'user_id' => $request->option_type === "one" ? 'required' : 'nullable'
+            'user_id' => $request->option_type === "one" ? 'required' : 'nullable',
+            'evaluation_id' => $request->type_bulletin === "trimestre" || $request->type_bulletin === "annuel"
+            ? 'nullable' : 'required',
+            'trimestre_id' => $request->type_bulletin === "annuel" ? 'nullable' : 'required'
         ]), [
             'classe_id.required' => 'Veuillez sélectionner une classe',
             'evaluation_id.required' => 'Veuillez sélectionner une évaluation',
@@ -96,29 +95,38 @@ class BullettinController extends Controller
         ]);
         // now create new bulletin base on data :
         try {
-            // getting classe and evaluation
+            // getting classe, evaluation and matieres
             $classe = Classe::findOrFail($request->classe_id);
-            $evaluation = Evaluation::findOrFail($request->evaluation_id)
-                ->where('trimestre_id', $request->trimestre_id)->first();
-            $trimestre = Trimestre::findOrFail($request->trimestre_id);
+            $evaluation = $request->type_bulletin === 'sequenciel' ?
+                Evaluation::where('id',$request->evaluation_id)
+                    ->where('trimestre_id', $request->trimestre_id)->first()
+                : null;
             $matieres = Matiere::whereIn('id', getCurrentYearCoefConfigurationMatId($activeYear->id, $classe->id))
                 ->get();
-            // check if all or a user in the specified class as note in every corresponding evaluation matiere
+            // check if each student have notes
             $userIds = ClasseAnneeScolaireStudent::where('user_id', $request->user_id)
-                ->where('annee_scolaire_id', $activeYear->id)->where('classe_id', $classe->id)->pluck('user_id');
-            if($request->option_type === "one" && isset($request->user_id)) {
+                ->where('annee_scolaire_id', $activeYear->id)
+                ->where('classe_id', $classe->id)->pluck('user_id');
+            if(
+                $request->option_type === "one" &&
+                $request->type_bulletin === 'sequenciel' &&
+                isset($request->user_id) && isset($request->evaluation_id)
+            ) {
                 $student = User::where('id', $request->user_id)->where('typeUser','eleve')
                     ->whereIn('id', $userIds)->first();
                 foreach ($matieres as $matiere) {
                     $note = Note::where('user_id', $student->id)
-                    ->where('matiere_id', $matiere->id)
-                    ->where('classe_id', $classe->id)
-                    ->where('evaluation_id', $evaluation->id)->exists();
+                        ->where('matiere_id', $matiere->id)
+                        ->where('classe_id', $classe->id)
+                        ->where('evaluation_id', $evaluation->id)->exists();
                     if(!$note) {
-                        return response()->json(["error" => "L'élève {$student->name} n'a pas de note en {$matiere->libelleMatiere}."]);
+                        return response()->json([
+                            "error" => "L'élève {$student->name} n'a pas de note en {$matiere->libelleMatiere}
+                            pour l'évaluation {$evaluation->libelleEvaluation}"
+                        ]);
                     }
                 }
-            } else {
+            }/* else {
                 foreach ($classe->students as $student) {
                     foreach ($matieres as $matiere) {
                         if (!Note::where('user_id', $student->id)
@@ -129,26 +137,136 @@ class BullettinController extends Controller
                         }
                     }
                 }
-            }
-            // generate for a user
-            if($request->option_type === "one" && isset($request->user_id)) {
+            }*/
+            // generate for one student
+            if(
+                $request->option_type === "one" &&
+                $request->type_bulletin === 'sequenciel' &&
+                isset($request->user_id)
+            ) {
                 $student = User::where('id', $request->user_id)->where('typeUser','eleve')
                 ->whereIn('id', $userIds)->first();
-                /* getting all notes of the specific student */
                 $notes = Note::where('user_id', $student->id)
-                ->where('evaluation_id', $evaluation->id)
-                ->where('classe_id', $classe->id)
-                ->get();
-                /** make the necessary calculation */
+                    ->where('evaluation_id', $evaluation->id)
+                    ->where('classe_id', $classe->id)
+                    ->get();
                 $average = getAverage($activeYear->id, $notes);
                 $appreciation = getAppreciation($average);
                 $princClassTeacherName = getPrincipalClassTeacher($request->classe_id, $activeYear->id);
                 $displineStats = getDisciplinesStats($student->disciplines);
-                // create bulletin base on the selected type
-                if($request->type_bulletin === 'sequenciel') {
                 // checking if the bulletin already exists :
+                $exists = Bulletin::where('classe_id', $request->classe_id)
+                    ->where('user_id',$request->user_id)
+                    ->where('trimestre_id', $request->trimestre_id)
+                    ->where('evaluation_id', $request->evaluation_id)->exists();
+                if($exists) {
+                    return response()->json([
+                        "error" => "l'élève {$student->name} a déjà un bulletin pour :
+                        {$evaluation->libelleEvaluation}"
+                    ]);
+                }
+                // create new sequenciel bulletin
+                Bulletin::create([
+                    'user_id' => $student->id,
+                    'classe_id' => $request->classe_id,
+                    'app_configuration_id' => $appConfig->id,
+                    'annee_scolaire_id' => $activeYear->id,
+                    'bulletin_file' => $student->bulletin_file,
+                    'type_bulletin' => $request->type_bulletin,
+                    'evaluation_id' => $request->evaluation_id,
+                    'trimestre_id' => $request->trimestre_id,
+                    'discipline_stats' => json_encode($displineStats),
+                    'appreciation' => $appreciation,
+                    'average' => $average,
+                    'principal_class_teacher' => $princClassTeacherName
+                ]);
+                // update bulletins stats
+                updateAllReportCardStats(
+                    $classe->id,
+                    $request->evaluation_id,
+                    $request->trimestre_id,
+                    $activeYear->id
+                );
+                return response()->json(["success" => "Bulletin généré avec succès !"]);
+            }
+            if ($request->option_type === "one" && $request->type_bulletin === 'trimestre') {
+                // check if sequenciel bulletin of the corresponding trimestre exist
+                $evaluations = Evaluation::all()->where('trimestre_id', $request->trimestre_id);
+                $student = User::where('id', $request->user_id)->where('typeUser','eleve')
+                    ->whereIn('id', $userIds)->first();
+                    $evalBulletins = [];
+                foreach($evaluations as $evaluation) {
+                    $bulletin = Bulletin::all()->where('evaluation_id',$evaluation->id)
+                        ->where('classe_id', $classe->id)
+                        ->where('user_id', $student->id)->first();
+                    if($bulletin->isEmpty()) {
+                        return response()->json([
+                            "error" => "Le bulletin de : {$evaluation->libelleEvaluation}
+                            n'existe pas, impossible de générer le bulletin trimestriel!"
+                        ]);
+                    } else {
+                        array_push($evalBulletins, $bulletin);
+                    }
+                }
+                $trimAverage = getTrimAverage($evalBulletins);
+                dd($trimAverage);
+                $trimAppreciation = getAppreciation($trimAverage);
+                $princClassTeacherName = getPrincipalClassTeacher($request->classe_id, $activeYear->id);
+                $trimDisplineStats = getDisciplinesStats($student->disciplines);
+                // checking if the bulletin already exists :
+                $exists = Bulletin::where('classe_id', $request->classe_id)
+                    ->where('user_id',$request->user_id)
+                    ->where('trimestre_id', $request->trimestre_id)
+                    ->where('type_bulletin', $request->type_bulletin)->exists();
+                if($exists) {
+                    return response()->json([
+                        "error" => "l'élève ".$student->name." a déjà un bulletin pour cette séquence"
+                    ]);
+                }
+                // create new trimestrial bulletin
+                Bulletin::create([
+                    'user_id' => $student->id,
+                    'classe_id' => $request->classe_id,
+                    'app_configuration_id' => $appConfig->id,
+                    'annee_scolaire_id' => $activeYear->id,
+                    'type_bulletin' => $request->type_bulletin,
+                    'trimestre_id' => $request->trimestre_id,
+                    'discipline_stats' => json_encode($trimDisplineStats),
+                    'appreciation' => $trimAppreciation,
+                    'average' => $trimAverage,
+                    'principal_class_teacher' => $princClassTeacherName
+                ]);
+                // update bulletins stats
+                updateAllTrimReportCardStats(
+                    $classe->id,
+                    $request->trimestre_id,
+                    $request->type_bulletin,
+                    $activeYear->id
+                );
+            }
+            if ($request->option_type === "one" && $request->type_bulletin === 'annuel') {
+            }
+            // generate for a class
+            if (
+                $request->option_type === "all" &&
+                $request->type_bulletin === 'sequenciel' &&
+                isset($request->evaluation_id)
+            ) {
+                $allUsersIds = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', $activeYear->id)
+                    ->where('classe_id', $classe->id)->pluck('user_id');
+                $students = User::all()->where('typeUser','eleve')
+                    ->whereIn('id', $allUsersIds);
+                foreach ($students as $student) {
+                    $notes = Note::where('user_id', $student->id)
+                        ->where('evaluation_id', $evaluation->id)
+                        ->where('classe_id', $classe->id)
+                        ->get();
+                    $average = getAverage($activeYear->id, $notes);
+                    $appreciation = getAppreciation($average);
+                    $princClassTeacherName = getPrincipalClassTeacher($request->classe_id, $activeYear->id);
+                    $displineStats = getDisciplinesStats($student->disciplines);
                     $exists = Bulletin::where('classe_id', $request->classe_id)
-                        ->where('user_id',$request->user_id)
+                        ->where('user_id',$student->id)
                         ->where('trimestre_id', $request->trimestre_id)
                         ->where('evaluation_id', $request->evaluation_id)->exists();
                     if($exists) {
@@ -156,7 +274,6 @@ class BullettinController extends Controller
                             "error" => "l'élève ".$student->name." a déjà un bulletin pour cette séquence"
                         ]);
                     }
-                    // create new sequenciel bulletin
                     Bulletin::create([
                         'user_id' => $student->id,
                         'classe_id' => $request->classe_id,
@@ -171,7 +288,6 @@ class BullettinController extends Controller
                         'average' => $average,
                         'principal_class_teacher' => $princClassTeacherName
                     ]);
-                    // update bulletins stats
                     updateAllReportCardStats(
                         $classe->id,
                         $request->evaluation_id,
@@ -179,69 +295,15 @@ class BullettinController extends Controller
                         $activeYear->id
                     );
                 }
-                if ($request->type_bulletin === 'trimestre') {
-                }
-                if ($request->type_bulletin === 'annuel') {
-                }
-                return response()->json(["success" => "Bulletin(s) généré(s) avec succès !"]);
+                return response()->json(["success" => "Bulletins générés avec succès !"]);
             }
-            // generate for a class
-            if($request->option_type === "all") {
-                // all userIds
-                $allUsersIds = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', $activeYear->id)
-                    ->where('classe_id', $classe->id)->pluck('user_id');
-                // generate for all student :
-                $students = User::all()->where('typeUser','eleve')
-                    ->whereIn('id', $allUsersIds);
-                foreach ($students as $student) {
-                    $notes = Note::where('user_id', $student->id)
-                        ->where('evaluation_id', $evaluation->id)
-                        ->where('classe_id', $classe->id)
-                        ->get();
-                    /** make the necessary calculation */
-                    $average = getAverage($activeYear->id, $notes);
-                    $appreciation = getAppreciation($average);
-                    $princClassTeacherName = getPrincipalClassTeacher($request->classe_id, $activeYear->id);
-                    $displineStats = getDisciplinesStats($student->disciplines);
-                    // create bulletin base on the selected type
-                    // create bulletin base on the selected type
-                    if($request->type_bulletin === 'sequenciel') {
-                        // checking if the bulletin already exists :
-                        $exists = Bulletin::where('classe_id', $request->classe_id)
-                            ->where('user_id',$student->id)
-                            ->where('trimestre_id', $request->trimestre_id)
-                            ->where('evaluation_id', $request->evaluation_id)->exists();
-                        if($exists) {
-                            return response()->json([
-                                "error" => "l'élève ".$student->name." a déjà un bulletin pour cette séquence"
-                            ]);
-                        }
-                        // create new sequenciel bulletin
-                        Bulletin::create([
-                            'user_id' => $student->id,
-                            'classe_id' => $request->classe_id,
-                            'app_configuration_id' => $appConfig->id,
-                            'annee_scolaire_id' => $activeYear->id,
-                            'bulletin_file' => $student->bulletin_file,
-                            'type_bulletin' => $request->type_bulletin,
-                            'evaluation_id' => $request->evaluation_id,
-                            'trimestre_id' => $request->trimestre_id,
-                            'discipline_stats' => json_encode($displineStats),
-                            'appreciation' => $appreciation,
-                            'average' => $average,
-                            'principal_class_teacher' => $princClassTeacherName
-                        ]);
-                        // update bulletins stats
-                        updateAllReportCardStats(
-                            $classe->id,
-                            $request->evaluation_id,
-                            $request->trimestre_id,
-                            $activeYear->id
-                        );
-                    }
-                }
-                return response()->json(["success" => "Bulletin(s) généré(s) avec succès !"]);
+            if ($request->option_type === "all" && $request->type_bulletin === 'trimestre') {
+                dd($request);
             }
+            if ($request->option_type === "all" && $request->type_bulletin === 'annuel') {
+                dd($request);
+            }
+
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -260,9 +322,9 @@ class BullettinController extends Controller
     public function configs()
     {
         $user = User::find(Auth::id());
-
+        $bulletin = Bulletin::findOrFail(11);
         //return view('bulletin.annual', compact('user'));
-        return view('bulletin.evaluation', compact('user'));
+        return view('bulletin.trimestrielle', compact(['user','bulletin']));
     }
 
     /**
