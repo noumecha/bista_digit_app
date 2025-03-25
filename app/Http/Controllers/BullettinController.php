@@ -101,6 +101,9 @@ class BullettinController extends Controller
                 Evaluation::where('id',$request->evaluation_id)
                     ->where('trimestre_id', $request->trimestre_id)->first()
                 : null;
+            $trimestre = Trimestre::where('id', $request->trimestre_id)
+            ->where('annee_scolaire_id', $activeYear->id)
+            ->first();
             $matieres = Matiere::whereIn('id', getCurrentYearCoefConfigurationMatId($activeYear->id, $classe->id))
                 ->get();
             // check if each student have notes
@@ -126,18 +129,7 @@ class BullettinController extends Controller
                         ]);
                     }
                 }
-            }/* else {
-                foreach ($classe->students as $student) {
-                    foreach ($matieres as $matiere) {
-                        if (!Note::where('user_id', $student->id)
-                                ->where('matiere_id', $matiere->id)
-                                ->where('evaluation_id', $evaluation->id)
-                                ->exists()) {
-                            return back()->with('error', "L'élève {$student->name} n'a pas de note en {$matiere->libelleMatiere}.");
-                        }
-                    }
-                }
-            }*/
+            }
             // generate for one student
             if(
                 $request->option_type === "one" &&
@@ -220,7 +212,7 @@ class BullettinController extends Controller
                     ->where('type_bulletin', $request->type_bulletin)->exists();
                 if($exists) {
                     return response()->json([
-                        "error" => "l'élève ".$student->name." a déjà un bulletin pour cette séquence"
+                        "error" => "l'élève ".$student->name." a déjà un bulletin pour le trimestre : {$trimetre->libelleTrimestre}"
                     ]);
                 }
                 // create new trimestrial bulletin
@@ -367,14 +359,15 @@ class BullettinController extends Controller
         // load schoolYear
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         // determinate the notes by group
-        $firstGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('1er groupe', $activeYear->id))->pluck('id');
-        $sndGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('2e groupe', $activeYear->id))->pluck('id');
-        $thirdGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('3e groupe', $activeYear->id))->pluck('id');
+        $firstGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('1er groupe', $activeYear->id, $bulletin->classe_id))->pluck('id');
+        $sndGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('2e groupe', $activeYear->id, $bulletin->classe_id))->pluck('id');
+        $thirdGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('3e groupe', $activeYear->id, $bulletin->classe_id))->pluck('id');
         // gettings notes by groups
         $userIds = ClasseAnneeScolaireStudent::where('user_id', $bulletin->user_id)
                 ->where('annee_scolaire_id', $activeYear->id)->where('classe_id', $bulletin->classe_id)->pluck('user_id');
         $student = User::where('id', $bulletin->user_id)->where('typeUser','eleve')
                 ->whereIn('id', $userIds)->first();
+        // all groups matieres datas
         $studentNotesFirstGroup = Note::where('user_id', $student->id)
                     ->where('evaluation_id', $bulletin->evaluation_id)
                     ->where('classe_id', $bulletin->classe_id)
@@ -390,6 +383,8 @@ class BullettinController extends Controller
                     ->where('classe_id', $bulletin->classe_id)
                     ->whereIn('matiere_id', $thirdGroupMatiereIds)
                     ->get();
+        // for trimestre :
+        $groupsNotes = [];
         // decode discplines
         $disciplines = json_decode($bulletin->discipline_stats);
         return view(
@@ -397,5 +392,4 @@ class BullettinController extends Controller
             compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
         );
     }
-
 }

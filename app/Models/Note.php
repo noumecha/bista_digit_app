@@ -23,6 +23,7 @@ class Note extends Model
         'gcma',
         'min_value',
         'max_value',
+        'annee_scolaire_id'
     ];
 
     /**
@@ -33,6 +34,13 @@ class Note extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * a note belongs to a school year
+     */
+    public function annee_scolaire(): BelongsTo
+    {
+        return $this->belongsTo(AnneeScolaire::class, 'annee_scolaire_id');
+    }
     /**
      * a note correspond to a subject
      */

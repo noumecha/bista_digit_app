@@ -293,11 +293,11 @@ use Illuminate\Support\Facades\Route;
     /**
      * function to return matieres ids base on group name
      */
-    function getGroupeMatieresIds($group, $yearId) {
+    function getGroupeMatieresIds($group, $yearId, $classeId) {
         $coefsAnneeScolairesFistGroup = CoefAnneeScolaire::all()->where('annee_scolaire_id',$yearId)
             ->where('groupe_matiere',$group)
             ->pluck('coefficient_id');
-        $coefficientsGroupIds = Coefficient::all()->whereIn('id', $coefsAnneeScolairesFistGroup)->pluck('matiere_id');
+        $coefficientsGroupIds = Coefficient::all()->where('classe_id',$classeId)->whereIn('id', $coefsAnneeScolairesFistGroup)->pluck('matiere_id');
         return $coefficientsGroupIds;
     }
 

@@ -67,16 +67,42 @@
                 </div>
                 <div class="border border-3 row">
                     <div id="report-card" class="bg-white">
-                        @include(
-                            'bulletin.evaluation',
-                            [
-                                'bulletin' => $bulletin,
-                                'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                                'studentNotesSndGroup' => $studentNotesSndGroup,
-                                'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                                'disciplines' => $disciplines
-                            ]
-                        )
+                        @if ($bulletin->type_bulletin === "sequenciel")
+                            @include(
+                                'bulletin.evaluation',
+                                [
+                                    'bulletin' => $bulletin,
+                                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                                    'studentNotesSndGroup' => $studentNotesSndGroup,
+                                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                                    'disciplines' => $disciplines
+                                ]
+                            )
+                        @endif
+                        @if ($bulletin->type_bulletin === "trimestre")
+                            @include(
+                                'bulletin.trimestrielle',
+                                [
+                                    'bulletin' => $bulletin,
+                                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                                    'studentNotesSndGroup' => $studentNotesSndGroup,
+                                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                                    'disciplines' => $disciplines
+                                ]
+                            )
+                        @endif
+                        @if ($bulletin->type_bulletin === "annuel")
+                            @include(
+                                'bulletin.annual',
+                                [
+                                    'bulletin' => $bulletin,
+                                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                                    'studentNotesSndGroup' => $studentNotesSndGroup,
+                                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                                    'disciplines' => $disciplines
+                                ]
+                            )
+                        @endif
                     </div>
                 </div>
             </div>
