@@ -37,7 +37,7 @@
                         {{ $bulletin->classe->libClasse }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $bulletin->evaluation->libelleEvaluation }}
+                        {{ isset($bulletin->evaluation) ? $bulletin->evaluation->libelleEvaluation : $bulletin->trimestre->libelleTrimestre }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $bulletin->trimestre->libelleTrimestre }}

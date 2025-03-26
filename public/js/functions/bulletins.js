@@ -179,7 +179,7 @@ $(function(){
     });
 
     // fetching bulletins dynamically with filters
-    $('#searchStudent,#trimestreFilter,#evaluationFilter,#classFilter').on('change keyup', function () {
+    $('#searchStudent,#trimestreFilter,#evaluationFilter,#classFilter,#typeFilter').on('change keyup', function () {
         fetchBulletins();
     });
 

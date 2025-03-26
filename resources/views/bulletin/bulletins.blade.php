@@ -32,15 +32,25 @@
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterBulletinForm">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <input
                                             type="text"
                                             name="searchStudent"
                                             id="searchStudent"
                                             class="form-control"
-                                            placeholder="Rechercher un élève (par nom ou prenom)"
+                                            placeholder="Rechercher un bulletin en fonction de lélève (nom ou prenom)"
                                         />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="typeFilter" id="typeFilter" class="form-select">
+                                            <option value="">Tout les types</option>
+                                            <option value="sequenciel">Séquenciel</option>
+                                            <option value="trimestre">Trimestriel</option>
+                                            <option value="annuel">Annuel</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

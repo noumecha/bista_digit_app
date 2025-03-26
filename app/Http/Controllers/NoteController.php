@@ -137,6 +137,8 @@ class NoteController extends Controller
                 $note->classe_id,
                 $note->evaluation_id,
             );
+            // update current user bulletin :
+            updateSpecificReportCard($note);
             // update all report car with the new note
             updateAllReportCardStats(
                 $note->classe_id,
@@ -188,6 +190,8 @@ class NoteController extends Controller
             $note->classe_id,
             $note->evaluation_id
         );
+        // update current user bulletin :
+        updateSpecificReportCard($note);
         // update all report car with the new note
         updateAllReportCardStats(
             $note->classe_id,

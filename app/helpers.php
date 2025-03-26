@@ -103,9 +103,9 @@ use Illuminate\Support\Facades\Route;
      * function that help to update specific report Card
      *
      */
-    function updateSpecificReportCard($userId, $note) {
+    function updateSpecificReportCard($note) {
         try {
-            $notes = Note::where('user_id', $userId)
+            $notes = Note::where('user_id', $note->user_id)
                     ->where('evaluation_id', $note->evaluation_id)
                     ->where('classe_id', $note->classe_id)
                     ->where('annee_scolaire_id', getCurrentYear()->id)
@@ -113,7 +113,7 @@ use Illuminate\Support\Facades\Route;
             $average = getAverage(getCurrentYear()->id, $notes);
             $appreciation = getAppreciation($average);
             // update corresponding user bulletin
-            $bulletin = Bulletin::where('user_id', $userId)
+            $bulletin = Bulletin::where('user_id', $note->user_id)
                 ->where('classe_id', $note->classe_id)
                 ->where('evaluation_id', $note->evaluation_id)
                 ->where('annee_scolaire_id', getCurrentYear()->id)
@@ -324,7 +324,7 @@ use Illuminate\Support\Facades\Route;
         $som = 0;
         $total = count($datas);
         foreach ($datas as $data) {
-            $som += $data->averge;
+            $som += $data;
         }
         $avg = ($som / $total);
         return $avg;

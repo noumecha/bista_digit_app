@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('classe_id')->constrained()->onDelete('cascade');
             $table->foreignId('app_configuration_id')->constrained()->onDelete('cascade');
             $table->foreignId('annee_scolaire_id')->constrained()->onDelete('cascade');
-            $table->foreignId('evaluation_id')->constrained()->onDelete('cascade')->nullable();
-            $table->foreignId('trimestre_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('evaluation_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('trimestre_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('bulletin_file');
             $table->string('appreciation');
             $table->double('average');
