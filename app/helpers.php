@@ -2,6 +2,7 @@
 
 use App\Models\AnneeScolaire;
 use App\Models\Bulletin;
+use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\CoefAnneeScolaire;
 use App\Models\Coefficient;
 use App\Models\EnseignantPrincipal;
@@ -69,8 +70,14 @@ use Illuminate\Support\Facades\Route;
      */
     function updateNoteMinMaxRange($matiereId, $classeId, $evaluationId) {
         try {
+            $classeYearStudentsIds = ClasseAnneeScolaireStudent::all()
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->where('classe_id',$classeId)
+                ->pluck('user_id');
             $notes = Note::all()->where('matiere_id',$matiereId)
-                ->where('classe_id',$classeId)->where('evaluation_id',$evaluationId);
+                ->where('evaluation_id',$evaluationId)
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->whereIn('user_id', $classeYearStudentsIds);
             $noteValues = [];
             foreach($notes as $note) {
                 array_push($noteValues, $note->note);
@@ -93,13 +100,45 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
+     * function that help to update specific report Card
+     *
+     */
+    function updateSpecificReportCard($userId, $note) {
+        try {
+            $notes = Note::where('user_id', $userId)
+                    ->where('evaluation_id', $note->evaluation_id)
+                    ->where('classe_id', $note->classe_id)
+                    ->where('annee_scolaire_id', getCurrentYear()->id)
+                    ->get();
+            $average = getAverage(getCurrentYear()->id, $notes);
+            $appreciation = getAppreciation($average);
+            // update corresponding user bulletin
+            $bulletin = Bulletin::where('user_id', $userId)
+                ->where('classe_id', $note->classe_id)
+                ->where('evaluation_id', $note->evaluation_id)
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->where('trimestre_id', $note->evaluation->trimestre_id)->first();
+            $bulletin->update([
+                'appreciation' => $appreciation,
+                'average' => $average,
+            ]);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+    /**
      * function to update report card stats
      */
     function updateAllReportCardStats($classeId, $evaluationId, $trimestreId, $yearId) {
         try {
-            $bulletins = Bulletin::where('classe_id',$classeId)
+            $classeYearStudentsIds = ClasseAnneeScolaireStudent::all()
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->where('classe_id',$classeId)
+                ->pluck('user_id');
+            $bulletins = Bulletin::where('evaluation_id',$evaluationId)
                 ->where('evaluation_id',$evaluationId)
                 ->where('annee_scolaire_id',$yearId)
+                ->whereIn('user_id', $classeYearStudentsIds)
                 ->where('trimestre_id',$trimestreId)->get();
             $bulletinValues = [];
             foreach($bulletins as $bulletin) {

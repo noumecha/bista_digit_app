@@ -20,7 +20,7 @@ class Evaluation extends Model
     ];
 
     /**
-     *
+     * An evaluation belongs to trimestre
      */
     public function trimestre(): BelongsTo
     {
@@ -28,7 +28,7 @@ class Evaluation extends Model
     }
 
     /**
-     *
+     * an evaluation belongs to a filling not period
      */
     public function remplissages(): HasMany
     {

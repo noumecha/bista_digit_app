@@ -25,15 +25,15 @@ class NoteController extends Controller
      */
     public function index(Request $request) {
         $user = User::find(Auth::id());
-        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $activeYear = AnneeScolaire::all()->where('statut',true)->first();
         // datas
         $remplissages = Remplissage::all()->where('statut','=','en cours');
         // getting classes base on the teacher teaching :
         if($user->typeUser === 'enseignant') {
             $ensMatYearIds = EnsMatAnneeScolaire::where('annee_scolaire_id', $activeYear->id)
-            ->pluck('enseignant_matiere_models_id');
+                ->pluck('enseignant_matiere_models_id');
             $enseignantMatiereIds = EnseignantMatiereModel::where('user_id',$user->id)
-            ->whereIn('id',$ensMatYearIds)->pluck('id');
+                ->whereIn('id',$ensMatYearIds)->pluck('id');
             $enseignantClassesIds = Enseignement::whereIn('enseignant_matiere_id', $enseignantMatiereIds)
                 ->pluck('classe_id');
             $classes = Classe::whereIn('classe_id', $enseignantClassesIds);
@@ -45,9 +45,13 @@ class NoteController extends Controller
         $classeFilter = $request->input('classeFilter');
         $matiereFilter = $request->input('matiereFilter');
         $remplissageFilter = $request->input('remplissageFilter');
-
-        $query = Note::query();
-        $studentQuery = User::query()->where('typeUser','eleve');
+        // queries
+        $query = Note::query()->where('annee_scolaire_id', getCurrentYear()->id);
+        $studentsYearClassseIds = ClasseAnneeScolaireStudent::all()
+            ->where('annee_scolaire_id', $activeYear->id)
+            ->pluck('user_id');
+        $studentQuery = User::query()->where('typeUser','eleve')->whereIn('id', $studentsYearClassseIds);
+        // filtering by filters inputs
         if(!empty($searchNote)) {
             $studentQuery->where('name','LIKE',"%{$searchNote}%");
         }
@@ -69,6 +73,7 @@ class NoteController extends Controller
         if (!empty($remplissageFilter)) {
             $query->where('remplissage_id',$remplissageFilter);
         }
+        // results
         $notes = $query->paginate(10);
         $students = $studentQuery->paginate(10);
 
@@ -108,6 +113,7 @@ class NoteController extends Controller
             ->where('classe_id',$request->classe_id)
             ->where('evaluation_id',$request->evaluation_id)
             ->where('remplissage_id',$request->remplissage_id)
+            ->where('annee_scolaire_id', getCurrentYear()->id)
             ->exists();
         if($existNote) {
             return response()->json([
@@ -122,13 +128,21 @@ class NoteController extends Controller
                 'evaluation_id' => $request->evaluation_id,
                 'remplissage_id' => $request->remplissage_id,
                 'note' => $request->note,
-                'appreciation' => $request->appreciation
+                'appreciation' => $request->appreciation,
+                'annee_scolaire_id' => getCurrentYear()->id
             ]);
             // update all the notes with the corresponding new min value and max value
             updateNoteMinMaxRange(
-                $request->matiere_id,
-                $request->classe_id,
-                $request->evaluation_id,
+                $note->matiere_id,
+                $note->classe_id,
+                $note->evaluation_id,
+            );
+            // update all report car with the new note
+            updateAllReportCardStats(
+                $note->classe_id,
+                $note->evaluation_id,
+                $note->evaluation->trimestre_id,
+                getCurrentYear()->id
             );
             if($note) {
                 return response()->json(['success' => 'Note enregistrée avec succès']);
@@ -173,6 +187,13 @@ class NoteController extends Controller
             $note->matiere_id,
             $note->classe_id,
             $note->evaluation_id
+        );
+        // update all report car with the new note
+        updateAllReportCardStats(
+            $note->classe_id,
+            $note->evaluation_id,
+            $note->evaluation->trimestre_id,
+            getCurrentYear()->id
         );
         if($noteHistory) {
             return response()->json(['success' => 'Note mise à jour avec succès']);
