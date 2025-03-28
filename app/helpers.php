@@ -31,6 +31,35 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
+     * get school month for disciplines
+     */
+    function getAllSchoolMonths() {
+        $schoolYear = getCurrentYear();
+        $months = [];
+        $yearStartDate = new DateTime($schoolYear->dateDeDebut);
+        $yearEndDate = new DateTime($schoolYear->dateDeFin);
+        $yearEndDate->modify("-1 month");
+        $interval = new DateInterval('P1M'); // 1 month interval
+        $datePeriod = new DatePeriod($yearStartDate, $interval, $yearEndDate);
+        foreach ($datePeriod as $date) {
+            array_push($months, $date);
+        }
+        return $months;
+    }
+
+    /**
+     * get month name base on his english name
+     */
+    function monthNameToFrench($month) {
+        $frenchNames = [
+            "01" => "Janvier","02" => "Fevrier","03" => "Mars","04" => "Avril",
+            "05" => "Mai","06" => "Juin","07" => "Juillet","08" => "Août",
+            "09" => "Septembre","10" => "Octobre","11" => "Novembre","12" => "Decembre"
+        ];
+        return $frenchNames[$month];
+    }
+
+    /**
      * for formating date in the blade template
      */
     function formatDate($date = '', $format = 'Y-m-d') {
@@ -99,6 +128,12 @@ use Illuminate\Support\Facades\Route;
         }
     }
 
+    /**
+     * update specific report card discipline
+     */
+    function updateStudentDisciplineOnReportCard($bulletin, $discipline) {
+        return true;
+    }
     /**
      * function that help to update specific report Card
      *

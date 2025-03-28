@@ -1,4 +1,4 @@
-<table class="table text-secondary text-center table-hover">
+<table class="table table-responsive text-secondary text-center table-hover">
     <thead>
         <tr>
             <th
@@ -46,11 +46,7 @@
                         {{ $discipline->eleve->name }}
                     </td>
                     <td class="align-middle bg-transparent borer-bottom">
-                        @foreach (\App\Month::cases() as $month)
-                            @if ($discipline->mois == $month->value)
-                                {{ $month->name; }}
-                            @endif
-                        @endforeach
+                        {{ monthNameToFrench($discipline->mois) }}
                     </td>
                     <td class="align-middle bg-transparent borer-bottom">
                         {{ $discipline->heures_absence }}

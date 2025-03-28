@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
+use App\Models\Bulletin;
 use App\Models\Classe;
 use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Discipline;
@@ -81,7 +82,7 @@ class DisciplineController extends Controller
             'user_id' => 'required|exists:users,id',
             'classe_id' => 'required|exists:classes,id',
             'annee_scolaire_id' => 'required|exists:annee_scolaires,id',
-            'mois' => 'required|integer|min:1|max:10',
+            'mois' => 'required',
             'heures_absence' => 'required|integer|min:0',
             'heures_justifiees' => [
                 'required',
@@ -144,7 +145,20 @@ class DisciplineController extends Controller
             'avertissement' => $avertissement,
             'decision' => $request->decision,
         ]);
-
+        // after adding discipline, update bulletin if exist
+        $userIds = ClasseAnneeScolaireStudent::where('user_id', $request->user_id)
+            ->where('annee_scolaire_id', getCurrentYear()->id)
+            ->where('classe_id', $request->user_id)->pluck('user_id');
+        $student = User::where('id', $request->user_id)->where('typeUser','eleve')
+            ->whereIn('id', $userIds)->first();
+        if($student->exists()) {
+            $bulletin = Bulletin::where('type_bulletin', 'sequenciel')->where('annee_scolaire_id', getCurrentYear()->id)
+            ->where('classe_id', $request->classe_id)->where('user_id', $student->id);
+            if($bulletin->exists()) {
+                updateStudentDisciplineOnReportCard($bulletin, $discipline);
+            }
+        }
+        // then show the message
         if($discipline) {
             return response()->json(['success' => 'Données de discipline ajoutées avec succès']);
         } else {

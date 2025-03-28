@@ -374,7 +374,6 @@ class BullettinController extends Controller
     {
         $user = User::find(Auth::id());
         $bulletin = Bulletin::findOrFail(11);
-        //return view('bulletin.annual', compact('user'));
         return view('bulletin.trimestrielle', compact(['user','bulletin']));
     }
 
@@ -391,7 +390,6 @@ class BullettinController extends Controller
      * get students base on a specific class id
      */
     public function getStudents($classeId) {
-        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $studentsIds = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeId)
             ->where('annee_scolaire_id', getCurrentYear()->id)->pluck('user_id');
         $students = User::where('typeUser','eleve')->whereIn('id', $studentsIds)->get();
@@ -402,7 +400,6 @@ class BullettinController extends Controller
      * get evaluations base on a specific trimestre id
      */
     public function getEvaluations($trimId) {
-        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         $trim = Trimestre::all()->where('id', $trimId)
             ->where('annee_scolaire_id', getCurrentYear()->id)->first();
         $evaluations = Evaluation::where('trimestre_id', $trim->id)->get();
@@ -426,42 +423,75 @@ class BullettinController extends Controller
                 ->where('annee_scolaire_id', getCurrentYear()->id)->where('classe_id', $bulletin->classe_id)->pluck('user_id');
         $student = User::where('id', $bulletin->user_id)->where('typeUser','eleve')
                 ->whereIn('id', $userIds)->first();
-        // all groups matieres datas
-        $studentNotesFirstGroup = Note::where('user_id', $student->id)
-                    ->where('evaluation_id', $bulletin->evaluation_id)
-                    ->where('classe_id', $bulletin->classe_id)
-                    ->whereIn('matiere_id', $firstGroupMatiereIds)
-                    ->get();
-        $studentNotesSndGroup = Note::where('user_id', $student->id)
-                    ->where('evaluation_id', $bulletin->evaluation_id)
-                    ->where('classe_id', $bulletin->classe_id)
-                    ->whereIn('matiere_id', $sndGroupMatiereIds)
-                    ->get();
-        $studentNotesThirdGroup = Note::where('user_id', $student->id)
-                    ->where('evaluation_id', $bulletin->evaluation_id)
-                    ->where('classe_id', $bulletin->classe_id)
-                    ->whereIn('matiere_id', $thirdGroupMatiereIds)
-                    ->get();
-        // decode discplines
-        $disciplines = json_decode($bulletin->discipline_stats);
+        if($bulletin->type_bulletin === 'sequenciel') {
+            // all groups matieres datas
+            $studentNotesFirstGroup = Note::where('user_id', $student->id)
+                ->where('evaluation_id', $bulletin->evaluation_id)
+                ->where('classe_id', $bulletin->classe_id)
+                ->whereIn('matiere_id', $firstGroupMatiereIds)
+                ->get();
+            $studentNotesSndGroup = Note::where('user_id', $student->id)
+                ->where('evaluation_id', $bulletin->evaluation_id)
+                ->where('classe_id', $bulletin->classe_id)
+                ->whereIn('matiere_id', $sndGroupMatiereIds)
+                ->get();
+            $studentNotesThirdGroup = Note::where('user_id', $student->id)
+                ->where('evaluation_id', $bulletin->evaluation_id)
+                ->where('classe_id', $bulletin->classe_id)
+                ->whereIn('matiere_id', $thirdGroupMatiereIds)
+                ->get();
+            // decode discplines
+            $disciplines = json_decode($bulletin->discipline_stats);
+            return view(
+            'bulletin.user-report-card',
+            compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
+            );
+        }
         // for trimestre :
         if($bulletin->type_bulletin === "trimestre") {
             $groupsNotes = [];
-            $sequencialBulletins = Bulletin::where('trimestre_id', $bulletin->trimestre_id)
+            $disciplines = [];
+            $sequencialBulletins = Bulletin::all()->where('trimestre_id', $bulletin->trimestre_id)
                 ->where('type_bulletin', "sequenciel")
                 ->where('user_id', $bulletin->user_id)
                 ->where('classe_id', $bulletin->classe_id)
-                ->where('annee_scolaire_id', getCurrentYear()->id)
-                ->where();
-            dd($sequencialBulletins);
+                ->where('annee_scolaire_id', getCurrentYear()->id);
+            foreach($sequencialBulletins as $key => $evalBulletin) {
+                // all groups matieres datas
+                $studentNotesFirstGroup = Note::where('user_id', $student->id)
+                    ->where('evaluation_id', $evalBulletin->evaluation_id)
+                    ->where('classe_id', $evalBulletin->classe_id)
+                    ->whereIn('matiere_id', $firstGroupMatiereIds)
+                    ->get();
+                $studentNotesSndGroup = Note::where('user_id', $student->id)
+                    ->where('evaluation_id', $evalBulletin->evaluation_id)
+                    ->where('classe_id', $evalBulletin->classe_id)
+                    ->whereIn('matiere_id', $sndGroupMatiereIds)
+                    ->get();
+                $studentNotesThirdGroup = Note::where('user_id', $student->id)
+                    ->where('evaluation_id', $evalBulletin->evaluation_id)
+                    ->where('classe_id', $evalBulletin->classe_id)
+                    ->whereIn('matiere_id', $thirdGroupMatiereIds)
+                    ->get();
+                array_push(
+                    $groupsNotes,
+                    [
+                        "bulletin_{$key}_groupsNotes" => [
+                            "firstGroup" => $studentNotesFirstGroup,
+                            "sndGroup" => $studentNotesSndGroup,
+                            "thirdGroup" => $studentNotesThirdGroup
+                        ]
+                    ]
+                );
+                array_push($disciplines, [
+                    "bulletin_{$key}_disciplines" => $evalBulletin->disciplines = json_decode($bulletin->discipline_stats)
+                ]);
+            }
+            dd($disciplines);
             return view(
                 'bulletin.user-report-card',
-                compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
+                compact('bulletin','groupsNotes','disciplines')
             );
         }
-        return view(
-            'bulletin.user-report-card',
-            compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
-        );
     }
 }
