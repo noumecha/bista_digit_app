@@ -129,12 +129,6 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
-     * update specific report card discipline
-     */
-    function updateStudentDisciplineOnReportCard($bulletin, $discipline) {
-        return true;
-    }
-    /**
      * function that help to update specific report Card
      *
      */

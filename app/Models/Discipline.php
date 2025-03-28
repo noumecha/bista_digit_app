@@ -19,7 +19,8 @@ class Discipline extends Model
         'heures_justifiees',
         'total_absences',
         'avertissement',
-        'decision'
+        'decision',
+        'evaluation_id'
     ];
 
     /**
@@ -44,5 +45,13 @@ class Discipline extends Model
     public function anneeScolaire(): BelongsTo
     {
         return $this->belongsTo(AnneeScolaire::class, 'annee_scolaire_id');
+    }
+
+    /**
+     * a discipline affair belongsTo to a evaluation
+     */
+    public function evaluation(): BelongsTo
+    {
+        return $this->belongsTo(Evaluation::class, 'evaluation_id');
     }
 }

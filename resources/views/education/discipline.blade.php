@@ -32,7 +32,7 @@
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterDisciplineForm">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="text" name="searchDiscipline" value="" id="searchDiscipline" class="form-control" placeholder="Rechercher par élèves, par total d'abscence"/>
                                     </div>
@@ -44,6 +44,18 @@
                                             @foreach($classes as $classe)
                                                 <option value="{{ $classe->id }}">
                                                     {{ $classe->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="evaluationFilter" id="evaluationFilter" class="form-select">
+                                            <option value="">Selectionnez une évalutation</option>
+                                            @foreach($evaluations as $evaluation)
+                                                <option value="{{ $evaluation->id }}">
+                                                    {{ $evaluation->libelleEvaluation }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -90,7 +102,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <select name="classe_id" id="classe_id" class="form-select">
-                                            <option value="">Toutes les classes</option>
+                                            <option value="">Selectionnez une classe</option>
                                             @foreach($classes as $classe)
                                                 <option value="{{ $classe->id }}">
                                                     {{ $classe->libClasse }}
@@ -101,15 +113,27 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <select id="user_id" name="user_id" class="form-select">
-                                            <option value="">Sélectionner Un élève</option>
+                                        <select name="evaluation_id" id="evaluation_id" class="form-select">
+                                            <option value="">Selectionnez une évaluation</option>
+                                            @foreach($evaluations as $evaluation)
+                                                <option value="{{ $evaluation->id }}">
+                                                    {{ $evaluation->libelleEvaluation }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select id="user_id" name="user_id" class="form-select">
+                                            <option value="">Sélectionnez Un élève</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <select name="mois" id="mois" class="form-select">
-                                            <option value="">Selectionner le mois</option>
+                                            <option value="">Selectionnez le mois</option>
                                             @foreach (getAllSchoolMonths() as $month)
                                                 <option value="{{ $month->format("m") }}">
                                                     {{ monthNameToFrench($month->format("m")) }}

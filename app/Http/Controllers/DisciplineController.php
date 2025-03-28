@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
-use App\Models\Bulletin;
 use App\Models\Classe;
 use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Discipline;
+use App\Models\Evaluation;
+use App\Models\Trimestre;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -18,11 +19,14 @@ class DisciplineController extends Controller
     public function index(Request $request) {
         // usefull vars
         $classes = Classe::all();
+        $trimestreIds = Trimestre::all()->where('annee_scolaire_id',getCurrentYear()->id)->pluck('id');
+        $evaluations = Evaluation::all()->whereIn('trimestre_id', $trimestreIds);
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         // filter vars
         $classeFilter = $request->input('classeFilter');
         $searchDiscipline = $request->input('searchDiscipline');
         $monthFilter = $request->input('monthFilter');
+        $evaluationFilter = $request->input('evaluationFilter');
         // querying
         $query = Discipline::query()->where('annee_scolaire_id', $activeYear->id);
 
@@ -35,6 +39,9 @@ class DisciplineController extends Controller
                 });
             })->orWhere('total_absences',$searchDiscipline);
         }
+        if(!empty($evaluationFilter)) {
+            $query->where('evaluation_id', $evaluationFilter);
+        }
         if(!empty($monthFilter)) {
             $query->where('mois', $monthFilter);
         }
@@ -44,9 +51,9 @@ class DisciplineController extends Controller
         $disciplines = $query->paginate(10);
 
         if($request->ajax()) {
-            return view('partials._disciplines_table', compact('disciplines','classes','activeYear'));
+            return view('partials._disciplines_table', compact('evaluations','disciplines','classes','activeYear'));
         } else {
-            return view('education.discipline', compact('disciplines','classes','activeYear'));
+            return view('education.discipline', compact('evaluations','disciplines','classes','activeYear'));
         }
     }
 
@@ -81,6 +88,7 @@ class DisciplineController extends Controller
         $rules = [
             'user_id' => 'required|exists:users,id',
             'classe_id' => 'required|exists:classes,id',
+            'evaluation_id' => 'required|exists:evaluations,id',
             'annee_scolaire_id' => 'required|exists:annee_scolaires,id',
             'mois' => 'required',
             'heures_absence' => 'required|integer|min:0',
@@ -100,6 +108,7 @@ class DisciplineController extends Controller
             'user_id' => 'Veuillez Selectionnez un élève',
             'classe_id' => 'Veuillez Selectionnez une classe',
             'annee_scolaire_id' => 'Veuillez activez une année scolaire',
+            'evaluation_id' => 'Veuillez selectionnez une séquence',
             'mois' => 'Veuillez Selectionnez un mois',
             'heures_absence' => 'Veuillez entrées le total des heures d\'absences',
             'heures_justifiees' => $request->heures_justifiees > $request->heures_absence
@@ -139,25 +148,13 @@ class DisciplineController extends Controller
             'mois' => $request->mois,
             'annee_scolaire_id' => $request->annee_scolaire_id,
             'classe_id' => $request->classe_id,
+            'evaluation_id' => $request->evaluation_id,
             'heures_absence' => $request->heures_absence,
             'heures_justifiees' => $request->heures_justifiees,
             'total_absences' => $totalAbsences,
             'avertissement' => $avertissement,
             'decision' => $request->decision,
         ]);
-        // after adding discipline, update bulletin if exist
-        $userIds = ClasseAnneeScolaireStudent::where('user_id', $request->user_id)
-            ->where('annee_scolaire_id', getCurrentYear()->id)
-            ->where('classe_id', $request->user_id)->pluck('user_id');
-        $student = User::where('id', $request->user_id)->where('typeUser','eleve')
-            ->whereIn('id', $userIds)->first();
-        if($student->exists()) {
-            $bulletin = Bulletin::where('type_bulletin', 'sequenciel')->where('annee_scolaire_id', getCurrentYear()->id)
-            ->where('classe_id', $request->classe_id)->where('user_id', $student->id);
-            if($bulletin->exists()) {
-                updateStudentDisciplineOnReportCard($bulletin, $discipline);
-            }
-        }
         // then show the message
         if($discipline) {
             return response()->json(['success' => 'Données de discipline ajoutées avec succès']);
@@ -226,7 +223,7 @@ class DisciplineController extends Controller
             'heures_justifiees' => $request->heures_justifiees,
             'total_absences' => $totalAbsences,
             'avertissement' => $avertissement,
-            'decision' => $request->decision,
+            'decision' => $totalAbsences > 40 ? $request->decision : null,
         ]);
 
         if($discipline) {

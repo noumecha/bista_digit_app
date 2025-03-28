@@ -9,6 +9,7 @@ use App\Models\Classe;
 use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\CoefAnneeScolaire;
 use App\Models\Coefficient;
+use App\Models\Discipline;
 use App\Models\Evaluation;
 use App\Models\Matiere;
 use App\Models\Note;
@@ -424,6 +425,13 @@ class BullettinController extends Controller
         $student = User::where('id', $bulletin->user_id)->where('typeUser','eleve')
                 ->whereIn('id', $userIds)->first();
         if($bulletin->type_bulletin === 'sequenciel') {
+            // update disciplines stats first
+            $studentDisciplines = Discipline::all()->where('user_id', $student->id)
+                ->where('evaluation_id',$bulletin->evaluation->id);
+            $displineStats = getDisciplinesStats($studentDisciplines);
+            $bulletin->update([
+                'discipline_stats' => json_encode($displineStats),
+            ]);
             // all groups matieres datas
             $studentNotesFirstGroup = Note::where('user_id', $student->id)
                 ->where('evaluation_id', $bulletin->evaluation_id)

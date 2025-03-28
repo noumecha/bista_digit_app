@@ -49,6 +49,7 @@ $(function(){
             $('#classe_id').prop("disabled", true);
             $('#mois').prop("disabled", true);
             $('#user_id').prop("disabled", true);
+            $('#evaluation_id').prop("disabled", true);
             disciplineIdInput.val(disciplineId);
             $.ajax({
                 url: "discipline/" + disciplineId + "/edit",
@@ -89,7 +90,7 @@ $(function(){
                     if(formAction === 'discipline/save') {
                         resetForm(form);
                     }
-                    $('#user_id').html('<option value="">Sélectionner Un élève</option>');
+                    $('#user_id').html('<option value="">Sélectionnez un élève</option>');
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
@@ -130,7 +131,7 @@ $(function(){
     });
 
     // fetching disciplines dynamically with filters
-    $('#searchDiscipline,#classeFilter,#monthFilter').on('change keyup', function () {
+    $('#searchDiscipline,#classeFilter,#monthFilter,#evaluationFilter').on('change keyup', function () {
         fetchDisciplines();
     });
 

@@ -42,4 +42,11 @@ class Evaluation extends Model
     public function notes(): HasMany {
         return $this->hasMany(Note::class);
     }
+
+    /**
+     * an evaluation have manys disciplines stats
+     */
+    public function disciplines(): HasMany {
+        return $this->hasMany(Discipline::class);
+    }
 }
