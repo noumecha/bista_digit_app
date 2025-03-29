@@ -84,9 +84,7 @@
                                 'bulletin.trimestrielle',
                                 [
                                     'bulletin' => $bulletin,
-                                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                                    'studentNotesSndGroup' => $studentNotesSndGroup,
-                                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                                    'groupsNotes' => $groupsNotes,
                                     'disciplines' => $disciplines
                                 ]
                             )

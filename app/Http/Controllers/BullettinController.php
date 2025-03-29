@@ -492,17 +492,30 @@ class BullettinController extends Controller
                 array_push(
                     $groupsNotes,
                     [
-                        "bulletin_{$key}_groupsNotes" => [
+                        "firstGroupNotes" => [
+                            "bulletin_{$key}_note" => $studentNotesFirstGroup,
+                        ],
+                        "SndGroupNotes" => [
+                            "bulletin_{$key}_note" => $studentNotesSndGroup,
+                        ],
+                        "SndGroupNotes" => [
+                            "bulletin_{$key}_note" => $studentNotesSndGroup,
+                        ],
+                        "thirdGroupNotes" => [
+                            "bulletin_{$key}_note" => $studentNotesSndGroup,
+                        ],
+                        /*"bulletin_{$key}_groupsNotes" => [
                             "firstGroup" => $studentNotesFirstGroup,
                             "sndGroup" => $studentNotesSndGroup,
                             "thirdGroup" => $studentNotesThirdGroup
-                        ]
+                        ]*/
                     ]
                 );
                 array_push($disciplines, [
                     "bulletin_{$key}_disciplines" => $evalBulletin->disciplines = json_decode($evalBulletin->discipline_stats)
                 ]);
             }
+            dd($groupsNotes);
             return view(
                 'bulletin.user-report-card',
                 compact('bulletin','groupsNotes','disciplines')

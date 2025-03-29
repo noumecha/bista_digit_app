@@ -1,4 +1,4 @@
-<x-report-card-layout :bulletin="$bulletin">
+<x-report-card-layout :bulletin="$bulletin" :groupsNotes="$groupsNotes" :disciplines="$disciplines">
     <!-- bulletin content -->
     <div class="container-flex header-bulletin">
         <div class="row">
@@ -6,83 +6,93 @@
                 <table class="w-100">
                     <thead>
                         <tr>
-                            <th class="bg-body-secondary border-2 text-center p-2" colspan="6">
+                            <th class="bg-light border-2 text-center p-0" colspan="6">
                                 Matieres
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2" colspan="3">
+                            <th class="border-2 bg-light text-center p-0" colspan="3">
                                 Evaluation 1
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2" colspan="3">
+                            <th class="border-2 bg-light text-center p-0" colspan="3">
                                 Evaluation 2
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2">
+                            <th class="border-2 bg-light text-center p-0">
                                 Moy
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2">
+                            <th class="border-2 bg-light text-center p-0">
                                 Coef
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2">
+                            <th class="border-2 bg-light text-center p-0">
                                 Total
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2">
+                            <th class="border-2 bg-light text-center p-0">
                                 Rang
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2">
+                            <th class="border-2 bg-light text-center p-0">
                                 MGC
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2">
+                            <th class="border-2 bg-light text-center p-0">
                                 Min
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2">
+                            <th class="border-2 bg-light text-center p-0">
                                 Max
                             </th>
-                            <th class="border-2 bg-body-secondary text-center p-2">
+                            <th class="border-2 bg-light text-center p-0">
                                 Appreciation
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- group 1 data -->
-                        <tr>
-                            <td colspan="6" class="border-2 text-center p-2">
-                                <h6 class="text-left text-uppercase">
-                                    Informatique
-                                </h6>
-                                <h6 class="text-left text-uppercase">
-                                    M. Noumecha
-                                </h6>
-                            </td>
-                            <td class="border-2 text-center p-2" colspan="3">
-                                10
-                            </td>
-                            <td class="border-2 text-center p-2" colspan="3">
-                                10
-                            </td>
-                            <td class="border-2 bg-body-secondary text-center p-2">
-                                3
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                60
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                5
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                13
-                            </td>
-                            <td class="border-2 bg-body-secondary text-center p-2">
-                                13
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                5
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                15
-                            </td>
-                            <td class="border-2 text-center p-2">
-                                CNA
-                            </td>
-                        </tr>
+                        @foreach ($groupsNotes as $groupNote)
+                            <tr>
+                                <td colspan="6" class="border-2 text-left p-0">
+                                    <h6 class="text-left text-uppercase mb-0">
+                                        @foreach ($groupNote as $notes)
+                                            @foreach ($notes["firstGroup"] as $firstGroup)
+                                                {{ $firstGroup->matiere->libelleMatiere }}
+                                            @endforeach
+                                        @endforeach
+                                    </h6>
+                                    <h6 class="text-left text-uppercase mb-0">
+                                        @foreach ($groupNote as $notes)
+                                            @foreach ($notes["firstGroup"] as $firstGroup)
+                                                {{ $firstGroup->matiere->getTeacher($firstGroup->classe_id) }}
+                                            @endforeach
+                                        @endforeach
+                                    </h6>
+                                </td>
+                                <td class="border-2 text-center p-0" colspan="3">
+                                    10
+                                </td>
+                                <td class="border-2 text-center p-0" colspan="3">
+                                    10
+                                </td>
+                                <td class="border-2 bg-light text-center p-0">
+                                    3
+                                </td>
+                                <td class="border-2 text-center p-0">
+                                    60
+                                </td>
+                                <td class="border-2 text-center p-0">
+                                    5
+                                </td>
+                                <td class="border-2 text-center p-0">
+                                    13
+                                </td>
+                                <td class="border-2 bg-light text-center p-0">
+                                    13
+                                </td>
+                                <td class="border-2 text-center p-0">
+                                    5
+                                </td>
+                                <td class="border-2 text-center p-0">
+                                    15
+                                </td>
+                                <td class="border-2 text-center p-0">
+                                    CNA
+                                </td>
+                            </tr>
+                        @endforeach
                         <!-- group 1 resume -->
                         <tr>
                             <td colspan="6" class="text-center p-2">
@@ -143,7 +153,7 @@
                             <td class="border-2 text-center p-2" colspan="3">
                                 10
                             </td>
-                            <td class="border-2 bg-body-secondary text-center p-2">
+                            <td class="border-2 bg-light text-center p-2">
                                 3
                             </td>
                             <td class="border-2 text-center p-2">
@@ -155,7 +165,7 @@
                             <td class="border-2 text-center p-2">
                                 13
                             </td>
-                            <td class="border-2 bg-body-secondary text-center p-2">
+                            <td class="border-2 bg-light text-center p-2">
                                 13
                             </td>
                             <td class="border-2 text-center p-2">
@@ -228,7 +238,7 @@
                             <td class="border-2 text-center p-2" colspan="3">
                                 10
                             </td>
-                            <td class="border-2 bg-body-secondary text-center p-2">
+                            <td class="border-2 bg-light text-center p-2">
                                 3
                             </td>
                             <td class="border-2 text-center p-2">
@@ -240,7 +250,7 @@
                             <td class="border-2 text-center p-2">
                                 13
                             </td>
-                            <td class="border-2 bg-body-secondary text-center p-2">
+                            <td class="border-2 bg-light text-center p-2">
                                 13
                             </td>
                             <td class="border-2 text-center p-2">
@@ -308,7 +318,7 @@
                 <table border="2" class="w-100 h-100">
                     <thead>
                         <tr>
-                            <th colspan="8" class="bg-body-secondary text-center p-2">
+                            <th colspan="8" class="bg-light text-center p-2">
                                 Discipline
                             </th>
                         </tr>
@@ -366,7 +376,7 @@
                 <table border="2" class="w-100 h-100">
                     <thead>
                         <tr>
-                            <th colspan="5" class="bg-body-secondary text-center p-2">
+                            <th colspan="5" class="bg-light text-center p-2">
                                 Travail de l'élève
                             </th>
                         </tr>
@@ -399,7 +409,7 @@
                 <table border="2" class="w-100 h-100">
                     <thead>
                         <tr>
-                            <th colspan="5" class="bg-body-secondary text-center p-2">
+                            <th colspan="5" class="bg-light text-center p-2">
                                 Profil de la classe
                             </th>
                         </tr>
