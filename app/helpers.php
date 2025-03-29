@@ -6,7 +6,10 @@ use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\CoefAnneeScolaire;
 use App\Models\Coefficient;
 use App\Models\EnseignantPrincipal;
+use App\Models\Evaluation;
 use App\Models\Note;
+use App\Models\Trimestre;
+use App\Models\TrimestreNote;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -225,6 +228,79 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
+     * update trimestrial notes
+     */
+    function updateTrimestreNotes($evaluation, $classeId, $studentId, $matiereId) {
+        try {
+            $evaluationIds = Evaluation::where('trimestre_id',$evaluation->trimestre_id)->pluck('id');
+            $notes = Note::all()->where('classe_id', $classeId)
+                ->where('matiere_id', $matiereId)
+                ->where('user_id', $studentId)
+                ->whereIn('evaluation_id', $evaluationIds);
+            $notesTable = [];
+            foreach($notes as $key => $note) {
+                array_push($notesTable,$note);
+            }
+            // update or create the corresponding trimestrenote
+            TrimestreNote::updateOrCreate(
+                [
+                    'user_id' => $studentId,
+                    'matiere_id' => $matiereId,
+                    'classe_id' => $classeId,
+                    'trimestre_id' => $evaluation->trimestre_id,
+                    'annee_scolaire_id' => getCurrentYear()->id
+                ],
+                [
+                    'eval1_note' => $notesTable[0] ? $notesTable[0]->note : null,
+                    'eval2_note' => $notesTable[1] ? $notesTable[1]->note : null,
+                    'note' => ($notesTable[0] && $notesTable[1]) ? ($notesTable[0]->note + $notesTable[1]->note)/2 : null,
+                    'appreciation' => ($notesTable[0] && $notesTable[1]) ?
+                        getAppreciation(($notesTable[0]->note + $notesTable[1]->note)/2)
+                    : null,
+                ]
+            );
+            // update trims notes for the class :
+            updateTrimMinMaxRange($matiereId, $classeId, $evaluation->trimestre_id);
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
+     * function to get the trimestrial notes
+     */
+    function updateTrimMinMaxRange($matiereId, $classeId, $trimestreId) {
+        try {
+            $classeYearStudentsIds = ClasseAnneeScolaireStudent::all()
+                ->where('annee_scolaire_id',getCurrentYear()->id)
+                ->where('classe_id',$classeId)
+                ->pluck('user_id');
+            $notes = TrimestreNote::all()->where('matiere_id',$matiereId)
+                ->where('trimestre_id',$trimestreId)
+                ->where('annee_scolaire_id',getCurrentYear()->id)
+                ->whereIn('user_id',$classeYearStudentsIds);
+            $noteValues = [];
+            foreach($notes as $note) {
+                array_push($noteValues, $note->note);
+            }
+            $minValue = min($noteValues);
+            $maxValue = max($noteValues);
+            $gcma = getGeneralMoy($noteValues);
+            foreach($notes as $note) {
+                $range = getRange($note->note, $noteValues);
+                $note->update([
+                    'class_avg' => $gcma,
+                    'min_note' => $minValue,
+                    'max_note' => $maxValue,
+                    'rang' => $range,
+                ]);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    /**
      * function to determine reussite percent
      */
     function getWinPercent($datas) {
@@ -326,7 +402,7 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
-     * function to determine average
+     * function to determine sequential average
      */
     function getAverage($yearId, $notes) {
         $avg = 0;

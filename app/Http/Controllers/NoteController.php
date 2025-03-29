@@ -9,11 +9,14 @@ use App\Models\Coefficient;
 use App\Models\EnseignantMatiereModel;
 use App\Models\Enseignement;
 use App\Models\EnsMatAnneeScolaire;
+use App\Models\Evaluation;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Matiere;
 use App\Models\Note;
 use App\Models\NoteHistory;
 use App\Models\Remplissage;
+use App\Models\Trimestre;
+use App\Models\TrimestreNote;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -146,6 +149,13 @@ class NoteController extends Controller
                 $note->evaluation->trimestre_id,
                 getCurrentYear()->id
             );
+            // update and manage trimestrial notes
+            updateTrimestreNotes(
+                $note->evaluation,
+                $note->classe_id,
+                $note->user_id,
+                $note->matiere_id
+            );
             if($note) {
                 return response()->json(['success' => 'Note enregistrée avec succès']);
             }
@@ -199,11 +209,17 @@ class NoteController extends Controller
             $note->evaluation->trimestre_id,
             getCurrentYear()->id
         );
+        // update and manage trimestrial notes
+        updateTrimestreNotes(
+            $note->evaluation,
+            $note->classe_id,
+            $note->user_id,
+            $note->matiere_id
+        );
         if($noteHistory) {
             return response()->json(['success' => 'Note mise à jour avec succès']);
         }
     }
-
     /**
      * getting matiere in coefficient classe base on the classe selection
      */

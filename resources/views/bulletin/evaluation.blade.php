@@ -392,8 +392,12 @@
                             <td class="p-0 text-center fw-bold border-2" colspan="1">Moyenne / 20</td>
                         </tr>
                         <tr>
-                            <td class="p-0 border-2" colspan="4">{{ $bulletin->evaluation->libelleEvaluation }}</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->average,1,2) }}</td>
+                            <td class="p-0 border-2" colspan="4">
+                                {{ $bulletin->evaluation->libelleEvaluation }}
+                            </td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">
+                                {{  bcdiv($bulletin->average,1,2) }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
