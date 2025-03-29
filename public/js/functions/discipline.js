@@ -128,6 +128,7 @@ $(function(){
         $('#classe_id').attr("disabled", false);
         $('#mois').attr("disabled", false);
         $('#user_id').attr("disabled", false);
+        $('#evaluation_id').prop("disabled", false);
     });
 
     // fetching disciplines dynamically with filters

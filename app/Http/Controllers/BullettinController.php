@@ -451,8 +451,8 @@ class BullettinController extends Controller
             // decode discplines
             $disciplines = json_decode($bulletin->discipline_stats);
             return view(
-            'bulletin.user-report-card',
-            compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
+                'bulletin.user-report-card',
+                compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
             );
         }
         // for trimestre :
@@ -465,6 +465,14 @@ class BullettinController extends Controller
                 ->where('classe_id', $bulletin->classe_id)
                 ->where('annee_scolaire_id', getCurrentYear()->id);
             foreach($sequencialBulletins as $key => $evalBulletin) {
+                // update disciplines stats first
+                $studentDisciplines = Discipline::all()->where('user_id', $student->id)
+                    ->where('evaluation_id',$evalBulletin->evaluation->id)
+                    ->where('classe_id', $evalBulletin->classe_id);
+                $displineStats = getDisciplinesStats($studentDisciplines);
+                $evalBulletin->update([
+                    'discipline_stats' => json_encode($displineStats),
+                ]);
                 // all groups matieres datas
                 $studentNotesFirstGroup = Note::where('user_id', $student->id)
                     ->where('evaluation_id', $evalBulletin->evaluation_id)
@@ -492,10 +500,9 @@ class BullettinController extends Controller
                     ]
                 );
                 array_push($disciplines, [
-                    "bulletin_{$key}_disciplines" => $evalBulletin->disciplines = json_decode($bulletin->discipline_stats)
+                    "bulletin_{$key}_disciplines" => $evalBulletin->disciplines = json_decode($evalBulletin->discipline_stats)
                 ]);
             }
-            dd($disciplines);
             return view(
                 'bulletin.user-report-card',
                 compact('bulletin','groupsNotes','disciplines')
