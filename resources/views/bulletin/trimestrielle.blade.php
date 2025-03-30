@@ -449,7 +449,15 @@
                         Moyenne trimestrielle : {{ bcdiv($bulletin->average,1,2) }}
                     </h5>
                     <h5 class="text-center fw-bold">
-                        Rang trimmestrielle : {{ $bulletin->range }}
+                        Rang trimmestrielle :
+                        @if ($bulletin->student->sex->value === "F" && $bulletin->range === 1)
+                            {{ $bulletin->range }}<sup>ère</sup>
+                        @elseif ($bulletin->student->sex->value === "M" && $bulletin->range === 1)
+                            {{ $bulletin->range }}<sup>er</sup>
+                        @else
+                            {{ $bulletin->range }}<sup>ème</sup>
+                        @endif
+                        /{{ $bulletin->classe->effectif->getEffectif() }}
                     </h5>
                 </div>
             </div>

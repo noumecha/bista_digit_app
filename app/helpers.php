@@ -238,7 +238,7 @@ use Illuminate\Support\Facades\Route;
                 ->where('user_id', $studentId)
                 ->whereIn('evaluation_id', $evaluationIds);
             $notesTable = [];
-            foreach($notes as $key => $note) {
+            foreach($notes as $note) {
                 array_push($notesTable,$note);
             }
             // update or create the corresponding trimestrenote

@@ -159,6 +159,21 @@ class BullettinController extends Controller
                         "message" => "l'élève {$student->name} a déjà un bulletin pour le trimestre : {$trimestre->libelleTrimestre}"
                     ];
                 }
+                // update trimestre notes
+                foreach($evaluations as $evaluation) {
+                    $notes = Note::all()->where('classe_id', $classe->id)
+                        ->where('user_id', $student->id)
+                        ->where('annee_scolaire_id', getCurrentYear()->id)
+                        ->where('evaluation_id', $evaluation->id);
+                    foreach($notes as $note) {
+                        updateTrimestreNotes(
+                            $evaluation,
+                            $classe->id,
+                            $student->id,
+                            $note->matiere_id
+                        );
+                    }
+                }
                 // create new trimestrial bulletin
                 Bulletin::create([
                     'user_id' => $student->id,
@@ -180,19 +195,6 @@ class BullettinController extends Controller
                     $typeBulletin,
                     getCurrentYear()->id
                 );
-                // update trimestre notes
-                $notes = Note::all()->where('classe_id', $classe->id)
-                ->where('user_id', $student->id)
-                ->where('annee_scolaire_id', getCurrentYear()->id)
-                ->where('evaluation_id', $evaluation->id);
-                foreach($notes as $note) {
-                    updateTrimestreNotes(
-                        $evaluation,
-                        $classe->id,
-                        $student->id,
-                        $note->matiere_id
-                    );
-                }
                 return [
                     "type" => "success",
                     "message" => "Bulletin {$typeBulletin} de {$student->name} généré avec succès !"
