@@ -40,16 +40,16 @@
                                     <div class="col-lg-10 col-md-10">
                                         Bulletin {{ $bulletin->type_bulletin }} de : {{ $bulletin->student->name }}
                                     </div>
-                                    <div class="col-lg-1 col-md-1">
+                                    <!--div class="col-lg-1 col-md-1">
                                         <a
                                             type="button"
                                             title="télécharger"
                                             id="download-report"
                                             class="btn btn-dark mb-0 p-0 text-white"
                                         >
-                                            <i class="fas fa-download me-2"></i>
+                                            <i class="fas fa-print me-2"></i>
                                         </a>
-                                    </div>
+                                    </div-->
                                     <div class="col-lg-1 col-md-1">
                                         <a
                                             type="button"
@@ -57,7 +57,7 @@
                                             id="printReport"
                                             class="btn btn-dark mb-0 p-0 text-white"
                                         >
-                                            <i class="fas fa-print me-2"></i>
+                                            <i class="fas fa-download me-2"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -111,10 +111,9 @@
         <x-app.footer />
     </main>
     @section('scripts')
-        <!-- adding html2canvas & jspdf cdn -->
+        <!-- adding html2canvas & jspdf -->
         <script src="{{ asset('js/functions/modules/jspdf.js') }}"></script>
         <script src="{{ asset('js/functions/modules/html2canvas.js') }}"></script>
-        <script src="{{ asset('js/functions/html2pdf.bundle.min.js') }}"></script>
         <script src="{{ asset('js/functions/bulletins.js') }}"></script>
     @endsection
 </x-app-layout>
