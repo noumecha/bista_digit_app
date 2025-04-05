@@ -9,13 +9,11 @@ use App\Models\Coefficient;
 use App\Models\EnseignantMatiereModel;
 use App\Models\Enseignement;
 use App\Models\EnsMatAnneeScolaire;
-use App\Models\Evaluation;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Matiere;
 use App\Models\Note;
 use App\Models\NoteHistory;
 use App\Models\Remplissage;
-use App\Models\Trimestre;
 use App\Models\TrimestreNote;
 use App\Models\User;
 use Exception;
@@ -140,9 +138,7 @@ class NoteController extends Controller
                 $note->classe_id,
                 $note->evaluation_id,
             );
-            // update current user bulletin :
-            updateSpecificReportCard($note);
-            // update all report car with the new note
+            // update all report card with the new note
             updateAllReportCardStats(
                 $note->classe_id,
                 $note->evaluation_id,
@@ -150,12 +146,21 @@ class NoteController extends Controller
                 getCurrentYear()->id
             );
             // update and manage trimestrial notes
-            updateTrimestreNotes(
-                $note->evaluation,
-                $note->classe_id,
-                $note->user_id,
-                $note->matiere_id
-            );
+            $trimNotes = TrimestreNote::all()->where('classe_id', $note->classe_id)
+                ->where('user_id', $note->user_id)
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->where('matiere_id', $note->matiere_id)
+                ->where('trimestre_id', $note->evaluation->trimestre_id);
+            if(!$trimNotes->isEmpty()) {
+                foreach ($trimNotes as $trimNote) {
+                    updateTrimestreNotes(
+                        $note->evaluation,
+                        $trimNote->classe_id,
+                        $trimNote->user_id,
+                        $trimNote->matiere_id
+                    );
+                }
+            }
             if($note) {
                 return response()->json(['success' => 'Note enregistrée avec succès']);
             }
@@ -202,7 +207,7 @@ class NoteController extends Controller
         );
         // update current user bulletin :
         updateSpecificReportCard($note);
-        // update all report car with the new note
+        // update all report card with the new note
         updateAllReportCardStats(
             $note->classe_id,
             $note->evaluation_id,
@@ -210,12 +215,21 @@ class NoteController extends Controller
             getCurrentYear()->id
         );
         // update and manage trimestrial notes
-        updateTrimestreNotes(
-            $note->evaluation,
-            $note->classe_id,
-            $note->user_id,
-            $note->matiere_id
-        );
+        $trimNotes = TrimestreNote::all()->where('classe_id', $note->classe_id)
+            ->where('user_id', $note->user_id)
+            ->where('annee_scolaire_id', getCurrentYear()->id)
+            ->where('matiere_id', $note->matiere_id)
+            ->where('trimestre_id', $note->evaluation->trimestre_id);
+        if(!$trimNotes->isEmpty()) {
+            foreach ($trimNotes as $trimNote) {
+                updateTrimestreNotes(
+                    $note->evaluation,
+                    $trimNote->classe_id,
+                    $trimNote->user_id,
+                    $trimNote->matiere_id
+                );
+            }
+        }
         if($noteHistory) {
             return response()->json(['success' => 'Note mise à jour avec succès']);
         }

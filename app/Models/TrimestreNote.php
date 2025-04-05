@@ -17,7 +17,7 @@ class TrimestreNote extends Model
         'trimestre_id',
         'eval1_note',
         'eval2_note',
-        'trim_note',
+        'note',
         'rang',
         'class_avg',
         'min_note',
