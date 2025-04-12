@@ -47,7 +47,7 @@ $(function() {
                     spinner.addClass('d-none');
                     icon.removeClass('d-none');
                     fetchNotes();
-                }, 3000);
+                }, 1000);
                 // Remove any lingering backdrop
                 $('.modal-backdrop').remove();
             },

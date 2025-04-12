@@ -240,53 +240,6 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
-     * update trimestrial notes
-     */
-    function updateTrimestreNotes($evaluation, $classeId, $studentId, $matiereId) {
-        try {
-            $evaluationIds = Evaluation::where('trimestre_id',$evaluation->trimestre_id)->pluck('id');
-            $notes = Note::all()->where('classe_id', $classeId)
-                ->where('matiere_id', $matiereId)
-                ->where('user_id', $studentId)
-                ->whereIn('evaluation_id', $evaluationIds);
-            $notesTable = [];
-            foreach($notes as $note) {
-                array_push($notesTable,$note);
-            }
-            // claculate :
-            $eval1Note = 00.0;
-            $eval2Note = 00.0;
-            $note = 00.0;
-            if(count($notesTable) !== 0) {
-                $eval1Note = $notesTable[0]->note;
-                $eval2Note = $notesTable[1]->note;
-                $note = ($eval1Note + $eval2Note)/2;
-            }
-            // update or create the corresponding trimestrenote
-            $trimNote = TrimestreNote::updateOrCreate(
-                [
-                    'user_id' => $studentId,
-                    'matiere_id' => $matiereId,
-                    'classe_id' => $classeId,
-                    'trimestre_id' => $evaluation->trimestre_id,
-                    'annee_scolaire_id' => getCurrentYear()->id
-                ],
-                [
-                    'eval1_note' => $eval1Note,
-                    'eval2_note' => $eval2Note,
-                    'note' => $note,
-                    'appreciation' => getAppreciation($note),
-                ]
-            );
-            dd($trimNote);
-            // update trims notes for the class :
-            updateTrimMinMaxRange($matiereId, $classeId, $evaluation->trimestre_id);
-        } catch (Exception $ex) {
-            throw $ex;
-        }
-    }
-
-    /**
      * function to get the trimestrial notes
      */
     function updateTrimMinMaxRange($matiereId, $classeId, $trimestreId) {
@@ -306,6 +259,7 @@ use Illuminate\Support\Facades\Route;
             $minValue = min($noteValues);
             $maxValue = max($noteValues);
             $gcma = getGeneralMoy($noteValues);
+            //dd($notes);
             foreach($notes as $note) {
                 $range = getRange($note->note, $noteValues);
                 $note->update([
@@ -625,6 +579,53 @@ function generateAllSeqReportCard($classe, $evaluation, $trimestre) {
         throw $ex;
     }
 }
+
+/**
+ * update trimestrial notes
+ */
+function updateTrimestreNotes($evaluation, $classeId, $studentId, $matiereId) {
+    try {
+        $evaluationIds = Evaluation::where('trimestre_id',$evaluation->trimestre_id)->pluck('id');
+        $notes = Note::all()->where('classe_id', $classeId)
+            ->where('matiere_id', $matiereId)
+            ->where('user_id', $studentId)
+            ->whereIn('evaluation_id', $evaluationIds);
+        $notesTable = [];
+        foreach($notes as $note) {
+            array_push($notesTable,$note);
+        }
+        // claculate :
+        $eval1Note = 00.0;
+        $eval2Note = 00.0;
+        $note = 00.0;
+        if(count($notesTable) !== 0) {
+            $eval1Note = $notesTable[0]->note;
+            $eval2Note = $notesTable[1]->note;
+            $note = ($eval1Note + $eval2Note)/2;
+        }
+        // update or create the corresponding trimestrenote
+        $trimNote = TrimestreNote::updateOrCreate(
+            [
+                'user_id' => $studentId,
+                'matiere_id' => $matiereId,
+                'classe_id' => $classeId,
+                'trimestre_id' => $evaluation->trimestre_id,
+                'annee_scolaire_id' => getCurrentYear()->id
+            ],
+            [
+                'eval1_note' => $eval1Note,
+                'eval2_note' => $eval2Note,
+                'note' => $note,
+                'appreciation' => getAppreciation($note),
+            ]
+        );
+        // update trims notes for the class :
+        updateTrimMinMaxRange($matiereId, $classeId, $evaluation->trimestre_id);
+    } catch (Exception $ex) {
+        throw $ex;
+    }
+}
+
 /**
  * generate single student class report card
  * for a trimester

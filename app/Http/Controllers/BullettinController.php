@@ -178,6 +178,10 @@ class BullettinController extends Controller
                 ]);
             }
             if ($request->option_type === "one" && $request->type_bulletin === 'annuel') {
+                $result = generateSingleAnnualReportCard();
+                return response()->json([
+                    $result["type"] => $result["message"]
+                ]);
             }
             // generate for a class
             if (
@@ -197,6 +201,10 @@ class BullettinController extends Controller
                 ]);
             }
             if ($request->option_type === "all" && $request->type_bulletin === 'annuel') {
+                $result = generateAllAnnualReportCard($classe, $evaluation, $trimestre);
+                return response()->json([
+                    $result["type"] => $result["message"]
+                ]);
                 dd($request);
             }
 
@@ -226,9 +234,27 @@ class BullettinController extends Controller
      * delete bulletin forever
      */
     public function destroy($id) {
-        $bulletin = Bulletin::findOrFail($id);
-        $bulletin->delete();
-        return redirect()->route('bulletins.list')->with('deleteSuccess', 'Bulletin supprimé avec succès!');
+        try {
+            $bulletin = Bulletin::findOrFail($id);
+            if($bulletin->type_bulletin === "sequenciel") {
+                $notes = Note::where('user_id', $bulletin->user_id)
+                    ->where('evaluation_id', $bulletin->evaluation_id)
+                    ->where('classe_id', $bulletin->classe_id);
+                $notes->delete();
+            }
+            if($bulletin->type_bulletin === "trimestre") {
+                dd($bulletin);
+            }
+            if($bulletin->type_bulletin === "annuel") {
+                dd($bulletin);
+            }
+            $bulletin->delete();
+            return redirect()->route('bulletins.list')
+                ->with('deleteSuccess', 'Bulletin supprimé avec succès!');
+        } catch (Exception $ex) {
+            return redirect()->route('bulletins.list')
+                ->with('deleteSuccess', $ex->getMessage());
+        }
     }
 
     /**
@@ -260,15 +286,18 @@ class BullettinController extends Controller
         // load schoolYear
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
         // determinate the notes by group
-        $firstGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('1er groupe', getCurrentYear()->id, $bulletin->classe_id))->pluck('id');
-        $sndGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('2e groupe', getCurrentYear()->id, $bulletin->classe_id))->pluck('id');
-        $thirdGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds('3e groupe', getCurrentYear()->id, $bulletin->classe_id))->pluck('id');
+        $firstGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds(
+            '1er groupe', getCurrentYear()->id, $bulletin->classe_id))->pluck('id');
+        $sndGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds(
+            '2e groupe', getCurrentYear()->id, $bulletin->classe_id))->pluck('id');
+        $thirdGroupMatiereIds = Matiere::all()->whereIn('id', getGroupeMatieresIds(
+            '3e groupe', getCurrentYear()->id, $bulletin->classe_id))->pluck('id');
         // gettings notes by groups
         $userIds = ClasseAnneeScolaireStudent::where('user_id', $bulletin->user_id)
-                ->where('annee_scolaire_id', getCurrentYear()->id)
-                ->where('classe_id', $bulletin->classe_id)->pluck('user_id');
+            ->where('annee_scolaire_id', getCurrentYear()->id)
+            ->where('classe_id', $bulletin->classe_id)->pluck('user_id');
         $student = User::where('id', $bulletin->user_id)->where('typeUser','eleve')
-                ->whereIn('id', $userIds)->first();
+            ->whereIn('id', $userIds)->first();
         if($bulletin->type_bulletin === 'sequenciel') {
             // update disciplines stats first
             $studentDisciplines = Discipline::all()->where('user_id', $student->id)
