@@ -178,7 +178,7 @@ class BullettinController extends Controller
                 ]);
             }
             if ($request->option_type === "one" && $request->type_bulletin === 'annuel') {
-                $result = generateSingleAnnualReportCard();
+                $result = generateSingleAnnualReportCard($student, $classe, $evaluation, $trimestre);
                 return response()->json([
                     $result["type"] => $result["message"]
                 ]);
@@ -243,7 +243,10 @@ class BullettinController extends Controller
                 $notes->delete();
             }
             if($bulletin->type_bulletin === "trimestre") {
-                dd($bulletin);
+                $notes = TrimestreNote::where('user_id', $bulletin->user_id)
+                    ->where('trimestre_id', $bulletin->trimestre_id)
+                    ->where('classe_id', $bulletin->classe_id);
+                $notes->delete();
             }
             if($bulletin->type_bulletin === "annuel") {
                 dd($bulletin);

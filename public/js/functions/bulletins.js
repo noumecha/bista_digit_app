@@ -12,7 +12,6 @@ $(function(){
 
             let imgWidth = 210;
             let imgHeight = 297;
-            //let imgHeight = (canvas.height * imgWidth) / canvas.width;
 
             pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
             pdf.save("bulletin.pdf");
@@ -45,6 +44,7 @@ $(function(){
         let option = $(this).val();
         if(option === "trimestre") {
             $('#evaluation_id').attr('disabled', true);
+            $('#trimestre_id').attr('disabled', false);
         } else if(option === "annuel") {
             $('#evaluation_id').attr('disabled', true);
             $('#trimestre_id').attr('disabled', true);
