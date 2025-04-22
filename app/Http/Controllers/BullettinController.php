@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
+use App\Models\AnnualNote;
 use App\Models\AppConfiguration;
 use App\Models\Bulletin;
 use App\Models\Classe;
@@ -178,7 +179,9 @@ class BullettinController extends Controller
                 ]);
             }
             if ($request->option_type === "one" && $request->type_bulletin === 'annuel') {
-                $result = generateSingleAnnualReportCard($student, $classe, $evaluation, $trimestre);
+                $student = User::where('id', $request->user_id)->where('typeUser','eleve')
+                    ->whereIn('id', $userIds)->first();
+                $result = generateSingleAnnualReportCard($student, $classe);
                 return response()->json([
                     $result["type"] => $result["message"]
                 ]);
@@ -201,11 +204,10 @@ class BullettinController extends Controller
                 ]);
             }
             if ($request->option_type === "all" && $request->type_bulletin === 'annuel') {
-                $result = generateAllAnnualReportCard($classe, $evaluation, $trimestre);
+                $result = generateAllAnnualReportCard($classe);
                 return response()->json([
                     $result["type"] => $result["message"]
                 ]);
-                dd($request);
             }
 
         } catch (Exception $ex) {
@@ -249,7 +251,10 @@ class BullettinController extends Controller
                 $notes->delete();
             }
             if($bulletin->type_bulletin === "annuel") {
-                dd($bulletin);
+                $notes = AnnualNote::where('user_id', $bulletin->user_id)
+                    ->where('annee_scolaire_id', getCurrentYear()->id)
+                    ->where('classe_id', $bulletin->classe_id);
+                $notes->delete();
             }
             $bulletin->delete();
             return redirect()->route('bulletins.list')
@@ -392,7 +397,61 @@ class BullettinController extends Controller
         }
         // for annual :
         if($bulletin->type_bulletin === "annuel") {
-            dd($bulletin);
+            $disciplines = [];
+            $bulletinsAvgs = [];
+            $trimestrialBulletins = Bulletin::all()->where('type_bulletin',"trimestre")
+                ->where('user_id', $bulletin->user_id)
+                ->where('classe_id', $bulletin->classe_id)
+                ->where('annee_scolaire_id', getCurrentYear()->id);
+            // getting something :
+            foreach($trimestrialBulletins as $key => $trimBulletin) {
+                // update disciplines stats first
+                $evaluationIds = Evaluation::where('trimestre_id', $trimBulletin->trimestre->id)
+                ->pluck('id');
+                $studentDisciplines = Discipline::all()->where('user_id', $student->id)
+                    ->whereIn('evaluation_id', $evaluationIds)
+                    ->where('classe_id', $trimBulletin->classe_id);
+                $displineStats = getDisciplinesStats($studentDisciplines);
+                $trimBulletin->update([
+                    'discipline_stats' => json_encode($displineStats),
+                ]);
+                // try to implements something to update annual note data before rendering the bulletin
+                $notes = Note::all()->where('classe_id', $trimBulletin->classe_id)
+                    ->where('user_id', $student->id)
+                    ->where('annee_scolaire_id', getCurrentYear()->id)
+                    ->whereIn('evaluation_id', $evaluationIds);
+                foreach($notes as $note) {
+                    updateAnnualNotes(
+                        $trimBulletin->classe_id,
+                        $student->id,
+                        $note->matiere_id
+                    );
+                }
+                // create the discipline data
+                array_push($disciplines, json_decode($trimBulletin->discipline_stats));
+                // bulletins average :
+                array_push($bulletinsAvgs, [
+                    "trimestre_name" => $trimBulletin->trimestre->libelleTrimestre,
+                    "trimestre_average" => $trimBulletin->average
+                ]);
+            }
+            // all annual groups matieres notes
+            $studentNotesFirstGroup = AnnualNote::where('user_id', $student->id)
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->where('classe_id', $bulletin->classe_id)
+                ->whereIn('matiere_id', $firstGroupMatiereIds)->get();
+            $studentNotesSndGroup = AnnualNote::where('user_id', $student->id)
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->where('classe_id', $bulletin->classe_id)
+                ->whereIn('matiere_id', $sndGroupMatiereIds)->get();
+            $studentNotesThirdGroup = AnnualNote::where('user_id', $student->id)
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->where('classe_id', $bulletin->classe_id)
+                ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
+            return view(
+                'bulletin.user-report-card',
+                compact('bulletin','bulletinsAvgs','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
+            );
         }
     }
 }

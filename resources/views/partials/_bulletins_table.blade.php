@@ -37,10 +37,16 @@
                         {{ $bulletin->classe->libClasse }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ isset($bulletin->evaluation) ? $bulletin->evaluation->libelleEvaluation : $bulletin->trimestre->libelleTrimestre }}
+                        @if (isset($bulletin->evaluation))
+                            {{ $bulletin->evaluation->libelleEvaluation }}
+                        @elseif (isset($bulletin->trimestre))
+                            {{ $bulletin->trimestre->libelleTrimestre }}
+                        @else
+                            {{ "Annuel" }}
+                        @endif
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $bulletin->trimestre->libelleTrimestre }}
+                        {{ isset($bulletin->trimestre) ? $bulletin->trimestre->libelleTrimestre : "Annuel" }}
                     </td>
                     <td class="text-center align-middle bg-transparent border-bottom">
                         <a

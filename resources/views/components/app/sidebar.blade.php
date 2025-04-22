@@ -170,6 +170,12 @@
                     </a>
                 </li>
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.remplissages') ? 'active' : '' }}"
+                        href="{{ route('evaluation.remplissages') }}">
+                        <span class="nav-link-text ms-1">Contrôle du remplissage</span>
+                    </a>
+                </li>
+                <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.notes') ? 'active' : '' }}"
                         href="{{ route('evaluation.notes') }}">
                         <span class="nav-link-text ms-1">Notes</span>
@@ -183,12 +189,6 @@
                         <i class="fa-solid fa-book-open"></i>
                         <span class="font-weight-normal text-md ml-n5">Bulletins</span>
                     </div>
-                </li>
-                <li data-submenu="bulletins" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('bulletins.configuration') ? 'active' : '' }}"
-                        href="{{ route('bulletins.configuration') }}">
-                        <span class="nav-link-text ms-1">Configuration</span>
-                    </a>
                 </li>
                 <li data-submenu="bulletins" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('bulletins.list') ? 'active' : '' }}"

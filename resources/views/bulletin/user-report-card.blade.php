@@ -97,6 +97,7 @@
                                 'bulletin.annual',
                                 [
                                     'bulletin' => $bulletin,
+                                    'bulletinsAvgs' => $bulletinsAvgs,
                                     'studentNotesFirstGroup' => $studentNotesFirstGroup,
                                     'studentNotesSndGroup' => $studentNotesSndGroup,
                                     'studentNotesThirdGroup' => $studentNotesThirdGroup,

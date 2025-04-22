@@ -64,7 +64,14 @@
                 <div class="col-md-12 d-flex justify-content-center align-items-center col-lg-12">
                     <div class="col-lg-6 ml-5">
                         <h4 class="ml-5 mr-n5 border border-3 fw-bold border-dark p-2 text-uppercase text-center">
-                            Bulletin {{ $bulletin->type_bulletin }}
+                            Bulletin
+                            @if ($bulletin->type_bulletin === "trimestre")
+                                {{ $bulletin->trimestre->libelleTrimestre }}
+                            @elseif ($bulletin->type_bulletin === "sequenciel")
+                                {{ $bulletin->evaluation->libelleEvaluation }}
+                            @else
+                                {{ $bulletin->type_bulletin }}
+                            @endif
                         </h4>
                     </div>
                 </div>

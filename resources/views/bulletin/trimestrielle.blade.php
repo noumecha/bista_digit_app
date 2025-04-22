@@ -473,27 +473,39 @@
                     <tbody>
                         <tr>
                             <td class="p-0 m-0 border-2" colspan="4">Moy. gen. classe</td>
-                            <td class="p-0 m-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->general_average,1,2) }}</td>
+                            <td class="p-0 m-0 text-center fw-bold border-2" colspan="1">
+                                {{  bcdiv($bulletin->general_average,1,2) }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Moy. dernier</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->min_average,1,2) }}</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">
+                                {{  bcdiv($bulletin->min_average,1,2) }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Moy. premier</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->max_average,1,2) }}</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">
+                                {{  bcdiv($bulletin->max_average,1,2) }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Taux R.</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{ bcdiv($bulletin->getWinPercent(),1,2) }} %</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">
+                                {{ bcdiv($bulletin->getWinPercent(),1,2) }} %
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Nbre. Moy.</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{ $bulletin->totalNumberOfMoy() }}</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">
+                                {{ $bulletin->totalNumberOfMoy() }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Ecart-type</td>
-                            <td class="p-0 text-center fw-bold border-2" colspan="1">{{  bcdiv($bulletin->standard_deviation,1,2) }}</td>
+                            <td class="p-0 text-center fw-bold border-2" colspan="1">
+                                {{  bcdiv($bulletin->standard_deviation,1,2) }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
