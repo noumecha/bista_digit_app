@@ -9,6 +9,7 @@ use App\Models\Discipline;
 use App\Models\Evaluation;
 use App\Models\Trimestre;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 
 class DisciplineController extends Controller
@@ -73,6 +74,23 @@ class DisciplineController extends Controller
     }
 
     /**
+     * getting months correspondig to the specific evaluation date
+     */
+    public function getMonths($evaluation_id) {
+        $months = [];
+        $evaluation = Evaluation::all()->where('id', $evaluation_id)->first();
+        $evaluation_month = new DateTime($evaluation->dateDeDebut);
+        foreach(getAllSchoolMonths() as $m) {
+            dd($m->format("m"), $evaluation_month->format("m"));
+            if($m->format("m") <= $evaluation_month->format("m")) {
+                array_push($months, $m);
+            }
+        }
+        dd($months);
+        return response()->json($months);
+    }
+
+    /**
      * getting student base on id when editing
      */
     public function getStudent($user_id)
@@ -91,7 +109,10 @@ class DisciplineController extends Controller
             'evaluation_id' => 'required|exists:evaluations,id',
             'annee_scolaire_id' => 'required|exists:annee_scolaires,id',
             'mois' => 'required',
-            'heures_absence' => 'required|integer|min:0',
+            'heures_absences' => 'required|integer|min:0',
+            'heures_retards' => 'required|integer|min:0',
+            'heures_consignes' => 'required|integer|min:0',
+            'jours_exclusions' => 'required|integer|min:0',
             'heures_justifiees' => [
                 'required',
                 'integer',
@@ -110,6 +131,9 @@ class DisciplineController extends Controller
             'annee_scolaire_id' => 'Veuillez activez une année scolaire',
             'evaluation_id' => 'Veuillez selectionnez une séquence',
             'mois' => 'Veuillez Selectionnez un mois',
+            'heures_retards' => "Veuillez entrez le nombres d'heures de retards",
+            'heures_consignes' => "Veuillez entrez le nombres d'heures de consignes",
+            'jours_exclusions' => "Veuillez entrez le nombres de jours d'exculsions",
             'heures_absence' => 'Veuillez entrées le total des heures d\'absences',
             'heures_justifiees' => $request->heures_justifiees > $request->heures_absence
             ? 'Le nombre d\'heures justifiées ne peut pas être supérieur au nombre d\'heures d\'absences.'
@@ -134,14 +158,16 @@ class DisciplineController extends Controller
         }
 
         $request->validate($rules, $messages);
-
+        $blame = 0;
         $avertissement = null;
         if ($totalAbsences == 40) {
             $avertissement = "Avertissement Conduite";
         } elseif ($totalAbsences >= 30 && $totalAbsences < 40) {
             $avertissement = "Blâme";
+            $blame += 1;
         } elseif ($totalAbsences > 40) {
-            $avertissement = "Avertisement Blâme";
+            $avertissement = "Avertissement Blâme";
+            $blame += 1;
         }
         $discipline = Discipline::create([
             'user_id' => $request->user_id,
@@ -151,6 +177,11 @@ class DisciplineController extends Controller
             'evaluation_id' => $request->evaluation_id,
             'heures_absence' => $request->heures_absence,
             'heures_justifiees' => $request->heures_justifiees,
+            'blame' => $blame,
+            'heures_retards' => $request->heures_retards,
+            'heures_consignes' => $request->heures_consignes,
+            'jours_exclusions' => $request->jours_exclusions,
+            'conseil_disciplines' => $request->conseil_disciplines,
             'total_absences' => $totalAbsences,
             'avertissement' => $avertissement,
             'decision' => $request->decision,
@@ -178,6 +209,9 @@ class DisciplineController extends Controller
      */
     public function update(Request $request, $id) {
         $rules = [
+            'heures_retards' => 'required|integer|min:0',
+            'heures_consignes' => 'required|integer|min:0',
+            'jours_exclusions' => 'required|integer|min:0',
             'heures_absence' => 'required|integer|min:0',
             'heures_justifiees' => [
                 'required',
@@ -192,23 +226,31 @@ class DisciplineController extends Controller
             'decision' => 'nullable|string|max:255'
         ];
         $messages = [
+            'heures_retards' => "Veuillez entrez le nombres d'heures de retards",
+            'heures_consignes' => "Veuillez entrez le nombres d'heures de consignes",
+            'jours_exclusions' => "Veuillez entrez le nombres de jours d'exculsions",
             'heures_absence' => 'Veuillez entrées le total des heures d\'absences',
             'heures_justifiees' => $request->heures_justifiees > $request->heures_absence
             ? 'Le nombre d\'heures justifiées ne peut pas être supérieur au nombre d\'heures d\'absences.'
             : 'Veuillez entrées le total des heures d\'absences justifiées',
         ];
-
+        $discipline = Discipline::find($id);
         $totalAbsences = $request->heures_absence - $request->heures_justifiees;
-
         $avertissement = null;
+        $blame = 0;
         if ($totalAbsences == 40) {
             $avertissement = "Avertissement Conduite";
         } elseif ($totalAbsences >= 30 && $totalAbsences < 40) {
             $avertissement = "Blâme";
+            $blame += 1;
+            if($discipline->blame === 0)
+                $discipline->update(['blame' => $blame]);
         } elseif ($totalAbsences > 40) {
             $avertissement = "Avertisement Blâme";
+            $blame += 1;
+            if($discipline->blame === 0)
+                $discipline->update(['blame' => $blame]);
         }
-
         // some rules
         if($totalAbsences > 40) {
             $rules['decision'] ='required|string';
@@ -216,12 +258,13 @@ class DisciplineController extends Controller
         }
 
         $request->validate($rules, $messages);
-
-        $discipline = Discipline::find($id);
         $discipline->update([
             'heures_absence' => $request->heures_absence,
             'heures_justifiees' => $request->heures_justifiees,
             'total_absences' => $totalAbsences,
+            'heures_retards' => $request->heures_retards,
+            'heures_consignes' => $request->heures_consignes,
+            'jours_exclusions' => $request->jours_exclusions,
             'avertissement' => $avertissement,
             'decision' => $totalAbsences > 40 ? $request->decision : null,
         ]);

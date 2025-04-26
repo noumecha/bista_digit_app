@@ -1,6 +1,18 @@
 $(function(){
     // load function to enable or disable decision field :
     enableDecision("#heures_absence", "#heures_justifiees", "#decision_container");
+    // filtering month list base on the evaluation change :
+    $('#evaluation_id').on('change', function() {
+        let evaluationId = $(this).val();
+        $("#mois").html('<option value="">Selectionnez le mois</option>');
+        if(evaluationId) {
+            $.get('discipline/month/' + evaluationId, function(datas) {
+                data.forEach(month => {
+                    $('#mois').append(`<option value="${month.m}">${month.name}</option>`);
+                });
+            })
+        }
+    })
     // filtering student base on classe change :
     $('#classe_id').on('change', function() {
         let classeId = $(this).val();
@@ -125,6 +137,7 @@ $(function(){
         $('#submit-discipline-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-discipline-form-buuton').children('span#submit-discipline-form-button-text').text('');
         $('#user_id').html('<option value="">Sélectionner Un élève</option>');
+        $("#mois").html('<option value="">Selectionnez le mois</option>');
         $('#classe_id').attr("disabled", false);
         $('#mois').attr("disabled", false);
         $('#user_id').attr("disabled", false);

@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Route;
     }
 
     /**
-     * get school month for disciplines
+     * get current year school month for disciplines
      */
     function getAllSchoolMonths() {
         $schoolYear = getCurrentYear();

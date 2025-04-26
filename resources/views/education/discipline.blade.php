@@ -99,7 +99,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <select name="classe_id" id="classe_id" class="form-select">
                                             <option value="">Selectionnez une classe</option>
@@ -132,17 +132,50 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="mois" class="form-control-label">
+                                            Mois de discipline :
+                                        </label>
                                         <select name="mois" id="mois" class="form-select">
                                             <option value="">Selectionnez le mois</option>
-                                            @foreach (getAllSchoolMonths() as $month)
-                                                <option value="{{ $month->format("m") }}">
-                                                    {{ monthNameToFrench($month->format("m")) }}
+                                            <!-- @ foreach (getAllSchoolMonths() as $month)
+                                                <option value="{ { $month->format("m") }}">
+                                                    { { monthNameToFrench($month->format("m")) }}
                                                 </option>
-                                            @endforeach
+                                            @ endforeach -->
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="heures_retards" class="form-control-label">
+                                            Heures de retard :
+                                        </label>
+                                        <input type="number" id="heures_retards" name="heures_retards"
+                                            class="form-control" value="{{ old("heures_retards") }}" aria-label="Name"
+                                            aria-describedby="name-addon">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="heures_consignes" class="form-control-label">
+                                            Heures de consignes :
+                                        </label>
+                                        <input type="number" id="heures_consignes" name="heures_consignes"
+                                            class="form-control" value="{{ old("heures_consignes") }}" aria-label="Name"
+                                            aria-describedby="name-addon">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="jours_exclusions" class="form-control-label">
+                                            Jours d'exclusions :
+                                        </label>
+                                        <input type="number" id="jours_exclusions" name="jours_exclusions"
+                                            class="form-control" value="{{ old("jours_exclusions") }}" aria-label="Name"
+                                            aria-describedby="name-addon">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="heures_absence" class="form-control-label">
                                             Total heures d'abscence :
@@ -151,7 +184,7 @@
                                             aria-describedby="name-addon">
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="heures_justifiees" class="form-control-label">
                                             Heures d'abscence justifiées :

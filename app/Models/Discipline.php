@@ -20,7 +20,11 @@ class Discipline extends Model
         'total_absences',
         'avertissement',
         'decision',
-        'evaluation_id'
+        'evaluation_id',
+        'blame',
+        'heures_retards',
+        'heures_consignes',
+        'jours_exclusions',
     ];
 
     /**

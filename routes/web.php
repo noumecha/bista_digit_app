@@ -192,6 +192,7 @@ Route::get('/education/discipline/{id}/edit', [DisciplineController::class, 'edi
 Route::delete('/education/discipline/{id}', [DisciplineController::class, 'destroy'])->name('discipline.destroy')->middleware('auth');
 Route::get('/education/discipline/students/{classe_id}', [DisciplineController::class, 'getStudents'])->middleware('auth');
 Route::get('/education/discipline/student/{user_id}', [DisciplineController::class, 'getStudent'])->middleware('auth');
+Route::get('/education/discipline/month/{evaluation_id}', [DisciplineController::class, 'getMonths'])->middleware('auth');
 
 ## education -> devoirs routes
 Route::post('/education/devoirs/save', [DevoirController::class, 'store'])->name('devoir.store')->middleware('auth');
