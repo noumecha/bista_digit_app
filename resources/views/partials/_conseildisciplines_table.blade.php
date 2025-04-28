@@ -3,22 +3,22 @@
         <tr>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Elèves</th>
+                Elève</th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Mois
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Dates
+                Date
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Motifs
+                Motif
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Decisions
+                Decision
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">

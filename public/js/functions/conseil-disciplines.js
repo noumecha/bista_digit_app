@@ -1,13 +1,17 @@
 $(function(){
-    // filtering trimestre dates base on the selected trimestre
+    // filtering conseil date and month base on evaluation_id
     $('#evaluation_id').on('change', function() {
-        let eval_id = $(this).val();
-        if (eval_id) {
-            $.get('conseildisciplines/conseildate/' + eval_id, function(data) {
-                var startDate = new Date(data.dateDeDebutTrim);
-                var endDate = new Date(data.dateDeFinTrim);
+        let evaluationId = $(this).val();
+        $("#mois").html('<option value="">Selectionnez un mois</option>');
+        if (evaluationId) {
+            $.get('conseildisciplines/conseildate/' + evaluationId, function(datas) {
+                var startDate = new Date(datas.dateDeDebutTrim);
+                var endDate = new Date(datas.dateDeFinTrim);
                 $('#date_conseil').attr('min', formatDate(startDate));
                 $('#date_conseil').attr('max', formatDate(endDate));
+                datas.months.forEach(month => {
+                    $('#mois').append(`<option value="${month.m}">${month.name}</option>`);
+                })
             });
         }
     });
@@ -24,17 +28,17 @@ $(function(){
         }
     });
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-conseil-discipline-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-conseildiscipline-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var conseilDisciplineId = $(this).data('conseil-discipline-id');
+        var conseilDisciplineId = $(this).data('conseildiscipline-id');
         var studentName = $(this).data('student-name');
         var disciplineIdInput = $('#conseilDisciplineId');
         var form = $('#conseilDisciplineForm');
         var button = $('#submit-conseil-discipline-form-button');
         var header = $('#modal-conseil-discipline-header');
-        var headerText = $('#header-discipline-text');
+        var headerText = $('#header-conseil-discipline-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -65,6 +69,7 @@ $(function(){
                     var endDate = new Date(res.dateDeFinTrim);
                     $('#date_conseil').attr('min', formatDate(startDate));
                     $('#date_conseil').attr('max', formatDate(endDate));
+                    $('#mois').html(`<option value="${res.monthId}">${res.monthName}</option>`);
                 },
                 error: function(xhr) {
                     console.log(xhr);
@@ -100,11 +105,12 @@ $(function(){
                         resetForm(form);
                     }
                     $('#user_id').html('<option value="">Sélectionnez un élève</option>');
+                    $('#mois').html('<option value="">Sélectionnez un mois</option>');
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
-                fetchDisciplines();
+                fetchConseilDisciplines();
             },
             error: function(xhr) {
                 var errors = []
@@ -117,7 +123,7 @@ $(function(){
                     });
                 } else {
                     setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
-                    $('#create-conseil-discipline-modal').hide();
+                    $('#create-conseildiscipline-modal').hide();
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
@@ -127,14 +133,14 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-conseil-discipline-modal').on('hidden.bs.modal', function () {
+    $('#create-conseildiscipline-modal').on('hidden.bs.modal', function () {
         const form = $('#conseilDisciplineForm');
         form.trigger('reset');
         $('#modal-conseil-discipline-header').removeClass('bg-primary bg-success');
         $('#submit-conseil-discipline-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-conseil-discipline-form-buuton').children('span#submit-conseil-discipline-form-button-text').text('');
+        $('#submit-conseil-discipline-form-button').children('span#submit-conseil-discipline-form-button-text').text('');
         $('#user_id').html('<option value="">Sélectionner Un élève</option>');
-        $("#mois").html('<option value="">Selectionnez le mois</option>');
+        $("#mois").html('<option value="">Selectionnez Un mois</option>');
         $('#mois').attr("disabled", false);
         $('#user_id').attr("disabled", false);
         $('#evaluation_id').prop("disabled", false);

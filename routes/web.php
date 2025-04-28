@@ -203,7 +203,7 @@ Route::get('/education/conseildiscipline/{id}/edit', [ConseilDisciplineControlle
 Route::delete('/education/conseildiscipline/{id}', [ConseilDisciplineController::class, 'destroy'])->name('conseildiscipline.destroy')->middleware('auth');
 Route::get('/education/conseildiscipline/students/{classe_id}', [ConseilDisciplineController::class, 'getStudents'])->middleware('auth');
 Route::get('/education/conseildiscipline/student/{user_id}', [ConseilDisciplineController::class, 'getStudent'])->middleware('auth');
-Route::get('/evaluation/conseildisciplines/conseildate/{evalId}', [ConseilDisciplineController::class, 'getTrimsDate'])->middleware('auth');
+Route::get('/education/conseildisciplines/conseildate/{evalId}', [ConseilDisciplineController::class, 'getTrimsDate'])->middleware('auth');
 
 
 ## education -> devoirs routes

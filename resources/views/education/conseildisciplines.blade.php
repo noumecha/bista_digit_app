@@ -25,14 +25,14 @@
                                         data-bs-toggle="modal"
                                         data-action="create"
                                         id="add-button"
-                                        data-bs-target="#create-conseil-discipline-modal"
+                                        data-bs-target="#create-conseildiscipline-modal"
                                     >
                                         <i class="fa-solid fa-clock me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterConseilDisciplineForm">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <input type="text" name="searchText" value=""
                                             id="searchText" class="form-control"
@@ -72,16 +72,16 @@
             </div>
         </div>
         <!-- modal for creating or updating a discipline datas -->
-        <div class="modal fade" id="create-conseil-discipline-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal fade" id="create-conseildiscipline-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-xl modal-dialog-centered">
-                <form enctype="multipart/form-data" role="form" id="disciplineForm" class="form row">
+                <form enctype="multipart/form-data" role="form" id="conseilDisciplineForm" class="form row">
                     @csrf
                     <input type="hidden" name="conseilDisciplineId" id="conseilDisciplineId" value="">
                     <div class="modal-content p-0">
-                        <div class="modal-header" id="modal-discipline-header">
+                        <div class="modal-header" id="modal-conseil-discipline-header">
                             <div class="modal-title row">
                                 <div class="col-12">
-                                    <h5 id="header-discipline-text" class="text-white"></h5>
+                                    <h5 id="header-conseil-discipline-text" class="text-white"></h5>
                                 </div>
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -126,7 +126,7 @@
                                             Mois de discipline :
                                         </label>
                                         <select name="mois" id="mois" class="form-select">
-                                            <option value="">Selectionnez le mois</option>
+                                            <option value="">Selectionnez un mois</option>
                                         </select>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
                                         </label>
                                         <input type="text" name="motif" value=""
                                             id="motif" class="form-control"
-                                            placeholder="Rechercher par élèves (nom, prenom)"/>
+                                            placeholder="Entrez le motif du conseil de discipline"/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -155,7 +155,8 @@
                                         <label for="decision" class="form-control-label">
                                             Entrez la décision :
                                         </label>
-                                        <textarea name="decision" class="form-control" id="decision" rows="3">
+                                        <textarea placeholder="Entrez le rapport détaillée du conseil de discipline"
+                                            name="decision" class="form-control" id="decision" rows="3">
                                         </textarea>
                                     </div>
                                 </div>

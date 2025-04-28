@@ -204,11 +204,10 @@ class DisciplineController extends Controller
     public function edit($id) {
         $disciplineToEdit = Discipline::findOrFail($id);
         $monthId = $disciplineToEdit->mois;
-        $monthName = monthNameToFrench($monthId);
         return response()->json([
             'disciplineToEdit' => $disciplineToEdit,
             'monthId' => $monthId,
-            'monthName' => $monthName
+            'monthName' => monthNameToFrench($monthId)
         ]);
     }
 

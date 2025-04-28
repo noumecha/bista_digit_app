@@ -9,6 +9,8 @@ use App\Models\ConseilDiscipline;
 use App\Models\Evaluation;
 use App\Models\Trimestre;
 use App\Models\User;
+use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 
 class ConseilDisciplineController extends Controller
@@ -57,30 +59,46 @@ class ConseilDisciplineController extends Controller
      * saving conseils discipline datas
      */
     public function store(Request $request) {
-        $rules = [
+        $request->validate([
             'user_id' => 'required|exists:users,id',
             'evaluation_id' => 'required|exists:evaluations,id',
             'annee_scolaire_id' => 'required|exists:annee_scolaires,id',
             'mois' => 'required',
-            'date_conseil' => 'required|max:255',
             'motif' => 'required|string|max:255',
-            'decision' => 'required|string'
-        ];
-        $messages = [
-            'user_id' => 'Veuillez Selectionnez un élève',
-            'annee_scolaire_id' => 'Veuillez activez une année scolaire',
-            'evaluation_id' => 'Veuillez selectionnez une séquence',
-            'mois' => 'Veuillez Selectionnez un mois',
-            'date_conseil' => 'Veuillez entre la date du conseil de discipline',
-            'motif' => "Veuillez entrez le motif du conseil de discipline",
-            'decision' => "Veuillez renseigner la décision"
-        ];
-        $request->validate($rules, $messages);
+            'decision' => 'required|string',
+            'date_conseil' => [
+                'required','max:255',
+                function ($attribute, $value, $fail) use ($request) {
+                    $date = new DateTime($value);
+                    if(($date->format('m') !== $request->mois)) {
+                        $fail("La date selectionnée ne correspond pas au mois choisi !");
+                    }
+                }
+            ],
+        ],[
+            'user_id.required' => 'Veuillez Selectionnez un élève',
+            'annee_scolaire_id.required' => 'Veuillez activez une année scolaire',
+            'evaluation_id.required' => 'Veuillez selectionnez une séquence',
+            'mois.required' => 'Veuillez Selectionnez un mois',
+            'date_conseil.required' => 'Veuillez entre la date du conseil de discipline',
+            'motif.required' => "Veuillez entrez le motif du conseil de discipline",
+            'decision.required' => "Veuillez renseigner la décision"
+        ]);
+        // check if the configuration already exists
+        $exists = ConseilDiscipline::where('user_id', $request->user_id)
+            ->where('mois', $request->mois)
+            ->where('annee_scolaire_id',getCurrentYear()->id)->first();
+        if ($exists) {
+            return response()->json([
+                'error' => 'Un conseil de discipline pour cet élève existe déjà pour ce mois'
+            ]);
+        }
         $conseildiscipline = ConseilDiscipline::create([
             'user_id' => $request->user_id,
             'mois' => $request->mois,
             'annee_scolaire_id' => $request->annee_scolaire_id,
             'evaluation_id' => $request->evaluation_id,
+            'date_conseil' => $request->date_conseil,
             'motif' => $request->motif,
             'decision' => $request->decision,
         ]);
@@ -99,10 +117,13 @@ class ConseilDisciplineController extends Controller
         $dataToEdit = ConseilDiscipline::findOrFail($id);
         $evaluation = Evaluation::where('id',$dataToEdit->evaluation_id)->first();
         $trimestre = Trimestre::findOrFail($evaluation->trimestre_id);
+        $monthId = $dataToEdit->mois;
         return response()->json([
             'dataToEdit' => $dataToEdit,
             'dateDeDebutTrim' => $trimestre->dateDeDebut,
-            'dateDeFinTrim' => $trimestre->dateDeDebut
+            'dateDeFinTrim' => $trimestre->dateDeDebut,
+            'monthId' => $monthId,
+            'monthName' => monthNameToFrench($monthId)
         ]);
     }
 
@@ -110,27 +131,34 @@ class ConseilDisciplineController extends Controller
      * update conseils discipline datas
      */
     public function update(Request $request, $id) {
-        $conseildiscipline = ConseilDiscipline::findOrFail($id);
-        $rules = [
-            'motif' => 'required|string|max:255',
-            'decision' => 'required|string',
-            'date_conseil' => 'required|max:255',
-        ];
-        $messages = [
-            "decision" => "Veuillez renseigner la décision",
-            "motif" => "Veuillez renseigner le motif",
-            "date_conseil" => "Veuillez renseigner la date du conseil de discipline"
-        ];
-        $request->validate($rules, $messages);
-        $conseildiscipline->update([
-            'decision' => $request->decision,
-            'motif' => $request->motif,
-        ]);
-
-        if($conseildiscipline) {
+        try {
+            $conseildiscipline = ConseilDiscipline::findOrFail($id);
+            $request->validate([
+                'motif' => 'required|string|max:255',
+                'decision' => 'required|string',
+                'date_conseil' => [
+                    'required','max:255',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $date = new DateTime($value);
+                        if(($date->format('m') !== $request->mois)) {
+                            $fail("La date selectionnée ne correspond pas au mois choisi !");
+                        }
+                    }
+                ],
+            ],[
+                "decision.required" => "Veuillez renseigner la décision",
+                "motif.required" => "Veuillez renseigner le motif",
+                "date_conseil.required" => "Veuillez renseigner la date du conseil de discipline"
+            ]);
+            $conseildiscipline->update([
+                'decision' => $request->decision,
+                'motif' => $request->motif,
+                'date_conseil' => $request->date_conseil
+            ]);
             return response()->json(['success' => 'Rapport conseil de disciplines mis à jour avec succès']);
-        } else {
-            return response()->json(['error' => 'Erreur inconue lors de l\'enregistrement ! réssayer']);        }
+        } catch (Exception $ex) {
+            return response()->json(['error' => 'Erreur lors de la mise à jour : '.$ex->getMessage()]);
+        }
     }
 
     /**
@@ -161,11 +189,24 @@ class ConseilDisciplineController extends Controller
      *  get trimestres date
     */
     public function getTrimsDate($evalId) {
-        $evaluation = Evaluation::all()->where('id',$evalId)->first();
-        $trimestre = Trimestre::findOrFail($evaluation->trimestre_id);
+        $evaluation = Evaluation::where('id',$evalId)->first();
+        $months = [];
+        $trimestre = Trimestre::where('id', $evaluation->trimestre_id)->first();
+        foreach(getAllSchoolMonths() as $m) {
+            if ($m >= new DateTime($trimestre->dateDeDebut) && $m <= new DateTime($trimestre->dateDeFin)) {
+                array_push($months, $m);
+            }
+        }
+        foreach($months as $month => $key) {
+            $months[$month] = [
+                'm' => $key->format("m"),
+                'name' => monthNameToFrench($key->format("m")),
+            ];
+        }
         return response()->json([
             'dateDeDebutTrim' => $trimestre->dateDeDebut,
             'dateDeFinTrim' => $trimestre->dateDeFin,
+            'months' => $months
         ]);
     }
 
