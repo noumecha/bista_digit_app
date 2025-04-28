@@ -130,6 +130,7 @@ class EvaluationController extends Controller
             return response()->json(['success' => 'Evaluation ajoutée avec succès']);
         }
     }
+
     /**
      *  get trimestres date
     */

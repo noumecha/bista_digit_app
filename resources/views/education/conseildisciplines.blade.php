@@ -13,9 +13,9 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Données disciplinaires par élève par classe</h5>
+                                    <h5 class="">Conseils de discipline par élève par évaluation</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer la discipline(Ajouter, Supprimer, Mettre à jour ...etc)
+                                        D'ici vous pouvez gérer les conseils de discipline(Ajouter, Supprimer, Mettre à jour ...etc)
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -25,28 +25,18 @@
                                         data-bs-toggle="modal"
                                         data-action="create"
                                         id="add-button"
-                                        data-bs-target="#create-discipline-modal"
+                                        data-bs-target="#create-conseil-discipline-modal"
                                     >
                                         <i class="fa-solid fa-clock me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>
-                            <form class="form form-inline row mt-3" id="filterDisciplineForm">
+                            <form class="form form-inline row mt-3" id="filterConseilDisciplineForm">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" name="searchDiscipline" value="" id="searchDiscipline" class="form-control" placeholder="Rechercher par élèves, par total d'abscence"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <select name="classeFilter" id="classeFilter" class="form-select">
-                                            <option value="">Toutes les classes</option>
-                                            @foreach($classes as $classe)
-                                                <option value="{{ $classe->id }}">
-                                                    {{ $classe->libClasse }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" name="searchText" value=""
+                                            id="searchText" class="form-control"
+                                            placeholder="Rechercher par élèves (nom, prenom)"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -75,18 +65,18 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="disciplinesTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="conseildisciplinesTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- modal for creating or updating a discipline datas -->
-        <div class="modal fade" id="create-discipline-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal fade" id="create-conseil-discipline-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-xl modal-dialog-centered">
                 <form enctype="multipart/form-data" role="form" id="disciplineForm" class="form row">
                     @csrf
-                    <input type="hidden" name="disciplineId" id="disciplineId" value="">
+                    <input type="hidden" name="conseilDisciplineId" id="conseilDisciplineId" value="">
                     <div class="modal-content p-0">
                         <div class="modal-header" id="modal-discipline-header">
                             <div class="modal-title row">
@@ -101,11 +91,11 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <select name="classe_id" id="classe_id" class="form-select">
-                                            <option value="">Selectionnez une classe</option>
-                                            @foreach($classes as $classe)
-                                                <option value="{{ $classe->id }}">
-                                                    {{ $classe->libClasse }}
+                                        <select name="evaluation_id" id="evaluation_id" class="form-select">
+                                            <option value="">Selectionnez une évaluation</option>
+                                            @foreach($evaluations as $evaluation)
+                                                <option value="{{ $evaluation->id }}">
+                                                    {{ $evaluation->libelleEvaluation }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -113,11 +103,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <select name="evaluation_id" id="evaluation_id" class="form-select">
-                                            <option value="">Selectionnez une évaluation</option>
-                                            @foreach($evaluations as $evaluation)
-                                                <option value="{{ $evaluation->id }}">
-                                                    {{ $evaluation->libelleEvaluation }}
+                                        <select name="classe_id" id="classe_id" class="form-select">
+                                            <option value="">Selectionnez une classe</option>
+                                            @foreach($classes as $classe)
+                                                <option value="{{ $classe->id }}">
+                                                    {{ $classe->libClasse }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -142,51 +132,22 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="heures_retards" class="form-control-label">
-                                            Heures de retard :
+                                        <label for="date_conseil" class="form-control-label">
+                                            Date du conseil de discipline :
                                         </label>
-                                        <input type="number" id="heures_retards" name="heures_retards"
-                                            class="form-control" value="{{ old("heures_retards") }}" aria-label="Name"
-                                            aria-describedby="name-addon">
+                                        <input type="date" id="date_conseil"
+                                            name="date_conseil" class="form-control"
+                                            value="{{old("date_conseil")}}">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="heures_consignes" class="form-control-label">
-                                            Heures de consignes :
+                                        <label for="date_conseil" class="form-control-label">
+                                            Motif du conseil de discipline :
                                         </label>
-                                        <input type="number" id="heures_consignes" name="heures_consignes"
-                                            class="form-control" value="{{ old("heures_consignes") }}" aria-label="Name"
-                                            aria-describedby="name-addon">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="jours_exclusions" class="form-control-label">
-                                            Jours d'exclusions :
-                                        </label>
-                                        <input type="number" id="jours_exclusions" name="jours_exclusions"
-                                            class="form-control" value="{{ old("jours_exclusions") }}" aria-label="Name"
-                                            aria-describedby="name-addon">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="heures_absence" class="form-control-label">
-                                            Total heures d'abscence :
-                                        </label>
-                                        <input type="number" id="heures_absence" name="heures_absence" class="form-control"
-                                            value="{{ old("heures_absence") }}" aria-label="Name"
-                                            aria-describedby="name-addon">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="heures_justifiees" class="form-control-label">
-                                            Heures d'abscence justifiées :
-                                        </label>
-                                        <input type="number" id="heures_justifiees" name="heures_justifiees" class="form-control" value="{{ old("heures_justifiees") }}" aria-label="Name"
-                                            aria-describedby="name-addon">
+                                        <input type="text" name="motif" value=""
+                                            id="motif" class="form-control"
+                                            placeholder="Rechercher par élèves (nom, prenom)"/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -214,9 +175,9 @@
                         </div>
                         <div class="modal-footer flex-row-reverse">
                             <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="button" id="submit-discipline-form-button" class="spinner-submit-discipline-form-button btn btn-lg">
+                            <button type="button" id="submit-conseil-discipline-form-button" class="spinner-submit-conseil-discipline-form-button btn btn-lg">
                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                <span id="submit-discipline-form-button-text"></span>
+                                <span id="submit-conseil-discipline-form-button-text"></span>
                             </button>
                         </div>
                     </div>
@@ -226,6 +187,6 @@
         <x-app.footer />
     </main>
     @section('scripts')
-        <script src="{{ asset('js/functions/discipline.js') }}"></script>
+        <script src="{{ asset('js/functions/conseil-disciplines.js') }}"></script>
     @endsection
 </x-app-layout>

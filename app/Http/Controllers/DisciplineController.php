@@ -78,15 +78,19 @@ class DisciplineController extends Controller
      */
     public function getMonths($evaluation_id) {
         $months = [];
-        $evaluation = Evaluation::all()->where('id', $evaluation_id)->first();
-        $evaluation_month = new DateTime($evaluation->dateDeDebut);
+        $currentEvaluation = Evaluation::where('id', $evaluation_id)->first();
+        $trimestre = Trimestre::where('id', $currentEvaluation->trimestre_id)->first();
         foreach(getAllSchoolMonths() as $m) {
-            dd($m->format("m"), $evaluation_month->format("m"));
-            if($m->format("m") <= $evaluation_month->format("m")) {
+            if ($m >= new DateTime($trimestre->dateDeDebut) && $m <= new DateTime($trimestre->dateDeFin)) {
                 array_push($months, $m);
             }
         }
-        dd($months);
+        foreach($months as $month => $key) {
+            $months[$month] = [
+                'm' => $key->format("m"),
+                'name' => monthNameToFrench($key->format("m")),
+            ];
+        }
         return response()->json($months);
     }
 
@@ -109,7 +113,7 @@ class DisciplineController extends Controller
             'evaluation_id' => 'required|exists:evaluations,id',
             'annee_scolaire_id' => 'required|exists:annee_scolaires,id',
             'mois' => 'required',
-            'heures_absences' => 'required|integer|min:0',
+            'heures_absence' => 'required|integer|min:0',
             'heures_retards' => 'required|integer|min:0',
             'heures_consignes' => 'required|integer|min:0',
             'jours_exclusions' => 'required|integer|min:0',
@@ -199,8 +203,12 @@ class DisciplineController extends Controller
      */
     public function edit($id) {
         $disciplineToEdit = Discipline::findOrFail($id);
+        $monthId = $disciplineToEdit->mois;
+        $monthName = monthNameToFrench($monthId);
         return response()->json([
-            'disciplineToEdit' => $disciplineToEdit
+            'disciplineToEdit' => $disciplineToEdit,
+            'monthId' => $monthId,
+            'monthName' => $monthName
         ]);
     }
 

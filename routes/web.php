@@ -15,6 +15,7 @@ use App\Http\Controllers\BullettinController;
 use App\Http\Controllers\CategorieActualiteController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\CoefficientController;
+use App\Http\Controllers\ConseilDisciplineController;
 use App\Http\Controllers\DevoirController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\EleveController;
@@ -129,6 +130,7 @@ Route::get('/signup', function () {
 Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuves')->middleware('auth');
 Route::get('/education/type_epreuves', [TypeEpreuveController::class, 'index'])->name('education.type_epreuves')->middleware('auth');
 Route::get('/education/discipline', [DisciplineController::class, 'index'])->name('education.discipline')->middleware('auth');
+Route::get('/education/conseildiscipline', [ConseilDisciplineController::class, 'index'])->name('education.conseildiscipline')->middleware('auth');
 Route::get('/education/matieres', [MatiereController::class, 'index'])->name('education.matiere')->middleware('auth');
 Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
 Route::get('/education/sections', [SectionController::class, 'index'])->name('education.sections')->middleware('auth');
@@ -193,6 +195,16 @@ Route::delete('/education/discipline/{id}', [DisciplineController::class, 'destr
 Route::get('/education/discipline/students/{classe_id}', [DisciplineController::class, 'getStudents'])->middleware('auth');
 Route::get('/education/discipline/student/{user_id}', [DisciplineController::class, 'getStudent'])->middleware('auth');
 Route::get('/education/discipline/month/{evaluation_id}', [DisciplineController::class, 'getMonths'])->middleware('auth');
+
+## educations -> conseilsdisciplines routes
+Route::post('/education/conseildiscipline/save', [ConseilDisciplineController::class, 'store'])->name('conseildiscipline.store')->middleware('auth');
+Route::put('/education/conseildiscipline/update/{id}', [ConseilDisciplineController::class, 'update'])->name('conseildiscipline.update')->middleware('auth');
+Route::get('/education/conseildiscipline/{id}/edit', [ConseilDisciplineController::class, 'edit'])->name('conseildiscipline.edit')->middleware('auth');
+Route::delete('/education/conseildiscipline/{id}', [ConseilDisciplineController::class, 'destroy'])->name('conseildiscipline.destroy')->middleware('auth');
+Route::get('/education/conseildiscipline/students/{classe_id}', [ConseilDisciplineController::class, 'getStudents'])->middleware('auth');
+Route::get('/education/conseildiscipline/student/{user_id}', [ConseilDisciplineController::class, 'getStudent'])->middleware('auth');
+Route::get('/evaluation/conseildisciplines/conseildate/{evalId}', [ConseilDisciplineController::class, 'getTrimsDate'])->middleware('auth');
+
 
 ## education -> devoirs routes
 Route::post('/education/devoirs/save', [DevoirController::class, 'store'])->name('devoir.store')->middleware('auth');

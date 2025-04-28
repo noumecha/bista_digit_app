@@ -1,47 +1,39 @@
 $(function(){
-    // filtering month list base on the evaluation change :
+    // filtering trimestre dates base on the selected trimestre
     $('#evaluation_id').on('change', function() {
-        let evaluationId = $(this).val();
-        $("#mois").html('<option value="">Selectionnez un mois</option>');
-        if(evaluationId) {
-            $.get('discipline/month/' + evaluationId, function(datas) {
-                datas.forEach(month => {
-                    $('#mois').append(`<option value="${month.m}">${month.name}</option>`);
-                });
-            })
+        let eval_id = $(this).val();
+        if (eval_id) {
+            $.get('conseildisciplines/conseildate/' + eval_id, function(data) {
+                var startDate = new Date(data.dateDeDebutTrim);
+                var endDate = new Date(data.dateDeFinTrim);
+                $('#date_conseil').attr('min', formatDate(startDate));
+                $('#date_conseil').attr('max', formatDate(endDate));
+            });
         }
-    })
+    });
     // filtering student base on classe change :
     $('#classe_id').on('change', function() {
         let classeId = $(this).val();
         $('#user_id').html('<option value="">Sélectionner Un élève</option>');
         if (classeId) {
-            $.get('discipline/students/' + classeId, function(data) {
+            $.get('conseildiscipline/students/' + classeId, function(data) {
                 data.forEach(student => {
                     $('#user_id').append(`<option value="${student.id}">${student.name}</option>`);
                 });
             });
         }
     });
-    // showing or unshow decision :
-    $("#heures_absence, #heures_justifiees").on("input", function() {
-        enableDecision("#heures_absence", "#heures_justifiees", "#decision_container");
-    });
-    // when the modal is opened, load the function
-    $('#create-discipline-modal').on('shown.bs.modal', function () {
-        enableDecision("#heures_absence", "#heures_justifiees", "#decision_container");
-    });
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-discipline-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-conseil-discipline-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var disciplineId = $(this).data('discipline-id');
+        var conseilDisciplineId = $(this).data('conseil-discipline-id');
         var studentName = $(this).data('student-name');
-        var disciplineIdInput = $('#disciplineId');
-        var form = $('#disciplineForm');
-        var button = $('#submit-discipline-form-button');
-        var header = $('#modal-discipline-header');
+        var disciplineIdInput = $('#conseilDisciplineId');
+        var form = $('#conseilDisciplineForm');
+        var button = $('#submit-conseil-discipline-form-button');
+        var header = $('#modal-conseil-discipline-header');
         var headerText = $('#header-discipline-text');
 
         // reseting
@@ -53,24 +45,26 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-discipline-form-button-text').text('Enregistrer');
-            headerText.text('Creer une nouvelle catégorie d\'actualité');
+            button.children('span#submit-conseil-discipline-form-button-text').text('Enregistrer');
+            headerText.text('Creer un nouveau conseil de discipline');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-discipline-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour l\'état disciplinaire de l\'élève : '+ studentName);
-            $('#classe_id').prop("disabled", true);
+            button.children('span#submit-conseil-discipline-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour le rapport du conseil de discipline de l\'élève : '+ studentName);
             $('#mois').prop("disabled", true);
             $('#user_id').prop("disabled", true);
             $('#evaluation_id').prop("disabled", true);
-            disciplineIdInput.val(disciplineId);
+            disciplineIdInput.val(conseilDisciplineId);
             $.ajax({
-                url: "discipline/" + disciplineId + "/edit",
+                url: "conseildiscipline/" + conseilDisciplineId + "/edit",
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
-                    $('#mois').html(`<option value="${res.monthId}">${res.monthName}</option>`);
+                    var startDate = new Date(res.dateDeDebutTrim);
+                    var endDate = new Date(res.dateDeFinTrim);
+                    $('#date_conseil').attr('min', formatDate(startDate));
+                    $('#date_conseil').attr('max', formatDate(endDate));
                 },
                 error: function(xhr) {
                     console.log(xhr);
@@ -79,14 +73,14 @@ $(function(){
         }
     })
     // When submiting form for updating or creating new discipline
-    $(document).on('click','.spinner-submit-discipline-form-button', function() {
+    $(document).on('click','.spinner-submit-conseil-discipline-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-discipline-form-button-text');
-        var disciplineId = $('#disciplineId').val();
+        var buttonText = $(this).children('span#submit-conseil-discipline-form-button-text');
+        var conseilDisciplineId = $('#conseilDisciplineId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'discipline/update/' + disciplineId : 'discipline/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'conseildiscipline/update/' + conseilDisciplineId : 'conseildiscipline/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -102,11 +96,10 @@ $(function(){
                     setSuccessMessage(response.error, '#modal-form-alert-errors');
                 if(response.success) {
                     setSuccessMessage(response.success, '#modal-form-alert-success');
-                    if(formAction === 'discipline/save') {
+                    if(formAction === 'conseildiscipline/save') {
                         resetForm(form);
                     }
                     $('#user_id').html('<option value="">Sélectionnez un élève</option>');
-                    $('#mois').html('<option value="">Sélectionnez un mois</option>');
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
@@ -124,7 +117,7 @@ $(function(){
                     });
                 } else {
                     setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
-                    $('#create-discipline-modal').hide();
+                    $('#create-conseil-discipline-modal').hide();
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
@@ -134,37 +127,36 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-discipline-modal').on('hidden.bs.modal', function () {
-        const form = $('#disciplineForm');
+    $('#create-conseil-discipline-modal').on('hidden.bs.modal', function () {
+        const form = $('#conseilDisciplineForm');
         form.trigger('reset');
-        $('#modal-discipline-header').removeClass('bg-primary bg-success');
-        $('#submit-discipline-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-discipline-form-buuton').children('span#submit-discipline-form-button-text').text('');
+        $('#modal-conseil-discipline-header').removeClass('bg-primary bg-success');
+        $('#submit-conseil-discipline-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-conseil-discipline-form-buuton').children('span#submit-conseil-discipline-form-button-text').text('');
         $('#user_id').html('<option value="">Sélectionner Un élève</option>');
-        $("#mois").html('<option value="">Selectionnez un mois</option>');
-        $('#classe_id').attr("disabled", false);
+        $("#mois").html('<option value="">Selectionnez le mois</option>');
         $('#mois').attr("disabled", false);
         $('#user_id').attr("disabled", false);
         $('#evaluation_id').prop("disabled", false);
     });
 
     // fetching disciplines dynamically with filters
-    $('#searchDiscipline,#classeFilter,#monthFilter,#evaluationFilter').on('change keyup', function () {
-        fetchDisciplines();
+    $('#searchText,#monthFilter,#evaluationFilter').on('change keyup', function () {
+        fetchConseilDisciplines();
     });
 
     // on page load :
-    fetchDisciplines();
+    fetchConseilDisciplines();
 
     // fetching all disciplines :
-    function fetchDisciplines() {
-        var formData = $('#filterDisciplineForm').serialize();
+    function fetchConseilDisciplines() {
+        var formData = $('#filterConseilDisciplineForm').serialize();
         $.ajax({
-            url : "/education/discipline",
+            url : "/education/conseildiscipline",
             type : 'GET',
             data : formData,
             success : function(data) {
-                $('#disciplinesTable').html(data);
+                $('#conseildisciplinesTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -178,7 +170,7 @@ $(function(){
         event.preventDefault();
 
         var page = $(this).attr('href').split('page=')[1];
-        fetchPage(page, '#disciplinesTable');
+        fetchPage(page, '#conseildisciplinesTable');
     });
 
 });

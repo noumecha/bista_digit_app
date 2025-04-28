@@ -173,8 +173,6 @@ function enableDecision(totalAbs , totalJust, field) {
     let totalAbsences = absences - justifiees;
     if (totalAbsences > 40) {
         $(field).show();
-    } else {
-        $(field).hide();
     }
 }
 // function for formating date :
