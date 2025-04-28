@@ -58,6 +58,7 @@ $(function(){
             headerText.text('Mettre à jour le rapport du conseil de discipline de l\'élève : '+ studentName);
             $('#mois').prop("disabled", true);
             $('#user_id').prop("disabled", true);
+            $('#classe_id').prop("disabled", true);
             $('#evaluation_id').prop("disabled", true);
             disciplineIdInput.val(conseilDisciplineId);
             $.ajax({
@@ -143,11 +144,12 @@ $(function(){
         $("#mois").html('<option value="">Selectionnez Un mois</option>');
         $('#mois').attr("disabled", false);
         $('#user_id').attr("disabled", false);
+        $('#classe_id').attr("disabled", false);
         $('#evaluation_id').prop("disabled", false);
     });
 
     // fetching disciplines dynamically with filters
-    $('#searchText,#monthFilter,#evaluationFilter').on('change keyup', function () {
+    $('#searchText,#monthFilter,#evaluationFilter,#classeFilter').on('change keyup', function () {
         fetchConseilDisciplines();
     });
 

@@ -32,11 +32,23 @@
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterConseilDisciplineForm">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="text" name="searchText" value=""
                                             id="searchText" class="form-control"
                                             placeholder="Rechercher par élèves (nom, prenom)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="classeFilter" id="classeFilter" class="form-select">
+                                            <option value="">Toutes les classes</option>
+                                            @foreach($classes as $classe)
+                                                <option value="{{ $classe->id }}">
+                                                    {{ $classe->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

@@ -27,6 +27,7 @@ class ConseilDisciplineController extends Controller
         // filter vars
         $searchText = $request->input('searchText');
         $monthFilter = $request->input('monthFilter');
+        $classeFilter = $request->input('classeFilter');
         $evaluationFilter = $request->input('evaluationFilter');
         // querying
         $query = ConseilDiscipline::query()->where('annee_scolaire_id', $activeYear->id);
@@ -38,13 +39,16 @@ class ConseilDisciplineController extends Controller
                     $studentQuery->where('name', 'LIKE', "%{$searchText}%")
                                  ->orWhere('surname', 'LIKE', "%{$searchText}%");
                 });
-            })->orWhere('total_absences',$searchText);
+            });
         }
         if(!empty($evaluationFilter)) {
             $query->where('evaluation_id', $evaluationFilter);
         }
         if(!empty($monthFilter)) {
             $query->where('mois', $monthFilter);
+        }
+        if(!empty($classeFilter)) {
+            $query->where('classe_id', $classeFilter);
         }
         $conseilDisciplines = $query->paginate(10);
 
@@ -61,6 +65,7 @@ class ConseilDisciplineController extends Controller
     public function store(Request $request) {
         $request->validate([
             'user_id' => 'required|exists:users,id',
+            'classe_id' => 'required|exists:classes,id',
             'evaluation_id' => 'required|exists:evaluations,id',
             'annee_scolaire_id' => 'required|exists:annee_scolaires,id',
             'mois' => 'required',
@@ -77,6 +82,7 @@ class ConseilDisciplineController extends Controller
             ],
         ],[
             'user_id.required' => 'Veuillez Selectionnez un élève',
+            'classe_id.required' => 'Veuillez Selectionnez une classe',
             'annee_scolaire_id.required' => 'Veuillez activez une année scolaire',
             'evaluation_id.required' => 'Veuillez selectionnez une séquence',
             'mois.required' => 'Veuillez Selectionnez un mois',
@@ -95,6 +101,7 @@ class ConseilDisciplineController extends Controller
         }
         $conseildiscipline = ConseilDiscipline::create([
             'user_id' => $request->user_id,
+            'classe_id' => $request->classe_id,
             'mois' => $request->mois,
             'annee_scolaire_id' => $request->annee_scolaire_id,
             'evaluation_id' => $request->evaluation_id,
@@ -116,12 +123,12 @@ class ConseilDisciplineController extends Controller
     public function edit($id) {
         $dataToEdit = ConseilDiscipline::findOrFail($id);
         $evaluation = Evaluation::where('id',$dataToEdit->evaluation_id)->first();
-        $trimestre = Trimestre::findOrFail($evaluation->trimestre_id);
+        $trimestre = Trimestre::where('id',$evaluation->trimestre_id)->first();
         $monthId = $dataToEdit->mois;
         return response()->json([
             'dataToEdit' => $dataToEdit,
             'dateDeDebutTrim' => $trimestre->dateDeDebut,
-            'dateDeFinTrim' => $trimestre->dateDeDebut,
+            'dateDeFinTrim' => $trimestre->dateDeFin,
             'monthId' => $monthId,
             'monthName' => monthNameToFrench($monthId)
         ]);
@@ -138,9 +145,9 @@ class ConseilDisciplineController extends Controller
                 'decision' => 'required|string',
                 'date_conseil' => [
                     'required','max:255',
-                    function ($attribute, $value, $fail) use ($request) {
+                    function ($attribute, $value, $fail) use ($conseildiscipline) {
                         $date = new DateTime($value);
-                        if(($date->format('m') !== $request->mois)) {
+                        if(($date->format('m') !== $conseildiscipline->mois)) {
                             $fail("La date selectionnée ne correspond pas au mois choisi !");
                         }
                     }
@@ -217,6 +224,6 @@ class ConseilDisciplineController extends Controller
         $conseildiscipline = ConseilDiscipline::findOrFail($id);
         $student = User::where('id', $conseildiscipline->user_id)->first();
         $conseildiscipline->delete();
-        return redirect()->route('education.discipline')->with('deleteSuccess', 'Données de discipline de l\'élève '.$student->name.' supprimées avec succès');
+        return redirect()->route('education.conseildiscipline')->with('deleteSuccess', 'Conseil de discipline de l\'élève '.$student->name.' supprimées avec succès');
     }
 }

@@ -14,6 +14,7 @@ class ConseilDiscipline extends Model
         "user_id",
         "annee_scolaire_id",
         "evaluation_id",
+        "classe_id",
         "date_conseil",
         "mois",
         "motif",
@@ -26,6 +27,14 @@ class ConseilDiscipline extends Model
     public function eleve():BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * an discipline advice belongs to a classe
+     */
+    public function classe():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'classe_id');
     }
 
     /**
