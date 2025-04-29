@@ -12,7 +12,13 @@ class NoteHistory extends Model
     /**
      * @var array
      */
-    protected $fillable = ['note_id', 'user_id', 'old_value', 'new_value', 'reason'];
+    protected $fillable = [
+        'note_id',
+        'user_id',
+        'old_value',
+        'new_value',
+        'reason'
+    ];
 
     /**
      * A Note history belongs to a note

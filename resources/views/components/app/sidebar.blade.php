@@ -172,13 +172,19 @@
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.remplissages') ? 'active' : '' }}"
                         href="{{ route('evaluation.remplissages') }}">
-                        <span class="nav-link-text ms-1">Remplissage des notes</span>
+                        <span class="nav-link-text ms-1">Configuration remplissage</span>
                     </a>
                 </li>
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.remplissages') ? 'active' : '' }}"
-                        href="{{ route('evaluation.remplissages') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.notes_controles') ? 'active' : '' }}"
+                        href="{{ route('evaluation.notes_controles') }}">
                         <span class="nav-link-text ms-1">Contrôle du remplissage</span>
+                    </a>
+                </li>
+                <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.notes_modifications') ? 'active' : '' }}"
+                        href="{{ route('evaluation.notes_modifications') }}">
+                        <span class="nav-link-text ms-1">Modifications(notes)</span>
                     </a>
                 </li>
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">

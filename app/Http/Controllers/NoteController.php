@@ -9,15 +9,18 @@ use App\Models\Coefficient;
 use App\Models\EnseignantMatiereModel;
 use App\Models\Enseignement;
 use App\Models\EnsMatAnneeScolaire;
+use App\Models\Evaluation;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Matiere;
 use App\Models\Note;
 use App\Models\NoteHistory;
+use App\Models\NoteRemplissageTrace;
 use App\Models\Remplissage;
 use App\Models\TrimestreNote;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class NoteController extends Controller
 {
@@ -86,7 +89,89 @@ class NoteController extends Controller
     }
 
     /**
-     * create or update note
+     * show remplissage state
+     */
+    public function remplissageTrace(Request $request) {
+        // usefull vars
+        $classes = Classe::all();
+        $matieres = Matiere::all();
+        $evaluations = Evaluation::all();
+        // filters vars
+        $query = NoteRemplissageTrace::query()->where('annee_scolaire_id', getCurrentYear()->id);
+        $searchTeacher = $request->input('searchTeacher');
+        $classeFilter = $request->input('classeFilter');
+        $matiereFilter = $request->input('matiereFilter');
+        $evaluationFilter = $request->input('evaluationFilter');
+        if (!empty($searchTeacher)) {
+            $query->whereHas('teacher', function ($q) use ($searchTeacher) {
+                $q->where('name', 'LIKE', "%{$searchTeacher}%")
+                ->orWhere('surname', 'LIKE', "%{$searchTeacher}%");
+            });
+        }
+        if (!empty($classeFilter)) {
+            $query->where('classe_id', $classeFilter);
+        }
+        if (!empty($evaluationFilter)) {
+            $query->where('evaluation_id', $evaluationFilter);
+        }
+        if (!empty($matiereFilter)) {
+            $query->where('matiere_id', $matiereFilter);
+        }
+        $traces = $query->paginate(10);
+
+        if($request->ajax()) {
+            return view('partials._controle_remplissage_table', compact('traces'));
+        } else {
+            return view('evaluation.controle_remplissage', compact('traces','classes','evaluations','matieres'));
+        }
+    }
+
+    /**
+     * show modification trace
+     */
+    public function noteHistories(Request $request) {
+        // usefull vars
+        $classes = Classe::all();
+        $matieres = Matiere::all();
+        $evaluations = Evaluation::all();
+        // var for filtering
+        $notesId = Note::where('annee_scolaire_id', getCurrentYear()->id)->pluck('id');
+        $query = NoteHistory::query()->whereIn('note_id', $notesId);
+        $classeFilter = $request->input('classeFilter');
+        $matiereFilter = $request->input('matiereFilter');
+        $evaluationFilter = $request->input('evaluationFilter');
+        $searchStudent = $request->input('searchStudent');
+        if (!empty($searchStudent)) {
+            $query->whereHas('note.eleve', function ($q) use ($searchStudent) {
+                $q->where('name', 'LIKE', "%{$searchStudent}%")
+                ->orWhere('surname', 'LIKE', "%{$searchStudent}%");
+            });
+        }
+        if (!empty($classeFilter)) {
+            $query->whereHas('note.classe', function ($q) use ($classeFilter) {
+                $q->where('id', $classeFilter);
+            });
+        }
+        if (!empty($evaluationFilter)) {
+            $query->whereHas('note.evaluation', function ($q) use ($evaluationFilter) {
+                $q->where('id', $evaluationFilter);
+            });
+        }
+        if (!empty($matiereFilter)) {
+            $query->whereHas('note.matiere', function ($q) use ($matiereFilter) {
+                $q->where('id', $matiereFilter);
+            });
+        }
+        $histories = $query->paginate(10);
+        if ($request->ajax()) {
+            return view('partials._historiques_notes_table', compact('histories'));
+        } else {
+            return view('evaluation.hitoriques_notes', compact('histories','matieres','classes','evaluations'));
+        }
+    }
+
+    /**
+     * create note - when filling some note
      */
     public function store(Request $request) {
         $request->validate([
@@ -132,6 +217,17 @@ class NoteController extends Controller
                 'appreciation' => $request->appreciation,
                 'annee_scolaire_id' => getCurrentYear()->id
             ]);
+            // create new note trace :
+            $noteTrace = NoteRemplissageTrace::updateOrCreate([
+                'user_id' => Auth::id(),
+                'classe_id' => $request->classe_id,
+                'matiere_id' => $request->matiere_id,
+                'evaluation_id' => $request->evaluation_id,
+                'remplissage_id' => $request->remplissage_id,
+                'annee_scolaire_id' => getCurrentYear()->id
+            ],[
+                'nb_notes_remplies' => DB::raw('nb_notes_remplies + 1')
+            ]);
             // update all the notes with the corresponding new min value and max value
             updateNoteMinMaxRange(
                 $note->matiere_id,
@@ -161,7 +257,7 @@ class NoteController extends Controller
                     );
                 }
             }
-            if($note) {
+            if($note && $noteTrace) {
                 return response()->json(['success' => 'Note enregistrée avec succès']);
             }
         }

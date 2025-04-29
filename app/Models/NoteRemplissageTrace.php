@@ -5,44 +5,41 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Note extends Model
+class NoteRemplissageTrace extends Model
 {
     use HasFactory;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
-        'note',
-        'appreciation',
         'user_id',
+        'classe_id',
         'matiere_id',
         'evaluation_id',
         'remplissage_id',
-        'classe_id',
-        'range',
-        'gcma',
-        'min_value',
-        'max_value',
-        'annee_scolaire_id'
+        'annee_scolaire_id',
+        'nb_notes_remplies'
     ];
 
     /**
-     * a note correspond to a student
+     * a note trace correspond to a student
      */
-    public function eleve(): BelongsTo
+    public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
-     * a note belongs to a school year
+     * a note trace belongs to a school year
      */
     public function annee_scolaire(): BelongsTo
     {
         return $this->belongsTo(AnneeScolaire::class, 'annee_scolaire_id');
     }
     /**
-     * a note correspond to a subject
+     * a note trace correspond to a subject
      */
     public function matiere(): BelongsTo
     {
@@ -50,7 +47,7 @@ class Note extends Model
     }
 
     /**
-     * a note correspond to a specific evaluation
+     * a note trace correspond to a specific evaluation
      */
     public function evaluation(): BelongsTo
     {
@@ -58,7 +55,7 @@ class Note extends Model
     }
 
     /**
-     * a note is create by a specific remplissage configuration
+     * a note trace is create by a specific remplissage configuration
      */
     public function remplissage(): BelongsTo
     {
@@ -66,18 +63,10 @@ class Note extends Model
     }
 
     /**
-     * a note correspond to a specific classe
+     * a note trace correspond to a specific classe
      */
     public function classe(): BelongsTo
     {
         return $this->belongsTo(Classe::class, 'classe_id');
-    }
-
-    /**
-     * a note has many notes histories
-     */
-    public function histories(): HasMany
-    {
-        return $this->hasMany(NoteHistory::class);
     }
 }

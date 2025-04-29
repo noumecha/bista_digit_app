@@ -30,7 +30,8 @@
             "app/helpers.php",
             "app/Helpers/AnnualReportCard.php",
             "app/Helpers/TrimReportCard.php",
-            "app/Helpers/SequenceReportCard.php"
+            "app/Helpers/SequenceReportCard.php",
+            "app/Helpers/NoteHelper.php"
         ],
         "psr-4": {
             "App\\": "app/",
