@@ -4,16 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\TypeEpreuve;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class TypeEpreuveController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $typeEpreuves = TypeEpreuve::all();
-        return view('education.type_epreuves', compact('typeEpreuves'));
+        $query = TypeEpreuve::query();
+        $searchText = $request->input('searchText');
+        if(!empty($searchText)) {
+            $query->where('libelleTypeEpreuve','LIKE' ,"%{$searchText}%");
+        }
+        $typeEpreuves = $query->paginate(10);
+        if($request->ajax()) {
+            return view('partials._type_epreuves_table', compact('typeEpreuves'));
+        } else {
+            return view('education.type_epreuves', compact('typeEpreuves'));
+        }
     }
 
     /**
@@ -28,50 +38,50 @@ class TypeEpreuveController extends Controller
             'libelleTypeEpreuve.unique' => 'Ce libellé existe déjà',
         ]);
 
-        TypeEpreuve::create([
+        $typeEpreuve = TypeEpreuve::create([
             'libelleTypeEpreuve' => $request->libelleTypeEpreuve,
         ]);
 
-        return redirect()->route('education.type_epreuves')->with('success', 'Type d\'épreuve ajoutée avec succès');
+        if ($typeEpreuve) {
+            return response()->json(["success" => "Type d'épreuve ajoutée avec succès"]);
+        }
     }
 
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TypeEpreuve $typeEpreuve, $id)
+    public function edit($id)
     {
-        $typeEpreuves = $typeEpreuve::all();
-        $typeEpreuveToEdit = $typeEpreuve::findOrFail($id);
-
-        return view('education.type_epreuves', compact('typeEpreuveToEdit','typeEpreuves'));
+        $typeEpreuveToEdit = TypeEpreuve::findOrFail($id);
+        return response()->json([
+            'typeEpreuveToEdit' => $typeEpreuveToEdit
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TypeEpreuve $typeEpreuve, $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'libelleTypeEpreuve' => 'required|min:3|max:255',
+            'libelleTypeEpreuve' => ['required','min:3','max:255',Rule::unique('type_epreuves')->ignore($id)]
         ], [
             'libelleTypeEpreuve.required' => 'Veuillez entrez un libellé de Type d\'épreuve',
+            'libelleTypeEpreuve.unique' => 'Ce libellé existe déjà',
         ]);
-
-        $typeEpreuve = $typeEpreuve::findOrFail($id);
+        $typeEpreuve = TypeEpreuve::findOrFail($id);
         $typeEpreuve->update($request->all());
-
-        return redirect()->route('education.type_epreuves')->with('success', 'Type d\'épreuve mis à jour avec succès');
+        return response()->json(['success' => 'Type d\'épreuve mis à jour avec succès']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TypeEpreuve $typeEpreuve, $id)
+    public function destroy($id)
     {
-        $typeEpreuve = $typeEpreuve::findOrFail($id);
+        $typeEpreuve = TypeEpreuve::findOrFail($id);
         $typeEpreuve->delete();
-
         return redirect()->route('education.type_epreuves')->with('deleteSuccess', 'Type d\'épreuve supprimé avec succès');
     }
 }
