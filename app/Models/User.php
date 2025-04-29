@@ -204,6 +204,14 @@ class User extends Authenticatable
     }
 
     /**
+     *  A Student can have many many disciplines advices
+     */
+    public function conseils_disciplines():HasMany
+    {
+        return $this->hasMany(ConseilDiscipline::class);
+    }
+
+    /**
      * teachers classes
      */
     public function teacherClasses($activeYearId) {

@@ -379,13 +379,36 @@ use Illuminate\Support\Facades\Route;
     function getDisciplinesStats($datas) {
         $absJust = 0;
         $absNonJust = 0;
+        $retards = 0;
+        $consignes = 0;
+        $exclusions = 0;
+        $blames = 0;
+        $avertissements = 0;
         foreach($datas as $data) {
             $absJust += $data->heures_justifiees;
             $absNonJust += $data->total_absences;
+            $retards += $data->heures_retards;
+            $consignes += $data->heures_consignes;
+            $exclusions += $data->jours_exclusions;
+            $blames += $data->blame;
+            $avertissements += (int)$data->avertissement;
         }
         $stats = [
             "absJust" => $absJust,
-            "absNonJust" => $absNonJust
+            "absNonJust" => $absNonJust,
+            "retards" => $retards,
+            "consignes" => $consignes,
+            "exclusions" => $exclusions,
+            "blames" => $blames,
+            "avertissements" => $avertissements
         ];
         return $stats;
+    }
+
+    /**
+     * function for getting disciplines advices stats
+     */
+    function getConseilsStats($datas) {
+        $cd = $datas->count();
+        return $cd;
     }

@@ -412,75 +412,123 @@
                             </tr>
                             <tr>
                                 <td class="border-2" colspan="4">Abs. non Just. (h)</td>
-                                <td class="border-2">
+                                <td class="border-2 text-center">
                                     {{ $disciplines[0]->absNonJust }}
                                 </td>
-                                <td class="border-2">
+                                <td class="border-2 text-center">
                                     {{ $disciplines[1]->absNonJust }}
                                 </td>
-                                <td class="border-2">
+                                <td class="border-2 text-center">
                                     {{ $disciplines[2]->absNonJust }}
                                 </td>
-                                <td class="border-2">
+                                <td class="border-2 text-center">
                                     {{ $disciplines[0]->absNonJust + $disciplines[1]->absNonJust + $disciplines[2]->absNonJust }}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="border-2" colspan="4">Abs. Just. (h)</td>
-                                <td class="border-2">
+                                <td class="border-2 text-center">
                                     {{ $disciplines[0]->absJust }}
                                 </td>
-                                <td class="border-2">
+                                <td class="border-2 text-center">
                                     {{ $disciplines[1]->absJust }}
                                 </td>
-                                <td class="border-2">
+                                <td class="border-2 text-center">
                                     {{ $disciplines[2]->absJust }}
                                 </td>
-                                <td class="border-2">
+                                <td class="border-2 text-center">
                                     {{ $disciplines[0]->absJust + $disciplines[1]->absJust + $disciplines[2]->absJust }}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="border-2" colspan="4">Retards (h)</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->retards }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[1]->retards }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[2]->retards }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->retards + $disciplines[1]->retards + $disciplines[2]->retards }}
+                                </td>
                             </tr>
                             <tr>
                                 <td class="border-2" colspan="4">Consignes (h)</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->consignes }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[1]->consignes }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[2]->consignes }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->consignes + $disciplines[1]->consignes + $disciplines[2]->consignes }}
+                                </td>
                             </tr>
                             <tr>
                                 <td class="border-2" colspan="4">Avert.</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->avertissements }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[1]->avertissements }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[2]->avertissements }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->avertissements + $disciplines[1]->avertissements + $disciplines[2]->avertissements }}
+                                </td>
                             </tr>
                             <tr>
                                 <td class="border-2" colspan="4">Blâme </td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->blames }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[1]->blames }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[2]->blames }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->blames + $disciplines[1]->blames + $disciplines[2]->blames }}
+                                </td>
                             </tr>
                             <tr>
                                 <td class="border-2" colspan="4">Excl. (j)</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->exclusions }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[1]->exclusions }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[2]->exclusions }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $disciplines[0]->exclusions + $disciplines[1]->exclusions + $disciplines[2]->exclusions }}
+                                </td>
                             </tr>
                             <tr>
                                 <td class="border-2" colspan="4">CD</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
-                                <td class="border-2">[0]</td>
+                                <td class="border-2 text-center">
+                                    {{ $conseils[0] }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $conseils[1] }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $conseils[2] }}
+                                </td>
+                                <td class="border-2 text-center">
+                                    {{ $conseils[0] + $conseils[1] + $conseils[2] }}
+                                </td>
                             </tr>
                         </tbody>
                     </table>

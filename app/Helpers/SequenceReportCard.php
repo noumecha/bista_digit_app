@@ -20,6 +20,7 @@ function generateSingleSeqReportCard($student, $classe, $evaluation, $trimestre)
         $appreciation = getAppreciation($average);
         $princClassTeacherName = getPrincipalClassTeacher($classe->id, getCurrentYear()->id);
         $displineStats = getDisciplinesStats($student->disciplines);
+        $conseilsStats = getConseilsStats($student->conseils_disciplines);
         // checking if the bulletin already exists :
         $exists = Bulletin::where('classe_id', $classe->id)
             ->where('user_id',$student->id)
@@ -43,6 +44,7 @@ function generateSingleSeqReportCard($student, $classe, $evaluation, $trimestre)
             'evaluation_id' => $evaluation->id,
             'trimestre_id' => $trimestre->id,
             'discipline_stats' => json_encode($displineStats),
+            'conseils_stats' => json_encode($conseilsStats),
             'appreciation' => $appreciation,
             'average' => $average,
             'principal_class_teacher' => $princClassTeacherName
@@ -84,6 +86,7 @@ function generateAllSeqReportCard($classe, $evaluation, $trimestre) {
             $appreciation = getAppreciation($average);
             $princClassTeacherName = getPrincipalClassTeacher($classe->id, getCurrentYear()->id);
             $displineStats = getDisciplinesStats($student->disciplines);
+            $conseilsStats = getConseilsStats($student->conseils_disciplines);
             $exists = Bulletin::where('classe_id', $classe->id)
                 ->where('user_id',$student->id)
                 ->where('trimestre_id', $trimestre->id)
@@ -105,6 +108,7 @@ function generateAllSeqReportCard($classe, $evaluation, $trimestre) {
                 'evaluation_id' => $evaluation->id,
                 'trimestre_id' => $trimestre->id,
                 'discipline_stats' => json_encode($displineStats),
+                'conseils_stats' => json_encode($conseilsStats),
                 'appreciation' => $appreciation,
                 'average' => $average,
                 'principal_class_teacher' => $princClassTeacherName

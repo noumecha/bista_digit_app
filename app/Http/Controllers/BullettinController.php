@@ -8,6 +8,7 @@ use App\Models\AppConfiguration;
 use App\Models\Bulletin;
 use App\Models\Classe;
 use App\Models\ClasseAnneeScolaireStudent;
+use App\Models\ConseilDiscipline;
 use App\Models\Discipline;
 use App\Models\Evaluation;
 use App\Models\Matiere;
@@ -306,13 +307,18 @@ class BullettinController extends Controller
             ->where('classe_id', $bulletin->classe_id)->pluck('user_id');
         $student = User::where('id', $bulletin->user_id)->where('typeUser','eleve')
             ->whereIn('id', $userIds)->first();
+        // for sequence :
         if($bulletin->type_bulletin === 'sequenciel') {
             // update disciplines stats first
             $studentDisciplines = Discipline::all()->where('user_id', $student->id)
                 ->where('evaluation_id',$bulletin->evaluation->id);
+            $studentConseils = ConseilDiscipline::where('user_id', $student->id)
+                ->where('evaluation_id',$bulletin->evaluation->id);
             $displineStats = getDisciplinesStats($studentDisciplines);
+            $conseilsStats = getConseilsStats($studentConseils);
             $bulletin->update([
                 'discipline_stats' => json_encode($displineStats),
+                'conseils_stats' => json_encode($conseilsStats)
             ]);
             // all groups matieres datas
             $studentNotesFirstGroup = Note::where('user_id', $student->id)
@@ -332,15 +338,17 @@ class BullettinController extends Controller
                 ->get();
             // decode discplines
             $disciplines = json_decode($bulletin->discipline_stats);
+            $conseils = $bulletin->conseils_stats;
             return view(
                 'bulletin.user-report-card',
-                compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
+                compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines','conseils')
             );
         }
         // for trimestre :
         if($bulletin->type_bulletin === "trimestre") {
             $disciplines = [];
             $bulletinsAvgs = [];
+            $conseils = [];
             $sequencialBulletins = Bulletin::all()->where('trimestre_id', $bulletin->trimestre_id)
                 ->where('type_bulletin', "sequenciel")
                 ->where('user_id', $bulletin->user_id)
@@ -352,9 +360,14 @@ class BullettinController extends Controller
                 $studentDisciplines = Discipline::all()->where('user_id', $student->id)
                     ->where('evaluation_id',$evalBulletin->evaluation->id)
                     ->where('classe_id', $evalBulletin->classe_id);
+                $studentConseils = ConseilDiscipline::where('user_id', $student->id)
+                    ->where('evaluation_id',$evalBulletin->evaluation->id)
+                    ->where('classe_id', $evalBulletin->classe_id);
                 $displineStats = getDisciplinesStats($studentDisciplines);
+                $conseilsStats = getConseilsStats($studentConseils);
                 $evalBulletin->update([
                     'discipline_stats' => json_encode($displineStats),
+                    'conseils_stats' => json_encode($conseilsStats)
                 ]);
                 // try to implements something to update trimestre note data before rendering the bulletin
                 $notes = Note::all()->where('classe_id', $evalBulletin->classe_id)
@@ -371,6 +384,7 @@ class BullettinController extends Controller
                 }
                 // create the discipline data
                 array_push($disciplines, json_decode($evalBulletin->discipline_stats));
+                array_push($conseils, json_decode($evalBulletin->conseils_stats));
                 // bulletins average :
                 array_push($bulletinsAvgs, [
                     "evaluation_name" => $evalBulletin->evaluation->libelleEvaluation,
@@ -392,13 +406,14 @@ class BullettinController extends Controller
                 ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
             return view(
                 'bulletin.user-report-card',
-                compact('bulletin','bulletinsAvgs','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
+                compact('bulletin','bulletinsAvgs','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines','conseils')
             );
         }
         // for annual :
         if($bulletin->type_bulletin === "annuel") {
             $disciplines = [];
             $bulletinsAvgs = [];
+            $conseils = [];
             $trimestrialBulletins = Bulletin::all()->where('type_bulletin',"trimestre")
                 ->where('user_id', $bulletin->user_id)
                 ->where('classe_id', $bulletin->classe_id)
@@ -411,9 +426,14 @@ class BullettinController extends Controller
                 $studentDisciplines = Discipline::all()->where('user_id', $student->id)
                     ->whereIn('evaluation_id', $evaluationIds)
                     ->where('classe_id', $trimBulletin->classe_id);
+                $studentConseils = ConseilDiscipline::where('user_id', $student->id)
+                    ->whereIn('evaluation_id', $evaluationIds)
+                    ->where('classe_id', $trimBulletin->classe_id);
                 $displineStats = getDisciplinesStats($studentDisciplines);
+                $conseilsStats = getConseilsStats($studentConseils);
                 $trimBulletin->update([
                     'discipline_stats' => json_encode($displineStats),
+                    'conseils_stats' => json_encode($conseilsStats)
                 ]);
                 // try to implements something to update annual note data before rendering the bulletin
                 $notes = Note::all()->where('classe_id', $trimBulletin->classe_id)
@@ -429,6 +449,7 @@ class BullettinController extends Controller
                 }
                 // create the discipline data
                 array_push($disciplines, json_decode($trimBulletin->discipline_stats));
+                array_push($conseils, json_decode($trimBulletin->conseils_stats));
                 // bulletins average :
                 array_push($bulletinsAvgs, [
                     "trimestre_name" => $trimBulletin->trimestre->libelleTrimestre,
@@ -450,7 +471,7 @@ class BullettinController extends Controller
                 ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
             return view(
                 'bulletin.user-report-card',
-                compact('bulletin','bulletinsAvgs','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines')
+                compact('bulletin','bulletinsAvgs','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines','conseils')
             );
         }
     }

@@ -381,33 +381,53 @@
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Retards (h)</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->retards + $disciplines[1]->retards }}
+                            </td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->retards + $disciplines[1]->retards }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Consignes (h)</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->consignes + $disciplines[1]->consignes }}
+                            </td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->consignes + $disciplines[1]->consignes }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Avert.</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->avertissements + $disciplines[1]->avertissements }}
+                            </td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->avertissements + $disciplines[1]->avertissements }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Blâme </td>
-                            <td class="p-0 border-2 text-center">[0]</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->blames + $disciplines[1]->blames }}
+                            </td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->blames + $disciplines[1]->blames }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">Excl. (j)</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->exclusions + $disciplines[1]->exclusions }}
+                            </td>
+                            <td class="p-0 border-2 text-center">
+                                {{ $disciplines[0]->exclusions + $disciplines[1]->exclusions }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="p-0 border-2" colspan="4">CD</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
-                            <td class="p-0 border-2 text-center">[0]</td>
+                            <td class="p-0 border-2 text-center">{{ $conseils[0] + $conseils[1] }}</td>
+                            <td class="p-0 border-2 text-center">{{ $conseils[0] + $conseils[1] }}</td>
                         </tr>
                     </tbody>
                 </table>

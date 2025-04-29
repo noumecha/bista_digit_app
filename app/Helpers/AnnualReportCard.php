@@ -39,6 +39,7 @@ function generateSingleAnnualReportCard($student, $classe) {
         $annualAppreciation = getAppreciation($annualAverage);
         $princClassTeacherName = getPrincipalClassTeacher($classe->id, getCurrentYear()->id);
         $annualDisplineStats = getDisciplinesStats($student->disciplines);
+        $annualConseilsStats = getConseilsStats($student->conseils_disciplines);
         // checking if the bulletin already exists :
         $exists = Bulletin::where('classe_id', $classe->id)
             ->where('user_id',$student->id)
@@ -74,6 +75,7 @@ function generateSingleAnnualReportCard($student, $classe) {
             'evaluation_id' => null,
             'trimestre_id' => null,
             'discipline_stats' => json_encode($annualDisplineStats),
+            'conseils_stats' => json_encode($annualConseilsStats),
             'appreciation' => $annualAppreciation,
             'average' => $annualAverage,
             'principal_class_teacher' => $princClassTeacherName
@@ -130,6 +132,7 @@ function generateAllAnnualReportCard($classe) {
             $annualAppreciation = getAppreciation($annualAverage);
             $princClassTeacherName = getPrincipalClassTeacher($classe->id, getCurrentYear()->id);
             $annualDisplineStats = getDisciplinesStats($student->disciplines);
+            $annualConseilsStats = getConseilsStats($student->conseils_disciplines);
             // checking if the bulletin already exists :
             $exists = Bulletin::where('classe_id', $classe->id)
                 ->where('user_id',$student->id)
@@ -165,6 +168,7 @@ function generateAllAnnualReportCard($classe) {
                 'evaluation_id' => null,
                 'trimestre_id' => null,
                 'discipline_stats' => json_encode($annualDisplineStats),
+                'conseils_stats' => json_encode($annualConseilsStats),
                 'appreciation' => $annualAppreciation,
                 'average' => $annualAverage,
                 'principal_class_teacher' => $princClassTeacherName

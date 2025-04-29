@@ -35,6 +35,7 @@ function generateSingleTrimReportCard($student, $classe, $evaluation, $trimestre
         $trimAppreciation = getAppreciation($trimAverage);
         $princClassTeacherName = getPrincipalClassTeacher($classe->id, getCurrentYear()->id);
         $trimDisplineStats = getDisciplinesStats($student->disciplines);
+        $trimConseilsStats = getConseilsStats($student->conseils_disciplines);
         // checking if the bulletin already exists :
         $exists = Bulletin::where('classe_id', $classe->id)
             ->where('user_id',$student->id)
@@ -72,6 +73,7 @@ function generateSingleTrimReportCard($student, $classe, $evaluation, $trimestre
             'trimestre_id' => $trimestre->id,
             'evaluation_id' => null,
             'discipline_stats' => json_encode($trimDisplineStats),
+            'conseils_stats' => json_encode($trimConseilsStats),
             'appreciation' => $trimAppreciation,
             'average' => $trimAverage,
             'principal_class_teacher' => $princClassTeacherName
@@ -126,6 +128,7 @@ function generateAllTrimReportCard($classe, $evaluation, $trimestre) {
             $trimAppreciation = getAppreciation($trimAverage);
             $princClassTeacherName = getPrincipalClassTeacher($classe->id, getCurrentYear()->id);
             $trimDisplineStats = getDisciplinesStats($student->disciplines);
+            $trimConseilsStats = getConseilsStats($student->conseils_disciplines);
             // checking if the bulletin already exists :
             $exists = Bulletin::where('classe_id', $classe->id)
                 ->where('user_id',$student->id)
@@ -148,6 +151,7 @@ function generateAllTrimReportCard($classe, $evaluation, $trimestre) {
                 'trimestre_id' => $trimestre->id,
                 'evaluation_id' => null,
                 'discipline_stats' => json_encode($trimDisplineStats),
+                'conseils_stats' => json_encode($trimConseilsStats),
                 'appreciation' => $trimAppreciation,
                 'average' => $trimAverage,
                 'principal_class_teacher' => $princClassTeacherName

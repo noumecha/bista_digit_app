@@ -75,7 +75,8 @@
                                     'studentNotesFirstGroup' => $studentNotesFirstGroup,
                                     'studentNotesSndGroup' => $studentNotesSndGroup,
                                     'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                                    'disciplines' => $disciplines
+                                    'disciplines' => $disciplines,
+                                    'conseils' => $conseils
                                 ]
                             )
                         @endif
@@ -88,7 +89,8 @@
                                     'studentNotesFirstGroup' => $studentNotesFirstGroup,
                                     'studentNotesSndGroup' => $studentNotesSndGroup,
                                     'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                                    'disciplines' => $disciplines
+                                    'disciplines' => $disciplines,
+                                    'conseils' => $conseils
                                 ]
                             )
                         @endif
@@ -101,7 +103,8 @@
                                     'studentNotesFirstGroup' => $studentNotesFirstGroup,
                                     'studentNotesSndGroup' => $studentNotesSndGroup,
                                     'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                                    'disciplines' => $disciplines
+                                    'disciplines' => $disciplines,
+                                    'conseils' => $conseils
                                 ]
                             )
                         @endif

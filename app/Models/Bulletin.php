@@ -23,6 +23,7 @@ class Bulletin extends Model
         'evaluation_id',
         'trimestre_id',
         'discipline_stats',
+        'conseils_stats',
         'appreciation',
         'average',
         'min_average',
