@@ -44,6 +44,8 @@ class TypeEpreuveController extends Controller
 
         if ($typeEpreuve) {
             return response()->json(["success" => "Type d'épreuve ajoutée avec succès"]);
+        } else {
+            return response()->json(["error" => "Erreur lors de l'ajout d'un type d'épreuve !"]);
         }
     }
 

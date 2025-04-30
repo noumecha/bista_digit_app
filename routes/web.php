@@ -143,10 +143,10 @@ Route::get('/education/enseignement', [EnseignementController::class, 'index'])-
 Route::get('/education/enseignantMatiere', [EnseignantMatiereModelController::class, 'index'])->name('education.enseignantMatiere')->middleware('auth');
 
 ## education - epreuves routes
-Route::post('/education/epreuves/save', [TypeEpreuveController::class, 'store'])->name('epreuves.store')->middleware('auth');
-Route::get('/education/epreuves/{id}/edit', [TypeEpreuveController::class, 'edit'])->name('epreuves.edit')->middleware('auth');
-Route::put('/education/epreuves/update/{id}', [TypeEpreuveController::class, 'update'])->name('epreuves.update')->middleware('auth');
-Route::delete('/education/epreuves/{id}', [TypeEpreuveController::class, 'destroy'])->name('epreuves.destroy')->middleware('auth');
+Route::post('/education/epreuves/save', [EpreuveController::class, 'store'])->name('epreuves.store')->middleware('auth');
+Route::get('/education/epreuves/{id}/edit', [EpreuveController::class, 'edit'])->name('epreuves.edit')->middleware('auth');
+Route::put('/education/epreuves/update/{id}', [EpreuveController::class, 'update'])->name('epreuves.update')->middleware('auth');
+Route::delete('/education/epreuves/{id}', [EpreuveController::class, 'destroy'])->name('epreuves.destroy')->middleware('auth');
 
 ## education - typeepreuves routes
 Route::get('/education/epreuves/typeepreuves', [TypeEpreuveController::class, 'index'])->name('epreuves.typeepreuves')->middleware('auth');

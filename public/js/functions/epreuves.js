@@ -30,7 +30,7 @@ $(function(){
             headerText.text('Mettre à jour les informations de l\'épreuve');
             epreuveIdInput.val(epreuveId);
             $.ajax({
-                url: "remplissages/"+epreuveId+"/edit",
+                url: "epreuves/"+epreuveId+"/edit",
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -51,7 +51,7 @@ $(function(){
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
         // Kind of action
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'remplissages/update/' + epreuveId : 'remplissages/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'epreuves/update/' + epreuveId : 'epreuves/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -71,7 +71,7 @@ $(function(){
                     spinner.addClass('d-none');
                 }, 4000);
                 // reset form after creation
-                if(formAction === 'remplissages/save') {
+                if(formAction === 'epreuves/save') {
                     resetForm(form);
                 }
                 fetchEpreuves();
@@ -105,8 +105,8 @@ $(function(){
         $('#submit-epreuve-form-button').children('span#submit-epreuve-form-button-text').text('');
     });
 
-    // fetching remplissages dynamically with filters
-    $('#matiererFilter,#classeFilter,#typeEpreuveFilter,#searchText,#schoolYearFilter')
+    // fetching epreuves dynamically with filters
+    $('#matiereFilter,#classeFilter,#typeEpreuveFilter,#searchEpreuve,#yearFilter')
     .on('change keyup', function () {
         fetchEpreuves();
     });
@@ -114,16 +114,24 @@ $(function(){
     // default data :
     fetchEpreuves();
 
-    // fetching all remplissages :
+    // fetching all epreuves :
     function fetchEpreuves() {
-        var formData = $('#filterRemplissageForm').serialize();
+        var formData = $('#filterEpreuveForm').serialize();
         $.ajax({
-            url : "/evaluation/remplissages",
+            url : "/education/epreuves",
             type : 'GET',
             data : formData,
             success : function(data) {
-                $('#epreuvesTable').html(data);
+                $('#epreuvesTable').html(data.epreuves);
                 initializeCountdowns();
+                // year Epreuve update after every refresh
+                // Update the yearEpreuves field
+                var yearEpreuvesSelect = $('#yearFilter');
+                yearEpreuvesSelect.empty();
+                yearEpreuvesSelect.append('<option value="">Année scolaire</option>');
+                data.yearEpreuves.forEach(function(year) {
+                    yearEpreuvesSelect.append('<option value="' + year.anneeEpreuve + '">' + year.anneeEpreuve + '</option>');
+                });
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);

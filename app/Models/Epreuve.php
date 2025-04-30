@@ -13,14 +13,22 @@ class Epreuve extends Model
     /**
      * @mixed array
      */
-    protected $fillable = ['libelleEpreuve','anneeEpreuve','fichier','matiere_id','classe_id','type_epreuve_id','user_id'];
+    protected $fillable = [
+        'libelleEpreuve',
+        'anneeEpreuve',
+        'fichier',
+        'matiere_id',
+        'classe_id',
+        'type_epreuve_id',
+        'user_id'
+    ];
 
     /**
      *
      */
     public function type() : BelongsTo
     {
-        return $this->belongsTo(TypeEpreuve::class);
+        return $this->belongsTo(TypeEpreuve::class, 'type_epreuve_id');
     }
 
     /**
@@ -28,7 +36,7 @@ class Epreuve extends Model
      */
     public function user() : BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -36,7 +44,7 @@ class Epreuve extends Model
      */
     public function matiere() : BelongsTo
     {
-        return $this->belongsTo(Matiere::class);
+        return $this->belongsTo(Matiere::class, 'matiere_id');
     }
 
     /**
@@ -44,7 +52,7 @@ class Epreuve extends Model
      */
     public function classe() : BelongsTo
     {
-        return $this->belongsTo(Classe::class);
+        return $this->belongsTo(Classe::class, 'classe_id');
     }
 
 }
