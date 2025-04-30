@@ -117,7 +117,15 @@ class EvaluationController extends Controller
         } else {
             $state = 'terminée';
         }
-
+        // check if the trimester already have 2 evaluation
+        $trimestreIds = Trimestre::where('annee_scolaire_id', getCurrentYear()->id)->pluck('id');
+        $checks = Evaluation::where('trimestre_id', $request->trimestre_id)
+            ->whereIn('trimestre_id', $trimestreIds);
+        if($checks->count() === 2) {
+            return response()->json([
+                'error' => 'Un trimestre ne peut pas avoir plus de 2 évaluations en une année'
+            ]);
+        }
         $evaluation = Evaluation::create([
             'libelleEvaluation' => $request->libelleEvaluation,
             'trimestre_id' => $request->trimestre_id,

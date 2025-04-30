@@ -57,7 +57,7 @@ class EnseignantPrincipalController extends Controller
     }
 
     /**
-     * define principal for a teacher in a year
+     * define principal teacher for a class in a year
      */
     public function store(Request $request) {
         $request->validate([
@@ -74,22 +74,27 @@ class EnseignantPrincipalController extends Controller
         $exists = EnseignantPrincipal::where('user_id',$request->user_id)
             ->where('annee_scolaire_id',$request->active_year_id)
             ->exists();
-
         if($exists) {
             return response()->json([
                 'error' => 'L\'enseignant est déjà l\'enseignant principale d\'une autre classe pour cette année',
             ]);
         }
-
         // check if the configuration alreary exists
         $exists = EnseignantPrincipal::where('classe_id',$request->classe_id)
             ->where('user_id',$request->user_id)
             ->where('annee_scolaire_id',$request->active_year_id)
             ->exists();
-
         if($exists) {
             return response()->json([
                 'error' => 'L\'enseignant est déjà l\'enseignant principale de cette classe pour cette année',
+            ]);
+        }
+        // also check if the class already have a principal teacher for the year
+        $exists = EnseignantPrincipal::where('classe_id', $request->classe_id)
+            ->where('annee_scolaire_id', getCurrentYear()->id)->exists();
+        if($exists) {
+            return response()->json([
+                'error' => 'un enseignant principal pour cette classe est déjà défini !',
             ]);
         }
 
