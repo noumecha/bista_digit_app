@@ -297,7 +297,6 @@ Route::get('/bulletins/preview/{id}', [BullettinController::class, 'preview'])->
 
 
 # configuration routes - app configuration
-
 Route::get('/configurations', function () {
     return redirect('/configurations/app_configuration');
 })->middleware('auth');
@@ -305,6 +304,13 @@ Route::get('/configurations/app_configuration', [AppConfigurationController::cla
 Route::get('/configurations/app_configuration/{id}/edit', [AppConfigurationController::class, 'edit'])->name('app_configuration.edit')->middleware('auth');
 Route::post('/configurations/app_configuration/{action}', [AppConfigurationController::class, 'update'])->name('app_configuration.update')->middleware('auth');
 
+# configurations routes -  profil configuration
+Route::get('/configurations/profile', function () {
+    return redirect('/configurations/profile');
+})->middleware('auth');
+Route::get('/configurations/profile', [ProfileController::class, 'index'])->name('profile.index')->middleware('auth');
+Route::get('/configurations/profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+Route::post('/configurations/profile/{action}', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
 
 #evaluation - evaluations routes
 Route::get('/evaluation/evaluations', [EvaluationController::class, 'index'])->name('evaluation.evaluations')->middleware('auth');
@@ -385,6 +391,7 @@ Route::get('/programme/leader', [ProgrammeController::class, 'index'])->name('pr
 Route::get('/laravel-examples/user-profile', [ProfileController::class, 'index'])->name('users.profile')->middleware('auth');
 Route::put('/laravel-examples/user-profile/update', [ProfileController::class, 'update'])->name('users.update')->middleware('auth');
 Route::get('/laravel-examples/users-management', [UserController::class, 'index'])->name('users-management')->middleware('auth');
+
 
 # special for storage link
 Route::get('/linkstorage', function() {

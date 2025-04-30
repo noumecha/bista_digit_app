@@ -8,32 +8,34 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    /**
+     *
+     */
     public function index()
     {
         $user = User::find(Auth::id());
 
-        return view('laravel-examples.user-profile', compact('user'));
+        return view('configurations.profil_configuration', compact('user'));
     }
 
+    /**
+     * Update user informations
+     */
     public function update(Request $request)
     {
-        if (config('app.is_demo') && in_array(Auth::id(), [1])) {
-            return back()->with('error', "You are in a demo version. You are not allowed to change the email for default users.");
-        }
-
         $request->validate([
             'name' => 'required|min:3|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
             'location' => 'max:255',
-            'phone' => 'numeric|digits:10',
+            'phone' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
             'about' => 'max:255',
         ], [
-            'name.required' => 'Name is required',
-            'email.required' => 'Email is required',
+            'name.required' => 'Entrez le nom',
+            'email.required' => 'Entrez l\'adresse email',
+            'phone.regex' => 'Le numero de téléphone doit être au format XXX-XXX-XXX',
+            'phone.required' => 'Renseignez le numéro de téléphone'
         ]);
-
         $user = User::find(Auth::id());
-
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -41,7 +43,16 @@ class ProfileController extends Controller
             'phone' => $request->phone,
             'about' => $request->about,
         ]);
+        return back()->with('success', 'Informations du profil mises à jour avec succès!');
+    }
 
-        return back()->with('success', 'Profile updated successfully.');
+    /**
+     * edit user informations
+     */
+    public function edit($id) {
+        $userToEdit = User::findOrFail($id);
+        return response()->json([
+            'userToE$userToEdit' =>$userToEdit,
+        ]);
     }
 }
