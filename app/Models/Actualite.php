@@ -26,8 +26,23 @@ class Actualite extends Model
     /**
      *
      */
+    public function category() : BelongsTo
+    {
+        return $this->belongsTo(ClubArticleCategory::class, 'club_article_category_id');
+    }
+
+    /**
+     *
+     */
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     *
+     */
+    public function actualiteeable() {
+        return $this->morphTo();
     }
 }

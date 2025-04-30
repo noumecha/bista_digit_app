@@ -46,7 +46,7 @@
                                 <li><a href="{{ route('home.epreuves') }}">Epreuves</a></li>
                                 <li>
                                     @if (Auth::check())
-                                        <a href="{{ route('dashboard') }}">Administration</a>
+                                        <a href="{{ route('dashboard') }}">Dashboard</a>
                                     @else
                                         <a href="{{ route('sign-in') }}">Connexion</a>
                                     @endif

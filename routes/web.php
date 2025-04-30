@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BullettinController;
 use App\Http\Controllers\CategorieActualiteController;
 use App\Http\Controllers\ClasseController;
+use App\Http\Controllers\ClubController;
 use App\Http\Controllers\CoefficientController;
 use App\Http\Controllers\ConseilDisciplineController;
 use App\Http\Controllers\DevoirController;
@@ -295,7 +296,6 @@ Route::post('/bulletins/save', [BullettinController::class, 'generate'])->name('
 Route::delete('/bulletins/{id}/delete', [BullettinController::class, 'destroy'])->name('bulletins.destroy')->middleware('auth');
 Route::get('/bulletins/preview/{id}', [BullettinController::class, 'preview'])->name('bulletins.preview');
 
-
 # configuration routes - app configuration
 Route::get('/configurations', function () {
     return redirect('/configurations/app_configuration');
@@ -304,6 +304,12 @@ Route::get('/configurations/app_configuration', [AppConfigurationController::cla
 Route::get('/configurations/app_configuration/{id}/edit', [AppConfigurationController::class, 'edit'])->name('app_configuration.edit')->middleware('auth');
 Route::post('/configurations/app_configuration/{action}', [AppConfigurationController::class, 'update'])->name('app_configuration.update')->middleware('auth');
 
+# configuration routes - club configuration
+Route::get('/configurations/club_configuration', [AppConfigurationController::class, 'index'])->name('club_configuration.index')->middleware('auth');
+Route::get('/configurations/club_configuration/{id}/edit', [AppConfigurationController::class, 'edit'])->name('club_configuration.edit')->middleware('auth');
+Route::post('/configurations/club_configuration/{action}', [AppConfigurationController::class, 'update'])->name('club_configuration.update')->middleware('auth');
+
+
 # configurations routes -  profil configuration
 Route::get('/configurations/profile', function () {
     return redirect('/configurations/profile');
@@ -311,6 +317,16 @@ Route::get('/configurations/profile', function () {
 Route::get('/configurations/profile', [ProfileController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::get('/configurations/profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
 Route::post('/configurations/profile/{action}', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+# configuratioun routes - clubs routes
+Route::get('/configurations/clubs', function () {
+    return redirect('/configurations/clubs/list');
+})->middleware('auth');
+Route::get('/configurations/clubs/list', [ClubController::class, 'index'])->name('clubs.index')->middleware('auth');
+Route::post('/configurations/clubs/save', [ClubController::class, 'store'])->name('clubs.store')->middleware('auth');
+Route::put('/configurations/clubs/update/{id}', [ClubController::class, 'update'])->name('clubs.update')->middleware('auth');
+Route::get('/configurations/clubs/{id}/edit', [ClubController::class, 'edit'])->name('clubs.edit')->middleware('auth');
+Route::delete('/configurations/clubs/{id}', [ClubController::class, 'destroy'])->name('clubs.destroy')->middleware('auth');
 
 #evaluation - evaluations routes
 Route::get('/evaluation/evaluations', [EvaluationController::class, 'index'])->name('evaluation.evaluations')->middleware('auth');

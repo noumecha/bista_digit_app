@@ -233,4 +233,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(NoteHistory::class);
     }
+
+    /**
+     * user in club
+     */
+    public function clubs() {
+        return $this->belongsToMany(Club::class)->withPivot('post_id')->withTimestamps();
+    }
+
+    public function presidencies() {
+        return $this->hasMany(Club::class, 'president_id');
+    }
 }
