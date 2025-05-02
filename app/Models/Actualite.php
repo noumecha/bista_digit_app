@@ -13,7 +13,14 @@ class Actualite extends Model
     /**
      * @mixed Array
      */
-    protected $fillable = ['titre','image','contenu','categorie_actualites_id','user_id'];
+    protected $fillable = [
+        'titre',
+        'image',
+        'contenu',
+        'categorie_actualites_id',
+        'user_id',
+        'club_id'
+    ];
 
     /**
      *
@@ -26,17 +33,17 @@ class Actualite extends Model
     /**
      *
      */
-    public function category() : BelongsTo
+    public function user() : BelongsTo
     {
-        return $this->belongsTo(ClubArticleCategory::class, 'club_article_category_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
      *
      */
-    public function user() : BelongsTo
+    public function club() : BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Club::class, 'club_id');
     }
 
     /**

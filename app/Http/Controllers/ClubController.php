@@ -96,7 +96,7 @@ class ClubController extends Controller
         $request->validate([
             'club_name' => 'required|min:3|max:255',Rule::unique('clubs')->ignore($id),
             'content' => 'required',
-            'club_image' => 'club_image|mimes:jpg,jpeg,png,gif|max:4096',
+            'club_image' => 'image|mimes:jpg,jpeg,png,gif|max:4096',
         ], [
             'club_name.required' => 'Veuillez entrez un nom de club',
             'club_name.min' => 'Le nom du club doit contenir au minimum 3 caractères',

@@ -6,7 +6,7 @@
                 style="background-image: url('{{
                     isset($clubconfiguration) && isset($clubconfiguration->club_image) ?
                     asset('storage/' . $clubconfiguration->club_image) :
-                    asset('img/header-blue-purple.jpg')
+                    asset('img/header-orange-purple.jpg')
                 }}'); background-position: bottom;">
             </div>
             <div class="container">
@@ -14,7 +14,8 @@
                     <div class="row">
                         <div class="col-auto my-auto">
                             <div class="h-100">
-                                <h3 class="mb-0 font-weight-bold">
+                                <h3 class="mb-0 text-uppercase font-weight-bold">
+                                    CLUB :
                                     @if (isset($clubconfiguration) && isset($clubconfiguration->club_name))
                                         {{ $clubconfiguration->club_name }}
                                     @else
@@ -70,8 +71,10 @@
                                     </li>
                                     <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm">
                                         <span class="text-secondary">Président :</span>
-                                        @if (isset($clubconfiguration) && isset($clubconfiguration->president->name))
+                                        @if (isset($clubconfiguration) && isset($clubconfiguration->president))
                                             {{ $clubconfiguration->president->name }}
+                                            {{  $clubconfiguration->president->surname}} -
+                                            {{ $clubconfiguration->president->getCurrentYearClasseName(getCurrentYear()->id)->libClasse }}
                                         @else
                                             Non défini
                                         @endif
@@ -149,15 +152,16 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="club_name" class="form-control-label">
-                                            Nom du club :
+                                            Modifier le nom du club :
                                         </label>
-                                        <input type="text" name="club_name" id="club_name" class="form-control" placeholder="POWER EDUCATION">
+                                        <input type="text" name="club_name" id="club_name"
+                                            class="form-control" placeholder="nouveau nom pour le club">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="club_image" class="form-control-label">
-                                            Image de mise en avant
+                                            Modifier l'image de mise en avant
                                         </label>
                                         <input type="file" id="club_image" name="club_image" class="form-control"
                                             value="{{ old("club_image") }}">
@@ -166,12 +170,12 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="content" class="form-control-label">
-                                            Description du club :
+                                            Modifier la description du club :
                                         </label>
                                         <textarea
                                             name="content"
                                             id="content"
-                                            placeholder="Entrez la contenu de l'établissement"
+                                            placeholder="ajouter une nouvelle description"
                                             cols="12"
                                             rows="30">
                                         </textarea>

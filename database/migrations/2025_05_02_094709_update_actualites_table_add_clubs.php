@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('club_article_categories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('club_id')->constrained()->onDelete('cascade');
-            $table->string('club_article_category_name');
-            $table->timestamps();
+        Schema::table('actualites', function (Blueprint $table) {
+            $table->foreignId('club_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 
@@ -24,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('club_article_categories');
+        //
     }
 };

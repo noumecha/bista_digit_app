@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BullettinController;
 use App\Http\Controllers\CategorieActualiteController;
 use App\Http\Controllers\ClasseController;
+use App\Http\Controllers\ClubConfigurationController;
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\CoefficientController;
 use App\Http\Controllers\ConseilDisciplineController;
@@ -305,9 +306,9 @@ Route::get('/configurations/app_configuration/{id}/edit', [AppConfigurationContr
 Route::post('/configurations/app_configuration/{action}', [AppConfigurationController::class, 'update'])->name('app_configuration.update')->middleware('auth');
 
 # configuration routes - club configuration
-Route::get('/configurations/club_configuration', [AppConfigurationController::class, 'index'])->name('club_configuration.index')->middleware('auth');
-Route::get('/configurations/club_configuration/{id}/edit', [AppConfigurationController::class, 'edit'])->name('club_configuration.edit')->middleware('auth');
-Route::post('/configurations/club_configuration/{action}', [AppConfigurationController::class, 'update'])->name('club_configuration.update')->middleware('auth');
+Route::get('/configurations/club_configuration', [ClubConfigurationController::class, 'index'])->name('club_configuration.index')->middleware('auth');
+Route::get('/configurations/club_configuration/{id}/edit', [ClubConfigurationController::class, 'edit'])->name('club_configuration.edit')->middleware('auth');
+Route::post('/configurations/club_configuration/{action}', [ClubConfigurationController::class, 'update'])->name('club_configuration.update')->middleware('auth');
 
 
 # configurations routes -  profil configuration

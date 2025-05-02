@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ClubConfigurationController extends Controller
 {
@@ -15,7 +16,8 @@ class ClubConfigurationController extends Controller
      * when the presient of the club is connected
      */
     public function index() {
-        $clubconfiguration = Club::all()->where('president_id',Auth::id());
+        # $clubconfiguration = Club::all()->where('president_id',Auth::id());
+        $clubconfiguration = Club::all()->last();
         return view('configurations.club_configuration', compact('clubconfiguration'));
     }
 
@@ -24,18 +26,15 @@ class ClubConfigurationController extends Controller
      */
     public function update(Request $request, $action) {
         $request->validate([
-            'club_name' => 'required|min:3|max:255|unique:clubs,club_name',
+            'club_name' => 'required|min:3|max:255',Rule::unique('clubs')->ignore($request->clubconfigurationId),
             'content' => 'required',
-            'club_image' => 'required|image|mimes:jpg,jpeg,png,gif|max:4096',
         ], [
-            'club_name.required' => 'Veuillez entrez le nom du club',
-            'club_name.min' => 'Le nom du club doit contenir minimum 3 caractères',
+            'club_name.required' => 'Veuillez entrez un nom de club',
+            'club_name.min' => 'Le nom du club doit contenir au minimum 3 caractères',
             'club_name.max' => 'Le nom du club doit contenir au maximum 255 caractères',
             'club_name.unique' => 'Ce nom de club existe déja',
             'content.required' => 'Veuillez remplir la description du club',
-            'club_image.required' => 'Veuillez selectionner une image de mise en avant',
         ]);
-
         try {
             if($action === 'update' && isset($request->clubconfigurationId)) {
                 $clubconfiguration = Club::findOrFail($request->clubconfigurationId);
@@ -48,13 +47,12 @@ class ClubConfigurationController extends Controller
                 }
                 $clubconfiguration->update([
                     'club_name' => $request->club_name,
-                    'contenu' => $request->content,
-                    'club_image' => $imagePath,
+                    'contenu' => $request->content
                 ]);
                 return response()->json(['success' => 'Configuration du club mis à jour avec succès']);
             }
         } catch (Exception $ex) {
-            dd($ex);
+            dd($ex->getMessage());
         }
     }
 

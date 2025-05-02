@@ -151,6 +151,19 @@ class User extends Authenticatable
     }
 
     /**
+     * current year student classe
+     */
+    public function getCurrentYearClasseName($activeYearId)
+    {
+        $studentYearClasseId = ClasseAnneeScolaireStudent::all()
+            ->where('user_id', $this->id)
+            ->where('annee_scolaire_id', $activeYearId)
+            ->pluck('classe_id');
+        $classe = Classe::where('id',$studentYearClasseId)->first();
+        return $classe;
+    }
+
+    /**
      * A user must be in different classes throw years
      */
     public function classeAnneeScolaire()
@@ -235,13 +248,24 @@ class User extends Authenticatable
     }
 
     /**
-     * user in club
+     *
      */
-    public function clubs() {
-        return $this->belongsToMany(Club::class)->withPivot('post_id')->withTimestamps();
-    }
-
     public function presidencies() {
         return $this->hasMany(Club::class, 'president_id');
     }
+
+    /**
+     * check if a user is a president of some club
+     */
+    public function isClubPresident() {
+        return $this->clubs()->where('president_id', $this->id)->exists();
+    }
+
+    /**
+     * a club must have one president
+     */
+    public function club() {
+        return $this->hasOne(Club::class, 'president_id');
+    }
+
 }

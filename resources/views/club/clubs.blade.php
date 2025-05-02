@@ -90,7 +90,7 @@
                                             Image de mise en Avant :
                                         </label>
                                         <input type="file" id="club_image" name="club_image" class="form-control"
-                                            placeholder="Selectionner une image de mise en avant" value="">
+                                            placeholder="Selectionner une image de mise en avant (taille max = 4Mo)" value="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

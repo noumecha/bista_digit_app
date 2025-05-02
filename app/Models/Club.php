@@ -40,14 +40,6 @@ class Club extends Model
     /**
      *
      */
-    public function postes(): HasMany
-    {
-        return $this->hasMany(ClubPost::class);
-    }
-
-    /**
-     *
-     */
     public function actualites(): MorphMany
     {
         return $this->morphMany(Actualite::class, 'actualiteable'); // if reusing article

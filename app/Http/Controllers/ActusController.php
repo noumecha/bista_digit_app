@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Actualite;
 use App\Models\CategorieActualite;
+use App\Models\Club;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,26 +20,26 @@ class ActusController extends Controller
         // utils vars
         $user = User::find(Auth::id());
         $categories = CategorieActualite::all();
-
         // filter vars
         $searchActualite = $request->input('searchActualite');
         $categorieFilter = $request->input('categorieFilter');
-
         // querying
         $query = Actualite::query();
-
         // filtering
         if(!empty($categorieFilter)) {
             $query->where('categorie_actualites_id', $categorieFilter);
         }
-
         if (!empty($searchActualite)) {
             $query->where('titre', 'LIKE', "%{$searchActualite}%")
                 ->orWhere('contenu', 'LIKE', "%{$searchActualite}%");
         }
-
-        $actualites = $query->paginate(10);
-
+        // if user is club president
+        $userIds = Club::all()->pluck('president_id');
+        if ($userIds->contains(Auth::id())) {
+            $club = Club::all()->where('president_id', Auth::id())->first();
+            $query->where('club_id', $club->id);
+        }
+        $actualites = $query->latest()->paginate(10);
         if($request->ajax()) {
             return view('partials._actualites_table', compact('actualites', 'categories'));
         } else {
@@ -68,12 +69,20 @@ class ActusController extends Controller
         else
             $imagePath = '';
 
+        // if user is club president
+        $clubId = null;
+        $userIds = Club::all()->pluck('president_id');
+        if ($userIds->contains(Auth::id())) {
+            $club = Club::all()->where('president_id', Auth::id())->first();
+            $clubId = $club->id;
+        }
         $actualite = Actualite::create([
             'titre' => $request->titre,
             'contenu' => $request->content,
             'user_id' => Auth::id(),
             'categorie_actualites_id' => $request->categorie_actualites_id,
             'image' => $imagePath,
+            'club_id' => $clubId,
         ]);
 
         if($actualite) {
