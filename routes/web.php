@@ -37,6 +37,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RemplissageController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TrimestreController;
 use App\Http\Controllers\TypeEpreuveController;
 use Illuminate\Support\Facades\Artisan;
@@ -77,7 +78,6 @@ Route::post('/categories/actualites/save', [CategorieActualiteController::class,
 Route::put('/categories/actualites/update/{id}', [CategorieActualiteController::class, 'update'])->name('categorie.update')->middleware('auth');
 Route::get('/categories/actualites/{id}/edit', [CategorieActualiteController::class, 'edit'])->name('categorie.edit')->middleware('auth');
 Route::delete('/categories/actualites/{id}', [CategorieActualiteController::class, 'destroy'])->name('categorie.destroy')->middleware('auth');
-
 
 // Authentication routes :
 Route::get('/sign-up', [RegisterController::class, 'create'])->middleware('guest')->name('sign-up');
@@ -220,7 +220,6 @@ Route::get('/education/conseildiscipline/students/{classe_id}', [ConseilDiscipli
 Route::get('/education/conseildiscipline/student/{user_id}', [ConseilDisciplineController::class, 'getStudent'])->middleware('auth');
 Route::get('/education/conseildisciplines/conseildate/{evalId}', [ConseilDisciplineController::class, 'getTrimsDate'])->middleware('auth');
 
-
 ## education -> devoirs routes
 Route::post('/education/devoirs/save', [DevoirController::class, 'store'])->name('devoir.store')->middleware('auth');
 Route::put('/education/devoirs/update/{id}', [DevoirController::class, 'update'])->name('devoir.update')->middleware('auth');
@@ -305,11 +304,17 @@ Route::get('/configurations/app_configuration', [AppConfigurationController::cla
 Route::get('/configurations/app_configuration/{id}/edit', [AppConfigurationController::class, 'edit'])->name('app_configuration.edit')->middleware('auth');
 Route::post('/configurations/app_configuration/{action}', [AppConfigurationController::class, 'update'])->name('app_configuration.update')->middleware('auth');
 
+# configuration routes - slider configuration
+Route::get('/configurations/sliders/list', [SliderController::class, 'index'])->name('sliders.index')->middleware('auth');
+Route::post('/configurations/sliders/save', [SliderController::class, 'store'])->name('sliders.store')->middleware('auth');
+Route::put('/configurations/sliders/update/{id}', [SliderController::class, 'update'])->name('sliders.update')->middleware('auth');
+Route::get('/configurations/sliders/{id}/edit', [SliderController::class, 'edit'])->name('sliders.edit')->middleware('auth');
+Route::delete('/configurations/sliders/{id}', [SliderController::class, 'destroy'])->name('sliders.destroy')->middleware('auth');
+
 # configuration routes - club configuration
 Route::get('/configurations/club_configuration', [ClubConfigurationController::class, 'index'])->name('club_configuration.index')->middleware('auth');
 Route::get('/configurations/club_configuration/{id}/edit', [ClubConfigurationController::class, 'edit'])->name('club_configuration.edit')->middleware('auth');
 Route::post('/configurations/club_configuration/{action}', [ClubConfigurationController::class, 'update'])->name('club_configuration.update')->middleware('auth');
-
 
 # configurations routes -  profil configuration
 Route::get('/configurations/profile', function () {

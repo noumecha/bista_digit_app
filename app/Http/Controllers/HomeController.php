@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Actualite;
 use App\Models\CategorieActualite;
 use App\Models\Epreuve;
+use App\Models\Slider;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -16,8 +17,10 @@ class HomeController extends Controller
     public function index () {
         $students = User::all()->where('typeUser','=','eleve')->count();
         $teachers = User::all()->where('typeUser','=','enseignant')->count();
+        $sliders = Slider::query()->latest()->paginate(5);
+        $articles = Actualite::query()->latest()->paginate(3);
         $categories = CategorieActualite::all();
-        return view('front.home', compact('students', 'teachers','categories'));
+        return view('front.home', compact('students','articles','teachers','categories','sliders'));
     }
 
     /**

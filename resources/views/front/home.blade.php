@@ -1,42 +1,33 @@
 <x-front-layout>
     <section id="carouselExampleFade" class="carousel slide carousel-fade slider" data-ride="carousel">
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="{{ asset('front/images/slider/1.jpg') }}" class="d-block" alt="...">
-                <div class="carousel-caption">
-                    <h2>Pour une meilleure éducation</h2>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
-                    <div class="button-01">
-                        <ul>
-                            <li><a href="#">View Courses</a></li>
-                        </ul>
+            @if ($sliders->isEmpty())
+                <div class="carousel-item active">
+                    <img src="{{ asset('front/images/slider/1.jpg') }}" class="d-block" alt="...">
+                    <div class="carousel-caption">
+                        <h2>
+                            Pour une meilleure éducation
+                        </h2>
+                        <p>
+                            Implication de la technologie dans l'enseignement
+                        </p>
                     </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-            <img src="{{ asset('front/images/slider/2.jpg') }}" class="d-block" alt="...">
-            <div class="carousel-caption">
-                <h2>Pour une meilleure éducation</h2>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
-                <div class="button-01">
-                    <ul>
-                        <li><a href="#">View Courses</a></li>
-                    </ul>
-                </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-            <img src="{{ asset('front/images/slider/3.jpg') }}" class="d-block" alt="...">
-            <div class="carousel-caption">
-                <h2>Pour une meilleure éducation</h2>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Qui perspiciatis, eveniet sequi labore vel itaque adipisci odio necessitatibus voluptatibus saepe, impedit enim unde velit amet rem, suscipit corrupti vero ad.</p>
-                <div class="button-01">
-                    <ul>
-                        <li><a href="#">View Courses</a></li>
-                    </ul>
-                </div>
-            </div>
-              </div>
+            @else
+                @foreach ($sliders as $slider)
+                    <div class="carousel-item {{ $loop->first ? 'active' : "" }}">
+                        <img src="{{ asset('storage/' . $slider->slider_image) }}" class="d-block" alt="...">
+                        <div class="carousel-caption">
+                            <h2>
+                                {{ $slider->slider_title }}
+                            </h2>
+                            <p>
+                                {{ $slider->slider_text }}
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
             </div>
             <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -46,6 +37,7 @@
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="sr-only">Next</span>
             </a>
+        </div>
     </section>
 
      <!-- ====================== section started====================== -->
@@ -184,7 +176,7 @@
       <section class="bg-03">
           <div class="container">
               <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-history"></i>
                       <div class="counting" data-count="0">0</div>
@@ -192,7 +184,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-graduation-cap"></i>
                         <div class="counting" data-count="{{ $students }}">0</div>
@@ -206,15 +198,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                    <div class="_lk_bg_cd">
-                        <i class="fal fa-globe"></i>
-                      <div class="counting" data-count="0">0</div>
-                      <h5>COURS EN LIGNE</h5>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
                         <i class="fal fa-registered"></i>
                         <div class="counting" data-count="{{ $teachers }}">0</div>
@@ -225,97 +209,6 @@
                                 ENSEIGNANTS QUALIFIES
                             @endif
                         </h5>
-                    </div>
-                </div>
-              </div>
-          </div>
-      </section>
-
-      <!-- ====================== Team Started started====================== -->
-
-      <section class="team">
-          <div class="container">
-              <div class="row">
-                <div class="col-12">
-                    <div class="heading">
-                        <h2>NOTRE EQUIPE</h2>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime totam quo, ducimus aliquid quisquam minima perspiciatis repellendus, minus tenetur reiciendis quis? Consequatur perferendis deleniti, rerum delectus consectetur modi praesentium deserunt.</p>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="owl-carousel owl-stage-outer">
-                        <div class="item">
-                            <div class="team-card">
-                                <div class="image-team">
-                                    <img src="{{ asset('front/images/team/1.jpg') }}">
-                                </div>
-                                <div class="team-content">
-                                    <h3>John</h3>
-                                    <p>Web Developer</p>
-                                    <ol>
-                                        <li><i class="fab fa-facebook-f"></i></li>
-                                        <li><i class="fab fa-instagram"></i></li>
-                                        <li><i class="fab fa-linkedin-in"></i></li>
-                                        <li><i class="fab fa-pinterest-p"></i></li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="item">
-                            <div class="team-card">
-                                <div class="image-team">
-                                    <img src="{{ asset('front/images/team/2.jpg') }}">
-                                </div>
-                                <div class="team-content">
-                                    <h3>Anderson john</h3>
-                                    <p>Web Designer</p>
-                                    <ol>
-                                        <li><i class="fab fa-facebook-f"></i></li>
-                                        <li><i class="fab fa-instagram"></i></li>
-                                        <li><i class="fab fa-linkedin-in"></i></li>
-                                        <li><i class="fab fa-pinterest-p"></i></li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="item">
-                            <div class="team-card">
-                                <div class="image-team">
-                                    <img src="{{ asset('front/images/team/3.jpg') }}">
-                                </div>
-                                <div class="team-content">
-                                    <h3>Sarah Se</h3>
-                                    <p>Web Designer</p>
-                                    <ol>
-                                        <li><i class="fab fa-facebook-f"></i></li>
-                                        <li><i class="fab fa-instagram"></i></li>
-                                        <li><i class="fab fa-linkedin-in"></i></li>
-                                        <li><i class="fab fa-pinterest-p"></i></li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="item">
-                            <div class="team-card">
-                                <div class="image-team">
-                                    <img src="{{ asset('front/images/team/4.jpg') }}">
-                                </div>
-                                <div class="team-content">
-                                    <h3>Williams</h3>
-                                    <p>English </p>
-                                    <ol>
-                                        <li><i class="fab fa-facebook-f"></i></li>
-                                        <li><i class="fab fa-instagram"></i></li>
-                                        <li><i class="fab fa-linkedin-in"></i></li>
-                                        <li><i class="fab fa-pinterest-p"></i></li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
               </div>

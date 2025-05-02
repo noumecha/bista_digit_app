@@ -13,9 +13,9 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des clubs</h5>
+                                    <h5 class="">Gestion de la page d'accueil</h5>
                                     <p class="text-sm">
-                                        Gestion des clubs
+                                        Modifier les sliders de la page d'acceuil
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -25,9 +25,9 @@
                                         data-bs-toggle="modal"
                                         data-action="create"
                                         id="add-button"
-                                        data-bs-target="#create-club-modal"
+                                        data-bs-target="#create-slider-modal"
                                     >
-                                        <i class="fa-solid fa-kaaba me-2"></i> Ajouter
+                                        <i class="fa-solid fa-image me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>
@@ -35,28 +35,28 @@
                                 <div class="col-md-12">
                                     <div class="input-group">
                                         <input type="text" name="searchText" id="searchText" class="form-control"
-                                            placeholder="Rechercher un club (par nom, description)"/>
+                                            placeholder="Rechercher un slider (par titre, description)"/>
                                     </div>
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="clubsTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="slidersTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- modal for creation new actualites -->
-        <div class="modal fade" id="create-club-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal fade" id="create-slider-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-xl">
-                <form enctype="multipart/form-data" role="form" id="clubForm" class="form row">
+                <form enctype="multipart/form-data" role="form" id="sliderForm" class="form row">
                     @csrf
-                    <input type="hidden" name="clubId" id="clubId" value="">
+                    <input type="hidden" name="sliderId" id="sliderId" value="">
                     <div class="modal-content p-0">
-                        <div class="modal-header" id="modal-club-header">
+                        <div class="modal-header" id="modal-slider-header">
                             <div class="modal-title row">
                                 <div class="col-12">
-                                    <h5 id="header-club-text" class="text-white"></h5>
+                                    <h5 id="header-slider-text" class="text-white"></h5>
                                 </div>
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -66,60 +66,40 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="club_name" class="form-control-label">
-                                            Nom du club :
+                                        <label for="slider_title" class="form-control-label">
+                                            Titre du slider :
                                         </label>
                                         <input
                                             type="text"
-                                            id="club_name"
-                                            name="club_name"
+                                            id="slider_title"
+                                            name="slider_title"
                                             class="form-control"
-                                            placeholder="Entrez le nom du club"
+                                            placeholder="Entrez le titre du slider"
                                         />
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        @if(isset($clubToEdit) && $clubToEdit->club_image)
-                                            <div>
-                                                <img src="{{ asset('storage/' . $clubToEdit->club_image) }}" alt="Profile Image"
-                                                    style="max-width: 150px; max-height: 150px; display: block; margin-bottom: 10px;">
-                                            </div>
-                                        @endif
-                                        <label for="club_image" class="form-control-label">
+                                        <label for="slider_image" class="form-control-label">
                                             Image de mise en Avant :
                                         </label>
-                                        <input type="file" id="club_image" name="club_image" class="form-control"
+                                        <input type="file" id="slider_image" name="slider_image" class="form-control"
                                             placeholder="Selectionner une image de mise en avant (taille max = 4Mo)" value="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="president_id" class="form-control-label">
-                                            Président :
-                                        </label>
-                                        <select name="president_id" id="president_id" class="form-select">
-                                            <option value="">Selectionnez le président</option>
-                                            @foreach ($students as $student)
-                                                <option value="{{ $student->id }}">
-                                                    {{ $student->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="contenu" class="form-control-label">
-                                        Description du club :
+                                    <label for="slider_text" class="form-control-label">
+                                        Description du slider :
                                     </label>
                                     <textarea
-                                        name="content"
-                                        id="content"
-                                        placeholder="Entrez la description du club"
+                                        name="slider_text"
+                                        id="slider_text"
+                                        class="form-control"
+                                        placeholder="Entrez la description du slider"
                                         cols="12"
-                                        rows="30">
+                                        rows="15">
                                     </textarea>
                                 </div>
                             </div>
@@ -130,9 +110,9 @@
                         </div>
                         <div class="modal-footer flex-row-reverse">
                             <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="button" id="submit-club-form-button" class="spinner-submit-club-form-button btn btn-lg">
+                            <button type="button" id="submit-slider-form-button" class="spinner-submit-slider-form-button btn btn-lg">
                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                <span id="submit-club-form-button-text"></span>
+                                <span id="submit-slider-form-button-text"></span>
                             </button>
                         </div>
                     </div>
@@ -142,7 +122,7 @@
         <x-app.footer />
     </main>
     @section('scripts')
-        <script src="{{ asset('js/functions/clubs.js') }}"></script>
+        <script src="{{ asset('js/functions/sliders.js') }}"></script>
     @endsection
 </x-app-layout>
 

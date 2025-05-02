@@ -324,9 +324,9 @@
                     </a>
                 </li>
                 <li data-submenu="app_configuration" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
-                        <span class="nav-link-text ms-1">Front</span>
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('sliders.index') ? 'active' : '' }}"
+                        href="{{ route('sliders.index') }}">
+                        <span class="nav-link-text ms-1">Slider</span>
                     </a>
                 </li>
             </ul>

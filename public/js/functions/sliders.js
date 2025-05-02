@@ -1,16 +1,16 @@
 $(function(){
 
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-club-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-slider-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var clubId = $(this).data('club-id');
-        var clubIdInput = $('#clubId');
-        var form = $('#clubForm');
-        var button = $('#submit-club-form-button');
-        var header = $('#modal-club-header');
-        var headerText = $('#header-club-text');
+        var sliderId = $(this).data('slider-id');
+        var sliderIdInput = $('#sliderId');
+        var form = $('#sliderForm');
+        var button = $('#submit-slider-form-button');
+        var header = $('#modal-slider-header');
+        var headerText = $('#header-slider-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -21,16 +21,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-club-form-button-text').text('Enregistrer');
-            headerText.text('Creer un nouveau club');
+            button.children('span#submit-slider-form-button-text').text('Enregistrer');
+            headerText.text('Creer un nouveau slider');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-club-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour les informations du club');
-            clubIdInput.val(clubId);
+            button.children('span#submit-slider-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour les informations du slider');
+            sliderIdInput.val(sliderId);
             $.ajax({
-                url: clubId+"/edit",
+                url: sliderId+"/edit",
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -41,19 +41,15 @@ $(function(){
             });
         }
     })
-    // When submiting form for updating or creating new club
-    $(document).on('click','.spinner-submit-club-form-button', function() {
-        // ckeditor synchronize before save
-        if (window.editor) {
-            $('textarea#content').val(window.editor.getData());
-        }
+    // When submiting form for updating or creating new slider
+    $(document).on('click','.spinner-submit-slider-form-button', function() {
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-club-form-button-text');
-        var clubId = $('#clubId').val();
+        var buttonText = $(this).children('span#submit-slider-form-button-text');
+        var sliderId = $('#sliderId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'update/' + clubId : 'save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'update/' + sliderId : 'save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -78,7 +74,7 @@ $(function(){
                         window.editor.setData('');
                     }, 4000);
                 }
-                fetchClubs();
+                fetchSliders();
             },
             error: function(xhr) {
                 var errors = []
@@ -91,7 +87,7 @@ $(function(){
                     });
                 } else {
                     setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
-                    $('#create-club-modal').hide();
+                    $('#create-slider-modal').hide();
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
@@ -101,32 +97,31 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-club-modal').on('hidden.bs.modal', function () {
-        const form = $('#clubForm');
+    $('#create-slider-modal').on('hidden.bs.modal', function () {
+        const form = $('#sliderForm');
         form.trigger('reset');
-        $('#modal-club-header').removeClass('bg-primary bg-success');
-        $('#submit-club-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-club-form-button').children('span#submit-club-form-button-text').text('');
-        window.editor.setData('');
+        $('#modal-slider-header').removeClass('bg-primary bg-success');
+        $('#submit-slider-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-slider-form-button').children('span#submit-slider-form-button-text').text('');
     });
 
-    // fetching clubs dynamically with filters
+    // fetching sliders dynamically with filters
     $('#searchText').on('change keyup', function () {
-        fetchClubs();
+        fetchSliders();
     });
 
     // default data :
-    fetchClubs();
+    fetchSliders();
 
-    // fetching all clubs :
-    function fetchClubs() {
-        var formData = $('#filterClubForm').serialize();
+    // fetching all sliders :
+    function fetchSliders() {
+        var formData = $('#filterSliderForm').serialize();
         $.ajax({
             url : "list",
             type : 'GET',
             data : formData,
             success : function(data) {
-                $('#clubsTable').html(data);
+                $('#slidersTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -140,7 +135,7 @@ $(function(){
         event.preventDefault();
 
         var page = $(this).attr('href').split('page=')[1];
-        fetchPage(page, '#clubsTable');
+        fetchPage(page, '#slidersTable');
     });
 
 });

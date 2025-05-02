@@ -46,6 +46,8 @@ class ClubController extends Controller
         ], [
             'club_name.required' => 'Veuillez entrez le nom du club',
             'club_name.unique' => 'Ce nom de club existe déja',
+            'club_name.min' => 'Le nom du club doit contenir minimum 3 caractères',
+            'club_name.max' => 'Le nom du club doit contenir maximum 255 caractères',
             'content.required' => 'Veuillez remplir la description du club',
             'club_image.required' => 'Veuillez selectionner une image de mise en avant',
         ]);
