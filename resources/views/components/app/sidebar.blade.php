@@ -231,12 +231,23 @@
                 </li>
             </ul>
             <!-- Programme I'am a leader on Dashboard -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link {{ is_current_route('programme.leader') ? 'active' : '' }}"
+            <ul class="navbar-nav submenu">
+                <li data-submenu="epreuves" class="submenu-click-link nav-item mt-2">
+                    <div class="d-flex align-items-center nav-link">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span class="font-weight-normal text-md ml-n5">I'am a Leader</span>
+                    </div>
+                </li>
+                <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
                         href="{{ route('programme.leader') }}">
-                        <i class="fa-solid fa-gear fa-sm"></i>
-                        <span class="nav-link-text text-md ml-n5">I'AM A LEADER</span>
+                        <span class="nav-link-text ms-1">Eleves Leader</span>
+                    </a>
+                </li>
+                <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Configuration page</span>
                     </a>
                 </li>
             </ul>
