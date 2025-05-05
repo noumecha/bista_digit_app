@@ -15,7 +15,7 @@
                                 <div class="col-md-12 col-lg-6">
                                     <h5 class="">Gestion de la page d'accueil</h5>
                                     <p class="text-sm">
-                                        Modifier les sliders de la page d'acceuil
+                                        Modifier les specialités & fillières de la page d'acceuil
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -25,38 +25,38 @@
                                         data-bs-toggle="modal"
                                         data-action="create"
                                         id="add-button"
-                                        data-bs-target="#create-slider-modal"
+                                        data-bs-target="#create-specialite-modal"
                                     >
                                         <i class="fa-solid fa-image me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>
-                            <form class="form form-inline row mt-3" id="filterSliderForm">
+                            <form class="form form-inline row mt-3" id="filterSpecialiteForm">
                                 <div class="col-md-12">
                                     <div class="input-group">
                                         <input type="text" name="searchText" id="searchText" class="form-control"
-                                            placeholder="Rechercher un slider (par titre, description)"/>
+                                            placeholder="Rechercher une specialite (par titre, description)"/>
                                     </div>
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="slidersTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="specialitesTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- modal for creation new actualites -->
-        <div class="modal fade" id="create-slider-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <div class="modal fade" id="create-specialite-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-xl">
-                <form enctype="multipart/form-data" role="form" id="sliderForm" class="form row">
+                <form enctype="multipart/form-data" role="form" id="specialiteForm" class="form row">
                     @csrf
-                    <input type="hidden" name="sliderId" id="sliderId" value="">
+                    <input type="hidden" name="specialiteId" id="specialiteId" value="">
                     <div class="modal-content p-0">
-                        <div class="modal-header" id="modal-slider-header">
+                        <div class="modal-header" id="modal-specialite-header">
                             <div class="modal-title row">
                                 <div class="col-12">
-                                    <h5 id="header-slider-text" class="text-white"></h5>
+                                    <h5 id="header-specialite-text" class="text-white"></h5>
                                 </div>
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -66,40 +66,39 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="slider_title" class="form-control-label">
-                                            Titre du slider :
+                                        <label for="specialite_title" class="form-control-label">
+                                            Titre de la spécialité (cycle):
                                         </label>
                                         <input
                                             type="text"
-                                            id="slider_title"
-                                            name="slider_title"
+                                            id="specialite_title"
+                                            name="specialite_title"
                                             class="form-control"
-                                            placeholder="Entrez le titre du slider"
+                                            placeholder="Entrez le titre du specialite"
                                         />
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="slider_image" class="form-control-label">
+                                        <label for="specialite_image" class="form-control-label">
                                             Image de mise en Avant :
                                         </label>
-                                        <input type="file" id="slider_image" name="slider_image" class="form-control"
+                                        <input type="file" id="specialite_image" name="specialite_image" class="form-control"
                                             placeholder="Selectionner une image de mise en avant (taille max = 4Mo)" value="">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="slider_text" class="form-control-label">
-                                        Description du slider :
+                                    <label for="content" class="form-control-label">
+                                        Description de la spécialité ou du cycle :
                                     </label>
                                     <textarea
-                                        name="slider_text"
-                                        id="slider_text"
-                                        class="form-control"
-                                        placeholder="Entrez la description du slider"
+                                        name="content"
+                                        id="content"
+                                        placeholder="Entrez la description du specialite"
                                         cols="12"
-                                        rows="15">
+                                        rows="30">
                                     </textarea>
                                 </div>
                             </div>
@@ -110,9 +109,9 @@
                         </div>
                         <div class="modal-footer flex-row-reverse">
                             <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="button" id="submit-slider-form-button" class="spinner-submit-slider-form-button btn btn-lg">
+                            <button type="button" id="submit-specialite-form-button" class="spinner-submit-specialite-form-button btn btn-lg">
                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                <span id="submit-slider-form-button-text"></span>
+                                <span id="submit-specialite-form-button-text"></span>
                             </button>
                         </div>
                     </div>
@@ -122,7 +121,7 @@
         <x-app.footer />
     </main>
     @section('scripts')
-        <script src="{{ asset('js/functions/sliders.js') }}"></script>
+        <script src="{{ asset('js/functions/specialites.js') }}"></script>
     @endsection
 </x-app-layout>
 

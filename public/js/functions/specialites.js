@@ -1,16 +1,16 @@
 $(function(){
 
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#create-slider-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#create-specialite-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
         var action = $(this).data('action');
-        var sliderId = $(this).data('slider-id');
-        var sliderIdInput = $('#sliderId');
-        var form = $('#sliderForm');
-        var button = $('#submit-slider-form-button');
-        var header = $('#modal-slider-header');
-        var headerText = $('#header-slider-text');
+        var specialiteId = $(this).data('specialite-id');
+        var specialiteIdInput = $('#specialiteId');
+        var form = $('#specialiteForm');
+        var button = $('#submit-specialite-form-button');
+        var header = $('#modal-specialite-header');
+        var headerText = $('#header-specialite-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -21,16 +21,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-slider-form-button-text').text('Enregistrer');
-            headerText.text('Creer un nouveau slider');
+            button.children('span#submit-specialite-form-button-text').text('Enregistrer');
+            headerText.text('Ajouter une nouvelle specialite ou cycle');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-slider-form-button-text').text('Mettre à jour');
-            headerText.text('Mettre à jour les informations du slider');
-            sliderIdInput.val(sliderId);
+            button.children('span#submit-specialite-form-button-text').text('Mettre à jour');
+            headerText.text('Mettre à jour les informations de la spécialité');
+            specialiteIdInput.val(specialiteId);
             $.ajax({
-                url: sliderId+"/edit",
+                url: specialiteId+"/edit",
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
@@ -41,15 +41,19 @@ $(function(){
             });
         }
     })
-    // When submiting form for updating or creating new slider
-    $(document).on('click','.spinner-submit-slider-form-button', function() {
+    // When submiting form for updating or creating new specialite
+    $(document).on('click','.spinner-submit-specialite-form-button', function() {
+        // ckeditor synchronize before save
+        if (window.editor) {
+            $('textarea#content').val(window.editor.getData());
+        }
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-slider-form-button-text');
-        var sliderId = $('#sliderId').val();
+        var buttonText = $(this).children('span#submit-specialite-form-button-text');
+        var specialiteId = $('#specialiteId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'update/' + sliderId : 'save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'update/' + specialiteId : 'save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -70,8 +74,11 @@ $(function(){
                 }, 4000);
                 if(formAction === 'save') {
                     resetForm(form);
+                    setTimeout(function() {
+                        window.editor.setData('');
+                    }, 4000);
                 }
-                fetchSliders();
+                fetchSpecialites();
             },
             error: function(xhr) {
                 var errors = []
@@ -84,7 +91,7 @@ $(function(){
                     });
                 } else {
                     setSuccessMessage('Erreur inconue' , '#modal-form-alert-errors');
-                    $('#create-slider-modal').hide();
+                    $('#create-specialite-modal').hide();
                 }
                 setTimeout(function() {
                     spinner.addClass('d-none');
@@ -94,31 +101,32 @@ $(function(){
         });
     });
     // reseting form title and color :
-    $('#create-slider-modal').on('hidden.bs.modal', function () {
-        const form = $('#sliderForm');
+    $('#create-specialite-modal').on('hidden.bs.modal', function () {
+        const form = $('#specialiteForm');
         form.trigger('reset');
-        $('#modal-slider-header').removeClass('bg-primary bg-success');
-        $('#submit-slider-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-slider-form-button').children('span#submit-slider-form-button-text').text('');
+        $('#modal-specialite-header').removeClass('bg-primary bg-success');
+        $('#submit-specialite-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-specialite-form-button').children('span#submit-specialite-form-button-text').text('');
+        window.editor.setData('');
     });
 
-    // fetching sliders dynamically with filters
+    // fetching specialites dynamically with filters
     $('#searchText').on('change keyup', function () {
-        fetchSliders();
+        fetchSpecialites();
     });
 
     // default data :
-    fetchSliders();
+    fetchSpecialites();
 
-    // fetching all sliders :
-    function fetchSliders() {
-        var formData = $('#filterSliderForm').serialize();
+    // fetching all specialites :
+    function fetchSpecialites() {
+        var formData = $('#filterSpecialiteForm').serialize();
         $.ajax({
             url : "list",
             type : 'GET',
             data : formData,
             success : function(data) {
-                $('#slidersTable').html(data);
+                $('#specialitesTable').html(data);
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
@@ -132,7 +140,7 @@ $(function(){
         event.preventDefault();
 
         var page = $(this).attr('href').split('page=')[1];
-        fetchPage(page, '#slidersTable');
+        fetchPage(page, '#specialitesTable');
     });
 
 });

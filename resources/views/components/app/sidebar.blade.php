@@ -329,6 +329,12 @@
                         <span class="nav-link-text ms-1">Slider</span>
                     </a>
                 </li>
+                <li data-submenu="app_configuration" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('specialite.index') ? 'active' : '' }}"
+                        href="{{ route('specialite.index') }}">
+                        <span class="nav-link-text ms-1">Specialités</span>
+                    </a>
+                </li>
             </ul>
             <!-- Profile on Dashboard -->
             <ul class="navbar-nav">

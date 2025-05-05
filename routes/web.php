@@ -38,6 +38,7 @@ use App\Http\Controllers\RemplissageController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\TrimestreController;
 use App\Http\Controllers\TypeEpreuveController;
 use Illuminate\Support\Facades\Artisan;
@@ -323,6 +324,16 @@ Route::get('/configurations/profile', function () {
 Route::get('/configurations/profile', [ProfileController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::get('/configurations/profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
 Route::post('/configurations/profile/{action}', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+# configuration routes - specialite routes
+Route::get('/configurations/specialite', function () {
+    return redirect('/configurations/specialite/list');
+})->middleware('auth');
+Route::get('/configurations/specialite/list', [SpecialiteController::class, 'index'])->name('specialite.index')->middleware('auth');
+Route::post('/configurations/specialite/save', [SpecialiteController::class, 'store'])->name('specialite.store')->middleware('auth');
+Route::put('/configurations/specialite/update/{id}', [SpecialiteController::class, 'update'])->name('specialite.update')->middleware('auth');
+Route::get('/configurations/specialite/{id}/edit', [SpecialiteController::class, 'edit'])->name('specialite.edit')->middleware('auth');
+Route::delete('/configurations/specialite/{id}', [SpecialiteController::class, 'destroy'])->name('specialite.destroy')->middleware('auth');
 
 # configuratioun routes - clubs routes
 Route::get('/configurations/clubs', function () {

@@ -50,6 +50,7 @@ class ClubController extends Controller
             'club_name.max' => 'Le nom du club doit contenir maximum 255 caractères',
             'content.required' => 'Veuillez remplir la description du club',
             'club_image.required' => 'Veuillez selectionner une image de mise en avant',
+            'club_image.mimes' => 'L\'image doit être du type (jpg, jpeg, png, gif)',
         ]);
 
         if(isset($request->president_id)) {
@@ -105,6 +106,7 @@ class ClubController extends Controller
             'club_name.max' => 'Le nom du club doit contenir au maximum 255 caractères',
             'club_name.unique' => 'Ce nom de club existe déja',
             'content.required' => 'Veuillez remplir la description du club',
+            'club_image.mimes' => 'L\'image doit être du type (jpg, jpeg, png, gif)',
         ]);
         $club = Club::findOrFail($id);
         # check if president_id is already president of some club
