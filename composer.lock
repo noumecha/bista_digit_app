@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9b0f6e08cbcb4c62bed0898b021e97a",
+    "content-hash": "c848202e0fbf60a19b2b074f5f0c0a68",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -1288,16 +1288,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v11.44.0",
+            "version": "v11.44.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "e9a33da34815ac1ed46c7e4c477a775f4592f0a7"
+                "reference": "00bc6ac91a6d577bf051c18ddaa638c0d221e1c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/e9a33da34815ac1ed46c7e4c477a775f4592f0a7",
-                "reference": "e9a33da34815ac1ed46c7e4c477a775f4592f0a7",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/00bc6ac91a6d577bf051c18ddaa638c0d221e1c7",
+                "reference": "00bc6ac91a6d577bf051c18ddaa638c0d221e1c7",
                 "shasum": ""
             },
             "require": {
@@ -1405,7 +1405,7 @@
                 "league/flysystem-read-only": "^3.25.1",
                 "league/flysystem-sftp-v3": "^3.25.1",
                 "mockery/mockery": "^1.6.10",
-                "orchestra/testbench-core": "^9.9.4",
+                "orchestra/testbench-core": "^9.11.2",
                 "pda/pheanstalk": "^5.0.6",
                 "php-http/discovery": "^1.15",
                 "phpstan/phpstan": "^2.0",
@@ -1499,7 +1499,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-02-24T13:08:54+00:00"
+            "time": "2025-04-25T12:40:47+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -1753,16 +1753,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.6.1",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "d990688c91cedfb69753ffc2512727ec646df2ad"
+                "reference": "6fbb36d44824ed4091adbcf4c7d4a3923cdb3405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/d990688c91cedfb69753ffc2512727ec646df2ad",
-                "reference": "d990688c91cedfb69753ffc2512727ec646df2ad",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/6fbb36d44824ed4091adbcf4c7d4a3923cdb3405",
+                "reference": "6fbb36d44824ed4091adbcf4c7d4a3923cdb3405",
                 "shasum": ""
             },
             "require": {
@@ -1799,7 +1799,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.7-dev"
+                    "dev-main": "2.8-dev"
                 }
             },
             "autoload": {
@@ -1856,7 +1856,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-29T14:10:59+00:00"
+            "time": "2025-05-05T12:20:28+00:00"
         },
         {
             "name": "league/config",
