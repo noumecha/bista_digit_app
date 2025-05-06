@@ -13,9 +13,9 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Gestion de la page d'accueil</h5>
+                                    <h5 class="">Gestion des pages pour la présentation des autouts</h5>
                                     <p class="text-sm">
-                                        Modifier les specialités & fillières de la page d'acceuil
+                                        Modifier ou ajouter des atouts de l'établissement (description et images)
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -98,8 +98,19 @@
                                         id="content"
                                         placeholder="Entrez la description du specialite"
                                         cols="12"
-                                        rows="30">
+                                        rows="5">
                                     </textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="slider-wrapper" class="form-control-label">
+                                        Ajouter des images + description :
+                                    </label>
+                                    <div class="d-flex row">
+                                        <div id="slider-wrapper">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
@@ -113,6 +124,7 @@
                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
                                 <span id="submit-specialite-form-button-text"></span>
                             </button>
+                            <button type="button" id="add-slider" class="btn btn-primary mt-2">Ajouter image + description</button>
                         </div>
                     </div>
                 </form>

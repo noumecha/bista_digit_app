@@ -232,19 +232,19 @@
             </ul>
             <!-- Programme I'am a leader on Dashboard -->
             <ul class="navbar-nav submenu">
-                <li data-submenu="epreuves" class="submenu-click-link nav-item mt-2">
+                <li data-submenu="leaders" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-book-open"></i>
                         <span class="font-weight-normal text-md ml-n5">I'am a Leader</span>
                     </div>
                 </li>
-                <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
+                <li data-submenu="leaders" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
                         href="{{ route('programme.leader') }}">
                         <span class="nav-link-text ms-1">Eleves Leader</span>
                     </a>
                 </li>
-                <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
+                <li data-submenu="leaders" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
                         href="{{ route('programme.leader') }}">
                         <span class="nav-link-text ms-1">Configuration page</span>
@@ -269,6 +269,30 @@
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
                         href="{{ route('programme.leader') }}">
                         <span class="nav-link-text ms-1">Notes</span>
+                    </a>
+                </li>
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Matieres</span>
+                    </a>
+                </li>
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Enseignants</span>
+                    </a>
+                </li>
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Eleves</span>
+                    </a>
+                </li>
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
+                        href="{{ route('programme.leader') }}">
+                        <span class="nav-link-text ms-1">Configuration page</span>
                     </a>
                 </li>
             </ul>
@@ -343,7 +367,7 @@
                 <li data-submenu="app_configuration" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('specialite.index') ? 'active' : '' }}"
                         href="{{ route('specialite.index') }}">
-                        <span class="nav-link-text ms-1">Specialités</span>
+                        <span class="nav-link-text ms-1">Atouts</span>
                     </a>
                 </li>
             </ul>

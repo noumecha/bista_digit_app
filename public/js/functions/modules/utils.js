@@ -30,6 +30,14 @@ function stylingErrors(errs, id) {
                     inputElement.addClass('is-invalid');
                     setTimeout(() => inputElement.removeClass('is-invalid'), 4000);
                 }
+            } else if (field.startsWith('sliders.')) {
+                const id = field.split('.')[1];
+                const name = field.split('.')[2];
+                const inputElement = $(`input[name="sliders[${id}][${name}]"]`);
+                if (inputElement.length) {
+                    inputElement.addClass('is-invalid');
+                    setTimeout(() => inputElement.removeClass('is-invalid'), 4000);
+                }
             } else {
                 let inputElement = $('#' + field);
                 if(id) {
@@ -94,7 +102,12 @@ function fillInputForm(res, form) {
                 $(this).val(res.groupe_matiere);
             return true;
         }
-        // for date inut type
+        // for input type image
+        if ($(this).is('input[type=image]') && inputName in data) {
+            // comming soon
+            // manage image for all the update input
+        }
+        // for date input type
         if ($(this).is('input[type=date]') && inputName in data) {
             const rawDate = data[inputName];
             if (rawDate) {
@@ -111,6 +124,30 @@ function fillInputForm(res, form) {
             }
         }
     });
+    // for specialites
+    if (data.sliders) {
+        console.log(data.sliders);
+        sliders = Object.entries(data.sliders);
+        sliders.forEach(([index, slider]) => {
+            const html = `
+                <div class="slider-group">
+                    <div class="d-flex">
+                        <img src="/storage/${slider.image}"
+                            class="mr-2 mb-2" alt="user1" style="height: 120px; width: 120px;">
+                    </div>
+                    <input type="file" id="sliders[${index}][image]"
+                        name="sliders[${index}][image]"
+                        placeholder="Taille.<= 4Mo" class="form-control mb-1"/>
+                    <input type="text" id="sliders[${index}][title]"
+                        name="sliders[${index}][title]"
+                        value="${slider.title}"
+                        class="form-control mb-1"/>
+                    <button type="button" class="btn btn-danger remove-slider">Supprimer</button>
+                </div>
+            `;
+            $('#slider-wrapper').append(html);
+        })
+    }
     // only for questions and responses
     if (data.question || res.reponses) {
         form.find('textarea[name="question"]').val(data.question.question);

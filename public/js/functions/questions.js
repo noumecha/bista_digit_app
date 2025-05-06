@@ -7,7 +7,8 @@ $(function(){
             <div class="row reponse-item mt-2" id="reponse-${reponseId}">
                 <div class="col-md-8">
                     <div class="input-group">
-                        <input type="text" id="responses[]" name="reponses[]" class="form-control" placeholder="Entrez une réponse">
+                        <input type="text" id="responses[]" name="reponses[]" class="form-control"
+                        placeholder="Entrez une réponse">
                     </div>
                 </div>
                 <div class="col-md-2 form-check">

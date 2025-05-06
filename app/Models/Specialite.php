@@ -12,6 +12,11 @@ class Specialite extends Model
     protected $fillable = [
         'specialite_title',
         'contenu',
-        'specialite_image'
+        'specialite_image',
+        'sliders'
+    ];
+
+    protected $casts = [
+        'sliders' => 'array'
     ];
 }

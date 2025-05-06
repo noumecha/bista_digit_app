@@ -149,17 +149,14 @@ class QuestionController extends Controller
             'status_checkbox.required' => 'Veuillez définir au moins une réponse comme correcte.',
             'reponses.*.required' => 'Veuillez remplir la :attribute',
         ], $customAttributes);
-
         //dd($request);
         $question = Question::findOrFail($id);
         $question->update([
             'question' => $request->content,
             'devoir_id' => $request->devoir_id,
         ]);
-
         // delete old reponses
         Reponse::where('question_id', $question->id)->delete();
-
         // add new reponses with them status
         foreach ($request->reponses as $index => $reponse) {
             Reponse::create([
@@ -168,7 +165,6 @@ class QuestionController extends Controller
                 'status' => $request->status[$index],
             ]);
         }
-
         return response()->json(['success' => 'Question et réponses mises à jour avec succès']);
     }
 
