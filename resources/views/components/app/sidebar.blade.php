@@ -241,13 +241,13 @@
                 <li data-submenu="leaders" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
                         href="{{ route('programme.leader') }}">
-                        <span class="nav-link-text ms-1">Eleves Leader</span>
+                        <span class="nav-link-text ms-1">Actualités</span>
                     </a>
                 </li>
                 <li data-submenu="leaders" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
                         href="{{ route('programme.leader') }}">
-                        <span class="nav-link-text ms-1">Configuration page</span>
+                        <span class="nav-link-text ms-1">Configuration de page</span>
                     </a>
                 </li>
             </ul>

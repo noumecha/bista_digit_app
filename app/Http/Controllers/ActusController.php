@@ -33,6 +33,8 @@ class ActusController extends Controller
             $query->where('titre', 'LIKE', "%{$searchActualite}%")
                 ->orWhere('contenu', 'LIKE', "%{$searchActualite}%");
         }
+        // if admin page programme iam leader , filtering the categories
+
         // if user is club president
         $userIds = Club::all()->pluck('president_id');
         if ($userIds->contains(Auth::id())) {

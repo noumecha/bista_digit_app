@@ -17,4 +17,21 @@ class ProgrammeController extends Controller
 
         return view('programme.booster', compact('user'));
     }
+
+    /**
+     * Programme controller : leader
+     */
+    public function leader()
+    {
+        $user = User::find(Auth::id());
+
+        return view('programme.booster', compact('user'));
+    }
+
+    /**
+     * programme controller : configuration
+     */
+    public function configuration() {
+
+    }
 }
