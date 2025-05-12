@@ -12,11 +12,19 @@ class Coefficient extends Model
     /**
      * @var array
      */
-    protected $fillable = ['classe_id','matiere_id','annee_scolaire_id'];
+    protected $fillable = [
+        'classe_id',
+        'matiere_id',
+        'annee_scolaire_id'
+    ];
 
+    /**
+     *
+     */
     public function coefAnneeScolaire() {
         return $this->hasMany(CoefAnneeScolaire::class, 'coefficient_id');
     }
+
     /**
      *
      */

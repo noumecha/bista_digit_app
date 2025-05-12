@@ -337,9 +337,23 @@ Route::get('/configurations/page_configuration/booster', [ProgrammeController::c
 Route::get('/configurations/page_configuration/booster/{id}/edit', [ProgrammeController::class, 'edit'])->name('page_configuration.booster.edit')->middleware('auth');
 Route::post('/configurations/page_configuration/booster/{action}', [ProgrammeController::class, 'update'])->name('page_configuration.booster.update')->middleware('auth');
 # programme routes - booster teachers routes
-Route::get('/configurations/programme/booster/teachers', [ProgrammeController::class, 'teachers'])->name('booster.teachers')->middleware('auth');
-Route::get('/configurations/programme/booster/{id}/edit', [ProgrammeController::class, 'teachersEdit'])->name('booster.teachersEdit')->middleware('auth');
-Route::delete('/configurations/programme/booster/{id}/delete', [ProgrammeController::class, 'teachersDelete'])->name('booster.teachersDelete')->middleware('auth');
+Route::get('/programme/booster/teachers', [ProgrammeController::class, 'teachers'])->name('booster.teachers')->middleware('auth');
+Route::post('/programme/booster/teachers/save', [ProgrammeController::class, 'teacherSave'])->name('booster.teacherSave')->middleware('auth');
+Route::get('/programme/booster/teachers/{id}/edit', [ProgrammeController::class, 'teacherEdit'])->name('booster.teachersEdit')->middleware('auth');
+Route::delete('/programme/booster/teachers/{id}/delete', [ProgrammeController::class, 'teacherDelete'])->name('booster.teachersDelete')->middleware('auth');
+Route::get('/booster/teachers/matieres/{userId}', [ProgrammeController::class, 'getTeacherMatieres'])->name('booster.teacherMatieres')->middleware('auth');
+
+# programme routes - booster matieres routes
+Route::get('/programme/booster/matieres', [ProgrammeController::class, 'matieres'])->name('booster.matieres')->middleware('auth');
+Route::post('/programme/booster/matieres/save', [ProgrammeController::class, 'matiereSave'])->name('booster.matiereSave')->middleware('auth');
+Route::get('/programme/booster/matieres/{id}/edit', [ProgrammeController::class, 'matiereEdit'])->name('booster.matiereEdit')->middleware('auth');
+Route::delete('/programme/booster/matieres/{id}/delete', [ProgrammeController::class, 'matiereDelete'])->name('booster.matiereDelete')->middleware('auth');
+# programme routes - booster students routes
+Route::get('/programme/booster/students', [ProgrammeController::class, 'students'])->name('booster.students')->middleware('auth');
+Route::post('/programme/booster/students/save', [ProgrammeController::class, 'studentSave'])->name('booster.studentSave')->middleware('auth');
+Route::get('/programme/booster/students/{id}/edit', [ProgrammeController::class, 'studentEdit'])->name('booster.studentEdit')->middleware('auth');
+Route::delete('/programme/booster/students/{id}/delete', [ProgrammeController::class, 'studentDelete'])->name('booster.studentDelete')->middleware('auth');
+
 
 # configuration routes - specialite routes
 Route::get('/configurations/specialite', function () {

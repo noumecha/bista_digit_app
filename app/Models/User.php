@@ -153,6 +153,19 @@ class User extends Authenticatable
     /**
      * current year student classe
      */
+    public function studentCurrentClasse($activeYearId)
+    {
+        $studentYearClasseId = ClasseAnneeScolaireStudent::all()
+            ->where('user_id', $this->id)
+            ->where('annee_scolaire_id', $activeYearId)
+            ->pluck('classe_id');
+        $classe = Classe::where('id',$studentYearClasseId)->first();
+        return $classe;
+    }
+
+    /**
+     * current year student classe
+     */
     public function getCurrentYearClasseName($activeYearId)
     {
         $studentYearClasseId = ClasseAnneeScolaireStudent::all()
