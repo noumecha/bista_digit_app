@@ -6,16 +6,17 @@ use App\Models\Specialite;
 use Carbon\Exceptions\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
-class ProgrammeController extends Controller
+class IamLeaderController extends Controller
 {
     /**
      *
      */
     public function index(Request $request)
     {
-        $page = Specialite::all()->where("type","booster-page")->last();
-        return view('programme.booster', compact('page'));
+        $page = Specialite::all()->where("type","leader-page")->last();
+        return view('programme.iamleader', compact('page'));
     }
 
     /**
@@ -100,6 +101,7 @@ class ProgrammeController extends Controller
             $rules['specialite_image'] = 'required|image|mimes:jpg,jpeg,png,gif|max:4096';
             $validators['specialite_image.required'] = 'Veuillez selectionner une image de mise en avant';
             # slider images
+            # slider images
             if($request->has('sliders')) {
                 foreach ($request->sliders as $index => $slider) {
                     $rules["sliders.$index.image"] = 'required|image|mimes:jpg,jpeg,png,gif|max:4096';
@@ -135,7 +137,7 @@ class ProgrammeController extends Controller
                         'specialite_image' => $imagePath
                     ]);
                 }
-                return response()->json(['success' => 'Configuration de la page booster mise à jour avec succès']);
+                return response()->json(['success' => 'Configuration de la page i am leader mise à jour avec succès']);
             }
             if ($action === 'create') {
                 $leaderPage = Specialite::create([
@@ -143,10 +145,10 @@ class ProgrammeController extends Controller
                     'contenu' => $request->content,
                     'specialite_image' => $imagePath,
                     'sliders' => $sliderData,
-                    'type' => 'booster-page',
+                    'type' => 'leader-page',
                 ]);
                 if ($leaderPage) {
-                    return response()->json(['success' => 'Configuration de la page booster enregistrée avec succès']);
+                    return response()->json(['success' => 'Configuration de la page i am leader enregistrée avec succès']);
                 }
             }
         } catch (Exception $ex) {
@@ -164,4 +166,5 @@ class ProgrammeController extends Controller
             'content' => $pageconfiguration->contenu
         ]);
     }
+
 }

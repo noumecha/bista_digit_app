@@ -13,7 +13,8 @@ class Specialite extends Model
         'specialite_title',
         'contenu',
         'specialite_image',
-        'sliders'
+        'sliders',
+        'type'
     ];
 
     protected $casts = [

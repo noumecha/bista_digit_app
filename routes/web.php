@@ -29,6 +29,7 @@ use App\Http\Controllers\EpreuveController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\FonctionController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\IamLeaderController;
 use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PersonnelController;
@@ -42,6 +43,7 @@ use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\TrimestreController;
 use App\Http\Controllers\TypeEpreuveController;
 use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\HttpKernel\Profiler\ProfilerStorageInterface;
 
 /*
 |--------------------------------------------------------------------------
@@ -325,6 +327,20 @@ Route::get('/configurations/profile', [ProfileController::class, 'index'])->name
 Route::get('/configurations/profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
 Route::post('/configurations/profile/{action}', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
 
+# programme configuration - routes leader
+Route::get('/configurations/page_configuration/leader', [IamLeaderController::class, 'index'])->name('page_configuration.leader.index')->middleware('auth');
+Route::get('/configurations/page_configuration/leader/{id}/edit', [IamLeaderController::class, 'edit'])->name('page_configuration.leader.edit')->middleware('auth');
+Route::post('/configurations/page_configuration/leader/{action}', [IamLeaderController::class, 'update'])->name('page_configuration.leader.update')->middleware('auth');
+
+# programme configuration - booster page config
+Route::get('/configurations/page_configuration/booster', [ProgrammeController::class, 'index'])->name('page_configuration.booster.index')->middleware('auth');
+Route::get('/configurations/page_configuration/booster/{id}/edit', [ProgrammeController::class, 'edit'])->name('page_configuration.booster.edit')->middleware('auth');
+Route::post('/configurations/page_configuration/booster/{action}', [ProgrammeController::class, 'update'])->name('page_configuration.booster.update')->middleware('auth');
+# programme routes - booster teachers routes
+Route::get('/configurations/programme/booster/teachers', [ProgrammeController::class, 'teachers'])->name('booster.teachers')->middleware('auth');
+Route::get('/configurations/programme/booster/{id}/edit', [ProgrammeController::class, 'teachersEdit'])->name('booster.teachersEdit')->middleware('auth');
+Route::delete('/configurations/programme/booster/{id}/delete', [ProgrammeController::class, 'teachersDelete'])->name('booster.teachersDelete')->middleware('auth');
+
 # configuration routes - specialite routes
 Route::get('/configurations/specialite', function () {
     return redirect('/configurations/specialite/list');
@@ -415,11 +431,6 @@ Route::put('/anneescolaire/desactivate/{id}', [AnneeScolaireController::class, '
 
 
 # actualites routes
-
-# programme routes
-Route::get('/programme/booster', [ProgrammeController::class, 'index'])->name('programme.booster')->middleware('auth');
-Route::get('/programme/leader', [ProgrammeController::class, 'index'])->name('programme.leader')->middleware('auth');
-
 
 Route::get('/laravel-examples/user-profile', [ProfileController::class, 'index'])->name('users.profile')->middleware('auth');
 Route::put('/laravel-examples/user-profile/update', [ProfileController::class, 'update'])->name('users.update')->middleware('auth');

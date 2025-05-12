@@ -1,15 +1,35 @@
 $(function(){
+    // manage the slider dynamically
+    let sliderId = 0;
+    $(document).on('click', '#add-slider', function () {
+        sliderId++;
+        const html = `
+            <div class="slider-group" id="slider-${sliderId}">
+                <input type="file" id="sliders[${sliderId}][image]"
+                    name="sliders[${sliderId}][image]"
+                    placeholder="Taille.<= 4Mo" class="form-control mb-1" />
+                <input type="text" id="sliders[${sliderId}][title]"
+                    name="sliders[${sliderId}][title]"
+                    placeholder="description de l'image" class="form-control mb-1" />
+                <button type="button" class="btn btn-danger remove-slider">Supprimer</button>
+            </div>
+        `;
+        $('#slider-wrapper').append(html);
+    });
+    $(document).on('click', '.remove-slider', function () {
+        $(this).closest('.slider-group').remove();
+    });
     // when the modal is opened
-    $(document).on('click', '[data-bs-target="#update-appconfiguration-modal"]', function(e) {
+    $(document).on('click', '[data-bs-target="#update-pageconfiguration-modal"]', function(e) {
         e.preventDefault();
         // setting up variables
-        var appconfigurationId = $(this).data('appconfiguration-id');
-        var appconfigurationIdInput = $('#appconfigurationId');
-        var action = appconfigurationId !== "" ? "edit" : "create";
-        var form = $('#appconfigurationForm');
-        var button = $('#submit-appconfiguration-form-button');
-        var header = $('#modal-appconfiguration-header');
-        var headerText = $('#header-appconfiguration-text');
+        var pageconfigurationId = $(this).data('pageconfiguration-id');
+        var pageconfigurationIdInput = $('#pageconfigurationId');
+        var action = pageconfigurationId !== "" ? "edit" : "create";
+        var form = $('#pageconfigurationForm');
+        var button = $('#submit-pageconfiguration-form-button');
+        var header = $('#modal-pageconfiguration-header');
+        var headerText = $('#header-pageconfiguration-text');
 
         // reseting
         header.removeClass('bg-primary bg-success');
@@ -20,16 +40,16 @@ $(function(){
         if (action == "create") {
             header.addClass('bg-primary');
             button.addClass('btn-outline-primary');
-            button.children('span#submit-appconfiguration-form-button-text').text('Enregistrer');
-            headerText.text('Modifier les informations de l\'établissement');
+            button.children('span#submit-pageconfiguration-form-button-text').text('Enregistrer');
+            headerText.text('Modifier la page du programme I Am Leader');
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
-            button.children('span#submit-appconfiguration-form-button-text').text('Mettre à jour');
-            headerText.text('Modifier les informations de l\'établissement');
-            appconfigurationIdInput.val(appconfigurationId);
+            button.children('span#submit-pageconfiguration-form-button-text').text('Mettre à jour');
+            headerText.text('Modifier la page du programme I Am leader');
+            pageconfigurationIdInput.val(pageconfigurationId);
             $.ajax({
-                url: "app_configuration/"+appconfigurationId+"/edit",
+                url: "leader/"+pageconfigurationId+"/edit",
                 type: "GET",
                 success: function(res) {
                     // filling form base on the data res
@@ -43,18 +63,19 @@ $(function(){
     })
 
     // When submiting form for updating or creating new remplissage
-    $(document).on('click','.spinner-submit-appconfiguration-form-button', function() {
+    $(document).on('click','.spinner-submit-pageconfiguration-form-button', function() {
         // ckeditor synchronize before save
         if (window.editor) {
             $('textarea#content').val(window.editor.getData());
         }
         var spinner = $(this).children('span.spinner-border');
         spinner.removeClass('d-none');
-        var buttonText = $(this).children('span#submit-appconfiguration-form-button-text');
+        var buttonText = $(this).children('span#submit-pageconfiguration-form-button-text');
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
+
         // Kind of action
-        var formAction = buttonText.text() === 'Mettre à jour' ? 'app_configuration/update' : 'app_configuration/create';
+        var formAction = buttonText.text() === 'Mettre à jour' ? 'leader/update' : 'leader/create';
         var modalId = $(this).closest('div.modal').prop('id');
         $.ajax({
             url: formAction,
@@ -71,13 +92,13 @@ $(function(){
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
-                /*if (formAction === 'app_configuration/create') {
+                /*if (formAction === 'page_configuration/create') {
                     // close the form :
                     $('#'+modalId).hide();
                     $('.modal-backdrop').remove();
                 }*/
                 setTimeout(function() {
-                    fetchAppConfigurations();
+                    fetchConfig();
                 }, 4000);
             },
             error: function(xhr) {
@@ -99,24 +120,24 @@ $(function(){
             }
         });
     });
-
     // reseting form title and color when closing modal :
-    $('#update-appconfiguration-modal').on('hidden.bs.modal', function () {
-        const form = $('#appconfigurationForm');
+    $('#update-pageconfiguration-modal').on('hidden.bs.modal', function () {
+        const form = $('#pageconfigurationForm');
         form.trigger('reset');
-        $('#modal-appconfiguration-header').removeClass('bg-primary bg-success');
-        $('#submit-appconfiguration-form-button').removeClass('btn-outline-primary btn-outline-success');
-        $('#submit-appconfiguration-form-button').children('span#submit-appconfiguration-form-button-text').text('');
+        $('#modal-pageconfiguration-header').removeClass('bg-primary bg-success');
+        $('#submit-pageconfiguration-form-button').removeClass('btn-outline-primary btn-outline-success');
+        $('#submit-pageconfiguration-form-button').children('span#submit-pageconfiguration-form-button-text').text('');
         window.editor.setData('');
+        $('.slider-group').remove();
     });
     // fetching all remplissages :
-    function fetchAppConfigurations() {
+    function fetchConfig() {
         $.ajax({
-            url : "app_configuration",
+            url : "leader/",
             type : 'GET',
             success : function(response) {
-                console.log("App configuration loaded!");
-                window.location.href = "app_configuration";
+                console.log("Page configuration loaded!");
+                window.location.href = "leader";
             },
             error: function(xhr, status, error) {
                 if (xhr && xhr.responseJSON.errors) {

@@ -239,14 +239,14 @@
                     </div>
                 </li>
                 <li data-submenu="leaders" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('actualites.index') ? 'active' : '' }}"
+                        href="{{ route('actualites.index') }}">
                         <span class="nav-link-text ms-1">Actualités</span>
                     </a>
                 </li>
                 <li data-submenu="leaders" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.leader.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.leader.index') }}">
                         <span class="nav-link-text ms-1">Configuration de page</span>
                     </a>
                 </li>
@@ -260,38 +260,38 @@
                     </div>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.booster') ? 'active' : '' }}"
-                        href="{{ route('programme.booster') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Evaluations</span>
                     </a>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Notes</span>
                     </a>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Matieres</span>
                     </a>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Enseignants</span>
                     </a>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Eleves</span>
                     </a>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Configuration page</span>
                     </a>
                 </li>
@@ -305,14 +305,14 @@
                     </div>
                 </li>
                 <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.booster') ? 'active' : '' }}"
-                        href="{{ route('programme.booster') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Nouvelle Notification</span>
                     </a>
                 </li>
                 <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Type de Notification</span>
                     </a>
                 </li>
@@ -390,14 +390,14 @@
                     </div>
                 </li>
                 <li data-submenu="statistics" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.booster') ? 'active' : '' }}"
-                        href="{{ route('programme.booster') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Publications</span>
                     </a>
                 </li>
                 <li data-submenu="statistics" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('programme.leader') ? 'active' : '' }}"
-                        href="{{ route('programme.leader') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
+                        href="{{ route('page_configuration.booster.index') }}">
                         <span class="nav-link-text ms-1">Classement OBC</span>
                     </a>
                 </li>

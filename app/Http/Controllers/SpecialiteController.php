@@ -15,7 +15,7 @@ class SpecialiteController extends Controller
     public function index(Request $request)
     {
         # useful var
-        $query = Specialite::query();
+        $query = Specialite::query()->where('type','specialite');
         # filtering
         $searchText = $request->input('searchText');
         if (!empty($searchText)) {
@@ -85,6 +85,7 @@ class SpecialiteController extends Controller
             'contenu' => $request->content,
             'specialite_image' => $imagePath,
             'sliders' => $sliderData,
+            'type' => 'specialite'
         ]);
 
         if($specialite) {
@@ -153,7 +154,9 @@ class SpecialiteController extends Controller
             if ($specialite->specialite_image) {
                 Storage::disk('public')->delete($specialite->specialite_image);
             }
-            $specialite->specialite_image = $imagePath;
+            $specialite->update([
+                'specialite_image' => $imagePath
+            ]);
         }
         // adding new sliders
         if ($request->has('sliders')) {

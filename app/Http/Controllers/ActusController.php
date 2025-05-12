@@ -16,7 +16,7 @@ class ActusController extends Controller
     /**
      * index function
      */
-    public function index (Request $request) {
+    public function index(Request $request) {
         // utils vars
         $user = User::find(Auth::id());
         $categories = CategorieActualite::all();
@@ -33,8 +33,6 @@ class ActusController extends Controller
             $query->where('titre', 'LIKE', "%{$searchActualite}%")
                 ->orWhere('contenu', 'LIKE', "%{$searchActualite}%");
         }
-        // if admin page programme iam leader , filtering the categories
-
         // if user is club president
         $userIds = Club::all()->pluck('president_id');
         if ($userIds->contains(Auth::id())) {

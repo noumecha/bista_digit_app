@@ -1,181 +1,169 @@
 <x-app-layout>
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <x-app.navbar />
-        <div class="px-5 py-4 container-fluid">
-            <div class="mt-4 row">
-                <div class="col-12">
-                    <div class="alert alert-dark text-sm" role="alert">
-                        <strong>Add, Edit, Delete features are not functional!</strong> This is a
-                        <strong>PRO</strong> feature ! Click <a href="#" target="_blank" class="text-bold">here</a>
-                        to see the <strong>PRO</strong> product!
+        <div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
+            <div class="pt-7 pb-6 bg-cover"
+                style="
+                    background-position: bottom;background-image:
+                    @if(isset($page) && isset($page->specialite_image))
+                        url('{{ asset('storage/'.$page->specialite_image) }}');
+                    @else
+                        url('{{ asset('img/header-blue-purple.jpg') }}');
+                    @endif"
+                >
+            </div>
+            <div class="container">
+                <div class="card card-body py-2 bg-transparent shadow-none">
+                    <div class="row">
+                        <div class="col-auto my-auto">
+                            <div class="h-100">
+                                <h3 class="mb-0 font-weight-bold">
+                                    @if (isset($page) && isset($page->specialite_title))
+                                        {{ $page->specialite_title }}
+                                    @else
+                                        Non défini
+                                    @endif
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3 text-sm-end">
+                            <a
+                                type="button"
+                                class="btn btn-lg btn-dark btn-primary text-white"
+                                data-bs-toggle="modal"
+                                data-action="create"
+                                data-pageconfiguration-id = "{{ isset($page) ? $page->id : ''}}"
+                                data-bs-target="#update-pageconfiguration-modal"
+                                class="btn btn-sm btn-white"
+                            >
+                                <i class="fas fa-pen me-2"></i> Modifier
+                            </a>
+                        </div>
                     </div>
-                    <div class="card">
-                        <div class="pb-0 card-header">
-                            <div class="row">
-                                <div class="col-6">
-                                    <h5 class="">User Management</h5>
-                                    <p class="mb-0 text-sm">
-                                        Here you can manage users.
-                                    </p>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <a href="#" class="btn btn-dark btn-primary">
-                                        <i class="fas fa-user-plus me-2"></i> Add Member
-                                    </a>
+                </div>
+            </div>
+            <div class="container my-3 py-3">
+                <div class="row">
+                    <div class="col-12 col-xl-12 mb-4">
+                        <div class="card border shadow-xs h-100">
+                            <div class="card-header pb-0 p-3">
+                                <div class="row">
+                                    <div class="col-md-8 col-9">
+                                        <h6 class="mb-0 font-weight-semibold text-lg">Informations de la page</h6>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="">
-                                @if (session('success'))
-                                    <div class="alert alert-success" role="alert" id="alert">
-                                        {{ session('success') }}
-                                    </div>
+                            <div class="card-body p-3">
+                                <h6 class="mb-0 font-weight-semibold text-lg">Description</h6>
+                                @if (isset($page) && isset($page->contenu))
+                                    {!! Str::limit($page->contenu , $limit=300, $end="...") !!}
+                                @else
+                                    <p class="text-sm mb-4">aucune description ...</p>
                                 @endif
-                                @if (session('error'))
-                                    <div class="alert alert-danger" role="alert" id="alert">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
+                                <ul class="list-group">
+                                    <li
+                                        class="list-group-item border-0 ps-0 text-dark font-weight-semibold pt-0 pb-1 text-sm">
+                                        <span class="text-secondary">Titre de la page :</span>
+                                        @if (isset($page) && isset($page->specialite_title))
+                                            {{ $page->specialite_title }}
+                                        @else
+                                            Non défini
+                                        @endif
+                                    </li>
+                                </ul>
                             </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table text-secondary text-center">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            ID</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Photo</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Name</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Email</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Role</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Creation Date</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">1</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/team-1.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user1" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Admin</td>
-                                        <td class="align-middle bg-transparent border-bottom">admin@softui.com</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Admin</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">16/08/18</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">2</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/team-2.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user2" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Creator</td>
-                                        <td class="align-middle bg-transparent border-bottom">creator@softui.com</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Creator</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">05/05/20</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">3</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/team-3.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user3" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Member</td>
-                                        <td class="align-middle bg-transparent border-bottom">member@softui.com</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Member</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">05/05/20</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">4</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/team-4.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user4" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Peterson</td>
-                                        <td class="align-middle bg-transparent border-bottom">peterson@corporateui.com
-                                        </td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Member</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">05/05/20</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle bg-transparent border-bottom">5</td>
-                                        <td class="align-middle bg-transparent border-bottom">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <img src="{{ asset('img/marie.jpg') }}" class="rounded-circle mr-2"
-                                                    alt="user5" style="height: 36px; width: 36px;">
-                                            </div>
-                                        </td>
-                                        <td class="align-middle bg-transparent border-bottom">Marie</td>
-                                        <td class="align-middle bg-transparent border-bottom">marie@corporateui.com
-                                        </td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">Creator</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">05/05/20</td>
-                                        <td class="text-center align-middle bg-transparent border-bottom">
-                                            <a href="#"><i class="fas fa-user-edit" aria-hidden="true"></i></a>
-                                            <a href="#"><i class="fas fa-trash" aria-hidden="true"></i></a>
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- modal for creating or updating a pageconfiguration datas -->
+        <div class="modal fade" id="update-pageconfiguration-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <form enctype="multipart/form-data" role="form" id="pageconfigurationForm" class="form row">
+                    @csrf
+                    <input type="hidden" name="pageconfigurationId" id="pageconfigurationId" value="">
+                    <div class="modal-content p-0">
+                        <div class="modal-header" id="modal-pageconfiguration-header">
+                            <div class="modal-title row">
+                                <div class="col-12">
+                                    <h5 id="header-pageconfiguration-text" class="text-white"></h5>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="specialite_title" class="form-control-label">
+                                            Titre de la spécialité (cycle):
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="specialite_title"
+                                            name="specialite_title"
+                                            class="form-control"
+                                            placeholder="Entrez le titre de la page"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="specialite_image" class="form-control-label">
+                                            Image de mise en Avant :
+                                        </label>
+                                        <input type="file" id="specialite_image" name="specialite_image" class="form-control"
+                                            placeholder="Selectionner une image de mise en avant (taille max = 4Mo)" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="content" class="form-control-label">
+                                        Description de la spécialité ou du cycle :
+                                    </label>
+                                    <textarea
+                                        name="content"
+                                        id="content"
+                                        placeholder="Entrez la description de la page"
+                                        cols="12"
+                                        rows="5">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="slider-wrapper" class="form-control-label">
+                                        Ajouter des images + description (slider) :
+                                    </label>
+                                    <div class="d-flex row">
+                                        <div id="slider-wrapper">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-row-reverse">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" id="submit-pageconfiguration-form-button" class="spinner-submit-pageconfiguration-form-button btn btn-lg">
+                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                <span id="submit-pageconfiguration-form-button-text"></span>
+                            </button>
+                            <button type="button" id="add-slider" class="btn btn-primary mt-2">Ajouter image + description</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <x-app.footer />
     </main>
-
+    @section('scripts')
+        <script src="{{ asset('js/functions/booster.js') }}"></script>
+    @endsection
 </x-app-layout>
-
-<script src="{{asset('js/plugins/datatables.js')}}"></script>
-<script>
-    const dataTableBasic = new simpleDatatables.DataTable("#datatable-search", {
-        searchable: true,
-        fixedHeight: true,
-        columns: [{
-            select: [2, 6],
-            sortable: false
-        }]
-    });
-</script>
