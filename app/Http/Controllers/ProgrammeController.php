@@ -6,6 +6,7 @@ use App\Models\BoosterMatiere;
 use App\Models\BoosterStudent;
 use App\Models\BoosterTeacher;
 use App\Models\Classe;
+use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\EnseignantMatiereModel;
 use App\Models\EnsMatAnneeScolaire;
 use App\Models\Matiere;
@@ -44,8 +45,8 @@ class ProgrammeController extends Controller
         $matiereFilter = $request->input('matiereFilter');
         // filtering
         if(!empty($searchText)) {
-            $query->whereHas('teacher', function ($teacherQuery) use ($searchText) {
-                $teacherQuery->where('name', 'LIKE', "%{$searchText}%")
+            $query->whereHas('teacher', function ($q) use ($searchText) {
+                $q->where('name', 'LIKE', "%{$searchText}%")
                     ->orWhere('surname', 'LIKE', "%{$searchText}%");
             });
         }
@@ -93,8 +94,8 @@ class ProgrammeController extends Controller
         $searchText = $request->input('searchText');
         // filtering
         if(!empty($searchText)) {
-            $query->whereHas('matiere', function ($teacherQuery) use ($searchText) {
-                $teacherQuery->where('libelleMatiere', 'LIKE', "%{$searchText}%")
+            $query->whereHas('matiere', function ($q) use ($searchText) {
+                $q->where('libelleMatiere', 'LIKE', "%{$searchText}%")
                     ->orWhere('codeMatiere', 'LIKE', "%{$searchText}%");
             });
         }
@@ -112,22 +113,25 @@ class ProgrammeController extends Controller
     public function students(Request $request) {
         $query = BoosterStudent::query()->where('annee_scolaire_id',getCurrentYear()->id);
         $classes = Classe::all();
+        // usefull vars
         $studentSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id',getCurrentYear()->id);
         $studentsSchoolYearId = $studentSchoolYear->pluck('user_id');
         $students = User::all()->where('typeUser', '=', 'eleve')->whereIn('id', $studentsSchoolYearId);
+        $classesYearsStudents = ClasseAnneeScolaireStudent::all()->where('annee_scolaire_id', getCurrentYear()->id);
+        // filters vars
         $searchText = $request->input('searchText');
         $classeFilter = $request->input('classeFilter');
         // filtering
         if(!empty($searchText)) {
-            $query->whereHas('student', function ($studentQuery) use ($searchText) {
-                $studentQuery->where('name', 'LIKE', "%{$searchText}%")
-                    ->orWhere('surname', 'LIKE', "%{$searchText}%");
+            $query->whereHas('student', function ($q) use ($searchText) {
+                $q->where('name', 'LIKE', "%{$searchText}%")
+                ->orWhere('surname', 'LIKE', "%{$searchText}%");
             });
         }
         if(!empty($classeFilter)) {
-            $query->whereHas('student.classe', function ($studentQuery) use ($classeFilter) {
-                $studentQuery->where('id', $classeFilter);
-            });
+            $userIdsWithYearClasse = $classesYearsStudents->where('classe_id', $classeFilter)
+                ->pluck('user_id');
+            $query->whereIn('user_id', $userIdsWithYearClasse);
         }
         $boosterstudents = $query->paginate(10);
         if($request->ajax()) {

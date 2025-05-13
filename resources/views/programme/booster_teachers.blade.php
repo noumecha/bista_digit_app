@@ -35,12 +35,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <input type="text" name="searchText" value=""
-                                            id="searchText" class="form-control" placeholder="Rechercher par nom"/>
+                                            id="searchText" class="form-control"
+                                            placeholder="Rechercher l'enseignant par nom ou prénom"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <select name="classeFilter" id="ClasseFilter" class="form-select">
+                                        <select name="classeFilter" id="classeFilter" class="form-select">
                                             <option value="">Toutes les classes</option>
                                             @foreach ($classes as $classe)
                                                 <option value="{{ $classe->id }}">

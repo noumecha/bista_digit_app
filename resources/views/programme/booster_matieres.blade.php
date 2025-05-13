@@ -35,7 +35,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <input type="text" name="searchText" value=""
-                                            id="searchText" class="form-control" placeholder="Rechercher par nom"/>
+                                            id="searchText" class="form-control"
+                                            placeholder="Rechercher la matière par libelle ou par code"/>
                                     </div>
                                 </div>
                             </form>

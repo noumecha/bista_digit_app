@@ -31,11 +31,12 @@
                                     </button>
                                 </div>
                             </div>
-                            <form class="form form-inline row mt-3" id="filterBoosterMatiereForm">
+                            <form class="form form-inline row mt-3" id="filterBoosterStudentForm">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <input type="text" name="searchText" value=""
-                                            id="searchText" class="form-control" placeholder="Rechercher par nom"/>
+                                            id="searchText" class="form-control"
+                                            placeholder="Rechercher l'élève par nom ou prénom"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

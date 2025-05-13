@@ -28,4 +28,5 @@ class BoosterStudent extends Model
     public function student():BelongsTo {
         return $this->belongsTo(User::class, 'user_id');
     }
+
 }
