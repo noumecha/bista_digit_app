@@ -13,9 +13,9 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Evaluations</h5>
+                                    <h5 class="">Evaluations du programme Booster</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer les Evaluations(Ajouter, Supprimer, Mettre à jour)
+                                        Gérer les évaluations du programme(Ajouter, Supprimer, Mettre à jour)
                                     </p>
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
@@ -25,13 +25,13 @@
                                         data-bs-toggle="modal"
                                         data-action="create"
                                         id="add-button"
-                                        data-bs-target="#create-evaluation-modal"
+                                        data-bs-target="#create-boosterevaluation-modal"
                                     >
                                         <i class="fa-solid fa-dna me-2"></i> Ajouter
                                     </button>
                                 </div>
                             </div>
-                            <form class="form form-inline row mt-3" id="filterEvaluationForm">
+                            <form class="form form-inline row mt-3" id="filterBoosterEvaluationForm">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <input type="text" name="searchEvaluation" value="" id="searchEvaluation" class="form-control" placeholder="Rechercher par libellé"/>
@@ -61,23 +61,23 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="evaluationsTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="boosterEvaluationsTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- modal for creating or updating a evaluation datas -->
-        <div class="modal fade" id="create-evaluation-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+        <!-- modal for creating or updating a boosterevaluation datas -->
+        <div class="modal fade" id="create-boosterevaluation-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-dialog-centered">
-                <form enctype="multipart/form-data" role="form" id="evaluationForm" class="form row">
+                <form enctype="multipart/form-data" role="form" id="boosterEvaluationForm" class="form row">
                     @csrf
-                    <input type="hidden" name="evaluationId" id="evaluationId" value="">
+                    <input type="hidden" name="boosterEvaluationId" id="boosterEvaluationId" value="">
                     <div class="modal-content p-0">
-                        <div class="modal-header" id="modal-evaluation-header">
+                        <div class="modal-header" id="modal-boosterevaluation-header">
                             <div class="modal-title row">
                                 <div class="col-12">
-                                    <h5 id="header-evaluation-text" class="text-white"></h5>
+                                    <h5 id="header-boosterevaluation-text" class="text-white"></h5>
                                 </div>
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -95,7 +95,7 @@
                                             id="libelleEvaluation"
                                             name="libelleEvaluation"
                                             class="form-control"
-                                            placeholder="Entrez le tire de l'évaluation"
+                                            placeholder="Entrez le titre de l'évaluation booster"
                                             value="{{ old("libelleEvaluation") }}"
                                         />
                                     </div>
@@ -139,9 +139,9 @@
                         </div>
                         <div class="modal-footer flex-row-reverse">
                             <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="button" id="submit-evaluation-form-button" class="spinner-submit-evaluation-form-button btn btn-lg">
+                            <button type="button" id="submit-boosterevaluation-form-button" class="spinner-submit-boosterevaluation-form-button btn btn-lg">
                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
-                                <span id="submit-evaluation-form-button-text"></span>
+                                <span id="submit-boosterevaluation-form-button-text"></span>
                             </button>
                         </div>
                     </div>
@@ -151,6 +151,6 @@
         <x-app.footer />
     </main>
     @section('scripts')
-        <script src="{{ asset('js/functions/evaluations.js') }}"></script>
+        <script src="{{ asset('js/functions/booster-evaluations.js') }}"></script>
     @endsection
 </x-app-layout>

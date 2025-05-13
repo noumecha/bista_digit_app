@@ -9,15 +9,14 @@ use App\Models\Trimestre;
 use DateTime;
 use Illuminate\Http\Request;
 
-class EvaluationController extends Controller
+class BoosterEvaluationController extends Controller
 {
     /**
      *
      */
-    public function index(Request $request)
-    {
+    public function evaluations (Request $request) {
         // on initialize :
-        $evals = Evaluation::all()->where('type','normal-evaluation');
+        $evals = Evaluation::all()->where('type','booster-evaluation');
         foreach ($evals as $eval) {
             $endDate = new DateTime($eval->dateDeFin);
             $startDate = new DateTime($eval->dateDeDebut);
@@ -33,17 +32,14 @@ class EvaluationController extends Controller
         // useful variables
         $trimestres = Trimestre::all();
         $activeYear = AnneeScolaire::all()->where('statut',true)->first();
-
         // filters
         $searchEvaluation = $request->input('searchEvaluation');
         $trimestreFilter = $request->input('trimestreFilter');
         $statutFilter = $request->input('statutFilter');
-
         // querying
         $trimestresYears = Trimestre::all()->where('annee_scolaire_id', $activeYear->id)->pluck('id');
-        $query = Evaluation::query()->where('type','normal-evaluation')
+        $query = Evaluation::query()->where('type','booster-evaluation')
             ->whereIn('trimestre_id', $trimestresYears);
-
         // filtering
         if(!empty($searchEvaluation)) {
             $query->where('libelleEvaluation', 'LIKE', "%{$searchEvaluation}%");
@@ -54,20 +50,17 @@ class EvaluationController extends Controller
         if(!empty($statutFilter)) {
             $query->where('statut',$statutFilter);
         }
-
         $evaluations = $query->paginate(10);
-
         if($request->ajax()) {
-            return view('partials._evaluations_table', compact('evaluations','trimestres'));
+            return view('partials._booster_evaluations_table', compact('evaluations','trimestres'));
         } else {
-            return view('evaluation.evaluations', compact('evaluations','trimestres'));
+            return view('programme.booster_evaluations', compact('evaluations','trimestres'));
         }
     }
-
     /**
      *
      */
-    public function store(Request $request) {
+    public function evaluationSave (Request $request) {
         $request->validate([
             'libelleEvaluation' => 'required|min:3|max:255',
             'trimestre_id' => 'required',
@@ -75,10 +68,9 @@ class EvaluationController extends Controller
                 'required',
                 'max:255',
                 function ($attribute, $value, $fail) use ($request) {
-                    $year = AnneeScolaire::all()->where('statut',true)->first();
                     $startDate = new DateTime($value);
-                    $yearStart = new DateTime($year->dateDeDebut);
-                    $yearEnd = new DateTime($year->dateDeFin);
+                    $yearStart = new DateTime(getCurrentYear()->dateDeDebut);
+                    $yearEnd = new DateTime(getCurrentYear()->dateDeFin);
                     if ($startDate < $yearStart || $startDate > $yearEnd) {
                         $fail('La date de début doit être comprise entre Septembre '
                         . $yearStart->format('Y') . ' et Juillet '
@@ -90,10 +82,9 @@ class EvaluationController extends Controller
                 'required',
                 'max:255',
                 function ($attribute, $value, $fail) use ($request) {
-                    $year = AnneeScolaire::all()->where('statut',true)->first();
                     $endDate = new DateTime($value);
-                    $yearStart = new DateTime($year->dateDeDebut);
-                    $yearEnd = new DateTime($year->dateDeFin);
+                    $yearStart = new DateTime(getCurrentYear()->dateDeDebut);
+                    $yearEnd = new DateTime(getCurrentYear()->dateDeFin);
                     if ($endDate < $yearStart || $endDate > $yearEnd) {
                         $fail('La date de fin doit être comprise entre Septembre '
                         . $yearStart->format('Y') . ' et Juillet '
@@ -124,22 +115,22 @@ class EvaluationController extends Controller
         } else {
             $state = 'terminée';
         }
-        // check if the trimester already have 2 evaluation
+        /* check if the trimester already have 2 evaluation
         $trimestreIds = Trimestre::where('annee_scolaire_id', getCurrentYear()->id)->pluck('id');
-        $checks = Evaluation::where('trimestre_id', $request->trimestre_id)->where('type','normal-evaluation')
+        $checks = Evaluation::where('trimestre_id', $request->trimestre_id)->where('type','booster-evaluation')
             ->whereIn('trimestre_id', $trimestreIds);
         if($checks->count() === 2) {
             return response()->json([
                 'error' => 'Un trimestre ne peut pas avoir plus de 2 évaluations en une année'
             ]);
-        }
+        }*/
         $evaluation = Evaluation::create([
             'libelleEvaluation' => $request->libelleEvaluation,
             'trimestre_id' => $request->trimestre_id,
             'dateDeDebut' => $request->dateDeDebut,
             'dateDeFin' => $request->dateDeFin,
             'statut' => $state,
-            'type' => 'normal-evaluation'
+            'type' => 'booster-evaluation'
         ]);
 
         if ($evaluation) {
@@ -148,20 +139,9 @@ class EvaluationController extends Controller
     }
 
     /**
-     *  get trimestres date
-    */
-    public function getTrimsDate($trimId) {
-        $trimestre = Trimestre::findOrFail($trimId);
-        return response()->json([
-            'dateDeDebutTrim' => $trimestre->dateDeDebut,
-            'dateDeFinTrim' => $trimestre->dateDeFin,
-        ]);
-    }
-
-    /**
-     * edit specific evaluation
+     *
      */
-    public function edit($id) {
+    public function evaluationEdit ($id) {
         $evaluationToEdit = Evaluation::findOrFail($id);
         $trimestre = Trimestre::findOrFail($evaluationToEdit->trimestre_id);
         return response()->json([
@@ -172,9 +152,20 @@ class EvaluationController extends Controller
     }
 
     /**
-     * udpate specific evaluation
+     *
      */
-    public function update(Request $request, $id) {
+    public function evaluationDelete ($id) {
+        $evaluation = Evaluation::findOrFail($id);
+        $rempliassage = Remplissage::where('evaluation_id', $evaluation->id);
+        $rempliassage->delete();
+        $evaluation->delete();
+        return redirect()->route('booster.evaluations')->with('deleteSuccess', 'Evaluation supprimée avec succès');
+    }
+
+    /**
+     *
+     */
+    public function evaluationUpdate (Request $request, $id) {
         $request->validate([
             'libelleEvaluation' => 'required|min:3|max:255',
             'trimestre_id' => 'required',
@@ -182,10 +173,9 @@ class EvaluationController extends Controller
                 'required',
                 'max:255',
                 function ($attribute, $value, $fail) use ($request) {
-                    $year = AnneeScolaire::all()->where('statut',true)->first();
                     $startDate = new DateTime($value);
-                    $yearStart = new DateTime($year->dateDeDebut);
-                    $yearEnd = new DateTime($year->dateDeFin);
+                    $yearStart = new DateTime(getCurrentYear()->dateDeDebut);
+                    $yearEnd = new DateTime(getCurrentYear()->dateDeFin);
                     if ($startDate < $yearStart || $startDate > $yearEnd) {
                         $fail('La date de début doit être comprise entre Septembre '
                         . $yearStart->format('Y') . ' et Juillet '
@@ -197,10 +187,9 @@ class EvaluationController extends Controller
                 'required',
                 'max:255',
                 function ($attribute, $value, $fail) use ($request) {
-                    $year = AnneeScolaire::all()->where('statut',true)->first();
                     $endDate = new DateTime($value);
-                    $yearStart = new DateTime($year->dateDeDebut);
-                    $yearEnd = new DateTime($year->dateDeFin);
+                    $yearStart = new DateTime(getCurrentYear()->dateDeDebut);
+                    $yearEnd = new DateTime(getCurrentYear()->dateDeFin);
                     if ($endDate < $yearStart || $endDate > $yearEnd) {
                         $fail('La date de fin doit être comprise entre Septembre '
                         . $yearStart->format('Y') . ' et Juillet '
@@ -231,9 +220,7 @@ class EvaluationController extends Controller
         } else {
             $state = 'terminée';
         }
-
         $evaluation = Evaluation::findOrFail($id);
-
         $evaluation->update([
             'libelleEvaluation' => $request->libelleEvaluation,
             'trimestre_id' => $request->trimestre_id,
@@ -241,20 +228,6 @@ class EvaluationController extends Controller
             'dateDeFin' => $request->dateDeFin,
             'statut' => $state,
         ]);
-
         return response()->json(['success' => 'Evaluation mise à jour avec succès']);
-
-    }
-
-
-    /**
-     * delete specific evaluation
-     */
-    public function destroy($id) {
-        $evaluation = Evaluation::findOrFail($id);
-        $rempliassage = Remplissage::where('evaluation_id', $evaluation->id);
-        $rempliassage->delete();
-        $evaluation->delete();
-        return redirect()->route('evaluation.evaluations')->with('deleteSuccess', 'Evaluation supprimée avec succès');
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\BoosterEvaluationController;
 use App\Http\Controllers\BullettinController;
 use App\Http\Controllers\CategorieActualiteController;
 use App\Http\Controllers\ClasseController;
@@ -342,7 +343,12 @@ Route::post('/programme/booster/teachers/save', [ProgrammeController::class, 'te
 Route::get('/programme/booster/teachers/{id}/edit', [ProgrammeController::class, 'teacherEdit'])->name('booster.teachersEdit')->middleware('auth');
 Route::delete('/programme/booster/teachers/{id}/delete', [ProgrammeController::class, 'teacherDelete'])->name('booster.teachersDelete')->middleware('auth');
 Route::get('/booster/teachers/matieres/{userId}', [ProgrammeController::class, 'getTeacherMatieres'])->name('booster.teacherMatieres')->middleware('auth');
-
+# programme routes - booster evaluations routes
+Route::get('/programme/booster/evaluations', [BoosterEvaluationController::class, 'evaluations'])->name('booster.evaluations')->middleware('auth');
+Route::post('/programme/booster/evaluations/save', [BoosterEvaluationController::class, 'evaluationSave'])->name('booster.evaluationSave')->middleware('auth');
+Route::get('/programme/booster/evaluations/{id}/edit', [BoosterEvaluationController::class, 'evaluationEdit'])->name('booster.evaluationEdit')->middleware('auth');
+Route::delete('/programme/booster/evaluations/{id}/delete', [BoosterEvaluationController::class, 'evaluationDelete'])->name('booster.evaluationDelete')->middleware('auth');
+Route::put('/programme/booster/evaluations/update/{id}', [BoosterEvaluationController::class, 'evaluationUpdate'])->name('booster.evaluationUpdate')->middleware('auth');
 # programme routes - booster matieres routes
 Route::get('/programme/booster/matieres', [ProgrammeController::class, 'matieres'])->name('booster.matieres')->middleware('auth');
 Route::post('/programme/booster/matieres/save', [ProgrammeController::class, 'matiereSave'])->name('booster.matiereSave')->middleware('auth');

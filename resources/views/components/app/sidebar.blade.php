@@ -260,8 +260,8 @@
                     </div>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
-                        href="{{ route('page_configuration.booster.index') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.evaluations') ? 'active' : '' }}"
+                        href="{{ route('booster.evaluations') }}">
                         <span class="nav-link-text ms-1">Evaluations</span>
                     </a>
                 </li>
