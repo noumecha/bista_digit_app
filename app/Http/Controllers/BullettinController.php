@@ -29,7 +29,7 @@ class BullettinController extends Controller
     {
         $user = User::find(Auth::id());
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
-        $evaluations = Evaluation::all();
+        $evaluations = Evaluation::all()->where('type','normal-evaluation');
         $trimestres = Trimestre::all();
         $classes = Classe::all();
         // loading app configuration :
@@ -103,6 +103,7 @@ class BullettinController extends Controller
             $classe = Classe::findOrFail($request->classe_id);
             $evaluation = $request->type_bulletin === 'sequenciel' ?
                 Evaluation::where('id',$request->evaluation_id)
+                    ->where('type','normal-evaluation')
                     ->where('trimestre_id', $request->trimestre_id)->first()
                 : null;
             $trimestre = Trimestre::where('id', $request->trimestre_id)
@@ -282,7 +283,8 @@ class BullettinController extends Controller
     public function getEvaluations($trimId) {
         $trim = Trimestre::all()->where('id', $trimId)
             ->where('annee_scolaire_id', getCurrentYear()->id)->first();
-        $evaluations = Evaluation::where('trimestre_id', $trim->id)->get();
+        $evaluations = Evaluation::where('trimestre_id', $trim->id)
+            ->where('type','normal-evaluation')->get();
         return response()->json($evaluations);
     }
 
@@ -422,7 +424,7 @@ class BullettinController extends Controller
             foreach($trimestrialBulletins as $key => $trimBulletin) {
                 // update disciplines stats first
                 $evaluationIds = Evaluation::where('trimestre_id', $trimBulletin->trimestre->id)
-                ->pluck('id');
+                    ->where('type','normal-evaluation')->pluck('id');
                 $studentDisciplines = Discipline::all()->where('user_id', $student->id)
                     ->whereIn('evaluation_id', $evaluationIds)
                     ->where('classe_id', $trimBulletin->classe_id);

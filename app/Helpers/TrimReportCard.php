@@ -14,7 +14,8 @@ use App\Models\User;
 function generateSingleTrimReportCard($student, $classe, $evaluation, $trimestre) {
     try {
         // check if sequenciel bulletin of the corresponding trimestre exist
-        $evaluations = Evaluation::all()->where('trimestre_id', $trimestre->id);
+        $evaluations = Evaluation::all()->where('type','normal-evaluation')
+            ->where('trimestre_id', $trimestre->id);
         $bulletinsAvgs = [];
         foreach($evaluations as $evaluation) {
             $bulletin = Bulletin::where('evaluation_id',$evaluation->id)
@@ -107,7 +108,8 @@ function generateAllTrimReportCard($classe, $evaluation, $trimestre) {
             ->whereIn('id', $allUsersIds);
         foreach ($students as $student) {
             // check if sequenciel bulletin of the corresponding trimestre exist
-            $evaluations = Evaluation::all()->where('trimestre_id', $trimestre->id);
+            $evaluations = Evaluation::all()->where('type','normal-evaluation')
+                ->where('trimestre_id', $trimestre->id);
             $bulletinsAvgs = [];
             foreach($evaluations as $evaluation) {
                 $bulletin = Bulletin::where('evaluation_id',$evaluation->id)
@@ -192,7 +194,8 @@ function generateAllTrimReportCard($classe, $evaluation, $trimestre) {
  */
 function updateTrimestreNotes($evaluation, $classeId, $studentId, $matiereId) {
     try {
-        $evaluationIds = Evaluation::where('trimestre_id',$evaluation->trimestre_id)->pluck('id');
+        $evaluationIds = Evaluation::where('trimestre_id',$evaluation->trimestre_id)
+            ->where('type','normal-evaluation')->pluck('id');
         $notes = Note::all()->where('classe_id', $classeId)
             ->where('matiere_id', $matiereId)
             ->where('user_id', $studentId)

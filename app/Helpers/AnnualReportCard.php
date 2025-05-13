@@ -16,7 +16,8 @@ function generateSingleAnnualReportCard($student, $classe) {
         // get alls year evaluation
         $trimestres = Trimestre::all()->where('annee_scolaire_id', getCurrentYear()->id);
         $trimestresIds = $trimestres->pluck('id');
-        $evaluations = Evaluation::all()->whereIn('trimestre_id', $trimestresIds);
+        $evaluations = Evaluation::all()->where('type','normal-evaluation')
+            ->whereIn('trimestre_id', $trimestresIds);
         $bulletinsAvgs = [];
         foreach($trimestresIds as $trimId) {
             $bulletin = Bulletin::where('trimestre_id', $trimId)
@@ -109,7 +110,8 @@ function generateAllAnnualReportCard($classe) {
             // get alls year evaluation
             $trimestres = Trimestre::all()->where('annee_scolaire_id', getCurrentYear()->id);
             $trimestresIds = $trimestres->pluck('id');
-            $evaluations = Evaluation::all()->whereIn('trimestre_id', $trimestresIds);
+            $evaluations = Evaluation::all()->where('type','normal-evaluation')
+                ->whereIn('trimestre_id', $trimestresIds);
             $bulletinsAvgs = [];
             foreach($trimestresIds as $trimId) {
                 $bulletin = Bulletin::where('trimestre_id', $trimId)
@@ -196,7 +198,8 @@ function updateAnnualNotes($classeId, $studentId, $matiereId) {
     try {
         $trimestres = Trimestre::where('annee_scolaire_id', getCurrentYear()->id);
         $trimestresId = $trimestres->pluck('id');
-        $evaluationIds = Evaluation::whereIn('trimestre_id',$trimestresId)->pluck('id');
+        $evaluationIds = Evaluation::where('type','normal-evaluation')
+            ->whereIn('trimestre_id',$trimestresId)->pluck('id');
         $notes = Note::all()->where('classe_id', $classeId)
             ->where('matiere_id', $matiereId)
             ->where('user_id', $studentId)

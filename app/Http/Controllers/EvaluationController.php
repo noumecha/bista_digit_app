@@ -17,7 +17,7 @@ class EvaluationController extends Controller
     public function index(Request $request)
     {
         // on initialize :
-        $evals = Evaluation::all();
+        $evals = Evaluation::all()->where('type','normal-evaluation');
         foreach ($evals as $eval) {
             $endDate = new DateTime($eval->dateDeFin);
             $startDate = new DateTime($eval->dateDeDebut);
@@ -119,7 +119,7 @@ class EvaluationController extends Controller
         }
         // check if the trimester already have 2 evaluation
         $trimestreIds = Trimestre::where('annee_scolaire_id', getCurrentYear()->id)->pluck('id');
-        $checks = Evaluation::where('trimestre_id', $request->trimestre_id)
+        $checks = Evaluation::where('trimestre_id', $request->trimestre_id)->where('type','normal-evaluation')
             ->whereIn('trimestre_id', $trimestreIds);
         if($checks->count() === 2) {
             return response()->json([
@@ -132,6 +132,7 @@ class EvaluationController extends Controller
             'dateDeDebut' => $request->dateDeDebut,
             'dateDeFin' => $request->dateDeFin,
             'statut' => $state,
+            'type' => 'normal-evaluation'
         ]);
 
         if ($evaluation) {

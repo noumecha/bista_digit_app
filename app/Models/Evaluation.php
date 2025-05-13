@@ -13,6 +13,7 @@ class Evaluation extends Model
 
     protected $fillable = [
         'libelleEvaluation',
+        'type',
         'trimestre_id',
         'dateDeDebut',
         'dateDeFin',
