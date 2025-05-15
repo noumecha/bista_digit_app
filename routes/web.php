@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BoosterEvaluationController;
+use App\Http\Controllers\BoosterNoteController;
 use App\Http\Controllers\BullettinController;
 use App\Http\Controllers\CategorieActualiteController;
 use App\Http\Controllers\ClasseController;
@@ -359,7 +360,14 @@ Route::get('/programme/booster/students', [ProgrammeController::class, 'students
 Route::post('/programme/booster/students/save', [ProgrammeController::class, 'studentSave'])->name('booster.studentSave')->middleware('auth');
 Route::get('/programme/booster/students/{id}/edit', [ProgrammeController::class, 'studentEdit'])->name('booster.studentEdit')->middleware('auth');
 Route::delete('/programme/booster/students/{id}/delete', [ProgrammeController::class, 'studentDelete'])->name('booster.studentDelete')->middleware('auth');
-
+# configuration routes - booster notes routes
+Route::get('/programme/booster/notes', [BoosterNoteController::class, 'index'])->name('booster.notes')->middleware('auth');
+Route::get('/programme/booster/notes/controles', [BoosterNoteController::class, 'boosterRemplissageTrace'])->name('booster.notes_controles')->middleware('auth');
+Route::get('/programme/booster/notes/modifications', [BoosterNoteController::class, 'boosterNoteHistories'])->name('booster.notes_modifications')->middleware('auth');
+Route::post('/programme/booster/note/save', [BoosterNoteController::class, 'store'])->name('booster.noteStore')->middleware('auth');
+Route::put('/programme/booster/note/update/{id}', [BoosterNoteController::class, 'update'])->name('booster.noteUpdate')->middleware('auth');
+Route::delete('/programme/booster/notes/delete/{id}', [BoosterNoteController::class, 'destroy'])->name('booster.notesDestroy')->middleware('auth');
+Route::get('/programme/booster/notes/matieres/{classId}', [BoosterNoteController::class, 'getBoosterMatieres'])->middleware('auth');
 
 # configuration routes - specialite routes
 Route::get('/configurations/specialite', function () {

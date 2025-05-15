@@ -97,8 +97,7 @@ class NoteController extends Controller
         $matieres = Matiere::all();
         $evaluations = Evaluation::all()->where('type','normal-evaluation');
         // filters vars
-        $query = NoteRemplissageTrace::query()->where('type', 'normal-note')
-            ->where('annee_scolaire_id', getCurrentYear()->id);
+        $query = NoteRemplissageTrace::query()->where('annee_scolaire_id', getCurrentYear()->id);
         $searchTeacher = $request->input('searchTeacher');
         $classeFilter = $request->input('classeFilter');
         $matiereFilter = $request->input('matiereFilter');
@@ -137,7 +136,7 @@ class NoteController extends Controller
         $evaluations = Evaluation::all();
         // var for filtering
         $notesId = Note::where('annee_scolaire_id', getCurrentYear()->id)->pluck('id');
-        $query = NoteHistory::query()->where('type','normal-note')->whereIn('note_id', $notesId);
+        $query = NoteHistory::query()->whereIn('note_id', $notesId);
         $classeFilter = $request->input('classeFilter');
         $matiereFilter = $request->input('matiereFilter');
         $evaluationFilter = $request->input('evaluationFilter');

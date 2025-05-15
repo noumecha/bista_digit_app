@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class BoosterNote extends Model
+class BoosterNoteRemplissageTrace extends Model
 {
     use HasFactory;
 
@@ -15,37 +14,32 @@ class BoosterNote extends Model
      * @var array
      */
     protected $fillable = [
-        'note',
-        'appreciation',
-        'booster_student_id',
+        'booster_teacher_id',
+        'classe_id',
         'booster_matiere_id',
         'evaluation_id',
         'remplissage_id',
-        'classe_id',
-        'range',
-        'gcma',
-        'min_value',
-        'max_value',
-        'annee_scolaire_id'
+        'annee_scolaire_id',
+        'nb_notes_remplies'
     ];
 
     /**
-     * a booster note correspond to a student
+     * a booster note trace correspond to a student
      */
-    public function student(): BelongsTo
+    public function teacher(): BelongsTo
     {
-        return $this->belongsTo(BoosterStudent::class, 'booster_student_id');
+        return $this->belongsTo(BoosterTeacher::class, 'booster_teacher_id');
     }
 
     /**
-     * a booster note belongs to a school year
+     * a booster note trace belongs to a school year
      */
     public function annee_scolaire(): BelongsTo
     {
         return $this->belongsTo(AnneeScolaire::class, 'annee_scolaire_id');
     }
     /**
-     * a booster note correspond to a subject
+     * a booster note trace correspond to a subject
      */
     public function matiere(): BelongsTo
     {
@@ -53,7 +47,7 @@ class BoosterNote extends Model
     }
 
     /**
-     * a booster note correspond to a specific evaluation
+     * a booster note trace correspond to a specific evaluation
      */
     public function evaluation(): BelongsTo
     {
@@ -61,7 +55,7 @@ class BoosterNote extends Model
     }
 
     /**
-     * a booster note is create by a specific remplissage configuration
+     * a booster note trace is create by a specific remplissage configuration
      */
     public function remplissage(): BelongsTo
     {
@@ -69,18 +63,10 @@ class BoosterNote extends Model
     }
 
     /**
-     * a booster note correspond to a specific classe
+     * a booster note trace correspond to a specific classe
      */
     public function classe(): BelongsTo
     {
         return $this->belongsTo(Classe::class, 'classe_id');
-    }
-
-    /**
-     * a booster note has many notes histories
-     */
-    public function histories(): HasMany
-    {
-        return $this->hasMany(NoteHistory::class);
     }
 }

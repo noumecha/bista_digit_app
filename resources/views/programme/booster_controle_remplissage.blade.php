@@ -5,32 +5,28 @@
             <div class="mt-4 row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="pb-0 card-header">
                             @if (session('deleteSuccess'))
                                 <div class="row alert alert-success text-center success-message">
                                     {{ session('deleteSuccess') }}
                                 </div>
                             @endif
-                            @if (session('deleteError'))
-                                <div class="row alert alert-danger text-center success-message">
-                                    {{ session('deleteError') }}
-                                </div>
-                            @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Notes par classes</h5>
+                                    <h5 class="">Etat de remplissages des notes</h5>
                                     <p class="text-sm">
-                                        Gérer les notes du programme booster(par classe, par matière et par évaluation)
+                                        controle du remplissage des notes
                                     </p>
                                 </div>
                             </div>
-                            <form id="filterBoosterNoteForm" class="form form-inline row mt-3">
-                                <div class="col-md-12">
+                            <form class="form form-inline row mt-3" id="filterControlForm">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" name="searchNote" id="searchNote" class="form-control" placeholder="Rechercher une note (nom de l'élève)"/>
+                                        <input type="text" name="searchTeacher" id="searchTeacher"
+                                            class="form-control" placeholder="Rechercher par enseignant(nom)"/>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <select name="classeFilter" class="form-select" id="classeFilter">
                                             <option value="">Toutes les classes</option>
@@ -42,20 +38,25 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <select name="matiereFilter" class="form-select" id="matiereFilter">
-                                            <option value="">Sélectionner une matière</option>
+                                        <select name="evaluationFilter" id="evaluationFilter" class="form-select">
+                                            <option value="">Toutes les evaluations</option>
+                                            @foreach ($evaluations as $evaluation)
+                                                <option value="{{ $evaluation->id }}">
+                                                    {{ $evaluation->libelleEvaluation }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <select name="remplissageFilter" class="form-select" id="remplissageFilter">
-                                            <option value="">Toutes les évaluations</option>
-                                            @foreach ($remplissages as $remplissage)
-                                                <option value="{{ $remplissage->id }}">
-                                                    {{ $remplissage->evaluation->libelleEvaluation }}
+                                        <select name="matiereFilter" id="matiereFilter" class="form-select">
+                                            <option value="">Toutes les matieres</option>
+                                            @foreach ($matieres as $matiere)
+                                                <option value="{{ $matiere->id }}">
+                                                    {{ $matiere->libelleMatiere }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -63,13 +64,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div>
-                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
-                            </div>
-                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
-                            </div>
-                        </div>
-                        <div class="table-responsive mt-3" id="boosterNotesTable">
+                        <div class="table-responsive" id="boosterControleRemplissagesTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>
@@ -78,6 +73,6 @@
         <x-app.footer />
     </main>
     @section('scripts')
-        <script src="{{ asset('js/functions/booster-notes.js') }}"></script>
+        <script src="{{ asset('js/functions/booster-controle-remplissage.js') }}"></script>
     @endsection
 </x-app-layout>

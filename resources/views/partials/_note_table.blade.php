@@ -185,7 +185,7 @@
                                                     </div>
                                                     <div class="col-md-12 text-start">
                                                         <div class="form-group">
-                                                            <label for="date_debut" class="form-control-label">
+                                                            <label for="update-appreciation-{{ $student->id }}" class="form-control-label">
                                                                 Nouvelle appréciation :
                                                             </label>
                                                             <input
@@ -200,7 +200,7 @@
                                                     </div>
                                                     <div class="col-md-12 text-start">
                                                         <div class="form-group">
-                                                            <label for="reason" class="form-control-label">
+                                                            <label for="reason-{{ $student->id }}" class="form-control-label">
                                                                 Raison du changement de la note :
                                                             </label>
                                                             <input
