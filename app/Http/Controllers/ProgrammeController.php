@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\UserAnneeScolaire;
 use Carbon\Exceptions\Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -424,5 +425,19 @@ class ProgrammeController extends Controller
             'pageconfiguration' => $pageconfiguration,
             'content' => $pageconfiguration->contenu
         ]);
+    }
+
+    /**
+     * getting students base on their class
+     */
+    public function getClasseStudents($classeId) {
+        $studentsSchoolYearIds = UserAnneeScolaire::all()->where('annee_scolaire_id',getCurrentYear()->id)
+            ->pluck('user_id');
+        $classesYearsStudentsIds = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeId)
+            ->where('annee_scolaire_id', getCurrentYear()->id)
+            ->pluck('user_id');
+        $students = User::where('typeUser','eleve')->whereIn('id', $studentsSchoolYearIds)
+            ->whereIn('id', $classesYearsStudentsIds)->get();
+        return response()->json($students->values());
     }
 }

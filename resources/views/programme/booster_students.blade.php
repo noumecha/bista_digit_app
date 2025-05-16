@@ -79,16 +79,28 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
+                                        <label for="classe_id" class="form-control-label">
+                                            Classe :
+                                        </label>
+                                        <select name="classe_id" id="classe_id" class="form-select">
+                                            <option value="">Selectionnez une classe</option>
+                                            @foreach ($classes as $classe)
+                                                <option value="{{ $classe->id }}">
+                                                    {{ $classe->libClasse }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
                                         <label for="user_id" class="form-control-label">
                                             Elèves :
                                         </label>
                                         <select name="user_id" id="user_id" class="form-select">
-                                            <option value="">Ajouter un élève</option>
-                                            @foreach ($students as $student)
-                                                <option value="{{ $student->id }}">
-                                                    {{ $student->name }}
-                                                </option>
-                                            @endforeach
+                                            <option value="">Selectionnez un élève</option>
                                         </select>
                                     </div>
                                 </div>

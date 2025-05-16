@@ -11,7 +11,6 @@ $(function() {
             });
         }
     });
-
     // fetching note dynamically throw filters
     $('#searchNote,#matiereFilter,#classeFilter,#remplissageFilter').on('change keyup', function () {
         fetchBoosterNotes();

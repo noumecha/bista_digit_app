@@ -29,14 +29,25 @@ class BoosterNoteController extends Controller
     public function index(Request $request) {
         $user = User::find(Auth::id());
         // datas
-        $remplissages = Remplissage::all()->where('statut','=','en cours');
+        $remplissages = Remplissage::all()->where('statut','en cours');
         // getting classes base on the teacher teaching :
         if($user->typeUser === 'enseignant') {
             $boosterClassesIds = BoosterTeacher::where('user_id',$user->id)->pluck('classe_id');
-            $classes = Classe::whereIn('classe_id', $boosterClassesIds);
+            $boosterStudentIds = BoosterStudent::all()->pluck('user_id');
+            $studentsYearClasseIds = ClasseAnneeScolaireStudent::all()
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->whereIn('user_id', $boosterStudentIds)
+                ->pluck('classe_id');
+            $classes = Classe::whereIn('id', $boosterClassesIds)->whereIn('id', $studentsYearClasseIds);
         } else {
             $boosterClassesIds = BoosterTeacher::all()->pluck('classe_id');
-            $classes = Classe::all()->whereIn('id', $boosterClassesIds);
+            $boosterStudentIds = BoosterStudent::all()->pluck('user_id');
+            $studentsYearClasseIds = ClasseAnneeScolaireStudent::all()
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->whereIn('user_id', $boosterStudentIds)
+                ->pluck('classe_id');
+            $classes = Classe::whereIn('id', $boosterClassesIds)
+                ->orWhereIn('id', $studentsYearClasseIds)->distinct()->get();
         }
         // filters
         $searchNote = $request->input('searchNote');
@@ -45,30 +56,34 @@ class BoosterNoteController extends Controller
         $remplissageFilter = $request->input('remplissageFilter');
         // queries
         $query = BoosterNote::query()->where('annee_scolaire_id', getCurrentYear()->id);
-        $studentsYearClassseIds = ClasseAnneeScolaireStudent::all()
+        $studentsYearClasseIds = ClasseAnneeScolaireStudent::all()
             ->where('annee_scolaire_id', getCurrentYear()->id)
             ->pluck('user_id');
-        $studentBoosterIds = BoosterStudent::all()->pluck('user_id');
-        $studentQuery = User::query()->where('typeUser','eleve')->whereIn('id',$studentBoosterIds)
-            ->whereIn('id', $studentsYearClassseIds);
+        $studentIds = User::all()->whereIn('id', $studentsYearClasseIds)
+            ->where('typeUser','eleve')->pluck('id');
         // filtering by filters inputs
+        $studentQuery = BoosterStudent::query()->whereIn('user_id', $studentIds);
         if(!empty($searchNote)) {
-            $studentQuery->where('name','LIKE',"%{$searchNote}%");
+            $studentQuery->whereHas('student', function ($q) use ($searchNote) {
+                $q->where('name', 'LIKE', "%{$searchNote}%")
+                ->orWhere('surname', 'LIKE', "%{$searchNote}%");
+            });
         }
         if (!empty($classeFilter)) {
             // filtering by different classe Id throw years
             $boosterClassesIds = BoosterTeacher::all()->pluck('classe_id');
+            $boosterStudentIds = BoosterStudent::all()->pluck('user_id');
             $studentsYearClassseId = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeFilter)
                 ->where('annee_scolaire_id', getCurrentYear()->id)
                 ->whereIn('classe_id', $boosterClassesIds)
                 ->pluck('classe_id');
             $query->whereIn('classe_id', $studentsYearClassseId);
             // filtering by different classe Id throw years
-            $studentsYearClassseIds = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeFilter)
+            $studentsYearClasseIds = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeFilter)
                 ->where('annee_scolaire_id', getCurrentYear()->id)
                 ->whereIn('classe_id', $boosterClassesIds)
                 ->pluck('user_id');
-            $studentQuery->whereIn('id', $studentsYearClassseIds);
+            $studentQuery->whereIn('user_id', $studentsYearClasseIds);
         }
         if (!empty($matiereFilter)) {
             $query->where('booster_matiere_id', $matiereFilter);
@@ -179,7 +194,7 @@ class BoosterNoteController extends Controller
             'remplissage_id' => 'required',
             'classe_id' => 'required',
             'appreciation' => 'required',
-            'note' => 'required|numeric|min:0|max:20'
+            'boosternote' => 'required|numeric|min:0|max:20'
         ], [
             'booster_student_id.required' => 'Aucun élève selectionner',
             'booster_matiere_id.required' => 'Veuillez selectionner une matière',
@@ -187,10 +202,10 @@ class BoosterNoteController extends Controller
             'remplissage_id.required' => 'Vérifiez bien qu\'une configuration de remplissage est [en cours]',
             'classe_id.required' => 'Veuillez selectionner une classe',
             'appreciation.required' => 'Veuillez entrer une note pour la définition de l\'appreciation',
-            'note.required' => 'Veuillez entrez une note',
-            'note.numeric' => 'La note doit etre un nombre',
-            'note.min' => 'La note doit etre égale au moins à 0',
-            'note.max' => 'La note doit etre égale au plus à 20'
+            'boosternote.required' => 'Veuillez entrez une note',
+            'boosternote.numeric' => 'La note doit etre un nombre',
+            'boosternote.min' => 'La note doit etre égale au moins à 0',
+            'boosternote.max' => 'La note doit etre égale au plus à 20'
         ]);
         $existNote = BoosterNote::where('booster_student_id', $request->booster_student_id)
             ->where('booster_matiere_id',$request->booster_matiere_id)
@@ -204,6 +219,7 @@ class BoosterNoteController extends Controller
                 'error' => 'La note existe déjà !'
             ]);
         } else {
+            dd($request);
             // then save the note in the db
             $note = BoosterNote::create([
                 'booster_matiere_id' => $request->booster_matiere_id,
@@ -211,7 +227,7 @@ class BoosterNoteController extends Controller
                 'classe_id' => $request->classe_id,
                 'evaluation_id' => $request->evaluation_id,
                 'remplissage_id' => $request->remplissage_id,
-                'note' => $request->note,
+                'note' => $request->boosternote,
                 'appreciation' => $request->appreciation,
                 'annee_scolaire_id' => getCurrentYear()->id
             ]);
@@ -294,7 +310,8 @@ class BoosterNoteController extends Controller
             $matieres = Matiere::whereIn('id', $coefsIds)->get();
         } else {
             $coefficients = Coefficient::where('classe_id', $classeId)->pluck('matiere_id');
-            $matieres = BoosterMatiere::whereIn('id', $coefficients)->get();
+            $matieresIds = BoosterMatiere::whereIn('matiere_id', $coefficients)->pluck('matiere_id');
+            $matieres = Matiere::whereIn('id', $matieresIds)->get();
         }
         return response()->json($matieres->values());
     }

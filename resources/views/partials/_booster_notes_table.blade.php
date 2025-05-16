@@ -31,10 +31,10 @@
             @foreach ($students as $student)
                 <tr>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $student->name }}
+                        {{ $student->student->name }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $student->surname }}
+                        {{ $student->student->surname }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         @php
@@ -80,7 +80,7 @@
                                 value="{{ isset($evaluationId) ? $evaluationId->evaluation->id : '' }}"
                             >
                             <input type="hidden" name="remplissage_id" value="{{ isset($remplissageFilter) ? $remplissageFilter : '' }}">
-                            <input type="hidden" name="classe_id" value="{{ $student->getCurrentYearClasse(getCurrentYear()->id) }}">
+                            <input type="hidden" name="classe_id" value="{{ $student->student->getCurrentYearClasse(getCurrentYear()->id) }}">
                             <input type="hidden" id="boosternote-input-{{ $student->id }}" name="boosternote" value="">
                             <input type="hidden" id="appreciation-input-{{ $student->id }}" name="appreciation" value="">
                             <button

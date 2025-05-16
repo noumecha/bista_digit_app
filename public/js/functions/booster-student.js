@@ -1,4 +1,16 @@
 $(function(){
+    // filtering matiere base on classe change :
+    $('#classe_id').on('change', function() {
+        let classeId = $(this).val();
+        $('#user_id').html('<option value="">Sélectionnez un élève</option>');
+        if (classeId) {
+            $.get('classe/students/' + classeId, function(data) {
+                data.forEach(student => {
+                    $('#user_id').append(`<option value="${student.id}">${student.name}</option>`);
+                });
+            });
+        }
+    });
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-boosterstudent-modal"]', function(e) {
         e.preventDefault();
