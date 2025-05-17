@@ -31,8 +31,8 @@
                                         <select name="classeFilter" class="form-select" id="classeFilter">
                                             <option value="">Toutes les classes</option>
                                             @foreach ($classes as $classe)
-                                                <option value="{{$classe->id}}">
-                                                    {{ $classe->libClasse }}
+                                                <option value="{{$classe->classe->id}}">
+                                                    {{ $classe->classe->libClasse }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -55,8 +55,8 @@
                                         <select name="matiereFilter" id="matiereFilter" class="form-select">
                                             <option value="">Toutes les matieres</option>
                                             @foreach ($matieres as $matiere)
-                                                <option value="{{ $matiere->id }}">
-                                                    {{ $matiere->libelleMatiere }}
+                                                <option value="{{ $matiere->matiere->id }}">
+                                                    {{ $matiere->matiere->libelleMatiere }}
                                                 </option>
                                             @endforeach
                                         </select>

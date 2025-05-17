@@ -145,7 +145,7 @@
                         @endif
                         <!-- modal for updating a note -->
                         @if(isset($studentNote))
-                            <div class="modal fade" data-student-id="{{ $student->id }}" id="update-note-modal-{{ isset($studentNote) ? $studentNote->id : '' }}" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+                            <div class="modal fade" data-student-id="{{ $student->id }}" id="update-boosternote-modal-{{ isset($studentNote) ? $studentNote->id : '' }}" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <form enctype="multipart/form-data" role="form" id="updateBoosterNoteForm" class="form row">
                                         @csrf

@@ -72,7 +72,7 @@
                         {{ formatDate($history->created_at, 'd/m/Y') }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $history->teacher->teacher->name }}
+                        {{ $history->teacher->name }}
                     </td>
                 </tr>
             @endforeach

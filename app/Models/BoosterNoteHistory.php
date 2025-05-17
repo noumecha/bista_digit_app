@@ -14,7 +14,7 @@ class BoosterNoteHistory extends Model
      */
     protected $fillable = [
         'booster_note_id',
-        'booster_teacher_id',
+        'user_id',
         'old_value',
         'new_value',
         'reason'
@@ -33,6 +33,6 @@ class BoosterNoteHistory extends Model
      */
     public function teacher()
     {
-        return $this->belongsTo(BoosterTeacher::class, 'booster_teacher_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -14,7 +14,7 @@ class BoosterNoteRemplissageTrace extends Model
      * @var array
      */
     protected $fillable = [
-        'booster_teacher_id',
+        'user_id',
         'classe_id',
         'booster_matiere_id',
         'evaluation_id',
@@ -28,7 +28,7 @@ class BoosterNoteRemplissageTrace extends Model
      */
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(BoosterTeacher::class, 'booster_teacher_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**

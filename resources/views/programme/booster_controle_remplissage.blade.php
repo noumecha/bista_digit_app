@@ -56,7 +56,7 @@
                                             <option value="">Toutes les matieres</option>
                                             @foreach ($matieres as $matiere)
                                                 <option value="{{ $matiere->id }}">
-                                                    {{ $matiere->libelleMatiere }}
+                                                    {{ $matiere->matiere->libelleMatiere }}
                                                 </option>
                                             @endforeach
                                         </select>

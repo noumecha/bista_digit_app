@@ -33,9 +33,9 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <select name="classeFilter" class="form-select" id="classeFilter">
-                                            <option value="">Toutes les classes</option>
+                                            <option value="">Selectionnez une classe</option>
                                             @foreach ($classes as $classe)
-                                                <option value="{{$classe->id}}">
+                                                <option value="{{ $classe->id }}">
                                                     {{ $classe->libClasse }}
                                                 </option>
                                             @endforeach
@@ -45,14 +45,14 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <select name="matiereFilter" class="form-select" id="matiereFilter">
-                                            <option value="">Sélectionner une matière</option>
+                                            <option value="">Sélectionnez une matière</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <select name="remplissageFilter" class="form-select" id="remplissageFilter">
-                                            <option value="">Toutes les évaluations</option>
+                                            <option value="">Sélectionnez une évaluation</option>
                                             @foreach ($remplissages as $remplissage)
                                                 <option value="{{ $remplissage->id }}">
                                                     {{ $remplissage->evaluation->libelleEvaluation }}

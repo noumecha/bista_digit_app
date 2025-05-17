@@ -2,6 +2,9 @@
 
 use App\Models\AnneeScolaire;
 use App\Models\AppConfiguration;
+use App\Models\BoosterClasse;
+use App\Models\BoosterNote;
+use App\Models\BoosterStudent;
 use App\Models\Bulletin;
 use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\CoefAnneeScolaire;
@@ -101,7 +104,43 @@ use Illuminate\Support\Facades\Route;
         $gcma = $s/count($datas);
         return $gcma;
     }
-
+    /**
+     * automatically update booster notes
+     */
+    function updateBoosterNoteMinMaxRange($matiereId, $classeId, $evaluationId) {
+        try {
+            $boosterClassesIds = BoosterClasse::all()->where('classe_id', $classeId)->pluck('classe_id');
+            $classeYearStudentsIds = ClasseAnneeScolaireStudent::all()
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->whereIn('classe_id',$boosterClassesIds)
+                ->pluck('user_id');
+            $boosterStudentIds = BoosterStudent::all()->whereIn('user_id', $classeYearStudentsIds)
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->pluck('id');
+            $notes = BoosterNote::all()->where('booster_matiere_id',$matiereId)
+                ->where('evaluation_id',$evaluationId)
+                ->where('annee_scolaire_id', getCurrentYear()->id)
+                ->whereIn('booster_student_id', $boosterStudentIds);
+            $noteValues = [];
+            foreach($notes as $note) {
+                array_push($noteValues, $note->note);
+            }
+            $minValue = min($noteValues);
+            $maxValue = max($noteValues);
+            $gcma = getGeneralMoy($noteValues);
+            foreach($notes as $note) {
+                $range = getRange($note->note, $noteValues);
+                $note->update([
+                    'range' => $range,
+                    'min_value' => $minValue,
+                    'max_value' => $maxValue,
+                    'gcma' => $gcma,
+                ]);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
     /**
      * function to automatically update notes
      */

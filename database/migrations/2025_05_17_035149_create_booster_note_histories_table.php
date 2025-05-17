@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('booster_note_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('booster_note_id')->constrained()->onDelete('cascade');
-            $table->foreignId('booster_student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->double('old_value');
             $table->double('new_value');
             $table->text('reason');

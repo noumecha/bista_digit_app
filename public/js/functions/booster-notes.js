@@ -6,7 +6,7 @@ $(function() {
         if (classeId) {
             $.get('notes/matieres/' + classeId, function(data) {
                 data.forEach(matiere => {
-                    $('#matiereFilter').append(`<option value="${matiere.id}">${matiere.libelleMatiere}</option>`);
+                    $('#matiereFilter').append(`<option value="${matiere.id}">${matiere.name}</option>`);
                 });
             });
         }

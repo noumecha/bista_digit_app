@@ -266,15 +266,27 @@
                     </a>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.classes') ? 'active' : '' }}"
+                        href="{{ route('booster.classes') }}">
+                        <span class="nav-link-text ms-1">Classes</span>
+                    </a>
+                </li>
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.notes') ? 'active' : '' }}"
                         href="{{ route('booster.notes') }}">
                         <span class="nav-link-text ms-1">Notes</span>
                     </a>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
-                        href="{{ route('page_configuration.booster.index') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.notes_controles') ? 'active' : '' }}"
+                        href="{{ route('booster.notes_controles') }}">
                         <span class="nav-link-text ms-1">Remplissage</span>
+                    </a>
+                </li>
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.notes_modifications') ? 'active' : '' }}"
+                        href="{{ route('booster.notes_modifications') }}">
+                        <span class="nav-link-text ms-1">Modifications(notes)</span>
                     </a>
                 </li>
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">

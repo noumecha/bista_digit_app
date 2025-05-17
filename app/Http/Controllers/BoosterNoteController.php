@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoosterClasse;
 use App\Models\BoosterMatiere;
 use App\Models\BoosterNote;
 use App\Models\BoosterNoteHistory;
@@ -13,7 +14,6 @@ use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Coefficient;
 use App\Models\Evaluation;
 use App\Models\Matiere;
-use App\Models\NoteRemplissageTrace;
 use App\Models\Remplissage;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,7 +40,7 @@ class BoosterNoteController extends Controller
                 ->pluck('classe_id');
             $classes = Classe::whereIn('id', $boosterClassesIds)->whereIn('id', $studentsYearClasseIds);
         } else {
-            $boosterClassesIds = BoosterTeacher::all()->pluck('classe_id');
+            $boosterClassesIds = BoosterClasse::all()->pluck('classe_id');
             $boosterStudentIds = BoosterStudent::all()->pluck('user_id');
             $studentsYearClasseIds = ClasseAnneeScolaireStudent::all()
                 ->where('annee_scolaire_id', getCurrentYear()->id)
@@ -70,20 +70,19 @@ class BoosterNoteController extends Controller
             });
         }
         if (!empty($classeFilter)) {
-            // filtering by different classe Id throw years
-            $boosterClassesIds = BoosterTeacher::all()->pluck('classe_id');
+            $boosterClassesIds = BoosterClasse::all()->pluck('classe_id');
             $boosterStudentIds = BoosterStudent::all()->pluck('user_id');
-            $studentsYearClassseId = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeFilter)
+            $studentsYearClasseId = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeFilter)
                 ->where('annee_scolaire_id', getCurrentYear()->id)
                 ->whereIn('classe_id', $boosterClassesIds)
                 ->pluck('classe_id');
-            $query->whereIn('classe_id', $studentsYearClassseId);
-            // filtering by different classe Id throw years
-            $studentsYearClasseIds = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeFilter)
+            $studentsIds = ClasseAnneeScolaireStudent::all()->where('classe_id', $classeFilter)
                 ->where('annee_scolaire_id', getCurrentYear()->id)
                 ->whereIn('classe_id', $boosterClassesIds)
                 ->pluck('user_id');
-            $studentQuery->whereIn('user_id', $studentsYearClasseIds);
+            #dd($usersIds);
+            $query->whereIn('classe_id', $studentsYearClasseId);
+            $studentQuery->whereIn('user_id', $studentsIds);
         }
         if (!empty($matiereFilter)) {
             $query->where('booster_matiere_id', $matiereFilter);
@@ -116,7 +115,7 @@ class BoosterNoteController extends Controller
         $matiereFilter = $request->input('matiereFilter');
         $evaluationFilter = $request->input('evaluationFilter');
         if (!empty($searchTeacher)) {
-            $query->whereHas('teacher.teacher', function ($q) use ($searchTeacher) {
+            $query->whereHas('teacher', function ($q) use ($searchTeacher) {
                 $q->where('name', 'LIKE', "%{$searchTeacher}%")
                 ->orWhere('surname', 'LIKE', "%{$searchTeacher}%");
             });
@@ -128,7 +127,9 @@ class BoosterNoteController extends Controller
             $query->where('evaluation_id', $evaluationFilter);
         }
         if (!empty($matiereFilter)) {
-            $query->where('booster_matiere_id', $matiereFilter);
+            $query->whereHas('matiere', function ($q) use ($matiereFilter) {
+                $q->where('id',$matiereFilter);
+            });
         }
         $traces = $query->paginate(10);
 
@@ -144,7 +145,7 @@ class BoosterNoteController extends Controller
      */
     public function boosterNoteHistories(Request $request) {
         // usefull vars
-        $classes = Classe::all();
+        $classes = BoosterClasse::all();
         $matieres = BoosterMatiere::all();
         $evaluations = Evaluation::all()->where('type','booster-evaluation');
         // var for filtering
@@ -207,7 +208,8 @@ class BoosterNoteController extends Controller
             'boosternote.min' => 'La note doit etre égale au moins à 0',
             'boosternote.max' => 'La note doit etre égale au plus à 20'
         ]);
-        $existNote = BoosterNote::where('booster_student_id', $request->booster_student_id)
+        try {
+            $existNote = BoosterNote::where('booster_student_id', $request->booster_student_id)
             ->where('booster_matiere_id',$request->booster_matiere_id)
             ->where('classe_id',$request->classe_id)
             ->where('evaluation_id',$request->evaluation_id)
@@ -219,7 +221,6 @@ class BoosterNoteController extends Controller
                 'error' => 'La note existe déjà !'
             ]);
         } else {
-            dd($request);
             // then save the note in the db
             $note = BoosterNote::create([
                 'booster_matiere_id' => $request->booster_matiere_id,
@@ -231,9 +232,9 @@ class BoosterNoteController extends Controller
                 'appreciation' => $request->appreciation,
                 'annee_scolaire_id' => getCurrentYear()->id
             ]);
-            // create new note trace :
-            $noteTrace = NoteRemplissageTrace::updateOrCreate([
-                'booster_teacher_id' => Auth::id(),
+            // create new booster note trace :
+            $noteTrace = BoosterNoteRemplissageTrace::updateOrCreate([
+                'user_id' => Auth::id(),
                 'classe_id' => $request->classe_id,
                 'booster_matiere_id' => $request->booster_matiere_id,
                 'evaluation_id' => $request->evaluation_id,
@@ -243,8 +244,8 @@ class BoosterNoteController extends Controller
                 'nb_notes_remplies' => DB::raw('nb_notes_remplies + 1')
             ]);
             // update all the notes with the corresponding new min value and max value
-            updateNoteMinMaxRange(
-                $note->matiere_id,
+            updateBoosterNoteMinMaxRange(
+                $note->booster_matiere_id,
                 $note->classe_id,
                 $note->evaluation_id,
             );
@@ -252,6 +253,12 @@ class BoosterNoteController extends Controller
                 return response()->json(['success' => 'Note enregistrée avec succès']);
             }
         }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'Erreur lors de l\'enregistrement : '.$th->getMessage()
+            ]);
+        }
+
     }
 
     /**
@@ -280,15 +287,15 @@ class BoosterNoteController extends Controller
         ]);
         // saving history note
         $noteHistory = BoosterNoteHistory::create([
-            'note_id' => $note->id,
-            'booster_teacher_id' => Auth::id(),
+            'booster_note_id' => $note->id,
+            'user_id' => Auth::id(),
             'old_value' => $oldValue,
             'new_value' => $request->new_value,
             'reason' => $request->reason,
         ]);
         // update all the notes with the corresponding new min value and max value
-        updateNoteMinMaxRange(
-            $note->matiere_id,
+        updateBoosterNoteMinMaxRange(
+            $note->booster_matiere_id,
             $note->classe_id,
             $note->evaluation_id
         );
@@ -301,19 +308,24 @@ class BoosterNoteController extends Controller
      */
     public function getBoosterMatieres($classeId) {
         $user = User::find(Auth::id());
+        $mats = [];
         if($user->typeUser === 'enseignant') {
             $boosterMatieresIds = BoosterTeacher::where('user_id', $user->id)->pluck('booster_matiere_id');
-            $matieresIds = BoosterMatiere::whereIn('id', $boosterMatieresIds)->pluck('matiere_id');
             $coefsIds = Coefficient::where('classe_id', $classeId)
-                ->whereIn('matiere_id', $matieresIds)
                 ->pluck('matiere_id');
-            $matieres = Matiere::whereIn('id', $coefsIds)->get();
+            $matieres = BoosterMatiere::whereIn('id', $boosterMatieresIds)
+                ->whereIn('matiere_id', $coefsIds)->get();
         } else {
             $coefficients = Coefficient::where('classe_id', $classeId)->pluck('matiere_id');
-            $matieresIds = BoosterMatiere::whereIn('matiere_id', $coefficients)->pluck('matiere_id');
-            $matieres = Matiere::whereIn('id', $matieresIds)->get();
+            $matieres = BoosterMatiere::whereIn('matiere_id', $coefficients)->get();
         }
-        return response()->json($matieres->values());
+        foreach($matieres as $matiere) {
+            array_push($mats, [
+                'id' => $matiere->id,
+                'name' => $matiere->matiere->libelleMatiere
+            ]);
+        }
+        return response()->json($mats);
     }
 
     /**

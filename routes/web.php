@@ -362,6 +362,11 @@ Route::post('/programme/booster/students/save', [ProgrammeController::class, 'st
 Route::get('/programme/booster/students/{id}/edit', [ProgrammeController::class, 'studentEdit'])->name('booster.studentEdit')->middleware('auth');
 Route::delete('/programme/booster/students/{id}/delete', [ProgrammeController::class, 'studentDelete'])->name('booster.studentDelete')->middleware('auth');
 Route::get('/programme/booster/classe/students/{classId}', [ProgrammeController::class, 'getClasseStudents'])->middleware('auth');
+# configuration routes - booster classes routes
+Route::get('/programme/booster/classes', [ProgrammeController::class, 'classes'])->name('booster.classes')->middleware('auth');
+Route::post('/programme/booster/classes/save', [ProgrammeController::class, 'classeSave'])->name('booster.classeSave')->middleware('auth');
+Route::get('/programme/booster/classes/{id}/edit', [ProgrammeController::class, 'classeEdit'])->name('booster.classeEdit')->middleware('auth');
+Route::delete('/programme/booster/classes/{id}/delete', [ProgrammeController::class, 'classeDelete'])->name('booster.classeDelete')->middleware('auth');
 # configuration routes - booster notes routes
 Route::get('/programme/booster/notes', [BoosterNoteController::class, 'index'])->name('booster.notes')->middleware('auth');
 Route::get('/programme/booster/notes/controles', [BoosterNoteController::class, 'boosterRemplissageTrace'])->name('booster.notes_controles')->middleware('auth');

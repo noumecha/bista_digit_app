@@ -12,7 +12,7 @@ $(function(){
     function fetchNotesHitory() {
         var formData = $('#filterBoosterHistoryForm').serialize();
         $.ajax({
-            url : "/programmes/booster/notes/modifications",
+            url : "/programme/booster/notes/modifications",
             type : 'GET',
             data : formData,
             success : function(data) {

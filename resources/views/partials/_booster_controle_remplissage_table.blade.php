@@ -32,7 +32,7 @@
             @foreach ($traces as $trace)
                 <tr>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $trace->classe->classe->libClasse }}
+                        {{ $trace->classe->libClasse }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $trace->matiere->matiere->codeMatiere }}
@@ -42,23 +42,23 @@
                     </td>
                     <td class="align-middle bg-transparent border-bottom"
                     >
-                        {{ $trace->teacher->teacher->name }}
+                        {{ $trace->teacher->name }}
                     </td>
                     <td class="align-middle bg-transparent pt-0 border-bottom">
                         <div class="progress w-100" role="progressbar" aria-label="Animated striped example"
                             aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
                             style="height: 12px; width:100% !important;">
                             <div class="progress-bar
-                                @if ((int)getBoosterRemplissagePourcentage($trace->classe_id, $trace->booster_matierer_id, $trace->evaluation_id) === 100)
+                                @if ((int)getBoosterRemplissagePourcentage($trace->classe_id, $trace->booster_matiere_id, $trace->evaluation_id) === 100)
                                     text-white text-bg-success
-                                @elseif((int)getBoosterRemplissagePourcentage($trace->classe_id, $trace->booster_matierer_id, $trace->evaluation_id) < 50)
+                                @elseif((int)getBoosterRemplissagePourcentage($trace->classe_id, $trace->booster_matiere_id, $trace->evaluation_id) < 50)
                                     text-white text-bg-danger progress-bar-animated progress-bar-striped
                                 @else
                                     text-white text-bg-info progress-bar-animated progress-bar-striped
                                 @endif
                                 "
-                                style="height: 12px; width: {{ getBoosterRemplissagePourcentage($trace->classe_id, $trace->booster_matierer_id, $trace->evaluation_id) }}%">
-                                {{ getBoosterRemplissagePourcentage($trace->classe_id, $trace->booster_matierer_id, $trace->evaluation_id) }}%
+                                style="height: 12px; width: {{ getBoosterRemplissagePourcentage($trace->classe_id, $trace->booster_matiere_id, $trace->evaluation_id) }}%">
+                                {{ getBoosterRemplissagePourcentage($trace->classe_id, $trace->booster_matiere_id, $trace->evaluation_id) }}%
                             </div>
                         </div>
                     </td>

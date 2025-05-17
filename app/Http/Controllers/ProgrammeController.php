@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoosterClasse;
 use App\Models\BoosterMatiere;
 use App\Models\BoosterStudent;
 use App\Models\BoosterTeacher;
@@ -10,6 +11,7 @@ use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\EnseignantMatiereModel;
 use App\Models\EnsMatAnneeScolaire;
 use App\Models\Matiere;
+use App\Models\Section;
 use App\Models\Specialite;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;
@@ -35,7 +37,8 @@ class ProgrammeController extends Controller
      */
     public function teachers(Request $request) {
         $query = BoosterTeacher::query()->where('annee_scolaire_id',getCurrentYear()->id);
-        $classes = Classe::all();
+        $boosterClassesIds = BoosterClasse::all()->pluck('classe_id');
+        $classes = Classe::all()->whereIn('id', $boosterClassesIds);
         $matieres = BoosterMatiere::all();
         $teacherSchoolYearIds = UserAnneeScolaire::all()->where('annee_scolaire_id',getCurrentYear()->id)
             ->pluck('user_id');
@@ -113,7 +116,8 @@ class ProgrammeController extends Controller
      */
     public function students(Request $request) {
         $query = BoosterStudent::query()->where('annee_scolaire_id',getCurrentYear()->id);
-        $classes = Classe::all();
+        $boosterClassesIds = BoosterClasse::all()->pluck('classe_id');
+        $classes = Classe::all()->whereIn('id', $boosterClassesIds);
         // usefull vars
         $studentSchoolYear = UserAnneeScolaire::all()->where('annee_scolaire_id',getCurrentYear()->id);
         $studentsSchoolYearId = $studentSchoolYear->pluck('user_id');
@@ -139,6 +143,41 @@ class ProgrammeController extends Controller
             return view('partials._booster_students_table', compact('boosterstudents', 'students', 'classes'));
         } else {
             return view('programme.booster_students', compact('boosterstudents', 'students', 'classes'));
+        }
+    }
+
+    /**
+     * booster classe index
+     */
+    public function classes(Request $request) {
+        $query = BoosterClasse::query()->where('annee_scolaire_id',getCurrentYear()->id);
+        $classes = Classe::all();
+        $sections = Section::all();
+        // filters vars
+        $searchClasse = $request->input('searchClasse');
+        $cycleFilter= $request->input('cycleFilter');
+        $sectionFilter = $request->input('sectionFilter');
+        // filtering
+        if(!empty($searchClasse)) {
+            $query->whereHas('classe', function ($q) use ($searchClasse) {
+                $q->where('libClasse', 'LIKE', "%{$searchClasse}%");
+            });
+        }
+        if(!empty($sectionFilter)) {
+            $query->whereHas('classe.section', function ($q) use ($sectionFilter) {
+                $q->where('id', $sectionFilter);
+            });
+        }
+        if(!empty($cycleFilter)) {
+            $query->whereHas('classe', function ($q) use ($cycleFilter) {
+                $q->where('cycleClasse',$cycleFilter);
+            });
+        }
+        $boosterclasses = $query->paginate(10);
+        if($request->ajax()) {
+            return view('partials._booster_classes_table', compact('sections','boosterclasses','classes'));
+        } else {
+            return view('programme.booster_classes', compact('sections','boosterclasses','classes'));
         }
     }
 
@@ -186,7 +225,39 @@ class ProgrammeController extends Controller
                 'error' => 'Erreur : '.$ex->getMessage()
             ]);
         }
+    }
 
+    /**
+     * saving booster classe of the programme
+     */
+    public function classeSave(Request $request) {
+        $request->validate([
+            'classe_id' => 'required',
+        ], [
+            'classe_id.required' => 'Selectionnez une classe',
+        ]);
+        try {
+            # check if confgiuration already exits
+            if(BoosterClasse::where('classe_id', $request->classe_id)
+                ->where('annee_scolaire_id',getCurrentYear()->id)->exists())
+            {
+                return response()->json([
+                    'error' => 'Cette classe a déjà été ajouté au programme !'
+                ]);
+            }
+            # then save
+            $evaluation = BoosterClasse::create([
+                'classe_id' => $request->classe_id,
+                'annee_scolaire_id' => getCurrentYear()->id
+            ]);
+            if ($evaluation) {
+                return response()->json(['success' => 'Classe ajouté avec succès!']);
+            }
+        } catch (\Throwable $ex) {
+            return response()->json([
+                'error' => 'Erreur : '.$ex->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -235,7 +306,7 @@ class ProgrammeController extends Controller
             if(BoosterStudent::where('annee_scolaire_id',getCurrentYear()->id)
                 ->where('user_id', $request->user_id)->exists()) {
                 return response()->json([
-                    'error' => 'Cette configuration existe déjà!'
+                    'error' => 'Cet élève a déjà été ajouté au programme!'
                 ]);
             }
             # then save
@@ -278,6 +349,17 @@ class ProgrammeController extends Controller
         $boosterStudent = BoosterStudent::findOrFail($id);
         $boosterStudent->delete();
         return redirect()->route('booster.students')->with('deleteSuccess', 'Elève supprimé du pogramme');
+    }
+
+    /**
+     * delete classes of the program
+     */
+    public function classeDelete($id) {
+        $boosterClasse = BoosterClasse::findOrFail($id);
+        $boosterStudent = BoosterStudent::where('booster_classe_id', $id);
+        if($boosterClasse->delete() && $boosterStudent->delete()) {
+            return redirect()->route('booster.classes')->with('deleteSuccess', 'Classe supprimé du pogramme');
+        }
     }
 
     /**
