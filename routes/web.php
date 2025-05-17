@@ -75,6 +75,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/apropos', [AboutController::class, 'index'])->name('home.about');
 Route::get('/actualites', [HomeController::class, 'actualites'])->name('home.actus');
 Route::get('/actualites/categorie/{category}', [HomeController::class, 'showCategorie'])->name('home.showCategorie');
+Route::get('/atouts/atout/{atout}', [HomeController::class, 'showAtout'])->name('home.showAtout');
 Route::get('/actualite/{id}/read', [HomeController::class, 'showActualite'])->name('actualites.show');
 Route::get('/epreuve/{id}/read', [HomeController::class, 'showEpreuve'])->name('home.showepreuve');
 

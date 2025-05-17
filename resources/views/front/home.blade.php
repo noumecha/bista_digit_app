@@ -1,5 +1,12 @@
 <x-front-layout>
-    <section id="carouselExampleFade" class="carousel slide carousel-fade slider" data-ride="carousel">
+    <div id="carouselExampleIndicators" class="carousel slide slider" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            @foreach ($sliders as $slider)
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $loop->index }}"
+                    class="{{ $loop->first ? 'active' : "" }}" aria-current="true" aria-label="Slide {{ $loop->index + 1 }}">
+                </button>
+            @endforeach
+        </div>
         <div class="carousel-inner">
             @if ($sliders->isEmpty())
                 <div class="carousel-item active">
@@ -15,12 +22,12 @@
                 </div>
             @else
                 @foreach ($sliders as $slider)
-                    <div class="carousel-item {{ $loop->first ? 'active' : "" }}">
+                    <div class="carousel-item {{ $loop->first ? 'active' : "" }}" data-bs-interval="5000">
                         <img src="{{ asset('storage/' . $slider->slider_image) }}" class="d-block" alt="...">
                         <div class="carousel-caption">
-                            <h2>
+                            <h1>
                                 {{ $slider->slider_title }}
-                            </h2>
+                            </h1>
                             <p>
                                 {{ $slider->slider_text }}
                             </p>
@@ -28,24 +35,23 @@
                     </div>
                 @endforeach
             @endif
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleFade" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
         </div>
-    </section>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 
      <!-- ====================== section started====================== -->
 
      <section class="bg-01">
          <div class="container">
              <div class="row">
-                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                      <div class="se-box">
                          <div class="icon">
                             <i class="fal fa-chalkboard-teacher"></i>
@@ -57,39 +63,26 @@
                              </p>
                          </div>
                      </div>
-                 </div>
-
-                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="se-box">
-                        <div class="icon">
-                            <i class="fal fa-globe-americas"></i>
-                        </div>
-                        <div class="content">
-                            <h3>Apprentissage en ligne</h3>
-                            <p>nous donnons la possibilité à nos apprenants de s’exercer sur notre plateforme</p>
-                        </div>
-                    </div>
                 </div>
-
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <div class="se-box">
                         <div class="icon">
                             <i class="fal fa-graduation-cap"></i>
                         </div>
                         <div class="content">
-                            <h3>Des Laboratoires à la pointe</h3>
+                            <h3>Laboratoires de pointes</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <div class="se-box">
                         <div class="icon">
                             <i class="fal fa-backpack"></i>
                         </div>
                         <div class="content">
-                            <h3>Bourses d'études et programmes de soutien</h3>
+                            <h3>Bourses d'études & programmes de soutien</h3>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
                         </div>
                     </div>
@@ -100,78 +93,105 @@
 
       <!-- ====================== Featured started====================== -->
 
-      <section class="bg-02">
-          <div class="container">
-              <div class="row">
-                  <div class="col-12">
-                      <div class="heading">
-                          <h2>PARTICULARITE DU COLLEGE BISTA</h2>
-                          <p class="text-justify">Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime totam quo, ducimus aliquid quisquam minima perspiciatis repellendus, minus tenetur reiciendis quis? Consequatur perferendis deleniti, rerum delectus consectetur modi praesentium deserunt.</p>
-                      </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                      <div class="featured-box">
-                          <div class="feature-card">
-                              <a href="#"><i class="far fa-link"></i></a>
-                              <img src="{{ asset('front/images/featured/1.jpg') }}">
-                          </div>
-                          <div class="content">
-                            <h3>PROGRAMME BOOSTER</h3>
-                            <p class="text-justify">
-                                Un programme de renforcement des capacités de nos apprenants dans les Mathématiques, en Anglais et en Mathématiques avec pour objectif la préparation efficace des élèves
-                                aux examens officiels accompagnés d’une bonne maîtrise de la langue.
-                            </p>
-                          </div>
-                      </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="featured-box">
-                        <div class="feature-card">
-                            <a href="#"><i class="far fa-link"></i></a>
-                            <img src="{{ asset('front/images/featured/2.jpg') }}">
-                        </div>
-                        <div class="content">
-                          <h3>PROGRAMME I'AM A LEADER</h3>
-                          <p class="text-justify">
-                            Le Programme I’M A LEADER, qui éveille le génie de l’enfant et fera de lui un grand leader de demain
-                          </p>
-                        </div>
+    <section class="bg-02">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="heading">
+                        <h2>PARTICULARITE DU COLLEGE : {{ $appconfiguration->school_name }}</h2>
+                        <p class="text-justify">
+                            {!! Str::limit($appconfiguration->description, $limit=150, $end="...") !!}
+                            <a href="{{ route('home.about') }}">lire la suite</a>
+                        </p>
                     </div>
                 </div>
-
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="featured-box">
-                        <div class="feature-card">
-                            <a href="#"><i class="far fa-link"></i></a>
-                            <img src="{{ asset('front/images/featured/3.jpg') }}">
-                        </div>
-                        <div class="content">
-                            <h3>LABORATOIRE DU COLLEGE BISTA</h3>
-                            <p class="text-justify">
-                                Des laboratoire de Sciences équipés de matériels récents pour nos apprenants des séries scientifiques pour les expérimentations et Travaux,
-                                et un Laboratoire Multimédia pour les élèves de la Série TI
+                @if ($atouts->isEmpty())
+                    <div class="carousel-item active">
+                        <img src="{{ asset('front/images/slider/1.jpg') }}" class="d-block" alt="...">
+                        <div class="carousel-caption">
+                            <h2>
+                                Pour une meilleure éducation
+                            </h2>
+                            <p>
+                                Implication de la technologie dans l'enseignement
                             </p>
                         </div>
                     </div>
-                </div>
+                @else
+                    @foreach ($atouts as $atout)
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <div class="featured-box">
+                                <div class="feature-card">
+                                    <a href="#"><i class="far fa-link"></i></a>
+                                    <img style="height: 300px;
+                                        width: 100%;
+                                        object-fit: cover;"
+                                        src="{{ asset('storage/'.$atout->specialite_image) }}"
+                                    >
+                                </div>
+                                <div class="content">
+                                    <h3 class="text-uppercase">
+                                        {{ $atout->specialite_title }}
+                                    </h3>
+                                    <p class="text-justify">
+                                        {!! Str::limit($atout->contenu, $limit=200, $end="...") !!}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+    </section>
 
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="featured-box">
-                        <div class="feature-card">
-                            <a href="#"><i class="far fa-link"></i></a>
-                            <img src="{{ asset('front/images/featured/4.jpg') }}">
-                        </div>
-                        <div class="content">
-                          <h3>CLUB DU COLLEGE BISTA</h3>
-                          <p class="text-justify">Club sport, Club Santé, Club danse, Club Informatique, Club Journal, Club art</p>
-                        </div>
+      <secton class="bg-02">
+        <div class="container bg-gray">
+            <div class="row">
+                <div class="col-12">
+                    <div class="heading">
+                        <h2 class="text-uppercase">programmes & clubs</h2>
                     </div>
                 </div>
-              </div>
-          </div>
-      </section>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @if (isset($club))
+                        <div class="featured-box">
+                            <div class="feature-card">
+                                <a href="#"><i class="far fa-link"></i></a>
+                                <img src="{{ asset('storage/'.$club->club_image) }}">
+                            </div>
+                            <div class="content">
+                                <h3 class="text-uppercase">
+                                    {{ $club->club_name }}
+                                </h3>
+                                <p class="text-justify">
+                                    {!! Str::limit($club->contenu, $limit=200, $end="...") !!}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @if (isset($leader))
+                        <div class="featured-box">
+                            <div class="feature-card">
+                                <a href="#"><i class="far fa-link"></i></a>
+                                <img src="{{ asset('storage/'.$leader->specialite_image) }}">
+                            </div>
+                            <div class="content">
+                                <h3 class="text-uppercase">
+                                    {{ $leader->specialite_title }}
+                                </h3>
+                                <p class="text-justify">
+                                    {!! Str::limit($leader->contenu, $limit=200, $end="...") !!}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+      </secton>
 
       <section class="bg-03">
           <div class="container">
@@ -223,56 +243,48 @@
                <div class="col-12">
                     <div class="heading">
                         <h2>Nos dernières actualités</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt</p>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                      <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-01.jpg') }}"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Easy English Learning Way</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                @if ($actualites->isEmpty())
+                    <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                        <article class="_lk_bg_sd_we">
+                            <div class="_xs_we_er">
+                                <div class="_he_w">
+                                    <h3>
+                                        Aucune actualité pour le moment
+                                    </h3>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                @else
+                    @foreach ($actualites as $actualite)
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <article class="_lk_bg_sd_we">
+                                <div class="_bv_xs_we" style="background:url({{ asset('storage/'. $actualite->image) }});"></div>
+                                <div class="_xs_we_er">
+                                    <div class="_he_w">
+                                        <h3>
+                                            <a href="{{ route('actualites.show', $actualite->id) }}">
+                                                {{ $actualite->titre }}
+                                            </a>
+                                        </h3>
+                                        <ol>
+                                            <li>
+                                                <span>Par</span>{{ $actualite->user->name }}<span class="_mn_cd_xs"><i>le {{ date('d M Y', strtotime($actualite->created_at)) }}</i></span>
+                                            </li>
+                                        </ol>
+                                        <p>
+                                            {!! Str::limit($actualite->contenu , $limit=70, $end="...") !!}
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
                         </div>
-                      </div>
-                    </article>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                      <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-01.jpg') }}"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Summer Course Start From 1st June</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </article>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <article class="_lk_bg_sd_we">
-                        <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-01.jpg') }}"></div>
-                      <div class="_xs_we_er">
-                        <div class="_he_w">
-                          <h3>Guest Interview will Occur Soon</h3>
-                          <ol>
-                            <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                          </ol>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                        </div>
-                      </div>
-                    </article>
-                </div>
+                    @endforeach
+                @endif
             </div>
         </div>
     </section>

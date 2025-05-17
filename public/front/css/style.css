@@ -169,6 +169,17 @@ a:hover {
   position: relative;
   overflow: hidden;
   z-index: 9; }
+  /** adding some touch **/
+  .slider .carousel-indicators {
+    z-index: 20;
+  }
+  .slider .carousel-item {
+    height: 100vh;
+  }
+  .slider .carousel-item img {
+    height: 100%;
+  }
+  /** end adding **/
   .slider::before {
     position: absolute;
     content: "";

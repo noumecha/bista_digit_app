@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actualite;
+use App\Models\AppConfiguration;
 use App\Models\CategorieActualite;
+use App\Models\Club;
 use App\Models\Epreuve;
 use App\Models\Slider;
+use App\Models\Specialite;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -15,12 +18,20 @@ class HomeController extends Controller
      * index function
      */
     public function index () {
+        $appconfiguration = AppConfiguration::all()->last();
         $students = User::all()->where('typeUser','=','eleve')->count();
         $teachers = User::all()->where('typeUser','=','enseignant')->count();
         $sliders = Slider::query()->latest()->paginate(5);
-        $articles = Actualite::query()->latest()->paginate(3);
+        $actualites = Actualite::query()->latest()->paginate(3);
         $categories = CategorieActualite::all();
-        return view('front.home', compact('students','articles','teachers','categories','sliders'));
+        $booster = Specialite::all()->where("type","booster-page")->last();
+        $atouts = Specialite::all()->where("type", '!=',"booster-page")->where("type","!=", "leader-page");
+        $leader = Specialite::all()->where("type","leader-page")->last();
+        $club = Club::all()->last();
+        return view('front.home', compact(
+            'students','actualites','teachers','categories','sliders','appconfiguration',
+            'booster', 'leader','atouts','club'
+        ));
     }
 
     /**

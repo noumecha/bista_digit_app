@@ -84,13 +84,14 @@ class SliderController extends Controller
     public function update(Request $request, $id) {
         $request->validate([
             'slider_title' => 'required|min:3|max:255',Rule::unique('sliders')->ignore($id),
-            'slider_text' => 'required|min:255',
+            'slider_text' => 'required|min:3|max:255',
             'slider_image' => 'image|mimes:jpg,jpeg,png,gif|max:4096',
         ], [
             'slider_title.required' => 'Veuillez entrez un nom de slider',
             'slider_title.min' => 'Le titre doit contenir minimum 3 caractères',
             'slider_title.max' => 'Le titre doit contenir au maximum 255 caractères',
-            'slider_text.min' => 'Le texte du slider doit contenir maximum 255 caractères',
+            'slider_text.min' => 'Le texte du slider doit contenir minimum 3 caractères',
+            'slider_text.max' => 'Le texte du slider doit contenir maximum 255 caractères',
             'slider_title.unique' => 'Ce nom de slider existe déja',
             'slider_text.required' => 'Veuillez remplir la description du slider',
         ]);
