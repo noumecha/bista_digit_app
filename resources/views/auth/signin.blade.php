@@ -5,7 +5,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-4 col-md-6 d-flex pt-20 pb-20 flex-column mx-auto">
-                            <div class="logo d-flex justify-content-center align-items-center rounded-full w-100 h-100 overflow-hidden">
+                            <div class="logo d-flex justify-content-center align-items-center rounded-full w-70 h-70 overflow-hidden">
                                 <img src="{{ asset('logo/logo-bista.png') }}" alt="logo" class=""/>
                             </div>
                             <div class="card card-plain mt-6">
@@ -68,7 +68,11 @@
                         <div class="col-md-6">
                             <div class="position-absolute w-40 top-0 end-0 h-100 d-md-block d-none">
                                 <div class="oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 bg-cover ms-n8"
-                                    style="background-image:url('{{ asset('img/image-sign-in.jpg') }}')">
+                                    style="background-image: url('{{
+                                        isset($appconfiguration) && isset($appconfiguration->school_image) ?
+                                        asset('storage/' . $appconfiguration->school_image) :
+                                        asset('img/image-sign-in.jpg')
+                                    }}');">
                                 </div>
                             </div>
                         </div>

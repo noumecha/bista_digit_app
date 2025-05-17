@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-
+use App\Models\AppConfiguration;
 
 class LoginController extends Controller
 {
@@ -17,7 +17,8 @@ class LoginController extends Controller
      */
     public function create()
     {
-        return view('auth.signin');
+        $appconfiguration = AppConfiguration::all()->last();
+        return view('auth.signin', compact('appconfiguration'));
     }
 
 
@@ -59,7 +60,7 @@ class LoginController extends Controller
         }*/
 
         return back()->withErrors([
-            'message' => 'Identifiants incorrect. Veuillez vérifier votre adresse email, votre matricule ou votre mot de passe',
+            'message' => 'Identifiants incorrects. Réessayez',
         ])->withInput($request->only('login'));
     }
 

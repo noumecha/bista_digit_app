@@ -32,6 +32,7 @@ class AppConfigurationController extends Controller
             'contact_phone_1' => ['required', 'regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
             'contact_phone_2' => ['nullable','regex:/^[0-9]{3}-[0-9]{3}-[0-9]{3}$/'],
             'school_email' => 'nullable|email|max:255',
+            'school_image' => 'image|mimes:jpg,jpeg,png,gif|max:4096',
         ], [
             'school_name.required' => 'Veuillez entrez le nom de l\'établissement',
             'school_motor.required' => 'Veuillez entrez la devise l\'établissement',
@@ -43,6 +44,8 @@ class AppConfigurationController extends Controller
             'contact_phone_1.regex' => 'Le numero de téléphone 1 doit être au format XXX-XXX-XXX',
             'contact_phone_2.regex' => 'Le numero de téléphone 2 doit être au format XXX-XXX-XXX',
             'contact_phone_1.required' => 'Le numero de téléphone 1 de l\'établissement est requis',
+            'school_image.required' => 'Veuillez selectionner une image de mise en avant',
+            'school_image.mimes' => 'L\'image de mise en avant doit être du type (jpg, jpeg, png, gif)',
         ]);
 
         try {
@@ -54,6 +57,13 @@ class AppConfigurationController extends Controller
                         Storage::disk('public')->delete($appconfiguration->school_logo);
                     }
                     $appconfiguration->school_logo = $imagePath;
+                }
+                if($request->hasFile('school_image')) {
+                    $schoolImagePath = $request->file('school_image')->store('images', 'public');
+                    if ($appconfiguration->school_image) {
+                        Storage::disk('public')->delete($appconfiguration->school_image);
+                    }
+                    $appconfiguration->school_image = $schoolImagePath;
                 }
                 $appconfiguration->update([
                     'school_name' => $request->school_name,
@@ -73,6 +83,7 @@ class AppConfigurationController extends Controller
                     'school_motor' => $request->school_motor,
                     'school_postal_box' => $request->school_postal_box,
                     'school_logo' => $request->hasFile('school_logo') ? $request->file('school_logo')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
+                    'school_image' => $request->hasFile('school_image') ? $request->file('school_image')->store('images', 'public') : 'img/image-sign-in.jpg',
                     'description' => $request->content,
                     'school_town' => $request->school_town,
                     'school_location' => $request->school_location,

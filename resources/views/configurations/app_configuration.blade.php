@@ -3,7 +3,11 @@
         <x-app.navbar />
         <div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
             <div class="pt-7 pb-6 bg-cover"
-                style="background-image: url('{{ asset('img/image-sign-in.jpg') }}'); background-position: bottom;">
+                style="background-image: url('{{
+                    isset($appconfiguration) && isset($appconfiguration->school_image) ?
+                    asset('storage/' . $appconfiguration->school_image) :
+                    asset('img/image-sign-in.jpg')
+                }}'); background-position: bottom;">
             </div>
             <div class="container">
                 <div class="card card-body py-2 bg-transparent shadow-none">
@@ -208,6 +212,15 @@
                                             Nom de l'établissement :
                                         </label>
                                         <input type="text" name="school_name" id="school_name" class="form-control" placeholder="POWER EDUCATION">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="school_image" class="form-control-label">
+                                            Modifier l'image de mise en avant
+                                        </label>
+                                        <input type="file" id="school_image" name="school_image" class="form-control"
+                                            value="{{ old("school_image") }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
