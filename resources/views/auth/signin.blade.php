@@ -36,12 +36,10 @@
                                         </div>
                                         <label>Mot de passe</label>
                                         <div class="mb-3" id="eye-password-container">
-                                            <input type="password" id="password" name="password"
-                                                value="{{ old('password') ? old('password') : 'admin123' }}"
-                                                class="form-control" placeholder="Entrez votre mot de passe" aria-label="Password"
-                                                aria-describedby="password-addon">
-                                                <span toggle="#password" class="fa-solid fa-eye field-icon toggle-eye"
-                                                onclick="togglePasswordVisibility()"></span>
+                                            <input type="password" id="password-con" name="password"
+                                                value="{{ old('password') ? old('password') : '@dmin123' }}"
+                                                class="form-control" autocomplete="current-password">
+                                                <span toggle="#password" id="icon-con" class="fa-solid fa-eye field-icon toggle-eye"></span>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <div class="form-check form-check-info text-left mb-0">

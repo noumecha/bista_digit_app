@@ -73,6 +73,8 @@
 <body class="">
 
     {{ $slot }}
+    <!-- JQuery file -->
+    <script src="{{ asset('js/plugins/jquery.js') }}"></script>
     <!--   Core JS Files   -->
     <script src="{{ asset('js/core/popper.min.js') }}"></script>
     <script src="{{ asset('js/core/bootstrap.min.js') }}"></script>

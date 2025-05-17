@@ -1,13 +1,17 @@
-function togglePasswordVisibility() {
-    const passwordInput = document.getElementById("password");
-    const eyeIcon = document.querySelector(".toggle-eye");
-    if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        eyeIcon.classList.add("fa-eye-slash");
-        eyeIcon.classList.remove("fa-eye");
-    } else {
-        passwordInput.type = "password";
-        eyeIcon.classList.add("fa-eye");
-        eyeIcon.classList.remove("fa-eye-slash");
-    }
+togglePasswordVisibility('#icon-con', '#password-con');
+togglePasswordVisibility('#icon-pwd', '#password');
+togglePasswordVisibility('#icon-confirm', '#confirmPassword');
+
+function togglePasswordVisibility(icon,el) {
+    $(icon).on('click', function() {
+        if($(el).attr('type') === "password") {
+            $(el).attr('type', 'text')
+            $(icon).addClass('fa-eye-slash')
+            $(icon).removeClass('fa-eye')
+        } else {
+            $(el).attr('type', 'password')
+            $(icon).removeClass('fa-eye-slash')
+            $(icon).addClass('fa-eye')
+        }
+    });
 }

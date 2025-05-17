@@ -1,12 +1,14 @@
-<aside class="sidenav navbar overflow-hidden navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
-    <div class="sidenav-header">
-        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+<aside class="sidenav navbar overflow-y-auto navbar-vertical navbar-expand-xs border-0
+    bg-slate-900 fixed-start overflow-x-hidden" id="sidenav-main">
+    <div class="sidenav-header position-sticky top-0 bg-slate-900 z-index-2">
+        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute e
+            nd-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand d-flex align-items-center m-0" href="{{ route('dashboard') }}">
             <span class="font-weight-bold text-lg">POWEREDUCATION</span>
         </a>
     </div>
-    <div class="collapse navbar-collapse px-4 overflow-hidden w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse px-4 overflow-y-auto hidden w-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link  {{ is_current_route('dashboard') ? 'active' : '' }}"

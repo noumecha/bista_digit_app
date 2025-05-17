@@ -46,6 +46,19 @@
                                 data-bs-toggle="modal"
                                 data-action="create"
                                 data-userconfiguration-id = "{{ isset($user) ? $user->id : ''}}"
+                                data-bs-target="#update-userpassword-modal"
+                                class="btn btn-sm btn-white"
+                            >
+                                <i class="fas fa-lock me-2"></i> Mot de passe
+                            </a>
+                        </div>
+                        <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3 text-sm-end">
+                            <a
+                                type="button"
+                                class="btn btn-lg btn-dark btn-primary text-white"
+                                data-bs-toggle="modal"
+                                data-action="create"
+                                data-userconfiguration-id = "{{ isset($user) ? $user->id : ''}}"
                                 data-bs-target="#update-userconfiguration-modal"
                                 class="btn btn-sm btn-white"
                             >
@@ -159,6 +172,69 @@
                 </div>
             </div>
         </div>
+        <!-- user password modal -->
+
+        <div class="modal fade" id="update-userpassword-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog modal-dialog-centered">
+                <form enctype="multipart/form-data" role="form" id="userPasswordForm" class="form row">
+                    @csrf
+                    <div class="modal-content p-0">
+                        <div class="modal-header bg-primary bg-success">
+                            <div class="modal-title row">
+                                <div class="col-12">
+                                    <h5 class="text-white">
+                                        Modifier votre mot de passe
+                                    </h5>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="password" class="form-control-label">
+                                            Nouveau mot de passe :
+                                        </label>
+                                        <div class="mb-3" id="eye-password-container">
+                                            <input autocomplete="mot-de-passe" type="password" id="password" name="password" class="form-control">
+                                                <span toggle="#password" id="icon-pwd" class="fa-solid fa-eye field-icon toggle-eye"
+                                                onclick="togglePasswordVisibility()"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="confirmPassword" class="form-control-label">
+                                            Confirmer le mot de passe :
+                                        </label>
+                                        <div class="mb-3" id="eye-password-container">
+                                            <input type="password" autocomplete="mot-de-passe" id="confirmPassword" name="confirmPassword" class="form-control">
+                                                <span toggle="#confirmPassword" id="icon-confirm" class="fa-solid fa-eye field-icon toggle-eye"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-row-reverse">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" id="submit-userpassword-form-button"
+                                class="spinner-submit-userpassword-form-button btn btn-lg btn-outline-primary btn-outline-success">
+                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                <span id="submit-form-button-text">
+                                    Modifier
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <!-- modal for creating or updating a userconfiguration datas -->
         <div class="modal fade" id="update-userconfiguration-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -265,5 +341,6 @@
     </main>
     @section('scripts')
         <script src="{{ asset('js/functions/profile-configuration.js') }}"></script>
+        <script src="{{ asset('js/functions/user-password.js') }}"></script>
     @endsection
 </x-app-layout>

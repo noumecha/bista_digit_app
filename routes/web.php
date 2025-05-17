@@ -329,6 +329,7 @@ Route::get('/configurations/profile', function () {
 Route::get('/configurations/profile', [ProfileController::class, 'index'])->name('profile.index')->middleware('auth');
 Route::get('/configurations/profile/{id}/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
 Route::post('/configurations/profile/{action}', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+Route::post('/configurations/profile/password/update', [ProfileController::class, 'updatePassword'])->name('profile.password')->middleware('auth');
 
 # programme configuration - routes leader
 Route::get('/configurations/page_configuration/leader', [IamLeaderController::class, 'index'])->name('page_configuration.leader.index')->middleware('auth');

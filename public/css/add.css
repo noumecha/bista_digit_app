@@ -41,3 +41,24 @@ ck editor error
 .bulletin-date-footer {
     margin-top: 150px !important;
 }
+/** scroll bar styling **/
+/* Modern browsers with `scrollbar-*` support */
+@supports (scrollbar-width: auto) {
+    body {
+      scrollbar-width: thin; /* Set the width of the scrollbar */
+      scrollbar-color: white black; /* Set the color of the thumb and track */
+    }
+}
+
+/* Legacy browsers with `::-webkit-scrollbar-*` support */
+@supports selector(::-webkit-scrollbar) {
+    body::-webkit-scrollbar-thumb {
+      background: black; /* Set the color of the thumb */
+    }
+    body::-webkit-scrollbar-track {
+      background: black; /* Set the color of the track */
+    }
+    body::-webkit-scrollbar {
+      width: 1px; /* Set the width of the scrollbar */
+    }
+}
