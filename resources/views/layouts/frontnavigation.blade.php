@@ -15,33 +15,16 @@
                                 <li><a href="{{ route ('home.about') }}">A propos</a></li>
                                 <li>
                                     <a href="{{ route ('home.actus') }}">Actualités</a>
-                                    <ul class="submenu">
-                                        @php
-                                            $categories = \App\Models\CategorieActualite::all();
-                                        @endphp
-                                        @foreach ($categories as $cat)
-                                            <li>
-                                                <a href="{{ route('home.showCategorie', $cat->id) }}">
-                                                    {{ $cat->libelleCategorie }}
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
                                 </li>
                                 <li>
                                     <a href="{{ route ('home.programmes') }}">Programmes</a>
                                     <ul class="submenu">
-                                        <li><a href="#">Booster</a></li>
-                                        <li><a href="#">I Am A Leader</a></li>
+                                        <li><a href="{{ route('home.boosterPage') }}">Booster</a></li>
+                                        <li><a href="{{ route('home.leaderPage') }}">I Am A Leader</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a href="{{ route ('home.clubs') }}">Clubs</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Club Santé</a></li>
-                                        <li><a href="#">Club Journal</a></li>
-                                        <li><a href="#">Club Musique</a></li>
-                                    </ul>
                                 </li>
                                 <li><a href="{{ route('home.epreuves') }}">Epreuves</a></li>
                                 <li>

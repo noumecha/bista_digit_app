@@ -181,6 +181,17 @@
                                         </textarea>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="slider-wrapper" class="form-control-label">
+                                            Ajouter des sliders :
+                                        </label>
+                                        <div class="d-flex row">
+                                            <div id="slider-wrapper">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
                             </div>
@@ -193,6 +204,7 @@
                                 <span class="spinner-border spinner-border-sm d-none" role="status"></span>
                                 <span id="submit-clubconfiguration-form-button-text"></span>
                             </button>
+                            <button type="button" id="add-slider" class="btn btn-primary mt-2">Ajouter un slider</button>
                         </div>
                     </div>
                 </form>

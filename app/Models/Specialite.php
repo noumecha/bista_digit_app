@@ -17,6 +17,9 @@ class Specialite extends Model
         'type'
     ];
 
+    /**
+     * @var array
+     */
     protected $casts = [
         'sliders' => 'array'
     ];

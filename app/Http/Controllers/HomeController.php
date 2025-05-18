@@ -38,14 +38,57 @@ class HomeController extends Controller
      * index function
      */
     public function programmes () {
-        return view('front.programmes');
+        $programmes = Specialite::query()->where("type","booster-page")->orWhere("type","leader-page")
+        ->distinct()->paginate(10);
+        $categories = CategorieActualite::query()->where("libelleCategorie","challenges")
+            ->orWhere("libelleCategorie","Bourses")
+            ->orWhere("libelleCategorie","programmes")
+            ->orWhere("libelleCategorie","innovations")
+            ->orWhere("libelleCategorie","résultats")->pluck('id');
+        $actualites = Actualite::all()->whereIn('categorie_actualites_id', $categories);
+        return view('front.programmes', compact('programmes', 'actualites'));
     }
 
     /**
-     * index function
+     * booster page
+     */
+    public function boosterPage() {
+        $booster = Specialite::where("type","booster-page")->first();
+        $actualites = Actualite::query()->latest()->paginate(6);
+        return view('front.boosterpage', compact('actualites','booster'));
+    }
+
+    /**
+     * i am leader page
+     */
+    public function leaderPage() {
+        $leader = Specialite::where("type","leader-page")->first();
+        $categories = CategorieActualite::query()->where("libelleCategorie","challenges")
+            ->orWhere("libelleCategorie","Bourses")
+            ->orWhere("libelleCategorie","programmes")
+            ->orWhere("libelleCategorie","innovations")
+            ->orWhere("libelleCategorie","résultats")->pluck('id');
+        $actualites = Actualite::query()->whereIn('categorie_actualites_id', $categories)->paginate(6);
+        return view('front.leaderpage', compact('actualites','leader'));
+    }
+
+    /**
+     * club page
      */
     public function clubs () {
-        return view('front.clubs');
+        $clubs = Club::query()->latest()->paginate(3);
+        $allClubs = Club::all();
+        $actualites = Actualite::query()->where('club_id', '!=', null)->latest()->paginate(6);
+        return view('front.clubs', compact('clubs', 'allClubs', 'actualites'));
+    }
+
+    /**
+     * single club page
+     */
+    public function clubPage($id) {
+        $currentClub = Club::findOrFail($id);
+        $clubs = Club::query()->where("id","!=",$currentClub->id)->latest()->paginate(3);
+        return view('front.clubpage', compact('currentClub','clubs'));
     }
 
     /**
@@ -91,7 +134,28 @@ class HomeController extends Controller
     }
 
     /**
-     *
+     * contact page
+     */
+    public function contact () {
+        $appconfiguration = AppConfiguration::all()->first();
+        return view('front.contact',compact('appconfiguration'));
+    }
+
+    /**
+     * atout page
+     */
+    public function specialitePage($id) {
+        $specialite = Specialite::findOrFail($id);
+        $specialites = Specialite::query()->where("type", '!=',"booster-page")
+            ->where("type","!=", "leader-page")
+            ->where("id","!=",$specialite->id)
+            ->latest()->paginate(3);
+        $actualites = Actualite::query()->latest()->paginate(3);
+        return view('front.specialitepage', compact('specialite','specialites','actualites'));
+    }
+
+    /**
+     * showing single actualités on the site
      */
     public function showActualite($id) {
         $actualite = Actualite::findOrFail($id);

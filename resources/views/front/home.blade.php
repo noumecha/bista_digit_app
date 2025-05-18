@@ -45,29 +45,27 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-
-     <!-- ====================== section started====================== -->
-
-     <section class="bg-01">
+    <!-- ====================== section started====================== -->
+    <section class="bg-01">
          <div class="container">
-             <div class="row">
-                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                     <div class="se-box">
-                         <div class="icon">
-                            <i class="fal fa-chalkboard-teacher"></i>
-                         </div>
-                         <div class="content">
-                             <h3>Enseignants Professionnels</h3>
-                             <p>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="se-box">
+                        <div class="icon">
+                            <i class="fa-solid fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="content">
+                            <h3>Enseignants Professionnels</h3>
+                            <p>
                                 Une équipe d’enseignants qualifiés, fiable, disponibles pour l’encadrement des élèves.
-                             </p>
-                         </div>
-                     </div>
+                            </p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <div class="se-box">
                         <div class="icon">
-                            <i class="fal fa-graduation-cap"></i>
+                            <i class="fa-solid fa-graduation-cap"></i>
                         </div>
                         <div class="content">
                             <h3>Laboratoires de pointes</h3>
@@ -75,11 +73,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <div class="se-box">
                         <div class="icon">
-                            <i class="fal fa-backpack"></i>
+                            <i class="fa-solid fa-graduation-cap"></i>
                         </div>
                         <div class="content">
                             <h3>Bourses d'études & programmes de soutien</h3>
@@ -87,33 +84,30 @@
                         </div>
                     </div>
                 </div>
-             </div>
-         </div>
-     </section>
-
-      <!-- ====================== Featured started====================== -->
-
+            </div>
+        </div>
+    </section>
+    <!-- ====================== Featured started====================== -->
     <section class="bg-02">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="heading">
                         <h2>PARTICULARITE DU COLLEGE : {{ $appconfiguration->school_name }}</h2>
-                        <p class="text-justify">
-                            {!! Str::limit($appconfiguration->description, $limit=150, $end="...") !!}
+                        <p class="">
+                            {!! Str::limit(strip_tags($appconfiguration->description), $limit=150, $end="...") !!}
                             <a href="{{ route('home.about') }}">lire la suite</a>
                         </p>
                     </div>
                 </div>
                 @if ($atouts->isEmpty())
-                    <div class="carousel-item active">
-                        <img src="{{ asset('front/images/slider/1.jpg') }}" class="d-block" alt="...">
-                        <div class="carousel-caption">
-                            <h2>
-                                Pour une meilleure éducation
-                            </h2>
-                            <p>
-                                Implication de la technologie dans l'enseignement
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="content">
+                            <h3 class="text-uppercase">
+                                Nos atouts
+                            </h3>
+                            <p class="" style="text-align: center;">
+                                Présentation des atouts de notre établissement
                             </p>
                         </div>
                     </div>
@@ -122,7 +116,9 @@
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <div class="featured-box">
                                 <div class="feature-card">
-                                    <a href="#"><i class="far fa-link"></i></a>
+                                    <a href="{{ route('home.specialitePage', $atout->id) }}">
+                                        <i class="fa-solid fa-link"></i>
+                                    </a>
                                     <img style="height: 300px;
                                         width: 100%;
                                         object-fit: cover;"
@@ -131,10 +127,15 @@
                                 </div>
                                 <div class="content">
                                     <h3 class="text-uppercase">
-                                        {{ $atout->specialite_title }}
+                                        <a href="{{ route('home.specialitePage', $atout->id) }}">
+                                            {{ $atout->specialite_title }}
+                                        </a>
                                     </h3>
-                                    <p class="text-justify">
-                                        {!! Str::limit($atout->contenu, $limit=200, $end="...") !!}
+                                    <p class="" style="text-align: justify;">
+                                        {!! Str::limit(strip_tags($atout->contenu), $limit=200, $end="...") !!}
+                                        <a href="{{ route('home.specialitePage', $atout->id) }}">
+                                            lire la suite
+                                        </a>
                                     </p>
                                 </div>
                             </div>
@@ -144,69 +145,20 @@
             </div>
         </div>
     </section>
-
-      <secton class="bg-02">
-        <div class="container bg-gray">
+    <!-- ============ Counter section ============ -->
+    <section class="bg-03">
+        <div class="container">
             <div class="row">
-                <div class="col-12">
-                    <div class="heading">
-                        <h2 class="text-uppercase">programmes & clubs</h2>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                    @if (isset($club))
-                        <div class="featured-box">
-                            <div class="feature-card">
-                                <a href="#"><i class="far fa-link"></i></a>
-                                <img src="{{ asset('storage/'.$club->club_image) }}">
-                            </div>
-                            <div class="content">
-                                <h3 class="text-uppercase">
-                                    {{ $club->club_name }}
-                                </h3>
-                                <p class="text-justify">
-                                    {!! Str::limit($club->contenu, $limit=200, $end="...") !!}
-                                </p>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                    @if (isset($leader))
-                        <div class="featured-box">
-                            <div class="feature-card">
-                                <a href="#"><i class="far fa-link"></i></a>
-                                <img src="{{ asset('storage/'.$leader->specialite_image) }}">
-                            </div>
-                            <div class="content">
-                                <h3 class="text-uppercase">
-                                    {{ $leader->specialite_title }}
-                                </h3>
-                                <p class="text-justify">
-                                    {!! Str::limit($leader->contenu, $limit=200, $end="...") !!}
-                                </p>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-      </secton>
-
-      <section class="bg-03">
-          <div class="container">
-              <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
-                        <i class="fal fa-history"></i>
+                        <i class="fa-solid fa-history"></i>
                       <div class="counting" data-count="0">0</div>
                       <h5>ANNEES D'EXPERIENCE</h5>
                     </div>
                 </div>
-
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
-                        <i class="fal fa-graduation-cap"></i>
+                        <i class="fa-solid fa-users"></i>
                         <div class="counting" data-count="{{ $students }}">0</div>
                         <h5>
                             @if($students < 2)
@@ -217,10 +169,9 @@
                         </h5>
                     </div>
                 </div>
-
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
-                        <i class="fal fa-registered"></i>
+                        <i class="fa-solid fa-chalkboard-teacher"></i>
                         <div class="counting" data-count="{{ $teachers }}">0</div>
                         <h5>
                             @if($teachers < 2)
@@ -231,13 +182,90 @@
                         </h5>
                     </div>
                 </div>
-              </div>
-          </div>
-      </section>
-
-      <!-- ====================== Blog Section started====================== -->
-
-      <section class="bg-04">
+            </div>
+        </div>
+    </section>
+    <!-- ============ Programme et clubs ============ -->
+    <section class="bg-02">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="heading">
+                        <h2 class="text-uppercase">programmes & clubs</h2>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @if (isset($club))
+                        <div class="featured-box">
+                            <div class="feature-card">
+                                <a href="{{ route('home.clubPage', $club->id) }}">
+                                    <i class="fa-solid fa-link"></i>
+                                </a>
+                                <img style="height: 300px;
+                                    width: 100%;
+                                    object-fit: cover;" src="{{ asset('storage/'.$club->club_image) }}">
+                            </div>
+                            <div class="content">
+                                <h3 class="text-uppercase">
+                                    <a href="{{ route('home.clubPage', $club->id) }}">
+                                        {{ $club->club_name }}
+                                    </a>
+                                </h3>
+                                <p class="" style="text-align: justify;">
+                                    {!! Str::limit(strip_tags($club->contenu), $limit=200, $end="...") !!}
+                                    <a href="{{ route('home.clubPage', $club->id) }}">
+                                        Lire la suite
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @if (isset($leader))
+                        <div class="featured-box">
+                            <div class="feature-card">
+                                <a href="#"><i class="fa-solid fa-link"></i></a>
+                                <img style="height: 300px;
+                                    width: 100%;
+                                    object-fit: cover;" src="{{ asset('storage/'.$leader->specialite_image) }}">
+                            </div>
+                            <div class="content">
+                                <h3 class="text-uppercase">
+                                    {{ $leader->specialite_title }}
+                                </h3>
+                                <p class="" style="text-align: justify;">
+                                    {!! Str::limit(strip_tags($leader->contenu), $limit=200, $end="...") !!}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    @if (isset($booster))
+                        <div class="featured-box">
+                            <div class="feature-card">
+                                <a href="#"><i class="fa fa-link"></i></a>
+                                <img style="height: 300px;
+                                    width: 100%;
+                                    object-fit: cover;" src="{{ asset('storage/'.$booster->specialite_image) }}">
+                            </div>
+                            <div class="content">
+                                <h3 class="text-uppercase">
+                                    {{ $booster->specialite_title }}
+                                </h3>
+                                <p class="" style="text-align: justify;">
+                                    {!! Str::limit(strip_tags($booster->contenu), $limit=200, $end="...") !!}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ====================== Blog Section started====================== -->
+    <section class="bg-04">
         <div class="container">
             <div class="row">
                <div class="col-12">
@@ -263,7 +291,12 @@
                     @foreach ($actualites as $actualite)
                         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                             <article class="_lk_bg_sd_we">
-                                <div class="_bv_xs_we" style="background:url({{ asset('storage/'. $actualite->image) }});"></div>
+                                <div class="_bv_xs_we" style="
+                                    height: 300px;
+                                    width: 100%;
+                                    object-fit: cover;
+                                    background:url({{ asset('storage/'. $actualite->image) }});">
+                                </div>
                                 <div class="_xs_we_er">
                                     <div class="_he_w">
                                         <h3>
@@ -276,8 +309,11 @@
                                                 <span>Par</span>{{ $actualite->user->name }}<span class="_mn_cd_xs"><i>le {{ date('d M Y', strtotime($actualite->created_at)) }}</i></span>
                                             </li>
                                         </ol>
-                                        <p>
-                                            {!! Str::limit($actualite->contenu , $limit=70, $end="...") !!}
+                                        <p class="" style="text-align: justify;">
+                                            {!! Str::limit(strip_tags($actualite->contenu) , $limit=200, $end="...") !!}
+                                            <a href="{{ route('actualites.show', $actualite->id) }}">
+                                                lire la suite
+                                            </a>
                                         </p>
                                     </div>
                                 </div>

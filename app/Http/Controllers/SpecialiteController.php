@@ -57,7 +57,7 @@ class SpecialiteController extends Controller
             'content.required' => 'Veuillez remplir la description',
             'specialite_image.required' => 'Veuillez selectionner une image de mise en avant',
             'specialite_image.mimes' => 'L\'image doit être du type (jpg, jpeg, png, gif)',
-            'sliders.required' => 'Veuillez ajouter au moins une image + descripton',
+            'sliders.required' => 'Veuillez ajouter au moins un slider',
             'sliders.*.title.required' => 'Ajouter un titre ou mini description au :attribute',
             'sliders.*.image.required' => 'Ajouter une image au :attribute',
             'sliders.*.image.mimes' => 'L\'image du :attribute doit être du type (jpg, jpeg, png, gif)',
@@ -124,68 +124,75 @@ class SpecialiteController extends Controller
             'specialite_title.unique' => 'Ce titre existe déja',
             'content.required' => 'Veuillez remplir la description',
             'specialite_image.mimes' => 'L\'image doit être du type (jpg, jpeg, png, gif)',
-            'sliders.required' => 'Veuillez ajouter au moins une image + descripton',
+            'sliders.required' => 'Veuillez ajouter au moins un slider',
         ];
-        $sliderData = [];
-        $existingSliders = $specialite->sliders ?? [];
-        if($request->has('sliders')) {
-            foreach ($request->sliders as $index => $slider) {
-                $sliderId = $index + 1;
-                $customAttributes["sliders.$index.title"] = "slider $sliderId";
-                $customAttributes["sliders.$index.image"] = "slider $sliderId";
-                // checking titles
-                $rules["sliders.$index.title"] = 'required|string';
-                $errors["sliders.$index.title.required"] = "Ajouter un titre ou mini description au slider $sliderId";
-                // checking images
-                if(!isset($existingSliders[$index]['image'])) {
-                    $rules["sliders.$index.image"] = 'required|image|mimes:jpg,jpeg,png,gif|max:4096';
-                    $errors["sliders.$index.image.required"] = "Ajouter une image au slider $sliderId";
-                    $errors["sliders.$index.image.mimes"] = "L'image du slider $sliderId doit être du type (jpg, jpeg, png, gif)";
-                } else {
-                    $rules["sliders.$index.image"] = 'nullable|image|mimes:jpg,jpeg,png,gif|max:4096';
-                    $errors["sliders.$index.image.mimes"] = "L'image du slider $sliderId doit être du type (jpg, jpeg, png, gif)";
+        try {
+            $sliderData = [];
+            $customAttributes = [];
+            $existingSliders = $specialite->sliders ?? [];
+            if($request->has('sliders')) {
+                foreach ($request->sliders as $index => $slider) {
+                    $sliderId = $index + 1;
+                    $customAttributes["sliders.$index.title"] = "slider $sliderId";
+                    $customAttributes["sliders.$index.image"] = "slider $sliderId";
+                    // checking titles
+                    $rules["sliders.$index.title"] = 'required|string';
+                    $errors["sliders.$index.title.required"] = "Ajouter un titre ou mini description au slider $sliderId";
+                    // checking images
+                    if(!isset($existingSliders[$index]['image'])) {
+                        $rules["sliders.$index.image"] = 'required|image|mimes:jpg,jpeg,png,gif|max:4096';
+                        $errors["sliders.$index.image.required"] = "Ajouter une image au slider $sliderId";
+                        $errors["sliders.$index.image.mimes"] = "L'image du slider $sliderId doit être du type (jpg, jpeg, png, gif)";
+                    } else {
+                        $rules["sliders.$index.image"] = 'nullable|image|mimes:jpg,jpeg,png,gif|max:4096';
+                        $errors["sliders.$index.image.mimes"] = "L'image du slider $sliderId doit être du type (jpg, jpeg, png, gif)";
+                    }
                 }
             }
-        }
-        $request->validate($rules, $errors, $customAttributes);
-        // update image if it's define
-        if($request->hasFile('specialite_image')) {
-            $imagePath = $request->file('specialite_image')->store('specialites', 'public');
-            if ($specialite->specialite_image) {
-                Storage::disk('public')->delete($specialite->specialite_image);
+            $request->validate($rules, $errors, $customAttributes);
+            // update image if it's define
+            if($request->hasFile('specialite_image')) {
+                $imagePath = $request->file('specialite_image')->store('specialites', 'public');
+                if ($specialite->specialite_image) {
+                    Storage::disk('public')->delete($specialite->specialite_image);
+                }
+                $specialite->update([
+                    'specialite_image' => $imagePath
+                ]);
             }
+            // adding new sliders
+            if ($request->has('sliders')) {
+                foreach ($request->sliders as $index => $slider) {
+                    $path = null;
+                    // update in case that a new image is upload
+                    if (isset($slider['image'])) {
+                        $path = $slider['image']->store('sliders', 'public');
+                        // delete the old image file
+                        if (!empty($existingSliders[$index]['image'])) {
+                            Storage::disk('public')->delete($existingSliders[$index]['image']);
+                        }
+                    } else {
+                        // keeping old image
+                        $path = $existingSliders[$index]['image'] ?? null;
+                    }
+                    $sliderData[] = [
+                        'title' => $slider['title'] ?? '',
+                        'image' => $path,
+                    ];
+                }
+            }
+            // finally update specialite
             $specialite->update([
-                'specialite_image' => $imagePath
+                'specialite_title' => $request->specialite_title,
+                'contenu' => $request->content,
+                'sliders' => $sliderData
+            ]);
+            return response()->json(['success' => 'Informations de la specialite mises à jour avec succès']);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'Erreur lors de la mise à jour '.$th->getMessage()
             ]);
         }
-        // adding new sliders
-        if ($request->has('sliders')) {
-            foreach ($request->sliders as $index => $slider) {
-                $path = null;
-                // update in case that a new image is upload
-                if (isset($slider['image'])) {
-                    $path = $slider['image']->store('sliders', 'public');
-                    // delete the old image file
-                    if (!empty($existingSliders[$index]['image'])) {
-                        Storage::disk('public')->delete($existingSliders[$index]['image']);
-                    }
-                } else {
-                    // keeping old image
-                    $path = $existingSliders[$index]['image'] ?? null;
-                }
-                $sliderData[] = [
-                    'title' => $slider['title'] ?? '',
-                    'image' => $path,
-                ];
-            }
-        }
-        // finally update specialite
-        $specialite->update([
-            'specialite_title' => $request->specialite_title,
-            'contenu' => $request->content,
-            'sliders' => $sliderData
-        ]);
-        return response()->json(['success' => 'Informations de la specialite mises à jour avec succès']);
     }
 
     /**

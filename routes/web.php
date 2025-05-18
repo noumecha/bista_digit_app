@@ -69,13 +69,17 @@ Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('ac
 // primary routes for the front-website :
 Route::get('/acceuil', [HomeController::class, 'index'])->name('home.index');
 Route::get('/programmes', [HomeController::class, 'programmes'])->name('home.programmes');
+Route::get('/programmes/leader', [HomeController::class, 'leaderPage'])->name('home.leaderPage');
+Route::get('/programmes/booster', [HomeController::class, 'boosterPage'])->name('home.boosterPage');
 Route::get('/clubs', [HomeController::class, 'clubs'])->name('home.clubs');
 Route::get('/epreuves', [HomeController::class, 'epreuves'])->name('home.epreuves');
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 Route::get('/apropos', [AboutController::class, 'index'])->name('home.about');
 Route::get('/actualites', [HomeController::class, 'actualites'])->name('home.actus');
 Route::get('/actualites/categorie/{category}', [HomeController::class, 'showCategorie'])->name('home.showCategorie');
-Route::get('/atouts/atout/{atout}', [HomeController::class, 'showAtout'])->name('home.showAtout');
+Route::get('/atouts/atout/{id}', [HomeController::class, 'specialitePage'])->name('home.specialitePage');
+Route::get('/clubs/club/{id}', [HomeController::class, 'clubPage'])->name('home.clubPage');
 Route::get('/actualite/{id}/read', [HomeController::class, 'showActualite'])->name('actualites.show');
 Route::get('/epreuve/{id}/read', [HomeController::class, 'showEpreuve'])->name('home.showepreuve');
 

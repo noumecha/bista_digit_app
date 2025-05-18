@@ -1,5 +1,24 @@
 $(function(){
-
+    // manage the slider dynamically
+    let sliderId = 0;
+    $(document).on('click', '#add-slider', function () {
+        sliderId++;
+        const html = `
+            <div class="slider-group" id="slider-${sliderId}">
+                <input type="file" id="sliders[${sliderId}][image]"
+                    name="sliders[${sliderId}][image]"
+                    placeholder="Taille.<= 4Mo" class="form-control mb-1" />
+                <input type="text" id="sliders[${sliderId}][title]"
+                    name="sliders[${sliderId}][title]"
+                    placeholder="description de l'image" class="form-control mb-1" />
+                <button type="button" class="btn btn-danger remove-slider">Supprimer</button>
+            </div>
+        `;
+        $('#slider-wrapper').append(html);
+    });
+    $(document).on('click', '.remove-slider', function () {
+        $(this).closest('.slider-group').remove();
+    });
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-club-modal"]', function(e) {
         e.preventDefault();
@@ -108,6 +127,7 @@ $(function(){
         $('#submit-club-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-club-form-button').children('span#submit-club-form-button-text').text('');
         window.editor.setData('');
+        $('.slider-group').remove();
     });
 
     // fetching clubs dynamically with filters

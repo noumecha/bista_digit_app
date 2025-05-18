@@ -11,6 +11,12 @@
         <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-grid.css') }}">
         <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-reboot.css') }}">
         <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+        <!-- Fonts and icons -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700"
+            rel="stylesheet" />
+        <!-- Font Awesome Icons -->
+        <script src="https://kit.fontawesome.com/612ac88160.js" crossorigin="anonymous"></script>
     </head>
 
     <body>
@@ -23,6 +29,5 @@
         <script src="{{ asset('front/js/popper.min.js') }}"></script>
         <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
         <script src="{{ asset('front/js/script.js') }}"></script>
-        <script src="https://kit.fontawesome.com/349ee9c857.js" crossorigin="anonymous"></script>
     </body>
 </html>

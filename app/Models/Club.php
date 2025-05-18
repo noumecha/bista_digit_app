@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Club extends Model
@@ -17,7 +18,15 @@ class Club extends Model
         'club_name',
         'contenu',
         'president_id',
-        'club_image'
+        'club_image',
+        'sliders'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'sliders' => 'array'
     ];
 
     /**
@@ -39,9 +48,9 @@ class Club extends Model
     /**
      *
      */
-    public function actualites(): MorphMany
+    public function actualites(): HasMany
     {
-        return $this->morphMany(Actualite::class, 'actualiteable'); // if reusing article
+        return $this->hasMany(Actualite::class);
     }
 
 }

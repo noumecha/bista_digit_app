@@ -1,4 +1,24 @@
 $(function(){
+    // manage the slider dynamically
+    let sliderId = 0;
+    $(document).on('click', '#add-slider', function () {
+        sliderId++;
+        const html = `
+            <div class="slider-group" id="slider-${sliderId}">
+                <input type="file" id="sliders[${sliderId}][image]"
+                    name="sliders[${sliderId}][image]"
+                    placeholder="Taille.<= 4Mo" class="form-control mb-1" />
+                <input type="text" id="sliders[${sliderId}][title]"
+                    name="sliders[${sliderId}][title]"
+                    placeholder="description de l'image" class="form-control mb-1" />
+                <button type="button" class="btn btn-danger remove-slider">Supprimer</button>
+            </div>
+        `;
+        $('#slider-wrapper').append(html);
+    });
+    $(document).on('click', '.remove-slider', function () {
+        $(this).closest('.slider-group').remove();
+    });
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#update-clubconfiguration-modal"]', function(e) {
         e.preventDefault();

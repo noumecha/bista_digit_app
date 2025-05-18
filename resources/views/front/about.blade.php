@@ -1,394 +1,243 @@
 <x-front-layout>
-
-       <section class="bg-02-a">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="_head_01">
-                            <h2>A Propos du collège</h2>
-                            <p>Acceuil<i class="fas fa-angle-right"></i><span>A propos de nous</span></p>
-                        </div>
+    <section class="bg-02-a">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="_head_01">
+                        <h2>A Propos du collège</h2>
+                        <p>Acceuil<i class="fas fa-angle-right"></i><span>A propos de nous</span></p>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section class="se-001">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-12">
-                        @if (isset($appconfiguration) && isset($appconfiguration->school_name))
-                            <h1>{{ $appconfiguration->school_name }}</h1>
+        </div>
+    </section>
+    <section class="se-001">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-12">
+                    @if (isset($appconfiguration) && isset($appconfiguration->school_name))
+                        <h1>{{ $appconfiguration->school_name }}</h1>
+                    @endif
+                    <div class="text-justify mt-3">
+                        @if (isset($appconfiguration) && isset($appconfiguration->description))
+                            {!! $appconfiguration->description !!}
+                        @else
+                            <p>Aucune description disponible ....</p>
                         @endif
-                        <div class="text-justify mt-3">
-                            @if (isset($appconfiguration) && isset($appconfiguration->description))
-                                {!! $appconfiguration->description !!}
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="_Ol_er_qw yu">
+                        <img
+                            @if (isset($appconfiguration) && isset($appconfiguration->school_logo))
+                                src="{{ asset('storage/' . $appconfiguration->school_logo) }}"
                             @else
-                                <p>Aucune description disponible ....</p>
+                                src="{{ asset('front/images/logo.png') }}"
                             @endif
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ====================== section started====================== -->
+    <section class="bg-01">
+         <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="se-box">
+                        <div class="icon">
+                            <i class="fa-solid fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="content">
+                            <h3>Enseignants Professionnels</h3>
+                            <p>
+                                Une équipe d’enseignants qualifiés, fiable, disponibles pour l’encadrement des élèves.
+                            </p>
                         </div>
                     </div>
-
-                    <div class="col-lg-6 col-md-6 col-12">
-                        <div class="_Ol_er_qw yu">
-                            <img
-                                @if (isset($appconfiguration) && isset($appconfiguration->school_logo))
-                                    src="{{ asset('storage/' . $appconfiguration->school_logo) }}"
-                                @else
-                                    src="{{ asset('front/images/logo.png') }}"
-                                @endif
-                            >
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="se-box">
+                        <div class="icon">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div class="content">
+                            <h3>Laboratoires de pointes</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="se-box">
+                        <div class="icon">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div class="content">
+                            <h3>Bourses d'études & programmes de soutien</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-
-             <section class="bg-01">
-                 <div class="container">
-                     <div class="row">
-                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                             <div class="se-box">
-                                 <div class="icon">
-                                    <i class="fal fa-chalkboard-teacher"></i>
-                                 </div>
-                                 <div class="content">
-                                     <h3>Enseignants Professionnels</h3>
-                                     <p>
-                                        Une équipe d’enseignants qualifiés, fiable, disponibles pour l’encadrement des élèves.
-                                     </p>
-                                 </div>
-                             </div>
-                         </div>
-
-                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="se-box">
-                                <div class="icon">
-                                    <i class="fal fa-globe-americas"></i>
-                                </div>
-                                <div class="content">
-                                    <h3>Apprentissage en ligne</h3>
-                                    <p>nous donnons la possibilité à nos apprenants de s’exercer sur notre plateforme</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="se-box">
-                                <div class="icon">
-                                    <i class="fal fa-graduation-cap"></i>
-                                </div>
-                                <div class="content">
-                                    <h3>Des Laboratoires à la pointe</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="se-box">
-                                <div class="icon">
-                                    <i class="fal fa-backpack"></i>
-                                </div>
-                                <div class="content">
-                                    <h3>Bourses d'études et programmes de soutien</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
-                                </div>
-                            </div>
-                        </div>
-                     </div>
-                 </div>
-             </section>
-
-              <!-- ====================== Featured started====================== -->
-
-              <section class="bg-02">
-                  <div class="container">
-                      <div class="row">
-                          <div class="col-12">
-                              <div class="heading">
-                                  <h2>PARTICULARITE DU COLLEGE BISTA</h2>
-                                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime totam quo, ducimus aliquid quisquam minima perspiciatis repellendus, minus tenetur reiciendis quis? Consequatur perferendis deleniti, rerum delectus consectetur modi praesentium deserunt.</p>
-                              </div>
-                          </div>
-
-                          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                              <div class="featured-box">
-                                  <div class="feature-card">
-                                      <a href="#"><i class="far fa-link"></i></a>
-                                      <img src="{{ asset('front/images/featured/1.jpg') }}">
-                                  </div>
-                                  <div class="content">
-                                    <h3>PROGRAMME BOOSTER</h3>
-                                    <p>
-                                        Un programme de renforcement des capacités de nos apprenants dans les Mathématiques, en Anglais et en Mathématiques avec pour objectif la préparation efficace des élèves
-                                        aux examens officiels accompagnés d’une bonne maîtrise de la langue.
-                                    </p>
-                                  </div>
-                              </div>
-                          </div>
-
-                          <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="featured-box">
-                                <div class="feature-card">
-                                    <a href="#"><i class="far fa-link"></i></a>
-                                    <img src="{{ asset('front/images/featured/2.jpg') }}">
-                                </div>
-                                <div class="content">
-                                  <h3>PROGRAMME I'AM A LEADER</h3>
-                                  <p>
-                                    Le Programme I’M A LEADER, qui éveille le génie de l’enfant et fera de lui un grand leader de demain
-                                  </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="featured-box">
-                                <div class="feature-card">
-                                    <a href="#"><i class="far fa-link"></i></a>
-                                    <img src="{{ asset('front/images/featured/3.jpg') }}">
-                                </div>
-                                <div class="content">
-                                    <h3>LABORATOIRE DU COLLEGE BISTA</h3>
-                                    <p>
-                                        Des laboratoire de Sciences équipés de matériels récents pour nos apprenants des séries scientifiques pour les expérimentations et Travaux,
-                                        et un Laboratoire Multimédia pour les élèves de la Série TI
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="featured-box">
-                                <div class="feature-card">
-                                    <a href="#"><i class="far fa-link"></i></a>
-                                    <img src="{{ asset('front/images/featured/4.jpg') }}">
-                                </div>
-                                <div class="content">
-                                  <h3>CLUB DU COLLEGE BISTA</h3>
-                                  <p>Club sport, Club Santé, Club danse, Club Informatique, Club Journal, Club art</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="featured-box">
-                                <div class="feature-card">
-                                    <a href="#"><i class="far fa-link"></i></a>
-                                    <img src="{{ asset('front/images/featured/5.jpg') }}">
-                                </div>
-                                <div class="content">
-                                  <h3>MSC</h3>
-                                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa dolor</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="featured-box">
-                                <div class="feature-card">
-                                    <a href="#"><i class="far fa-link"></i></a>
-                                    <img src="{{ asset('front/images/featured/6.jpg') }}">
-                                </div>
-                                <div class="content">
-                                  <h3>MA</h3>
-                                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa dolor</p>
-                                </div>
-                            </div>
-                        </div>
-                      </div>
-                  </div>
-              </section>
-
-              <section class="bg-03">
-                  <div class="container">
-                      <div class="row">
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                            <div class="_lk_bg_cd">
-                                <i class="fal fa-history"></i>
-                              <div class="counting" data-count="0">0</div>
-                              <h5>ANNEES D'EXPERIENCE</h5>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                            <div class="_lk_bg_cd">
-                                <i class="fal fa-graduation-cap"></i>
-                              <div class="counting" data-count="0">0</div>
-                              <h5>ELEVES</h5>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                            <div class="_lk_bg_cd">
-                                <i class="fal fa-globe"></i>
-                              <div class="counting" data-count="0">0</div>
-                              <h5>COURS EN LIGNE</h5>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6">
-                            <div class="_lk_bg_cd">
-                                <i class="fal fa-registered"></i>
-                              <div class="counting" data-count="0">0</div>
-                              <h5>ENSEIGNANTS QUALIFIES</h5>
-                            </div>
-                        </div>
-                      </div>
-                  </div>
-              </section>
-
-              <!-- ====================== Team Started started====================== -->
-
-              <section class="team">
-                  <div class="container">
-                      <div class="row">
-                        <div class="col-12">
-                            <div class="heading">
-                                <h2>NOTRE EQUIPE</h2>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime totam quo, ducimus aliquid quisquam minima perspiciatis repellendus, minus tenetur reiciendis quis? Consequatur perferendis deleniti, rerum delectus consectetur modi praesentium deserunt.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="owl-carousel owl-stage-outer">
-                                <div class="item">
-                                    <div class="team-card">
-                                        <div class="image-team">
-                                            <img src="{{ asset('front/images/team/1.jpg') }}">
-                                        </div>
-                                        <div class="team-content">
-                                            <h3>John</h3>
-                                            <p>Web Developer</p>
-                                            <ol>
-                                                <li><i class="fab fa-facebook-f"></i></li>
-                                                <li><i class="fab fa-instagram"></i></li>
-                                                <li><i class="fab fa-linkedin-in"></i></li>
-                                                <li><i class="fab fa-pinterest-p"></i></li>
-                                            </ol>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="item">
-                                    <div class="team-card">
-                                        <div class="image-team">
-                                            <img src="{{ asset('front/images/team/2.jpg') }}">
-                                        </div>
-                                        <div class="team-content">
-                                            <h3>Anderson john</h3>
-                                            <p>Web Designer</p>
-                                            <ol>
-                                                <li><i class="fab fa-facebook-f"></i></li>
-                                                <li><i class="fab fa-instagram"></i></li>
-                                                <li><i class="fab fa-linkedin-in"></i></li>
-                                                <li><i class="fab fa-pinterest-p"></i></li>
-                                            </ol>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="item">
-                                    <div class="team-card">
-                                        <div class="image-team">
-                                            <img src="{{ asset('front/images/team/3.jpg') }}">
-                                        </div>
-                                        <div class="team-content">
-                                            <h3>Sarah Se</h3>
-                                            <p>Web Designer</p>
-                                            <ol>
-                                                <li><i class="fab fa-facebook-f"></i></li>
-                                                <li><i class="fab fa-instagram"></i></li>
-                                                <li><i class="fab fa-linkedin-in"></i></li>
-                                                <li><i class="fab fa-pinterest-p"></i></li>
-                                            </ol>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="item">
-                                    <div class="team-card">
-                                        <div class="image-team">
-                                            <img src="{{ asset('front/images/team/4.jpg') }}">
-                                        </div>
-                                        <div class="team-content">
-                                            <h3>Williams</h3>
-                                            <p>English </p>
-                                            <ol>
-                                                <li><i class="fab fa-facebook-f"></i></li>
-                                                <li><i class="fab fa-instagram"></i></li>
-                                                <li><i class="fab fa-linkedin-in"></i></li>
-                                                <li><i class="fab fa-pinterest-p"></i></li>
-                                            </ol>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                      </div>
-                  </div>
-              </section>
-
-              <!-- ====================== Blog Section started====================== -->
-
-              <section class="bg-04">
-                <div class="container">
-                    <div class="row">
-                       <div class="col-12">
-                            <div class="heading">
-                                <h2>Nos dernières actualités</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <article class="_lk_bg_sd_we">
-                              <div class="_bv_xs_we"></div>
-                              <div class="_xs_we_er">
-                                <div class="_he_w">
-                                  <h3>Easy English Learning Way</h3>
-                                  <ol>
-                                    <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                                  </ol>
-                                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                                </div>
-                              </div>
-                            </article>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <article class="_lk_bg_sd_we">
-                              <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-01.jpg') }}"></div>
-                              <div class="_xs_we_er">
-                                <div class="_he_w">
-                                  <h3>Summer Course Start From 1st June</h3>
-                                  <ol>
-                                    <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                                  </ol>
-                                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                                </div>
-                              </div>
-                            </article>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <article class="_lk_bg_sd_we">
-                                <div class="_bv_xs_we" style="background:url({{ asset('front/images/blog/img-03.jpg') }}"></div>
-                              <div class="_xs_we_er">
-                                <div class="_he_w">
-                                  <h3>Guest Interview will Occur Soon</h3>
-                                  <ol>
-                                    <li><span>by</span> admin<span class="_mn_cd_xs">june 30, 2020</span></li>
-                                  </ol>
-                                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
-                                </div>
-                              </div>
-                            </article>
-                        </div>
+        </div>
+    </section>
+    <!-- ====================== Featured started====================== -->
+    <section class="bg-02">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="heading">
+                        <h2>PARTICULARITE DU COLLEGE : {{ $appconfiguration->school_name }}</h2>
+                        <p class="">
+                            {!! Str::limit(strip_tags($appconfiguration->description), $limit=150, $end="...") !!}
+                            <a href="{{ route('home.about') }}">lire la suite</a>
+                        </p>
                     </div>
                 </div>
-            </section>
+                @if ($atouts->isEmpty())
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="content">
+                            <h3 class="text-uppercase">
+                                Nos atouts
+                            </h3>
+                            <p class="" style="text-align: center;">
+                                Présentation des atouts de notre établissement
+                            </p>
+                        </div>
+                    </div>
+                @else
+                    @foreach ($atouts as $atout)
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <div class="featured-box">
+                                <div class="feature-card">
+                                    <a href="{{ route('home.specialitePage', $atout->id) }}">
+                                        <i class="fa-solid fa-link"></i>
+                                    </a>
+                                    <img style="height: 300px;
+                                        width: 100%;
+                                        object-fit: cover;"
+                                        src="{{ asset('storage/'.$atout->specialite_image) }}"
+                                    >
+                                </div>
+                                <div class="content">
+                                    <h3 class="text-uppercase">
+                                        <a href="{{ route('home.specialitePage', $atout->id) }}">
+                                            {{ $atout->specialite_title }}
+                                        </a>
+                                    </h3>
+                                    <p class="" style="text-align: justify;">
+                                        {!! Str::limit(strip_tags($atout->contenu), $limit=200, $end="...") !!}
+                                        <a href="{{ route('home.specialitePage', $atout->id) }}">
+                                            lire la suite
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+    </section>
+    <!-- ============ Counter section ============ -->
+    <section class="bg-03">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <div class="_lk_bg_cd">
+                        <i class="fa-solid fa-history"></i>
+                      <div class="counting" data-count="0">0</div>
+                      <h5>ANNEES D'EXPERIENCE</h5>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <div class="_lk_bg_cd">
+                        <i class="fa-solid fa-users"></i>
+                        <div class="counting" data-count="{{ $students }}">0</div>
+                        <h5>
+                            @if($students < 2)
+                                ELEVE
+                            @else
+                                ELEVES
+                            @endif
+                        </h5>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <div class="_lk_bg_cd">
+                        <i class="fa-solid fa-chalkboard-teacher"></i>
+                        <div class="counting" data-count="{{ $teachers }}">0</div>
+                        <h5>
+                            @if($teachers < 2)
+                                ENSEIGNANT QUALIFIE
+                            @else
+                                ENSEIGNANTS QUALIFIES
+                            @endif
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ====================== Blog Section started====================== -->
+    <section class="bg-04">
+        <div class="container">
+            <div class="row">
+               <div class="col-12">
+                    <div class="heading">
+                        <h2>Nos dernières actualités</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @if ($actualites->isEmpty())
+                    <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                        <article class="_lk_bg_sd_we">
+                            <div class="_xs_we_er">
+                                <div class="_he_w">
+                                    <h3>
+                                        Aucune actualité pour le moment
+                                    </h3>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                @else
+                    @foreach ($actualites as $actualite)
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <article class="_lk_bg_sd_we">
+                                <div class="_bv_xs_we" style="
+                                    height: 300px;
+                                    width: 100%;
+                                    object-fit: cover;
+                                    background:url({{ asset('storage/'. $actualite->image) }});">
+                                </div>
+                                <div class="_xs_we_er">
+                                    <div class="_he_w">
+                                        <h3>
+                                            <a href="{{ route('actualites.show', $actualite->id) }}">
+                                                {{ $actualite->titre }}
+                                            </a>
+                                        </h3>
+                                        <ol>
+                                            <li>
+                                                <span>Par</span>{{ $actualite->user->name }}<span class="_mn_cd_xs"><i>le {{ date('d M Y', strtotime($actualite->created_at)) }}</i></span>
+                                            </li>
+                                        </ol>
+                                        <p class="" style="text-align: justify;">
+                                            {!! Str::limit(strip_tags($actualite->contenu) , $limit=200, $end="...") !!}
+                                            <a href="{{ route('actualites.show', $actualite->id) }}">
+                                                lire la suite
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+    </section>
 </x-front-layout>
