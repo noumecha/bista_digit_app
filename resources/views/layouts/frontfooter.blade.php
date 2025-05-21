@@ -3,12 +3,29 @@
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6 col-12">
                 <div class="_kl_de_w">
-                    <h3>POWEREDUCATION</h3>
-                    <p>ipsum dolor sit amet, Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    @if (isset(appConfiguration()->school_logo))
+                        <a href="{{ route('home.index') }}">
+                            <img src="{{ asset('storage/'.appConfiguration()->school_logo) }}">
+                        </a>
+                    @else
+                        <h3>
+                            <a class="h4 text-white" href={{ route('home.index') }}>POWEREDUCATION</a>
+                        </h3>
+                    @endif
+                    @if (appConfiguration() !== null)
+                        @if(isset(appConfiguration()->description))
+                            <p style="text-align: justify;">
+                                {!! Str::limit(strip_tags(appConfiguration()->description) , $limit=200, $end="...") !!}
+                                <a href="{{ route('home.about') }}">lire la suite </a>
+                            </p>
+                        @endif
+                    @else
+                        <p>
+                            Aucune description pour le moment ...
+                        </p>
+                    @endif
                 </div>
             </div>
-
             <div class="col-lg-4 col-md-4 col-sm-6 col-12">
                 <div class="_kl_de_w">
                     <h3>Liens rapides</h3>
@@ -27,7 +44,7 @@
                         </li>
                         <li>
                             <i class="fas fa-angle-right"></i>
-                            <a class="text-white" href="{{ route ('home.about') }}">Le Collège</a>
+                            <a class="text-white" href="{{ route ('home.about') }}">A propos</a>
                         </li>
                     </ol>
                 </div>

@@ -24,13 +24,13 @@
                     <img src="{{ asset('storage/' . $club->club_image) }}" class="d-block" alt="...">
                     <div class="carousel-caption">
                       <h1>
-                        <a href="{{ route('home.clubPage', $club->id) }}">
+                        <a class="text-white" href="{{ route('home.clubPage', $club->id) }}">
                           {{ $club->club_name }}
                         </a>
                       </h1>
                       <p class="">
                         {!! Str::limit(strip_tags($club->contenu), $limit=50, $end="...") !!}
-                        <a href="{{ route('home.clubPage', $club->id) }}">
+                        <a class="text-white fw-bold" href="{{ route('home.clubPage', $club->id) }}">
                           Lire la suite
                         </a>
                       </p>

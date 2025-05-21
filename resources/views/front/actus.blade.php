@@ -1,36 +1,77 @@
 <x-front-layout>
-    <section class="bg-02-a">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="_head_01">
-                        <h2>Actualités</h2>
-                        <p>Acceuil<i class="fas fa-angle-right"></i><span>Articles & Publication</span></p>
-                    </div>
-                </div>
-            </div>
+    <!-- ==== slider === -->
+    <div id="carouselExampleIndicators" class="carousel slide slider" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            @foreach ($actualitesSliders as $actualitesSlider)
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $loop->index }}"
+                    class="{{ $loop->first ? 'active' : "" }}" aria-current="true" aria-label="Slide {{ $loop->index + 1 }}">
+                </button>
+            @endforeach
         </div>
-    </section>
+        <div class="carousel-inner">
+            @if (empty($actualitesSliders->items()))
+              <div class="carousel-item active">
+                <img src="{{ asset('storage/') }}" class="d-block" alt="...">
+                <div class="carousel-caption">
+                  <h2>
+                    Dernières actualités
+                  </h2>
+                  <p>
+                    Aucune actualité pour le moment
+                  </p>
+                </div>
+              </div>
+            @else
+                @foreach ($actualitesSliders as $actualitesSlider)
+                    <div class="carousel-item {{ $loop->first ? 'active' : "" }}" data-bs-interval="5000">
+                        <img src="{{ asset('storage/' . $actualitesSlider->image) }}" class="d-block" alt="...">
+                        <div class="carousel-caption">
+                          <h1>
+                            <a class="text-white" href="{{ route('actualites.show', $actualitesSlider->id) }}">
+                              {{ $actualitesSlider->titre }}
+                            </a>
+                          </h1>
+                          <p class="">
+                            {!! Str::limit(strip_tags($actualitesSlider->contenu), $limit=50, $end="...") !!}
+                            <a class="text-white fw-bold" href="{{ route('actualites.show', $actualitesSlider->id) }}">
+                              Lire la suite
+                            </a>
+                          </p>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
     <section class="bg-04">
         <div class="container">
             <div class="row">
                <div class="col-12">
                     <div class="heading">
-                        <h2>Les dernières actualités du collège</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt</p>
+                        <h2>Les dernières actualités</h2>
                     </div>
                 </div>
             </div>
-            <form class="form-inline row mt-3" action="{{ route('home.actus') }}" method="get">
-                <div class="col-md-4">
+            <form class="form-inline row mt-3" id="actusDataSearch"
+                action="">
+                <div class="col-md-6">
                     <div class="input-group">
-                        <input type="text" name="search" value="{{ isset($search) ? $search : '' }}" id="search" class="form-control" placeholder="Rechercher une actulaité (titre ou contenu)"/>
+                        <input type="text" name="search"
+                            value="{{ isset($search) ? $search : '' }}" id="search" class="form-control"
+                            placeholder="Rechercher une actulaité (titre ou contenu)"/>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div class="input-group">
-                        <select name="category" class="form-control" id="">
+                        <select name="category" class="form-select" id="category">
                             <option value="">Toutes les catégorie</option>
                             @foreach ($categories as $cat)
                                 <option value="{{$cat->id}}" {{ request('category') == $cat->id ? 'selected' : '' }}>
@@ -40,36 +81,30 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn btn-primary" type="submit">Rechercher</button>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
                 </div>
             </form>
             <div class="row">
-                @foreach ($actualites as $actualite)
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                        <article class="_lk_bg_sd_we">
-                        <div class="_bv_xs_we" style="background:url({{ asset('storage/' . $actualite->image) }})"></div>
-                        <div class="_xs_we_er">
-                            <div class="_he_w">
-                                <h5>
-                                    <a class="title h5 text-uppercase" href="{{ route('actualites.show', $actualite->id) }}">
-                                        {{ $actualite->titre }}
-                                    </a>
-                                </h5>
-                                <ol>
-                                    <li><span>Par</span>{{ $actualite->user->name }}<span class="_mn_cd_xs"><i>le {{ date('d M Y', strtotime($actualite->created_at)) }}</i></span></li>
-                                </ol>
-                                <p>
-                                    {!! Str::limit(strip_tags($actualite->contenu) , $limit=70, $end="...") !!}
-                                </p>
+                <div class="col-12 mt-3">
+                    <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
                     </div>
-                        </div>
-                        </article>
+                    <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
                     </div>
-                @endforeach
+                </div>
             </div>
-            <div class="d-flex justify-content-center">
-                {{ $actualites->appends(request()->query())->links() }}
+            <div class="row d-none" id="loader" style="text-align: center;">
+                <div class="col-12 mt-5">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="actusDatas">
             </div>
         </div>
     </section>

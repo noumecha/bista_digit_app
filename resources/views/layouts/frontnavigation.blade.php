@@ -5,8 +5,13 @@
                 <div class="nav-items">
                     <div class="menu-toggle"></div>
                     <div class="logo text-white">
-                        <a class="h4 text-white" href={{ route('home.index') }}>POWEREDUCATION</a>
-                        <!--img src="../assets/front/images/logo-01.png"-->
+                        @if (isset(appConfiguration()->school_logo))
+                            <a href="{{ route('home.index') }}">
+                                <img src="{{ asset('storage/'.appConfiguration()->school_logo) }}">
+                            </a>
+                        @else
+                            <a class="h4 text-white" href={{ route('home.index') }}>POWEREDUCATION</a>
+                        @endif
                     </div>
                     <div class="menu-items">
                         <div class="menu">
@@ -26,16 +31,25 @@
                                 <li>
                                     <a href="{{ route ('home.clubs') }}">Clubs</a>
                                 </li>
-                                <li><a href="{{ route('home.epreuves') }}">Epreuves</a></li>
                                 <li>
-                                    @if (Auth::check())
-                                        <a href="{{ route('dashboard') }}">Dashboard</a>
-                                    @else
-                                        <a href="{{ route('sign-in') }}">Connexion</a>
-                                    @endif
+                                    <a href="{{ route('home.epreuves') }}">Epreuves</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('home.contact') }}">Contact</a>
                                 </li>
                             </ul>
                         </div>
+                    </div>
+                    <div class="login-menu">
+                        @if (Auth::check())
+                            <a class="text-white" href="{{ route('dashboard') }}">
+                                <i class="fa-solid fa-gear"></i>
+                            </a>
+                        @else
+                            <a class="text-white" href="{{ route('sign-in') }}">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

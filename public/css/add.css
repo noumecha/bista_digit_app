@@ -62,3 +62,8 @@ ck editor error
       width: 1px; /* Set the width of the scrollbar */
     }
 }
+/** login menu on navigation **/
+.login-menu {
+    display: flex;
+    align-items: center;
+}

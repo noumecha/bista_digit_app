@@ -17,38 +17,88 @@
                <div class="col-12">
                     <div class="heading">
                         <h2>Liste des épreuves disponibles</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt</p>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                @foreach ($epreuves as $epreuve)
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                        <article class="_lk_bg_sd_we">
-                            <div class="_bv_xs_we" style="background:url({{ $epreuve->isImage ? asset('storage/' . $epreuve->fichier) : '' }})">
-                                @if (!$epreuve->isImage)
-                                    <iframe class="h-100 w-100" src="{{ asset('storage/'.$epreuve->fichier) }}#page=1" frameborder="0"></iframe>
-                                @endif
-                            </div>
-                            <div class="_xs_we_er">
-                                <div class="_he_w">
-                                    <h5>
-                                        <a class="title h5 text-uppercase" href="{{ route('home.showepreuve', $epreuve->id) }}">
-                                            {{ $epreuve->matiere->libelleMatiere }} : {{ $epreuve->libelleEpreuve }}-{{ $epreuve->classe->libClasse }}
-                                        </a>
-                                    </h5>
-                                    <ol class="mt-3">
-                                        <li><span>Par</span>{{ $epreuve->user->name }}<span class="_mn_cd_xs"><i>le {{ date('d M Y', strtotime($epreuve->created_at)) }}</i></span></li>
-                                    </ol>
-                                    <a class="mt-3 btn btn-primary text-white"  download="{{ $epreuve->fichier }}" href="{{ asset('storage/' . $epreuve->fichier) }}">
-                                        Télécharger
-                                    </a>
-                                </div>
-                            </div>
-                        </article>
+            <form class="form-inline row mt-3" id="epreuvesDataSearch" action="">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <input type="text" name="search" id="search" class="form-control"
+                            placeholder="Rechercher une épreuve"/>
                     </div>
-                @endforeach
+                </div>
+                <div class="col-md-6 mt-3">
+                    <div class="input-group">
+                        <select name="matiereId" class="form-select" id="matiereId">
+                            <option value="">Toutes les matieres</option>
+                            @foreach ($matieres as $matiere)
+                                <option value="{{ $matiere->id }}">
+                                    {{ $matiere->libelleMatiere }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <div class="input-group">
+                        <select name="typeId" class="form-select" id="typeId">
+                            <option value="">Touts les types</option>
+                            @foreach ($types as $type)
+                                <option value="{{ $type->id }}">
+                                    {{ $type->libelleTypeEpreuve }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <div class="input-group">
+                        <select name="classeId" class="form-select" id="classeId">
+                            <option value="">Toutes les classes</option>
+                            @foreach ($classes as $classe)
+                                <option value="{{ $classe->id }}">
+                                    {{ $classe->libClasse }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-3">
+                    <div class="input-group">
+                        <select name="anneeEpreuve" class="form-select" id="anneeEpreuve">
+                            <option value="">Toutes les années</option>
+                            @foreach ($anneeEpreuves as $anneeEpreuve)
+                                <option value="{{ $anneeEpreuve->anneeEpreuve }}">
+                                    {{ $anneeEpreuve->anneeEpreuve }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-1 mt-3">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-12 mt-3">
+                    <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                    </div>
+                    <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                    </div>
+                </div>
+            </div>
+            <div class="row d-none" id="epreuve-loader" style="text-align: center;">
+                <div class="col-12 mt-5">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="epreuveDatas">
             </div>
         </div>
     </section>

@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-grid.css') }}">
         <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap-reboot.css') }}">
         <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/add.css') }}">
         <!-- Fonts and icons -->
         <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700"
@@ -29,5 +30,7 @@
         <script src="{{ asset('front/js/popper.min.js') }}"></script>
         <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
         <script src="{{ asset('front/js/script.js') }}"></script>
+        <script src="{{ asset('js/functions/actualites-search-bar.js') }}"></script>
+        <script src="{{ asset('js/functions/epreuves-search-bar.js') }}"></script>
     </body>
 </html>

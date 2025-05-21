@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Actualite;
 use App\Models\AppConfiguration;
 use App\Models\CategorieActualite;
+use App\Models\Classe;
 use App\Models\Club;
 use App\Models\Epreuve;
+use App\Models\Matiere;
 use App\Models\Slider;
 use App\Models\Specialite;
+use App\Models\TypeEpreuve;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -94,13 +97,48 @@ class HomeController extends Controller
     /**
      * index function
      */
-    public function epreuves () {
-        $epreuves = Epreuve::all();
+    public function epreuves (Request $request) {
+        // vars :
+        $classes = Classe::all();
+        $matieres = Matiere::all();
+        $types = TypeEpreuve::all();
+        $anneeEpreuves = Epreuve::select('anneeEpreuve')->distinct()->get();
+        // search vars
+        $search = $request->input('search');
+        $classeId = $request->input('classeId');
+        $matiereId = $request->input('matiereId');
+        $typeId = $request->input('typeId');
+        $anneeEpreuve = $request->input('anneeEpreuve');
+        // create query
+        $query = Epreuve::query();
+        if($search) {
+            $query->where('libelleEpreuve', 'LIKE', "%{$search}%");
+        }
+        if($classeId) {
+            $query->where('classe_id', $classeId);
+        }
+        if($matiereId) {
+            $query->where('matiere_id', $matiereId);
+        }
+        if($typeId) {
+            $query->where('type_epreuve_id', $typeId);
+        }
+        if($anneeEpreuve) {
+            $query->where('anneeEpreuve', $anneeEpreuve);
+        }
+        $epreuves = $query->latest()->paginate(9);
         foreach ($epreuves as $epreuve) {
             $epreuve->isImage = preg_match('/\.(jpg|jpeg|png|gif)$/i', $epreuve->fichier);
         }
-        //dd($epreuves);
-        return view('front.epreuves', compact('epreuves'));
+        if($request->ajax()) {
+            return view('partials._epreuves_datas', compact(
+                'epreuves'
+            ));
+        } else {
+            return view('front.epreuves', compact(
+                'epreuves','classes','matieres','types','anneeEpreuves'
+            ));
+        }
     }
 
     /**
@@ -116,11 +154,10 @@ class HomeController extends Controller
      * index function
      */
     public function actualites (Request $request) {
-        $actualites = Actualite::all();
         $categories = CategorieActualite::all();
         $search = $request->input('search');
         $categoryFilter = $request->input('category');
-
+        $actualitesSliders = Actualite::query()->latest()->paginate(5);
         $query = Actualite::query();
         if($search) {
             $query->where('titre', 'LIKE', "%{$search}%")->orWhere('contenu', 'LIKE', "%{$search}%");
@@ -128,9 +165,16 @@ class HomeController extends Controller
         if($categoryFilter) {
             $query->where('categorie_actualites_id', $categoryFilter);
         }
-
-        $actualites = $query->paginate(9);
-        return view('front.actus', compact('actualites', 'categories', 'search', 'categoryFilter'));
+        $actualites = $query->latest()->paginate(9);
+        if($request->ajax()) {
+            return view('partials._actus_datas', compact(
+                'actualites',
+            ));
+        } else {
+            return view('front.actus', compact(
+                'actualites', 'categories', 'search', 'categoryFilter','actualitesSliders'
+            ));
+        }
     }
 
     /**
@@ -138,7 +182,8 @@ class HomeController extends Controller
      */
     public function contact () {
         $appconfiguration = AppConfiguration::all()->first();
-        return view('front.contact',compact('appconfiguration'));
+        $actualites = Actualite::query()->latest()->paginate(3);
+        return view('front.contact',compact('appconfiguration', 'actualites'));
     }
 
     /**
@@ -159,7 +204,8 @@ class HomeController extends Controller
      */
     public function showActualite($id) {
         $actualite = Actualite::findOrFail($id);
-        return view('actualites.show')->with('actualite', $actualite);
+        $actualites = Actualite::query()->latest()->paginate(3);
+        return view('actualites.show', compact('actualite', 'actualites'));
     }
 
     /**

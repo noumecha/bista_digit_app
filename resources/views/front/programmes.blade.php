@@ -27,13 +27,13 @@
                     <img src="{{ asset('storage/' . $programme->specialite_image) }}" class="d-block" alt="...">
                     <div class="carousel-caption">
                       <h1>
-                        <a href="{{ route('home.clubPage', $programme->id) }}">
+                        <a class="text-white" href="{{ route('home.clubPage', $programme->id) }}">
                           {{ $programme->specialite_title }}
                         </a>
                       </h1>
-                      <p class="">
+                      <p>
                         {!! Str::limit(strip_tags($programme->contenu), $limit=50, $end="...") !!}
-                        <a href="{{ route('home.clubPage', $programme->id) }}">
+                        <a class="text-white fw-bold" href="{{ route('home.clubPage', $programme->id) }}">
                           Lire la suite
                         </a>
                       </p>
@@ -76,7 +76,15 @@
                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                         <div class="featured-box">
                             <div class="feature-card">
-                                <a href="#"><i class="fa-solid fa-link"></i></a>
+                                <a
+                                @if ($programme->type === "booster-page")
+                                    href="{{ route('home.boosterPage') }}"
+                                @else
+                                    href="{{ route('home.leaderPage') }}"
+                                @endif
+                                >
+                                    <i class="fa-solid fa-link"></i>
+                                </a>
                                 <img style="height: 300px;
                                     width: 100%;
                                     object-fit: cover;"
@@ -85,10 +93,27 @@
                             </div>
                             <div class="content">
                                 <h3 class="text-uppercase">
-                                    {{ $programme->specialite_title }}
+                                    <a
+                                        @if ($programme->type === "booster-page")
+                                            href="{{ route('home.boosterPage') }}"
+                                        @else
+                                            href="{{ route('home.leaderPage') }}"
+                                        @endif
+                                    >
+                                        {{ $programme->specialite_title }}
+                                    </a>
                                 </h3>
                                 <p class="" style="text-align: justify;">
                                     {!! Str::limit(strip_tags($programme->contenu), $limit=200, $end="...") !!}
+                                    <a
+                                    @if ($programme->type === "booster-page")
+                                        href="{{ route('home.boosterPage') }}"
+                                    @else
+                                        href="{{ route('home.leaderPage') }}"
+                                    @endif
+                                    >
+                                        lire la suite
+                                    </a>
                                 </p>
                             </div>
                         </div>
