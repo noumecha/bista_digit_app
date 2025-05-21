@@ -3,7 +3,13 @@
         <div class="container">
             <div class="row">
                 <div class="nav-items">
-                    <div class="menu-toggle"></div>
+                    <div class="menu-toggle d-flex aligns-center"
+                        style="padding:10px 15px;
+                        margin: 7px;
+                        "
+                    >
+                        <i class="text-white fa-solid fa-bars"></i>
+                    </div>
                     <div class="logo text-white">
                         @if (isset(appConfiguration()->school_logo))
                             <a href="{{ route('home.index') }}">
@@ -16,26 +22,58 @@
                     <div class="menu-items">
                         <div class="menu">
                             <ul>
-                                <li><a href="{{ route ('home.index') }}">Acceuil</a></li>
-                                <li><a href="{{ route ('home.about') }}">A propos</a></li>
                                 <li>
-                                    <a href="{{ route ('home.actus') }}">Actualités</a>
+                                    <a href="{{ route ('home.index') }}"
+                                        class="{{ request()->routeIs('home.index') ? 'active-menu' : '' }}"
+                                    >
+                                        Acceuil
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route ('home.programmes') }}">Programmes</a>
+                                    <a href="{{ route ('home.about') }}"
+                                        class="{{ request()->routeIs('home.about') ? 'active-menu' : '' }}"
+                                    >
+                                        A propos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route ('home.actus') }}"
+                                        class="{{ request()->routeIs('home.actus') ? 'active-menu' : '' }}"
+                                        >
+                                        Actualités
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route ('home.programmes') }}"
+                                        class="{{ request()->routeIs('home.programmes') ? 'active-menu' : '' }}"
+                                        >
+                                        Programmes
+                                    </a>
                                     <ul class="submenu">
                                         <li><a href="{{ route('home.boosterPage') }}">Booster</a></li>
                                         <li><a href="{{ route('home.leaderPage') }}">I Am A Leader</a></li>
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="{{ route ('home.clubs') }}">Clubs</a>
+                                    <a href="{{ route ('home.clubs') }}"
+                                        class="{{ request()->routeIs('home.clubs') ? 'active-menu' : '' }}"
+                                        >
+                                        Clubs
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('home.epreuves') }}">Epreuves</a>
+                                    <a href="{{ route('home.epreuves') }}"
+                                        class="{{ request()->routeIs('home.epreuves') ? 'active-menu' : '' }}"
+                                        >
+                                        Epreuves
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('home.contact') }}">Contact</a>
+                                    <a href="{{ route('home.contact') }}"
+                                        class="{{ request()->routeIs('home.contact') ? 'active-menu' : '' }}"
+                                        >
+                                        Contact
+                                    </a>
                                 </li>
                             </ul>
                         </div>

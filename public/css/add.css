@@ -67,3 +67,6 @@ ck editor error
     display: flex;
     align-items: center;
 }
+.active-menu {
+    color: #e4b83f !important;
+}
