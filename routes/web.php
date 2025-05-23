@@ -34,6 +34,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IamLeaderController;
 use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\QuestionController;
@@ -44,8 +45,10 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\SpecialiteController;
 use App\Http\Controllers\TrimestreController;
 use App\Http\Controllers\TypeEpreuveController;
+use App\Models\Notification;
 use App\Models\Programme;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Profiler\ProfilerStorageInterface;
 
 /*
@@ -65,6 +68,14 @@ Route::post('/actualites/save', [ActusController::class, 'store'])->name('actual
 Route::put('/actualites/update/{id}', [ActusController::class, 'update'])->name('actualite.update')->middleware('auth');
 Route::get('/actualites/{id}/edit', [ActusController::class, 'edit'])->name('actualite.edit')->middleware('auth');
 Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
+
+// notifications routes :
+// routes/web.php
+Route::get('/notifications/view/{id}', [NotificationController::class, 'view'])->name('notification.view')->middleware('auth');
+Route::get('/notifications/create', [NotificationController::class, 'create'])->name('notification.create')->middleware('auth');
+Route::get('/notifications/index', [NotificationController::class, 'index'])->name('notification.index')->middleware('auth');
+Route::post('/notifications/save', [NotificationController::class, 'store'])->name('notification.send')->middleware('auth');
+Route::delete('/notifications/delete/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy')->middleware('auth');
 
 // primary routes for the front-website :
 Route::get('/acceuil', [HomeController::class, 'index'])->name('home.index');

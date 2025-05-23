@@ -281,4 +281,12 @@ class User extends Authenticatable
         return $this->hasOne(Club::class, 'president_id');
     }
 
+    /**
+     * to show notifications to the user
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at')->get();
+    }
+
 }

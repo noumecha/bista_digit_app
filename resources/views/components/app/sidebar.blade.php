@@ -325,9 +325,15 @@
                     </div>
                 </li>
                 <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('notification.create') ? 'active' : '' }}"
+                        href="{{ route('notification.create') }}">
+                        <span class="nav-link-text ms-1">Nouvelle Notification</span>
+                    </a>
+                </li>
+                <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
                         href="{{ route('page_configuration.booster.index') }}">
-                        <span class="nav-link-text ms-1">Nouvelle Notification</span>
+                        <span class="nav-link-text ms-1">Messages (sms)</span>
                     </a>
                 </li>
                 <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">

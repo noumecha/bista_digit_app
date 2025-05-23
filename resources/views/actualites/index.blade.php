@@ -85,7 +85,7 @@
                                             id="titre"
                                             name="titre"
                                             class="form-control"
-                                            placeholder="Entrez le titre de la actualite"
+                                            placeholder="Entrez le titre de l'actualité"
                                         />
                                     </div>
                                 </div>

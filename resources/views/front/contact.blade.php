@@ -21,22 +21,22 @@
     <section class="bg-02">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 col-md-6">
-                    <div class="heading">
+                <div class="col-lg-6 col-md-6">
+                    <div class="heading" style="text-align: justify">
                         <h2>
                             Nos contacts
                         </h2>
                         @if (appConfiguration() !== null)
-                            @if (isset(appConfiguration()->school_phone_1))
+                            @if (isset(appConfiguration()->contact_phone_1))
                                 <p class="text-lowercase">
                                     <i class="fa-solid fa-phone"></i>
-                                    {{ appConfiguration()->school_phone_1 }}
+                                    {{ appConfiguration()->contact_phone_1 }}
                                 </p>
                             @endif
-                            @if (isset(appConfiguration()->school_phone_2))
+                            @if (isset(appConfiguration()->contact_phone_2))
                                 <p class="text-lowercase">
                                     <i class="fa-solid fa-phone"></i>
-                                    {{ appConfiguration()->school_phone_2 }}
+                                    {{ appConfiguration()->contact_phone_2 }}
                                 </p>
                             @endif
                             @if (isset(appConfiguration()->school_email))
@@ -52,7 +52,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-6 col-md-6">
                     <div class="heading">
                         <h2>Localisation</h2>
                         @if (appConfiguration() !== null)
