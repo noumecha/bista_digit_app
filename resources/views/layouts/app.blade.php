@@ -28,7 +28,6 @@
         <link rel="stylesheet" href="{{ asset('css/custom-dropdown.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/dashboard-menu.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/ckeditor5.css') }}" />
-        <link rel="stylesheet" href="{{ asset('md-bootstrap/css/mdb.min.css') }}">
         <!--     Fonts and icons     -->
         <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700"
@@ -428,7 +427,8 @@
         <script src="{{ asset('js/functions/migrate.js') }}"></script>
         <script src="{{ asset('js/functions/edit.js') }}"></script>
         <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
+        <script src="{{ asset('bootstrap-select/js/bootstrap-select.js') }}"></script>
+        <script src="{{ asset('bootstrap-select/dist/js/bootstrap-select.js') }}"></script>
         @yield('scripts')
     </body>
-
 </html>
