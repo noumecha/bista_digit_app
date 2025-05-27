@@ -144,10 +144,11 @@
                             <div class="col-md-12">
                                 <div class="form-group d-none" id="receiverSelector">
                                     <label class="form-control-label">
-                                        Choisir les utilisateurs
+                                        Choisir les utilisateurs :
                                     </label>
                                     <select class="selectpicker" multiple data-live-search="true"
                                         name="receiver_ids[]">
+                                        <option value="">Selectionner un ou plusieurs utilisateur</option>
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach

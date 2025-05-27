@@ -28,6 +28,8 @@
         <link rel="stylesheet" href="{{ asset('css/custom-dropdown.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/dashboard-menu.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/ckeditor5.css') }}" />
+        <!-- JQuery file -->
+        <script src="{{ asset('js/plugins/jquery.js') }}"></script>
         <!--     Fonts and icons     -->
         <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700"
@@ -35,6 +37,10 @@
         <!-- Nucleo Icons -->
         <link href="{{ asset ('css/nucleo-icons.css') }}" rel="stylesheet" />
         <link href="{{ asset ('css/nucleo-svg.css') }}" rel="stylesheet" />
+        <!-- boostrap-select-css file -->
+        <link rel="stylesheet" href="{{ asset('b-select/bootstrap-select.min.css') }}">
+        <!-- app.js -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
         <!-- CKEDITOR -->
         <script type="importmap">
             {
@@ -47,8 +53,6 @@
         <!-- Font Awesome Icons -->
         <script src="https://kit.fontawesome.com/612ac88160.js" crossorigin="anonymous"></script>
         <link href="{{ asset ('css/nucleo-svg.css') }}" rel="stylesheet" />
-        <!-- vite config
-        @ vite(['resources/css/app.css', 'resources/js/app.js'])-->
         <!-- CSS Files -->
         <link id="pagestyle" href="{{ asset('css/corporate-ui-dashboard.css?v=1.0.0') }}" rel="stylesheet" />
     </head>
@@ -72,9 +76,6 @@
         @endif
 
         {{ $slot }}
-
-        <!-- JQuery file -->
-        <script src="{{ asset('js/plugins/jquery.js') }}"></script>
         <!--   Core JS Files   -->
         <script src="{{ asset('js/core/popper.min.js') }}"></script>
         <script src="{{ asset('bootstrap/js/bootstrap.js')}}"></script>
@@ -427,8 +428,6 @@
         <script src="{{ asset('js/functions/migrate.js') }}"></script>
         <script src="{{ asset('js/functions/edit.js') }}"></script>
         <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
-        <script src="{{ asset('bootstrap-select/js/bootstrap-select.js') }}"></script>
-        <script src="{{ asset('bootstrap-select/dist/js/bootstrap-select.js') }}"></script>
         @yield('scripts')
     </body>
 </html>

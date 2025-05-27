@@ -1,8 +1,6 @@
 $(function() {
     // multiselect with search bar
-    $('.selectpicker').selectpicker({
-        liveSearch: true,
-    });
+    $('.selectpicker').selectpicker();
     // toggle receivers - and filtering result
     const targetGroup = $('#target_group');
     const sendToAll = $('#sendToAll');

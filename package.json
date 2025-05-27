@@ -12,9 +12,10 @@
         "jquery": "^3.7.1",
         "laravel-vite-plugin": "^1.0",
         "rollup": "^4.24.3",
-        "vite": "^5.4.12"
+        "vite": "^5.4.19"
     },
     "dependencies": {
+        "bootstrap-select": "^1.13.18",
         "html2canvas": "^1.4.1",
         "jspdf": "^3.0.1"
     }
