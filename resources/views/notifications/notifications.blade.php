@@ -146,9 +146,9 @@
                                     <label class="form-control-label">
                                         Choisir les utilisateurs :
                                     </label>
-                                    <select class="selectpicker" multiple data-live-search="true"
+                                    <select class="col-md-12 selectpicker" title="choisir les utilisateurs" id="selectpicker"
                                         name="receiver_ids[]">
-                                        <option value="">Selectionner un ou plusieurs utilisateur</option>
+                                        <option value="">option 1</option>
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach

@@ -39,8 +39,8 @@
         <link href="{{ asset ('css/nucleo-svg.css') }}" rel="stylesheet" />
         <!-- boostrap-select-css file -->
         <link rel="stylesheet" href="{{ asset('b-select/bootstrap-select.min.css') }}">
-        <!-- app.js -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- app.js
+        @ vite(['resources/css/app.css', 'resources/js/app.js']) -->
         <!-- CKEDITOR -->
         <script type="importmap">
             {
@@ -412,6 +412,8 @@
                     } );
             }
         </script>
+        <!-- bootstrap select js -->
+        <script src="{{ asset('b-select/bootstrap-select.min.js') }}"></script>
         <!-- Github buttons -->
         <script async defer src="https://buttons.github.io/buttons.js"></script>
         <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
