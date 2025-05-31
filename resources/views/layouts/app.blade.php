@@ -37,8 +37,9 @@
         <!-- Nucleo Icons -->
         <link href="{{ asset ('css/nucleo-icons.css') }}" rel="stylesheet" />
         <link href="{{ asset ('css/nucleo-svg.css') }}" rel="stylesheet" />
-        <!-- boostrap-select-css file -->
-        <link rel="stylesheet" href="{{ asset('b-select/bootstrap-select.min.css') }}">
+        <!-- some css for pluguins [select2, b-select] -->
+        <!--link rel="stylesheet" href="{ { asset('css/bootstrap-select.min.css') }}"-->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
         <!-- app.js
         @ vite(['resources/css/app.css', 'resources/js/app.js']) -->
         <!-- CKEDITOR -->
@@ -95,7 +96,6 @@
                     },
                 });
             };
-
 
             var ctx = document.getElementById("chart-bars").getContext("2d");
 
@@ -412,8 +412,9 @@
                     } );
             }
         </script>
-        <!-- bootstrap select js -->
-        <script src="{{ asset('b-select/bootstrap-select.min.js') }}"></script>
+        <!-- some js for common plugins -->
+        <!--script src="{ { asset('js/plugins/bootstrap-select.min.js') }}"></-script-->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <!-- Github buttons -->
         <script async defer src="https://buttons.github.io/buttons.js"></script>
         <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->

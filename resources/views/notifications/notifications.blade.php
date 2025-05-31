@@ -115,7 +115,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">
+                                    <label class="form-control-label" for="type">
                                         Type de notification
                                     </label>
                                     <select name="type" id="type" class="form-select">
@@ -129,7 +129,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">
+                                    <label class="form-control-label" for="target_group">
                                         Cible
                                     </label>
                                     <select name="target_group" class="form-select" id="target_group">
@@ -142,13 +142,12 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-group d-none" id="receiverSelector">
+                                <div class="form-group" id="receiverSelector">
                                     <label class="form-control-label">
                                         Choisir les utilisateurs :
                                     </label>
-                                    <select class="col-md-12 selectpicker" title="choisir les utilisateurs" id="selectpicker"
-                                        name="receiver_ids[]">
-                                        <option value="">option 1</option>
+                                    <select class="col-md-12 receiver_ids" id="receiver_ids"
+                                        name="receiver_ids[]" multiple>
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach

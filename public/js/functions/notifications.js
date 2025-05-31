@@ -1,24 +1,25 @@
 $(function() {
-    // multiselect with search bar
-    $('#selectpicker').selectpicker();
     // toggle receivers - and filtering result
     const targetGroup = $('#target_group');
     const sendToAll = $('#sendToAll');
     const receiverSelector = $('#receiverSelector');
-    // run function on load
-    $(document).on('change', targetGroup, function() {
-        toggleReceiverSelector();
+    // multiselect with search bar
+    /*$('#receiver_ids').selectpicker({
+        liveSearch: true,
+        actionsBox: true,
+        selectedTextFormat: 'count > 3',
+        countSelectedText: '{0} utilisateurs sélectionnés',
+        noneSelectedText: 'Sélectionner des utilisateurs',
+        selectAllText: 'Tout sélectionner',
+        deselectAllText: 'Tout désélectionner'
+    });*/
+    $('#create-notification-modal').on('shown.bs.modal', function () {
+        $('#receiver_ids').select2({
+            width : '100%',
+            placeholder: "Choisir les utilisateurs",
+            dropdownParent: $('#create-notification-modal')
+        });
     });
-    $(document).on('change', targetGroup, function() {
-        toggleReceiverSelector();
-    });
-    function toggleReceiverSelector() {
-        if (sendToAll.checked || targetGroup.value === 'all') {
-            receiverSelector.addClass("d-none");
-        } else {
-            receiverSelector.removeClass("d-none");
-        }
-    }
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-notification-modal"]', function(e) {
         e.preventDefault();
@@ -30,12 +31,10 @@ $(function() {
         var button = $('#submit-notification-form-button');
         var header = $('#modal-notification-header');
         var headerText = $('#header-notification-text');
-
         // reseting
         header.removeClass('bg-primary bg-success');
         button.removeClass('btn-outline-primary btn-outline-success');
         form.trigger('reset');
-
         // kind of action
         if (action == "create") {
             header.addClass('bg-primary');
