@@ -76,6 +76,7 @@ Route::get('/notifications/create', [NotificationController::class, 'create'])->
 Route::get('/notifications/index', [NotificationController::class, 'index'])->name('notification.index')->middleware('auth');
 Route::post('/notifications/save', [NotificationController::class, 'store'])->name('notification.send')->middleware('auth');
 Route::delete('/notifications/delete/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy')->middleware('auth');
+Route::get('/notifications/users/{type}', [NotificationController::class, 'getUsers'])->name('notification.users');
 
 // primary routes for the front-website :
 Route::get('/acceuil', [HomeController::class, 'index'])->name('home.index');

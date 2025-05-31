@@ -134,23 +134,23 @@
                                     </label>
                                     <select name="target_group" class="form-select" id="target_group">
                                         <option value="">Choisir la cible</option>
-                                        <option value="students">Élèves</option>
-                                        <option value="teachers">Enseignants</option>
-                                        <option value="staff">Personnel</option>
+                                        <option value="eleve">Élèves</option>
+                                        <option value="enseignant">Enseignants</option>
+                                        <option value="personnel">Personnel</option>
                                         <option value="all">Tout le monde</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group" id="receiverSelector">
-                                    <label class="form-control-label">
+                                    <label for="receiver_ids" class="form-control-label">
                                         Choisir les utilisateurs :
                                     </label>
                                     <select class="col-md-12 receiver_ids" id="receiver_ids"
                                         name="receiver_ids[]" multiple>
-                                        @foreach ($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                        @endforeach
+                                        <!--@ foreach ($ users as $user)
+                                            <option value="{ { $user->id }}">{ { $user->name }}</option>
+                                        @ endforeach -->
                                     </select>
                                 </div>
                             </div>

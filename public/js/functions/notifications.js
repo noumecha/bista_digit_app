@@ -4,21 +4,24 @@ $(function() {
     const sendToAll = $('#sendToAll');
     const receiverSelector = $('#receiverSelector');
     // multiselect with search bar
-    /*$('#receiver_ids').selectpicker({
-        liveSearch: true,
-        actionsBox: true,
-        selectedTextFormat: 'count > 3',
-        countSelectedText: '{0} utilisateurs sélectionnés',
-        noneSelectedText: 'Sélectionner des utilisateurs',
-        selectAllText: 'Tout sélectionner',
-        deselectAllText: 'Tout désélectionner'
-    });*/
     $('#create-notification-modal').on('shown.bs.modal', function () {
         $('#receiver_ids').select2({
             width : '100%',
             placeholder: "Choisir les utilisateurs",
-            dropdownParent: $('#create-notification-modal')
+            dropdownParent: $('#create-notification-modal'),
         });
+    });
+    // filtering users base on type [students, teacher, personnels]
+    $('#target_group').on('change', function() {
+        let type = $(this).val();
+        $('#receiver_ids').html('<option value="all">Tous les utilisateurs</option>');
+        if (type) {
+            $.get('/notifications/users/' + type, function(data) {
+                data.forEach(user => {
+                    $('#receiver_ids').append(`<option value="${user.id}">${user.name}</option>`);
+                });
+            });
+        }
     });
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-notification-modal"]', function(e) {

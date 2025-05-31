@@ -100,6 +100,20 @@ class NotificationController extends Controller
     }
 
     /**
+     * getting user by group [teachers, students, personnel, all]
+     */
+    public function getUsers($type) {
+        $userYearIds = UserAnneeScolaire::all()->where('annee_scolaire_id', getCurrentYear()->id)
+            ->pluck('user_id');
+        if($type !== "all") {
+            $users = User::all()->where('typeUser', $type)->whereIn('id', $userYearIds);
+        } else {
+            $users = User::all()->whereIn('id', $userYearIds);
+        }
+        return response()->json($users);
+    }
+
+    /**
      * function do dispatch type notifications and for who
      */
     private function dispatchNotification(Notification $notification)
