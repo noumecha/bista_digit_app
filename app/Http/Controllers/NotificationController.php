@@ -20,7 +20,7 @@ class NotificationController extends Controller
             'title' => 'required|string',
             'message' => 'required|string',
             'type' => 'required|in:sms,email,whatsapp,in_app',
-            'target_group' => 'required|in:students,teachers,staff,all',
+            'target_group' => 'required|in:eleve,enseignant,personnel,all',
             'receiver_ids' => 'nullable|array',
         ], [
             'title.required' => 'Entrez le titre de la notification',
@@ -28,6 +28,7 @@ class NotificationController extends Controller
             'type.required' => 'Selectionnez un type de notification',
             'target_group.required' => 'Selectionnez le groupe cible'
         ]);
+        dd($request);
         try {
             $notification = Notification::create([
                 'title' => $request->title,
@@ -35,7 +36,6 @@ class NotificationController extends Controller
                 'message' => $request->message,
                 'type' => $request->type,
                 'target_group' => $request->target_group,
-                #'receivers' => $request->receiver_ids ?? [],
                 'receivers' => $request->has('send_to_all') ? [] : $request->receiver_ids,
                 'is_mass' => $request->has('send_to_all'),
                 'sent_at' => now(),
@@ -46,7 +46,63 @@ class NotificationController extends Controller
             return response()->json(['error' => 'Erreur lors de l\'envoi '.$th->getMessage()]);
         }
     }
-
+    /**
+     * function do dispatch type notifications and for who
+     */
+    private function dispatchNotification(Notification $notification)
+    {
+        $users = collect();
+        if ($notification->is_mass) {
+            // Envoi groupé selon le type
+            switch ($notification->target_group) {
+                case 'students':
+                    $users = User::where('typeUser', 'eleve')->get();
+                    break;
+                case 'teachers':
+                    $users = User::where('typeUser', 'enseignant')->get();
+                    break;
+                case 'personnel':
+                    $users = User::where('typeUser', 'personnel')->get()->get();
+                    break;
+                case 'all':
+                    $users = User::all();
+                    break;
+            }
+        } else {
+            $users = User::whereIn('id', $notification->receivers)->get();
+        }
+        foreach ($users as $user) {
+            match($notification->type) {
+                'in_app' => $user->notify(
+                    new \App\Notifications\InAppNotification(
+                        $notification->title, $notification->message
+                    )
+                ),
+                'email' => Mail::to($user->email)->send(
+                    new \App\Mail\GenericNotificationMail(
+                        $notification->title, $notification->message
+                    )
+                ),
+                'sms' => $this->sendSMS($user->phone, $notification->message),
+                'whatsapp' => $this->sendWhatsApp($user->phone, $notification->message),
+            };
+        }
+        // Mise à jour de status si besoin (pour tracking plus tard)
+    }
+    /**
+     * send sms
+     */
+    private function sendSMS($phone, $message)
+    {
+        // API SMS Gateway ici (ex: Twilio, Orange, etc.)
+    }
+    /**
+     * send whatsapp
+     */
+    private function sendWhatsApp($phone, $message)
+    {
+        // Intégration API WhatsApp (ex: Twilio, Meta Cloud API)
+    }
     /**
      * all notifications
      */
@@ -106,71 +162,11 @@ class NotificationController extends Controller
         $userYearIds = UserAnneeScolaire::all()->where('annee_scolaire_id', getCurrentYear()->id)
             ->pluck('user_id');
         if($type !== "all") {
-            $users = User::all()->where('typeUser', $type)->whereIn('id', $userYearIds);
+            $users = User::where('typeUser', $type)->whereIn('id', $userYearIds)->get();
         } else {
-            $users = User::all()->whereIn('id', $userYearIds);
+            $users = User::whereIn('id', $userYearIds)->get();
         }
         return response()->json($users);
-    }
-
-    /**
-     * function do dispatch type notifications and for who
-     */
-    private function dispatchNotification(Notification $notification)
-    {
-        $users = collect();
-        if ($notification->is_mass) {
-            // Envoi groupé selon le type
-            switch ($notification->target_group) {
-                case 'students':
-                    $users = User::where('typeUser', 'eleve')->get();
-                    break;
-                case 'teachers':
-                    $users = User::where('typeUser', 'enseignant')->get();
-                    break;
-                case 'personnel':
-                    $users = User::where('typeUser', 'personnel')->get()->get();
-                    break;
-                case 'all':
-                    $users = User::all();
-                    break;
-            }
-        } else {
-            $users = User::whereIn('id', $notification->receivers)->get();
-        }
-        foreach ($users as $user) {
-            match($notification->type) {
-                'in_app' => $user->notify(
-                    new \App\Notifications\InAppNotification(
-                        $notification->title, $notification->message
-                    )
-                ),
-                'email' => Mail::to($user->email)->send(
-                    new \App\Mail\GenericNotificationMail(
-                        $notification->title, $notification->message
-                    )
-                ),
-                'sms' => $this->sendSMS($user->phone, $notification->message),
-                'whatsapp' => $this->sendWhatsApp($user->phone, $notification->message),
-            };
-        }
-        // Mise à jour de status si besoin (pour tracking plus tard)
-    }
-
-    /**
-     * send sms
-     */
-    private function sendSMS($phone, $message)
-    {
-        // API SMS Gateway ici (ex: Twilio, Orange, etc.)
-    }
-
-    /**
-     * send whatsapp
-     */
-    private function sendWhatsApp($phone, $message)
-    {
-        // Intégration API WhatsApp (ex: Twilio, Meta Cloud API)
     }
 
     /**

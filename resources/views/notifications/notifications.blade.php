@@ -148,9 +148,6 @@
                                     </label>
                                     <select class="col-md-12 receiver_ids" id="receiver_ids"
                                         name="receiver_ids[]" multiple>
-                                        <!--@ foreach ($ users as $user)
-                                            <option value="{ { $user->id }}">{ { $user->name }}</option>
-                                        @ endforeach -->
                                     </select>
                                 </div>
                             </div>

@@ -11,15 +11,45 @@ $(function() {
             dropdownParent: $('#create-notification-modal'),
         });
     });
-    // filtering users base on type [students, teacher, personnels]
+    // toggle select filter base on the sendToAll value
+    sendToAll.on('change', function() {
+        if (sendToAll.is(':checked')) {
+            $('#receiver_ids').prop('disabled', true)
+        } else {
+            $('#receiver_ids').prop('disabled', false)
+        }
+    });
+    // filtering users base on type [eleve, enseignant, personnel]
     $('#target_group').on('change', function() {
         let type = $(this).val();
-        $('#receiver_ids').html('<option value="all">Tous les utilisateurs</option>');
+        let receiverSelect = $('#receiver_ids');
+        receiverSelect.empty().prop('disabled', true);
         if (type) {
+            receiverSelect.select2({
+                placeholder: "Chargement...",
+                minimumResultsForSearch: Infinity
+            });
             $.get('/notifications/users/' + type, function(data) {
+                receiverSelect.append(new Option("Tous les utilisateurs", "all", false, false));
                 data.forEach(user => {
-                    $('#receiver_ids').append(`<option value="${user.id}">${user.name}</option>`);
+                    receiverSelect.append(new Option(user.name, user.id, false, false));
                 });
+                receiverSelect.prop('disabled', false).select2({
+                    width: '100%',
+                    placeholder: "Choisir les utilisateurs",
+                    dropdownParent: $('#create-notification-modal'),
+                    allowClear: true
+                });
+            }).fail(function() {
+                receiverSelect.select2({
+                    placeholder: "Erreur de chargement",
+                    minimumResultsForSearch: Infinity
+                });
+            });
+        } else {
+            receiverSelect.select2({
+                placeholder: "Veuillez sélectionner une cible d'abord",
+                minimumResultsForSearch: Infinity
             });
         }
     });
