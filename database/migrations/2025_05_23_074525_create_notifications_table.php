@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('message');
             $table->enum('type', ['sms', 'email', 'whatsapp', 'in_app']);
             $table->json('receivers');
-            $table->enum('target_group', ['students', 'teachers', 'staff', 'all']);
+            $table->enum('target_group', ['eleve', 'enseignant', 'personnel', 'all']);
             $table->boolean('is_mass')->default(false);
             $table->timestamp('read_at')->nullable();
             $table->timestamp('sent_at')->nullable();

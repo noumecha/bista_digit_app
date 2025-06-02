@@ -6,6 +6,7 @@ use App\Models\Classe;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;
+use App\Services\OrangeSMSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -28,7 +29,6 @@ class NotificationController extends Controller
             'type.required' => 'Selectionnez un type de notification',
             'target_group.required' => 'Selectionnez le groupe cible'
         ]);
-        dd($request);
         try {
             $notification = Notification::create([
                 'title' => $request->title,
@@ -89,12 +89,14 @@ class NotificationController extends Controller
         }
         // Mise à jour de status si besoin (pour tracking plus tard)
     }
+
     /**
      * send sms
      */
     private function sendSMS($phone, $message)
     {
-        // API SMS Gateway ici (ex: Twilio, Orange, etc.)
+        $orangeService = app(OrangeSMSService::class);
+        return $orangeService->sendSMS($phone, $message);
     }
     /**
      * send whatsapp

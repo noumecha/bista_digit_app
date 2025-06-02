@@ -31,4 +31,18 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    # orange api config
+    'orange' => [
+        'client_id' => env('ORANGE_CLIENT_ID'),
+        'client_secret' => env('ORANGE_CLIENT_SECRET'),
+        'auth_header' => env('ORANGE_AUTH_HEADER'),
+    ],
+
+    # twilio for whatsapp message
+    /*'twilio' => [
+        'sid' => env('TWILIO_SID'),
+        'token' => env('TWILIO_TOKEN'),
+        'whatsapp_from' => env('TWILIO_WHATSAPP_FROM'),
+    ],*/
+
 ];
