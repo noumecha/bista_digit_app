@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\GenericNotificationMail;
 use App\Models\Classe;
 use App\Models\Notification;
 use App\Models\User;
@@ -40,10 +41,12 @@ class NotificationController extends Controller
                 'is_mass' => $request->has('send_to_all'),
                 'sent_at' => now(),
             ]);
-            $this->dispatchNotification($notification);
-            return response()->json(['success' => 'Notification envoyée']);
+            $result = $this->dispatchNotification($notification);
+            return response()->json([
+                $result["type"] => $result["message"]
+            ]);
         } catch (\Throwable $th) {
-            return response()->json(['error' => 'Erreur lors de l\'envoi '.$th->getMessage()]);
+            return response()->json(['error' => 'Erreur lors de la sauvegarde : '.$th->getMessage()]);
         }
     }
     /**
@@ -78,16 +81,38 @@ class NotificationController extends Controller
                         $notification->title, $notification->message
                     )
                 ),
-                'email' => Mail::to($user->email)->send(
-                    new \App\Mail\GenericNotificationMail(
-                        $notification->title, $notification->message
-                    )
-                ),
+                'email' => $this->sendEmailNotification($user, $notification),
                 'sms' => $this->sendSMS($user->phone, $notification->message),
                 'whatsapp' => $this->sendWhatsApp($user->phone, $notification->message),
             };
         }
         // Mise à jour de status si besoin (pour tracking plus tard)
+    }
+    /**
+     * send mail
+     */
+    private function sendEmailNotification(User $user, Notification $notification) {
+        try {
+            Mail::to($user->email)->send(
+                new GenericNotificationMail(
+                    $notification->title,
+                    $notification->message
+                )
+            );
+            Notification::find($notification->id)->update([
+                'status' => 'envoyé',
+                'sent_at' => now()
+            ]);
+            return [
+                "type" => "success",
+                "message" => "Email(s) envoyé(s) avec succès!"
+            ];
+        } catch (\Exception $ex) {
+            return [
+                "type" => "error",
+                "message" => "Erreur lors de l'envoi du mail : ".$ex->getMessage()
+            ];
+        }
     }
 
     /**
@@ -177,14 +202,11 @@ class NotificationController extends Controller
     public function destroy($id) {
         try {
             $notification = Notification::findOrFail($id);
-            if($notification->delete()) {
-                return response()->json([
-                    'success' => 'Notification suprimée avec succès!'
-                ]);
-            }
-        } catch (\Throwable $th) {
+            $notification->delete();
+            return redirect()->route('notification.create')->with('deleteSuccess', 'Notification suprimée avec succès!');
+        } catch (\Exception $ex) {
             return response()->json([
-                'error' => 'Erreur lors de la supressio : '.$th->getMessage()
+                'error' => 'Erreur lors de la supression : '.$ex->getMessage()
             ]);
         }
     }

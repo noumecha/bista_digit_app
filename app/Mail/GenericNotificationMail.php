@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,12 +12,16 @@ class GenericNotificationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $title;
+    public $message;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(string $title, string $message)
     {
-        //
+        $this->title = $title;
+        $this->message = $message;
     }
 
     /**
@@ -27,7 +30,7 @@ class GenericNotificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Generic Notification Mail',
+            subject: $this->title,
         );
     }
 
@@ -37,14 +40,16 @@ class GenericNotificationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.notification',
+            with: [
+                'title' => $this->title,
+                'content' => $this->message,
+            ],
         );
     }
 
     /**
      * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
     public function attachments(): array
     {

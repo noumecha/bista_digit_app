@@ -39,9 +39,9 @@
                                     <div class="form-group mt-3">
                                         <select name="typeFilter" id="typeFilter" class="form-select">
                                             <option value="">Filtrer par type</option>
-                                            <option value="sms">SMS</option>
+                                            <option disabled value="sms">SMS</option>
                                             <option value="email">Email</option>
-                                            <option value="whatsapp">WhatsApp</option>
+                                            <option disabled value="whatsapp">WhatsApp</option>
                                             <option value="in_app">Notification simple</option>
                                         </select>
                                     </div>
@@ -120,9 +120,9 @@
                                     </label>
                                     <select name="type" id="type" class="form-select">
                                         <option value="">Choisir le type</option>
-                                        <option value="sms">SMS</option>
+                                        <option disabled value="sms">SMS</option>
                                         <option value="email">Email</option>
-                                        <option value="whatsapp">WhatsApp</option>
+                                        <option disabled value="whatsapp">WhatsApp</option>
                                         <option value="in_app">Notification simple</option>
                                     </select>
                                 </div>
