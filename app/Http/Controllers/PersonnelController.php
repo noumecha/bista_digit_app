@@ -132,6 +132,7 @@ class PersonnelController extends Controller
             'numCni' => $request->numCni,
             'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'personnel',
+            'role' => 'user',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
             'create_year_id' => $request->active_year_id,

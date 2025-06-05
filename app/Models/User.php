@@ -284,9 +284,28 @@ class User extends Authenticatable
     /**
      * to show notifications to the user
      */
-    public function unreadNotifications()
-    {
+    public function unreadNotifications() {
         return $this->notifications()->whereNull('read_at')->get();
     }
+
+    /**
+     * Manage roles
+     */
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
+
+    public function isTeacher() {
+        return $this->typeUser === 'enseignant';
+    }
+
+    public function isStudent() {
+        return $this->typeUser === 'eleve';
+    }
+
+    public function isDisciplineMaster() {
+        return $this->role === 'discipline_master';
+    }
+
 
 }

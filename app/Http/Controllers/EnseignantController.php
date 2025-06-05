@@ -106,6 +106,7 @@ class EnseignantController extends Controller
             'numCni' => $request->numCni,
             'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'enseignant',
+            'role' => 'user',
             'password' => Hash::make($request->password),
             'sex' => $request->sex,
             'create_year_id' => $request->active_year_id,

@@ -130,6 +130,7 @@ class EleveController extends Controller
             'create_year_id' => $request->active_year_id,
             'profile' => $request->hasFile('profile') ? $request->file('profile')->store('profiles', 'public') : 'profiles/default/default-avatar.png',
             'typeUser' => 'eleve',
+            'role' => 'user',
             'password' => Hash::make($request->password),
             'statutRedoublance' => $request->statutRedoublance === null ? 0 : 1,
             'sex' => $request->sex,
