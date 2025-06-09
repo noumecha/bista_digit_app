@@ -31,7 +31,9 @@ class NoteController extends Controller
         $user = User::find(Auth::id());
         $activeYear = AnneeScolaire::all()->where('statut',true)->first();
         // datas
-        $remplissages = Remplissage::all()->where('statut','=','en cours');
+        $evaluationsId = Evaluation::where('type','normal-evaluation')->pluck('id');
+        $remplissages = Remplissage::all()->whereIn('evaluation_id', $evaluationsId)
+            ->where('statut','=','en cours');
         // getting classes base on the teacher teaching :
         if($user->typeUser === 'enseignant') {
             $ensMatYearIds = EnsMatAnneeScolaire::where('annee_scolaire_id', $activeYear->id)
@@ -40,7 +42,8 @@ class NoteController extends Controller
                 ->whereIn('id',$ensMatYearIds)->pluck('id');
             $enseignantClassesIds = Enseignement::whereIn('enseignant_matiere_id', $enseignantMatiereIds)
                 ->pluck('classe_id');
-            $classes = Classe::whereIn('classe_id', $enseignantClassesIds);
+            $classes = Classe::all()->whereIn('id', $enseignantClassesIds);
+            //dd($classes);
         } else {
             $classes = Classe::all();
         }

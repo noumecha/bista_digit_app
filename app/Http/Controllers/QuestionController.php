@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classe;
 use App\Models\Devoir;
+use App\Models\Matiere;
 use App\Models\Question;
 use App\Models\Reponse;
 use App\Models\User;
@@ -19,13 +21,20 @@ class QuestionController extends Controller
         // utils vars
         $user = User::find(Auth::id());
         // query vars :
-        $devoirs = Devoir::all();
-
+        $user->typeUser === "enseignant" ?
+            $teacherMatsIds = $user->teacherMatieres(getCurrentYear()->id)->pluck('id')
+            : $teacherMatsIds = Matiere::all()->pluck('id'); #filter by teacher matiere ids
+        $user->typeUser === "enseignant" ?
+            $teacherClassesIds = $user->teacherClasses(getCurrentYear()->id)->pluck('id')
+            : $teacherClassesIds = Classe::all()->pluck('id'); #filter by teacher classe ids
+        $devoirs = Devoir::all()->whereIn('matiere_id', $teacherMatsIds)
+        ->whereIn('classe_id', $teacherClassesIds);
         // filter vars :
         $searchQuestion = $request->input('searchQuestion');
         $devoirFilter = $request->input('devoirFilter');
         // querying :
-        $query = Question::query();
+        $devoirsIds = $devoirs->pluck('id'); #for filtering questions
+        $query = Question::query()->whereIn('devoir_id', $devoirsIds);
 
         // filtering :
         if(!empty($searchQuestion)) {

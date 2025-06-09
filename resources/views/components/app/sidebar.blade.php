@@ -80,6 +80,12 @@
                         <span class="nav-link-text ms-1">Elèves</span>
                     </a>
                 </li>
+                <li data-submenu="utilisateurs" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('utilisateur.roles') ? 'active' : '' }}"
+                        href="{{ route('utilisateur.roles') }}">
+                        <span class="nav-link-text ms-1">Rôles</span>
+                    </a>
+                </li>
             </ul>
             @endcan
             <!-- Education on Dashboard -->
@@ -381,12 +387,14 @@
             </ul>
             <!-- Clubs -->
             <ul class="navbar-nav submenu">
+                @can('access-student')
                 <li data-submenu="clubs" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-kaaba"></i>
                         <span class="font-weight-normal text-md ml-n5">Clubs</span>
                     </div>
                 </li>
+                @endcan
                 @can('access-admin')
                 <li data-submenu="clubs" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('clubs.index') ? 'active' : '' }}"
@@ -395,6 +403,7 @@
                     </a>
                 </li>
                 @endcan
+                @can('access-student')
                 <li data-submenu="clubs" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('actualites.index') ? 'active' : '' }}"
                         href="{{ route('actualites.index') }}">
@@ -407,6 +416,7 @@
                         <span class="nav-link-text ms-1">Configuration</span>
                     </a>
                 </li>
+                @endcan
             </ul>
             <!-- App configuration menu -->
             @can('access-admin')

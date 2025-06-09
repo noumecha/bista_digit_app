@@ -137,14 +137,19 @@ class PersonnelController extends Controller
             'sex' => $request->sex,
             'create_year_id' => $request->active_year_id,
         ]);
-
+        // update user role if the fonction is surveillant générale
+        $fonction = Fonction::findOrFail($request->fonction_id);
+        if($fonction->libelleFonction === "Surveillant Général") {
+            $personnel->update([
+                'role' => 'surveillant'
+            ]);
+        }
         // relation between user - fonction - school year
         $fonctionAnneeScolaireUser = FonctionAnneeScolaireUser::create([
             'user_id' => $personnel->id,
             'fonction_id' => $request->fonction_id,
             'annee_scolaire_id' => $request->active_year_id,
         ]);
-
         // add the user to the current school year
         $userAnneeScolaire = UserAnneeScolaire::create([
             'user_id' => $personnel->id,
@@ -215,7 +220,6 @@ class PersonnelController extends Controller
             'fonction_id.required' => 'Choisisssez la fonction',
             'password.min' => 'Le mot de passe doit contenir minimum 8 caractères',
         ]);
-
         $personnel = User::findOrFail($id);
         $currentUserFonction = FonctionAnneeScolaireUser::where('user_id', '=', $id)
         ->where('annee_scolaire_id', '=', $request->active_year_id)->first();
@@ -224,14 +228,12 @@ class PersonnelController extends Controller
             if($currentUserFonction) {
                 $currentUserFonction->delete();
             }
-
             FonctionAnneeScolaireUser::create([
                 'user_id' => $id,
                 'fonction_id' => $request->fonction_id,
                 'annee_scolaire_id' => $request->active_year_id,
             ]);
         }
-
         if($request->hasFile('profile')) {
             $imagePath = $request->file('profile')->store('profiles', 'public');
             if ($personnel->profile) {
@@ -239,7 +241,13 @@ class PersonnelController extends Controller
             }
             $personnel->profile = $imagePath;
         }
-
+        // update user role if the fonction is surveillant générale
+        $fonction = Fonction::findOrFail($request->fonction_id);
+        if($fonction->libelleFonction === "Surveillant Général") {
+            $personnel->update([
+                'role' => 'surveillant'
+            ]);
+        }
         $personnel->update($request->except('profile'));
 
         return response()->json(['success' => 'Informations du personnel mis à jour avec succès']);

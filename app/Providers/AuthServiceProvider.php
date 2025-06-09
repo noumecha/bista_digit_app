@@ -24,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('access-student', fn($user) =>
-            in_array($user->typeUser, ['eleve', 'enseignant']) || $user->isAdmin()
+            $user->isStudent() || $user->isAdmin()
         );
 
         Gate::define('access-teacher', fn($user) =>

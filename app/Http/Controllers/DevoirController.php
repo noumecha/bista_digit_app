@@ -22,8 +22,10 @@ class DevoirController extends Controller
         // utils vars
         $teacher = User::find(Auth::id());
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
-        $teacher->typeUser === "enseignant" ? $matieres = $teacher->matieres : $matieres = Matiere::all();
-        $teacher->typeUser === "enseignant" ? $classes = $teacher->teacherClasses($activeYear) : $classes = Classe::all();
+        $teacher->typeUser === "enseignant" ?
+            $matieres = $teacher->teacherMatieres($activeYear->id) : $matieres = Matiere::all();
+        $teacher->typeUser === "enseignant" ?
+            $classes = $teacher->teacherClasses($activeYear->id) : $classes = Classe::all();
         // query vars :
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $devoirSchoolYears = DevoirAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
@@ -34,8 +36,16 @@ class DevoirController extends Controller
         $classeFilter = $request->input('classeFilter');
         $matiereFilter = $request->input('matiereFilter');
         // querying :
+        $teacher->typeUser === "enseignant" ?
+            $teacherMatsIds = $teacher->teacherMatieres($activeYear->id)->pluck('id')
+            : $teacherMatsIds = Matiere::all()->pluck('id'); #filter by teacher matiere ids
+        $teacher->typeUser === "enseignant" ?
+            $teacherClassesIds = $teacher->teacherClasses($activeYear->id)->pluck('id')
+            : $teacherClassesIds = Classe::all()->pluck('id'); #filter by teacher classe ids
         if(isset($devoirSchoolYears)) {
-            $query = Devoir::query()->whereIn('id', $devoirSchoolYearsIds);
+            $query = Devoir::query()->whereIn('id', $devoirSchoolYearsIds)
+            ->whereIn('matiere_id', $teacherMatsIds)
+            ->whereIn('classe_id', $teacherClassesIds);
         }
         // filtering :
         if(!empty($searchDevoir)) {

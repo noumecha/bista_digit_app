@@ -13,7 +13,6 @@ use App\Models\Classe;
 use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Coefficient;
 use App\Models\Evaluation;
-use App\Models\Matiere;
 use App\Models\Remplissage;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,7 +28,9 @@ class BoosterNoteController extends Controller
     public function index(Request $request) {
         $user = User::find(Auth::id());
         // datas
-        $remplissages = Remplissage::all()->where('statut','en cours');
+        $evaluationsId = Evaluation::where('type','booster-evaluation')->pluck('id');
+        $remplissages = Remplissage::all()->whereIn('evaluation_id', $evaluationsId)
+            ->where('statut','en cours');
         // getting classes base on the teacher teaching :
         if($user->typeUser === 'enseignant') {
             $boosterClassesIds = BoosterTeacher::where('user_id',$user->id)->pluck('classe_id');
@@ -38,7 +39,7 @@ class BoosterNoteController extends Controller
                 ->where('annee_scolaire_id', getCurrentYear()->id)
                 ->whereIn('user_id', $boosterStudentIds)
                 ->pluck('classe_id');
-            $classes = Classe::whereIn('id', $boosterClassesIds)->whereIn('id', $studentsYearClasseIds);
+            $classes = Classe::all()->whereIn('id', $boosterClassesIds)->whereIn('id', $studentsYearClasseIds);
         } else {
             $boosterClassesIds = BoosterClasse::all()->pluck('classe_id');
             $boosterStudentIds = BoosterStudent::all()->pluck('user_id');

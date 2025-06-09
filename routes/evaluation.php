@@ -13,12 +13,13 @@ Route::middleware(['can:access-teacher'])->group(function () {
     Route::post('/evaluation/note/save', [NoteController::class, 'store'])->name('evaluation.noteStore')->middleware('auth');
     Route::put('/evaluation/note/update/{id}', [NoteController::class, 'update'])->name('evaluation.noteUpdate')->middleware('auth');
     Route::delete('/evaluation/notes/delete/{id}', [NoteController::class, 'destroy'])->name('evaluation.notesDestroy')->middleware('auth');
+    // filter matieres by classId
+    Route::get('/evaluation/notes/matieres/{classId}', [NoteController::class, 'getMatieres'])->middleware('auth');
 });
 
 Route::middleware(['can:access-admin'])->group(function () {
     Route::get('/evaluation/notes/controles', [NoteController::class, 'remplissageTrace'])->name('evaluation.notes_controles')->middleware('auth');
     Route::get('/evaluation/notes/modifications', [NoteController::class, 'noteHistories'])->name('evaluation.notes_modifications')->middleware('auth');
-    Route::get('/evaluation/notes/matieres/{classId}', [NoteController::class, 'getMatieres'])->middleware('auth');
     # evaluation - bulleting routes
     Route::get('/bulletins', function () {
         return redirect('/bulletins/list');

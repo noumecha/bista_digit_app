@@ -238,17 +238,28 @@ class User extends Authenticatable
     }
 
     /**
+     * teachers matieres
+     */
+    public function teacherMatieres($activeYearId) {
+        $ensMatsYearIds = EnsMatAnneeScolaire::all()->where('annee_scolaire_id', $activeYearId)
+            ->pluck('enseignant_matiere_models_id');
+        $ensMatsIds = EnseignantMatiereModel::all()
+            ->where('user_id', $this->id)->whereIn('id', $ensMatsYearIds)->pluck('matiere_id');
+        $matieres = Matiere::all()->whereIn('id', $ensMatsIds);
+        return $matieres;
+    }
+
+    /**
      * teachers classes
      */
     public function teacherClasses($activeYearId) {
         $enseignantMatieres = EnseignantMatiereModel::all()
-            ->where('enseignant_id', $this->id)->pluck('enseignant_id');
-        $ensMatYearIds = EnseignementAnneeScolaire::all()->where('annee_scolaire_id', $activeYearId)
-            ->whereIn('enseignat_id', $enseignantMatieres)->pluck('enseignant_matiere_id');
-        $enseignantClassesIds = Enseignement::all()->whereIn('enseignant_matiere_id',$ensMatYearIds)
-            ->pluck('classe_id');
+            ->where('user_id', $this->id)->pluck('id');
+        $enseignementIds = EnseignementAnneeScolaire::all()->where('annee_scolaire_id', $activeYearId)
+            ->pluck('enseignement_id');
+        $enseignantClassesIds = Enseignement::all()->whereIn('enseignant_matiere_id',$enseignantMatieres)
+            ->whereIn('id', $enseignementIds)->pluck('classe_id');
         $classes = Classe::all()->whereIn('id', $enseignantClassesIds);
-
         return $classes;
     }
 
@@ -304,7 +315,7 @@ class User extends Authenticatable
     }
 
     public function isDisciplineMaster() {
-        return $this->role === 'discipline_master';
+        return $this->role === 'surveillant';
     }
 
 

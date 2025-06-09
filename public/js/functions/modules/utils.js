@@ -178,7 +178,6 @@ function fillInputForm(res, form) {
     }
 }
 
-
 // paginate throw different tables lists
 function fetchPage(page, tableId) {
     $.ajax({

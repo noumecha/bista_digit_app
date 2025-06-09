@@ -14,7 +14,14 @@ class Devoir extends Model
     /**
      * @var array
      */
-    protected $fillable = ['titre_devoir','description_devoir','user_id','matiere_id','annee_scolaire_id','classe_id'];
+    protected $fillable = [
+        'titre_devoir',
+        'description_devoir',
+        'user_id',
+        'matiere_id',
+        'annee_scolaire_id',
+        'classe_id'
+    ];
 
     /**
      * Un devoir correspond à une année scolaire

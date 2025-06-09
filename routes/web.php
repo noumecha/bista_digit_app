@@ -22,6 +22,7 @@ use App\Http\Controllers\IamLeaderController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PersonnelController;
 use App\Http\Controllers\ProgrammeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\SpecialiteController;
 use Illuminate\Support\Facades\Artisan;
@@ -202,6 +203,13 @@ Route::middleware(['can:access-admin'])->group(function () {
     Route::get('/utilisateur/student/{id}/edit/{yearId}', [EleveController::class, 'edit'])->name('student.edit')->middleware('auth');
     Route::post('/utilisateur/student/migrate', [EleveController::class, 'migrate'])->name('student.studentMigrate')->middleware('auth');
     Route::post('/utilisateur/student/delete-user-in-year', [EleveController::class, 'deleteUserCurrentYear'])->name('student.studentDeleteUserCurrentYear')->middleware('auth');
+
+    ## users -> roles routes
+    Route::get('/utilisateur/roles', [RoleController::class, 'index'])->name('utilisateur.roles')->middleware('auth');
+    Route::post('/utilisateur/role/save', [RoleController::class, 'store'])->name('utilisateur.roleStore')->middleware('auth');
+    Route::put('/utilisateur/role/update/{id}', [RoleController::class, 'update'])->name('utilisateur.roleUpdate')->middleware('auth');
+    Route::get('/utilisateur/roles/{id}/edit', [RoleController::class, 'edit'])->name('utilisateur.roleEdit')->middleware('auth');
+    Route::delete('/utilisateur/roles/{id}', [RoleController::class, 'destroy'])->name('utilisateur.roleDestroy')->middleware('auth');
 
     ## users -> fonctions routes
     Route::get('/utilisateur/fonctions', [FonctionController::class, 'index'])->name('utilisateur.fonctions')->middleware('auth');
