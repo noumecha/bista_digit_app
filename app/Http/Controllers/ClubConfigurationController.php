@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Club;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,12 @@ class ClubConfigurationController extends Controller
      * when the presient of the club is connected
      */
     public function index() {
-        # $clubconfiguration = Club::all()->where('president_id',Auth::id());
-        $clubconfiguration = Club::all()->last();
+        $user = User::findOrFail(Auth::id());
+        if ($user->typeUser === 'eleve') {
+            $clubconfiguration = Club::where('president_id',Auth::id())->first();
+        } else {
+            $clubconfiguration = Club::all()->last();
+        }
         return view('configurations.club_configuration', compact('clubconfiguration'));
     }
 

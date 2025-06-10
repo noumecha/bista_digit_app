@@ -7,8 +7,8 @@
         <title>Document</title>
     </head>
     <body>
-        page non trouvé !
-        contactez l'administrateur !
-        <a href="{{ route('home.index') }}">retour à l'acceuil</a>
+        Vous n'avez pas l'autorisation requise pour accéder à cette page !
+        contacter l'administrateur
+        <a href="{{ route('dashboard') }}">retour sur le dashboard</a>
     </body>
 </html>

@@ -1,8 +1,20 @@
 $(function(){
-
+    // on change durree - update date fin
+    $('#duree, #date_debut').on('input', function() {
+        updateEndDate($('#date_debut'), $('#duree'), true, $('#date_fin'));
+    })
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-devoir-modal"]', function(e) {
         e.preventDefault();
+        // filtering devoir dates base on the current year
+        $.get('devoirs/yeardates', function(data) {
+            var startDate = new Date(data.dateDeDebutYear);
+            var endDate = new Date(data.dateDeFinYear);
+            $('#date_debut').attr('min', formatDate(startDate));
+            $('#date_debut').attr('max', formatDate(endDate));
+            $('#date_fin').attr('min', formatDate(startDate));
+            $('#date_fin').attr('max', formatDate(endDate));
+        });
         // setting up variables
         var action = $(this).data('action');
         var devoirId = $(this).data('devoir-id');
@@ -112,7 +124,7 @@ $(function(){
     });
 
     // fetching devoirs dynamically with filters
-    $('#searchDevoir,#classeFilter,#matiereFilter').on('change keyup', function () {
+    $('#searchDevoir,#classeFilter,#matiereFilter,#statutFilter').on('change keyup', function () {
         fetchDevoirs();
     });
 

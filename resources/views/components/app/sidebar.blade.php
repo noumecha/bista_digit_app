@@ -153,19 +153,34 @@
                         <span class="nav-link-text ms-1">Questions</span>
                     </a>
                 </li>
-                @endcan
                 <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.discipline') ? 'active' : '' }}"
-                        href="{{ route('education.discipline') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('devoir.traces') ? 'active' : '' }}"
+                        href="{{ route('devoir.traces') }}">
                         <span class="nav-link-text ms-1">Contrôles des devoirs</span>
                     </a>
                 </li>
+                @endcan
+                @can('access-student-devoir')
                 <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.discipline') ? 'active' : '' }}"
-                        href="{{ route('education.discipline') }}">
-                        <span class="nav-link-text ms-1">Mes devoirs</span>
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('devoir.student') ? 'active' : '' }}"
+                        href="{{ route('devoir.student') }}">
+                        <span class="nav-link-text ms-1">Devoirs</span>
                     </a>
                 </li>
+                <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('devoir.student') ? 'active' : '' }}"
+                        href="{{ route('devoir.student') }}">
+                        <span class="nav-link-text ms-1">Devoirs terminés</span>
+                    </a>
+                </li>
+                <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('devoir.student') ? 'active' : '' }}"
+                        href="{{ route('devoir.student') }}">
+                        <span class="nav-link-text ms-1">Etat disciplinaire</span>
+                    </a>
+                </li>
+                @endcan
+                @can('access-discipline')
                 <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.discipline') ? 'active' : '' }}"
                         href="{{ route('education.discipline') }}">
@@ -178,6 +193,7 @@
                         <span class="nav-link-text ms-1">Conseils de discipline</span>
                     </a>
                 </li>
+                @endcan
             </ul>
             <!-- Evaluation on Dashboard -->
             <ul class="navbar-nav submenu">
@@ -227,6 +243,14 @@
                     </a>
                 </li>
                 @endcan
+                @can('access-student')
+                <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.notes') ? 'active' : '' }}"
+                        href="{{ route('evaluation.notes') }}">
+                        <span class="nav-link-text ms-1">Mes notes</span>
+                    </a>
+                </li>
+                @endcan
             </ul>
             <!-- Bulletins on Dashboard -->
             @can('access-admin')
@@ -247,12 +271,14 @@
             @endcan
             <!-- Epreuve on Dashboard -->
             <ul class="navbar-nav submenu">
+                @can('access-teacher')
                 <li data-submenu="epreuves" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-book-open"></i>
                         <span class="font-weight-normal text-md ml-n5">Epreuves</span>
                     </div>
                 </li>
+                @endcan
                 @can('access-admin')
                 <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.type_epreuves') ? 'active' : '' }}"
@@ -320,6 +346,14 @@
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.notes') ? 'active' : '' }}"
                         href="{{ route('booster.notes') }}">
                         <span class="nav-link-text ms-1">Notes</span>
+                    </a>
+                </li>
+                @endcan
+                @can('access-student-devoir')
+                <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.notes') ? 'active' : '' }}"
+                        href="{{ route('booster.notes') }}">
+                        <span class="nav-link-text ms-1">Mes notes</span>
                     </a>
                 </li>
                 @endcan
@@ -403,13 +437,15 @@
                     </a>
                 </li>
                 @endcan
-                @can('access-student')
+                @can('access-actus')
                 <li data-submenu="clubs" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('actualites.index') ? 'active' : '' }}"
                         href="{{ route('actualites.index') }}">
                         <span class="nav-link-text ms-1">Articles</span>
                     </a>
                 </li>
+                @endcan
+                @can('access-club')
                 <li data-submenu="clubs" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('club_configuration.index') ? 'active' : '' }}"
                         href="{{ route('club_configuration.index') }}">

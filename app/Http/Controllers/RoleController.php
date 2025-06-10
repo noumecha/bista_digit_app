@@ -67,15 +67,13 @@ class RoleController extends Controller
     /**
      * updating fonction
      */
-    public function update(Request $request) {
+    public function update(Request $request, $id) {
         $request->validate([
             'role' => 'required|in:admin,user,surveillant',
-            'user_id' => 'required',
         ], [
             'role.required' => 'Selectionnez un rôle',
-            'user_id.required' => 'Selectionnez un utilisateur',
         ]);
-        $user = User::findOrFail($request->user_id);
+        $user = User::findOrFail($id);
         $user->update([
             'role' => $request->role
         ]);

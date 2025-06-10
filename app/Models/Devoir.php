@@ -20,7 +20,10 @@ class Devoir extends Model
         'user_id',
         'matiere_id',
         'annee_scolaire_id',
-        'classe_id'
+        'classe_id',
+        'dateDeDebut',
+        'dateDeFin',
+        'statut'
     ];
 
     /**
@@ -54,6 +57,13 @@ class Devoir extends Model
     public function classe(): BelongsTo
     {
         return $this->belongsTo(Classe::class, 'classe_id');
+    }
+
+    /**
+     * Un devoir appartient à un résultat
+     */
+    public function results() {
+        return $this->hasMany(DevoirResult::class);
     }
 
     /**

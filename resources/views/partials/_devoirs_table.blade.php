@@ -4,9 +4,6 @@
         <tr>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                ID</th>
-            <th
-                class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Titre</th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -15,6 +12,10 @@
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Classe
+            </th>
+            <th
+                class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                Statut
             </th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -35,9 +36,6 @@
             @foreach ($devoirs as $devoir)
                 <tr>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $devoir->id }}
-                    </td>
-                    <td class="align-middle bg-transparent border-bottom">
                         {{ $devoir->titre_devoir }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
@@ -45,6 +43,12 @@
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $devoir->classe->libClasse }}
+                    </td>
+                    <td
+                        class="countdown-timer align-middle bg-transparent border-bottom"
+                        data-start-date="{{ $devoir->dateDeDebut }}"
+                        data-end-date="{{ $devoir->dateDeFin }}"
+                    >
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $devoir->enseignant->name }}

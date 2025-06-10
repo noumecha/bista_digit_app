@@ -282,7 +282,7 @@ class User extends Authenticatable
      * check if a user is a president of some club
      */
     public function isClubPresident() {
-        return $this->clubs()->where('president_id', $this->id)->exists();
+        return $this->club()->where('president_id', $this->id)->exists();
     }
 
     /**
@@ -318,5 +318,10 @@ class User extends Authenticatable
         return $this->role === 'surveillant';
     }
 
-
+    /**
+     * A user have devoir result
+     */
+    public function devoirResults() {
+        return $this->hasMany(DevoirResult::class);
+    }
 }

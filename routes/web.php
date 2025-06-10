@@ -60,7 +60,7 @@ Route::get('/admin', function () { return redirect('/dashboard');})->middleware(
 Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard')->middleware('auth');
 
 # configuration routes - club configuration
-Route::middleware(['can:access-student'])->group(function () {
+Route::middleware(['can:access-club'])->group(function () {
     Route::get('/configurations/club_configuration', [ClubConfigurationController::class, 'index'])->name('club_configuration.index')->middleware('auth');
     Route::get('/configurations/club_configuration/{id}/edit', [ClubConfigurationController::class, 'edit'])->name('club_configuration.edit')->middleware('auth');
     Route::post('/configurations/club_configuration/{action}', [ClubConfigurationController::class, 'update'])->name('club_configuration.update')->middleware('auth');
@@ -86,6 +86,15 @@ Route::middleware(['can:access-teacher'])->group(function () {
     Route::get('/programme/booster/notes/matieres/{classId}', [BoosterNoteController::class, 'getBoosterMatieres'])->middleware('auth');
 });
 
+Route::middleware(['can:access-actus'])->group(function () {
+    // Actualites CRUD Routes :
+    Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
+    Route::post('/actualites/save', [ActusController::class, 'store'])->name('actualite.store')->middleware('auth');
+    Route::put('/actualites/update/{id}', [ActusController::class, 'update'])->name('actualite.update')->middleware('auth');
+    Route::get('/actualites/{id}/edit', [ActusController::class, 'edit'])->name('actualite.edit')->middleware('auth');
+    Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
+});
+
 Route::middleware(['can:access-admin'])->group(function () {
     // notifications routes :
     Route::get('/notifications/view/{id}', [NotificationController::class, 'view'])->name('notification.view')->middleware('auth');
@@ -94,13 +103,6 @@ Route::middleware(['can:access-admin'])->group(function () {
     Route::post('/notifications/save', [NotificationController::class, 'store'])->name('notification.send')->middleware('auth');
     Route::delete('/notifications/delete/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy')->middleware('auth');
     Route::get('/notifications/users/{type}', [NotificationController::class, 'getUsers'])->name('notification.users');
-
-    // Actualites CRUD Routes :
-    Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
-    Route::post('/actualites/save', [ActusController::class, 'store'])->name('actualite.store')->middleware('auth');
-    Route::put('/actualites/update/{id}', [ActusController::class, 'update'])->name('actualite.update')->middleware('auth');
-    Route::get('/actualites/{id}/edit', [ActusController::class, 'edit'])->name('actualite.edit')->middleware('auth');
-    Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
 
     // Categories actualites CRUD Routes :
     Route::get('/categories/actualites', [CategorieActualiteController::class, 'index'])->name('actualites.categories')->middleware('auth');

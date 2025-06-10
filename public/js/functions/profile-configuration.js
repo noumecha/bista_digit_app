@@ -103,7 +103,6 @@ $(function(){
         $('#modal-userconfiguration-header').removeClass('bg-primary bg-success');
         $('#submit-userconfiguration-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-userconfiguration-form-button').children('span#submit-userconfiguration-form-button-text').text('');
-        window.editor.setData('');
     });
 
     // fetching all remplissages :

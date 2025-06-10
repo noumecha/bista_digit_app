@@ -35,10 +35,14 @@ $(function(){
             button.children('span#submit-role-form-button-text').text('Mettre à jour');
             headerText.text('Changer le rôle de l\'utilisateur');
             roleIdInput.val(roleId);
+            $("#user_id").prop('disabled', true);
             $.ajax({
                 url: "roles/"+roleId+"/edit",
                 type: "GET",
                 success: function(res) {
+                    var $newOption = $("<option selected='selected'></option>")
+                    .val(res.user.id).text(res.user.name)
+                    $("#user_id").append($newOption).trigger('change');
                     fillInputForm(res, form);
                 },
                 error: function(xhr) {
@@ -103,6 +107,7 @@ $(function(){
         $('#modal-header').removeClass('bg-primary bg-success');
         $('#submit-role-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-role-form-button').children('span#submit-role-form-button-text').text('');
+        $("#user_id").prop('disabled', false);
     });
 
     // fetching note dynamically throw filters

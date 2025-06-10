@@ -14,7 +14,10 @@ class Question extends Model
     /**
      * @var array
      */
-    protected $fillable = ['devoir_id', 'question'];
+    protected $fillable = [
+        'devoir_id',
+        'question'
+    ];
 
     /**
      * A question belongs to a specific devoir
