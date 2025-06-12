@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AnneeScolaire;
 use App\Models\Classe;
+use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Devoir;
 use App\Models\DevoirAnneeScolaire;
 use App\Models\DevoirAnswer;
@@ -19,16 +20,16 @@ use Illuminate\Validation\Rule;
 class DevoirController extends Controller
 {
     /**
-     *
+     * devoir index
      */
     public function index(Request $request)
     {
         $devs = Devoir::all();
         foreach ($devs as $dev) {
-            $endDate = new DateTime($dev->dateDeDebut);
-            $startDate = new DateTime($dev->dateDeFin);
+            $endDate = new DateTime($dev->date_fin);
+            $startDate = new DateTime($dev->date_debut);
             $currentDate = new DateTime();
-            if ($currentDate >= $endDate && $dev->statut !== 'terminé') {
+            if ($currentDate >= $endDate && $dev->statut !== "terminé") {
                 $dev->update(['statut' => 'terminé']);
             } elseif ($currentDate >= $startDate && $currentDate <= $endDate) {
                 $dev->update(['statut' => 'en cours']);
@@ -39,14 +40,19 @@ class DevoirController extends Controller
         // utils vars
         $teacher = User::find(Auth::id());
         $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
-        $teacher->typeUser === "enseignant" ?
-            $matieres = $teacher->teacherMatieres($activeYear->id) : $matieres = Matiere::all();
-        $teacher->typeUser === "enseignant" ?
-            $classes = $teacher->teacherClasses($activeYear->id) : $classes = Classe::all();
+        if($teacher->typeUser === "enseignant") {
+            $matieres = $teacher->teacherMatieres($activeYear->id);
+            $classes = $teacher->teacherClasses($activeYear->id);
+        } else if ($teacher->typeUser === "eleve") {
+            $matieres = $teacher->studentClasseMatiere($activeYear->id, $teacher->getClasse()->id);
+            $classes = Classe::all()->where('id', $teacher->getClasse()->id);
+        } else {
+            $matieres = Matiere::all();
+            $classes = Classe::all();
+        }
         // query vars :
         $migrateYears = AnneeScolaire::all()->where('created_at', '>', $activeYear->created_at);
         $devoirSchoolYears = DevoirAnneeScolaire::all()->where('annee_scolaire_id','=', $activeYear->id);
-        //dd($devoirSchoolYears);
         $devoirSchoolYearsIds = $devoirSchoolYears->pluck('devoir_id');
         // filter vars :
         $searchDevoir = $request->input('searchDevoir');
@@ -54,12 +60,20 @@ class DevoirController extends Controller
         $matiereFilter = $request->input('matiereFilter');
         $statutFilter = $request->input('statutFilter');
         // querying :
-        $teacher->typeUser === "enseignant" ?
-            $teacherMatsIds = $teacher->teacherMatieres($activeYear->id)->pluck('id')
-            : $teacherMatsIds = Matiere::all()->pluck('id'); #filter by teacher matiere ids
-        $teacher->typeUser === "enseignant" ?
-            $teacherClassesIds = $teacher->teacherClasses($activeYear->id)->pluck('id')
-            : $teacherClassesIds = Classe::all()->pluck('id'); #filter by teacher classe ids
+        if($teacher->typeUser === "enseignant") {
+            #filter by teacher matiere ids
+            $teacherMatsIds = $teacher->teacherMatieres($activeYear->id)->pluck('id');
+            #filter by teacher classe ids
+            $teacherClassesIds = $teacher->teacherClasses($activeYear->id)->pluck('id');
+        } else if ($teacher->typeUser === "eleve") {
+            #filter by student classe matiere ids
+            $teacherMatsIds = $teacher->studentClasseMatiere($activeYear->id, $teacher->getClasse()->id)->pluck('id');
+            #filter by student classe
+            $teacherClassesIds = Classe::all()->where('id', $teacher->getClasse()->id)->pluck('id');
+        } else {
+            $teacherMatsIds = Matiere::all()->pluck('id');
+            $teacherClassesIds = Classe::all()->pluck('id');
+        }
         if(isset($devoirSchoolYears)) {
             $query = Devoir::query()->whereIn('id', $devoirSchoolYearsIds)
             ->whereIn('matiere_id', $teacherMatsIds)
@@ -105,6 +119,7 @@ class DevoirController extends Controller
             'classe_id' => 'required|exists:classes,id',
             'matiere_id' => 'required|exists:matieres,id',
             'active_year_id' => 'required|exists:annee_scolaires,id',
+            'duree' => 'required|numeric|integer',
             'date_debut' => [
                 'required',
                 'date',
@@ -137,6 +152,7 @@ class DevoirController extends Controller
                 },
             ],
         ], [
+            'duree' => 'Veuillez définir la durée du devoir',
             'date_debut.required' => 'Veuillez définir la date debut du devoir',
             'date_fin.required' => 'Veuillez définir la date de fin du devoir',
             'titre_devoir.required' => 'Veuillez entrez un titre pour le devoir',
@@ -147,8 +163,8 @@ class DevoirController extends Controller
             'active_year_id.required' => 'Veuillez selectionnez une année scolaire',
         ]);
 
-        if (isset($request->dateDeDebut) && isset($request->dateDeFin)) {
-            if(new DateTime($request->dateDeFin) <= new DateTime($request->dateDeDebut)) {
+        if (isset($request->date_debut) && isset($request->date_fin)) {
+            if(new DateTime($request->date_fin) <= new DateTime($request->date_debut)) {
                 return response()->json([
                     'error' => 'La date de fin ne doit pas être inférieur ou égale à la date de debut'
                 ]);
@@ -171,9 +187,10 @@ class DevoirController extends Controller
             'classe_id' => $request->classe_id,
             'matiere_id' => $request->matiere_id,
             'user_id' => Auth::id(),
+            'duree' => $request->duree,
             'annee_scolaire_id' => $request->active_year_id,
-            'dateDeDebut' => $request->date_debut,
-            'dateDeFin' => $request->date_fin,
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
             'statut' => $state,
         ]);
 
@@ -220,6 +237,7 @@ class DevoirController extends Controller
             'classe_id' => 'required|exists:classes,id',
             'matiere_id' => 'required|exists:matieres,id',
             'active_year_id' => 'required|exists:annee_scolaires,id',
+            'duree' => 'required|numeric|integer',
             'date_debut' => [
                 'required',
                 'date',
@@ -253,6 +271,7 @@ class DevoirController extends Controller
             ],
         ], [
             'date_debut.required' => 'Veuillez définir la date debut du devoir',
+            'duree' => 'Veuillez définir la durée du devoir',
             'date_fin.required' => 'Veuillez définir la date de fin du devoir',
             'titre_devoir.required' => 'Veuillez entrez un titre pour le devoir',
             'titre_devoir.unique' => 'Ce titre de devoir existe déja',
@@ -264,8 +283,8 @@ class DevoirController extends Controller
             'active_year_id.required' => 'Veuillez selectionnez une année scolaire',
         ]);
 
-        if (isset($request->dateDeDebut) && isset($request->dateDeFin)) {
-            if(new DateTime($request->dateDeFin) <= new DateTime($request->dateDeDebut)) {
+        if (isset($request->date_debut) && isset($request->date_fin)) {
+            if(new DateTime($request->date_fin) <= new DateTime($request->date_debut)) {
                 return response()->json([
                     'error' => 'La date de fin ne doit pas être inférieur ou égale à la date de debut'
                 ]);
@@ -284,9 +303,10 @@ class DevoirController extends Controller
 
         $devoir = Devoir::findOrFail($id);
         $devoir->update([
-            'dateDeDebut' => $request->date_debut,
-            'dateDeFin' => $request->date_fin,
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
             'statut' => $state,
+            'duree' => $request->duree,
             'titre_devoir' => $request->titre_devoir,
             'description_devoir' => $request->content,
             'classe_id' => $request->classe_id,
@@ -351,22 +371,35 @@ class DevoirController extends Controller
     /**
      * treating devoir
      */
-    public function take(Devoir $devoir, $questionNumber = 1) {
-        // Check if devoir is available
-        if (!$devoir->is_published || now() > $devoir->dateDeFin) {
+    public function start(Devoir $devoir, $questionNumber = 1) {
+        if (now() > $devoir->date_fin) {
             return redirect()->back()->with('error', 'Ce devoir n\'est plus disponible');
         }
-
         // Check if student already completed
-        if ($devoir->results()->where('user_id', Auth::id())->exists()) {
+        $result = DevoirResult::firstOrCreate([
+            'devoir_id' => $devoir->id,
+            'user_id' => Auth::id(),
+        ]);
+        $totalQuestions = $devoir->questions()->count();
+        $answeredQuestions = $result->answers()->count();
+        $progress = ($answeredQuestions / $totalQuestions) * 100;
+        // If all questions answered but not marked as completed
+        if ($answeredQuestions >= $totalQuestions && !$result->completed_at) {
+            $result->update(['completed_at' => now()]);
             return redirect()->route('devoirs.results', $devoir);
         }
-
-        $totalQuestions = $devoir->questions()->count();
-        $question = $devoir->questions()->orderBy('id')->skip($questionNumber - 1)->first();
+        // If already completed
+        if ($result->completed_at) {
+            return redirect()->route('devoirs.results', $devoir);
+        }
+        // Get current question
+        $question = $devoir->questions()
+            ->orderBy('id')
+            ->skip($questionNumber - 1)
+            ->firstOrFail();
 
         return view(
-            'eleves.devoir', compact('devoir', 'question', 'questionNumber', 'totalQuestions')
+            'eleves.start', compact('devoir', 'question', 'progress', 'questionNumber', 'totalQuestions')
         );
     }
 
@@ -376,40 +409,45 @@ class DevoirController extends Controller
     public function answer(Request $request, Devoir $devoir) {
         $request->validate([
             'question_id' => 'required|exists:questions,id',
-            'answers' => 'nullable|array',
+            'answers' => 'required|min:1|array',
             'answers.*' => 'exists:reponses,id',
+        ],
+        [
+            'answers.required' => 'Vous devez sélectionner au moins une réponse',
+            'answers.min' => 'Vous devez sélectionner au moins une réponse'
         ]);
-
         // Get or create devoir result
         $result = DevoirResult::firstOrCreate([
             'devoir_id' => $devoir->id,
             'user_id' => Auth::id(),
         ], [
+            'started_at' => now(),
             'score' => 0,
             'total_questions' => $devoir->questions()->count(),
             'percentage' => 0,
         ]);
-
         // Save answer
         $question = Question::find($request->question_id);
         $correctAnswers = $question->reponses()->where('status', 1)->pluck('id')->toArray();
         $selectedAnswers = $request->answers ?? [];
         $isCorrect = empty(array_diff($correctAnswers, $selectedAnswers)) &&
                     empty(array_diff($selectedAnswers, $correctAnswers));
-
         DevoirAnswer::updateOrCreate([
-            'result_id' => $result->id,
+            'devoir_result_id' => $result->id,
             'question_id' => $question->id,
         ], [
             'selected_answers' => $selectedAnswers,
             'is_correct' => $isCorrect,
             'points_earned' => $isCorrect ? $question->points : 0,
         ]);
+        // Check if all questions answered
+        $answeredCount = $result->answers()->count();
+        $totalQuestions = $devoir->questions()->count();
 
-        // Update result if finishing
-        if ($request->finish) {
+        if ($request->finish || $answeredCount >= $totalQuestions) {
             $totalScore = $result->answers()->sum('points_earned');
-            $percentage = ($totalScore / ($devoir->questions()->sum('points'))) * 100;
+            $maxScore = $devoir->questions()->sum('points');
+            $percentage = $maxScore > 0 ? ($totalScore / $maxScore) * 100 : 0;
 
             $result->update([
                 'score' => $totalScore,
@@ -419,15 +457,13 @@ class DevoirController extends Controller
 
             return redirect()->route('devoirs.results', $devoir);
         }
-
         // Go to next question
         $nextQuestionNumber = $devoir->questions()
             ->where('id', '>', $question->id)
             ->orderBy('id')
             ->first()
-            ?->getQuestionNumber(); // You'd need to implement this method
-
-        return redirect()->route('devoirs.take', [
+            ?->getQuestionNumber();
+        return redirect()->route('devoirs.start', [
             'devoir' => $devoir,
             'questionNumber' => $nextQuestionNumber ?? 1
         ]);
@@ -447,17 +483,33 @@ class DevoirController extends Controller
      * showing individual devoir
      */
     public function teacherShow(Devoir $devoir) {
-        $this->authorize('view', $devoir);
-
-        return view('enseignant.devoir', compact('devoir'));
+        $classeId = $devoir->pluck('classe_id');
+        $userClasseYearIds = ClasseAnneeScolaireStudent::all()
+            ->where('annee_scolaire_id', getCurrentYear()->id)
+            ->whereIn('classe_id', $classeId)->pluck('user_id');
+        $students = User::where('typeUser', 'eleve')->whereIn('id', $userClasseYearIds)->get();
+        $results = DevoirResult::where('devoir_id', $devoir->id)
+            ->with('user')->get()->keyBy('user_id');
+         // Calculate statistics
+        $totalStudents = $students->count();
+        $completedCount = $students->filter(fn($s) =>
+            $s->devoirResults->isNotEmpty() && $s->devoirResults->first()->completed_at
+        )->count();
+        $completionRate = $totalStudents > 0 ? ($completedCount / $totalStudents) * 100 : 0;
+        return view('enseignant.devoir', compact(
+            'devoir',
+            'students',
+            'results',
+            'totalStudents',
+            'completedCount',
+            'completionRate'
+        ));
     }
 
     /**
      * showing devoir result for teacher
      */
     public function teacherResults(Devoir $devoir, DevoirResult $result) {
-        $this->authorize('view', $devoir);
-
         $answers = $result->answers()
             ->with(['question', 'question.reponses'])
             ->get();
@@ -480,13 +532,6 @@ class DevoirController extends Controller
         } else {
             return view('enseignant.controles_devoirs', compact('matieres', 'classes'));
         }
-    }
-
-    /**
-     * students devois
-     */
-    public function studentsDevoirs() {
-        return view('eleves.devoirs');
     }
 
     /**

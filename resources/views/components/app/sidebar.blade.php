@@ -140,13 +140,15 @@
                     </a>
                 </li>
                 @endcan
-                @can('access-teacher')
+                @can('access-devoirs')
                 <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.devoirs') ? 'active' : '' }}"
                         href="{{ route('education.devoirs') }}">
                         <span class="nav-link-text ms-1">Devoirs</span>
                     </a>
                 </li>
+                @endcan
+                @can('access-teacher')
                 <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.questions') ? 'active' : '' }}"
                         href="{{ route('education.questions') }}">
@@ -162,20 +164,8 @@
                 @endcan
                 @can('access-student-devoir')
                 <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('devoir.student') ? 'active' : '' }}"
-                        href="{{ route('devoir.student') }}">
-                        <span class="nav-link-text ms-1">Devoirs</span>
-                    </a>
-                </li>
-                <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('devoir.student') ? 'active' : '' }}"
-                        href="{{ route('devoir.student') }}">
-                        <span class="nav-link-text ms-1">Devoirs terminés</span>
-                    </a>
-                </li>
-                <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('devoir.student') ? 'active' : '' }}"
-                        href="{{ route('devoir.student') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.devoirs') ? 'active' : '' }}"
+                        href="{{ route('education.devoirs') }}">
                         <span class="nav-link-text ms-1">Etat disciplinaire</span>
                     </a>
                 </li>

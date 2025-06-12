@@ -14,14 +14,21 @@
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
                                     <h5 class="">Liste des devoirs créer par les enseignants</h5>
-                                    <p class="text-sm">
-                                        D'ici vous pouvez gérer les devoirs (Ajouter, Supprimer, Mettre à jour ...etc)
-                                    </p>
+                                    @if ($teacher->typeUser === "eleve")
+                                        <p class="text-sm">
+                                            Chosir le devoir à traiter !
+                                        </p>
+                                    @else
+                                        <p class="text-sm">
+                                            D'ici vous pouvez gérer les devoirs (Ajouter, Supprimer, Mettre à jour ...etc)
+                                        </p>
+                                    @endif
                                 </div>
                                 <div class="col-md-12 col-lg-6 text-end">
                                     <button
                                         type="button"
-                                        class="btn btn-lg btn-dark btn-primary text-white"
+                                        class="{{ $teacher->typeUser === "eleve" ? "d-none" : "" }}
+                                            btn btn-lg btn-dark btn-primary text-white"
                                         data-bs-toggle="modal"
                                         data-action="create"
                                         id="add-button"
@@ -32,7 +39,7 @@
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterDevoirForm">
-                                <div class="col-md-6 mb-4">
+                                <div class="{{ $teacher->typeUser === "eleve" ? "col-md-12" : "col-md-6" }} mb-4">
                                     <div class="input-group">
                                         <input type="text" name="searchDevoir" id="searchDevoir" class="form-control" placeholder="Rechercher par titre"/>
                                     </div>
@@ -47,7 +54,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 {{ $teacher->typeUser === "eleve" ? "d-none" : "" }}">
                                     <div class="form-group">
                                         <select name="classeFilter" id="classeFilter" class="form-select">
                                             <option value="">Toutes les classes</option>

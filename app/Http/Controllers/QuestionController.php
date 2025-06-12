@@ -70,6 +70,7 @@ class QuestionController extends Controller
         // validates entries
         $request->validate([
             'content' => 'required',
+            'points' => 'required|numeric|integer',
             'devoir_id' => 'required|exists:devoirs,id',
             'reponses' => 'required|array',
             'reponses.*' => 'required|string',
@@ -84,6 +85,7 @@ class QuestionController extends Controller
             ]
         ], [
             'content.required' => 'Veuillez entrez le contenu de la question',
+            'points.required' => 'Veuillez définir le nombre de points pour cette question',
             'reponses.required' => 'Veuillez ajouter au moins une réponse à la question',
             'devoir_id.required' => 'Veuillez selectionnez le devoir pour la question',
             'status_checkbox.required' => 'Veuillez définir au moins une réponse comme correcte.',
@@ -93,6 +95,7 @@ class QuestionController extends Controller
         $question = Question::create([
             'question' => $request->content,
             'devoir_id' => $request->devoir_id,
+            'points' => $request->points,
         ]);
 
         // adding reponses with her status
@@ -139,6 +142,7 @@ class QuestionController extends Controller
         // make validations
         $request->validate([
             'content' => 'required',
+            'points' => 'required|numeric|integer',
             'devoir_id' => 'required|exists:devoirs,id',
             'reponses' => 'required|array',
             'reponses.*' => 'required|string',
@@ -153,6 +157,7 @@ class QuestionController extends Controller
             ]
         ], [
             'content.required' => 'Veuillez entrez la description de la question',
+            'points.required' => 'Veuillez définir le nombre de points pour cette question',
             'reponses.required' => 'Veuillez ajouter au moins une réponse à la question',
             'devoir_id.required' => 'Veuillez selectionnez le devoir',
             'status_checkbox.required' => 'Veuillez définir au moins une réponse comme correcte.',
@@ -162,6 +167,7 @@ class QuestionController extends Controller
         $question = Question::findOrFail($id);
         $question->update([
             'question' => $request->content,
+            'points' => $request->points,
             'devoir_id' => $request->devoir_id,
         ]);
         // delete old reponses

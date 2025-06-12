@@ -16,7 +16,8 @@ class Question extends Model
      */
     protected $fillable = [
         'devoir_id',
-        'question'
+        'question',
+        'points'
     ];
 
     /**
@@ -33,5 +34,26 @@ class Question extends Model
     public function reponses():HasMany
     {
         return $this->hasMany(Reponse::class);
+    }
+
+    /**
+     * Une question possède plusieurs réponses pour un devoir
+     */
+    public function devoir_answers():HasMany
+    {
+        return $this->hasMany(DevoirAnswer::class);
+    }
+
+    /**
+     * get question number in a devoir
+     */
+    public function getQuestionNumber()
+    {
+        $questionIds = $this->devoir->questions()
+            ->orderBy('id')
+            ->pluck('id')
+            ->toArray();
+        $position = array_search($this->id, $questionIds);
+        return $position !== false ? $position + 1 : 1;
     }
 }

@@ -5,16 +5,8 @@ $(function(){
     })
     // when the modal is opened
     $(document).on('click', '[data-bs-target="#create-devoir-modal"]', function(e) {
+        setDevoirDates();
         e.preventDefault();
-        // filtering devoir dates base on the current year
-        $.get('devoirs/yeardates', function(data) {
-            var startDate = new Date(data.dateDeDebutYear);
-            var endDate = new Date(data.dateDeFinYear);
-            $('#date_debut').attr('min', formatDate(startDate));
-            $('#date_debut').attr('max', formatDate(endDate));
-            $('#date_fin').attr('min', formatDate(startDate));
-            $('#date_fin').attr('max', formatDate(endDate));
-        });
         // setting up variables
         var action = $(this).data('action');
         var devoirId = $(this).data('devoir-id');
@@ -36,17 +28,20 @@ $(function(){
             button.addClass('btn-outline-primary');
             button.children('span#submit-devoir-form-button-text').text('Enregistrer');
             headerText.text('Creer un nouveau devoir (QCM)');
+            $('#date_fin').prop("readOnly", true);
         } else if (action == "edit") {
             header.addClass('bg-success');
             button.addClass('btn-outline-success');
             button.children('span#submit-devoir-form-button-text').text('Mettre à jour');
             headerText.text('Mettre à jour la configuration du devoir');
             devoirIdInput.val(devoirId);
+            $('#date_fin').prop("readOnly", true);
             $.ajax({
                 url: "devoirs/"+devoirId+"/edit/"+yearId,
                 type: "GET",
                 success: function(res) {
                     fillInputForm(res, form);
+                    setDevoirDates();
                 },
                 error: function(xhr) {
                     console.log(xhr);
@@ -121,6 +116,7 @@ $(function(){
         $('#submit-devoir-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-devoir-form-buuton').children('span#submit-devoir-form-button-text').text('');
         window.editor.setData('');
+        $('#date_fin').prop("readOnly", false);
     });
 
     // fetching devoirs dynamically with filters
@@ -140,12 +136,26 @@ $(function(){
             data : formData,
             success : function(data) {
                 $('#devoirsTable').html(data);
+                initializeCountdowns();
             },
             error: function(xhr, status, error) {
                 var datas = Object.entries(xhr.responseJSON.errors);
                 var errors = datas.map(error => error[1][0]);
                 setSuccessMessage(errors, '#modal-form-alert-errors');
             }
+        });
+    }
+
+    // filtering devoir dates base on the current year
+    function setDevoirDates() {
+        $.get('devoirs/yeardates', function(data) {
+            var startDate = new Date(data.dateDeDebutYear);
+            var endDate = new Date(data.dateDeFinYear);
+            console.log(startDate, endDate);
+            $('#date_debut').attr('min', formatDate(startDate));
+            $('#date_debut').attr('max', formatDate(endDate));
+            $('#date_fin').attr('min', formatDate(startDate));
+            $('#date_fin').attr('max', formatDate(endDate));
         });
     }
     // handle pagination :

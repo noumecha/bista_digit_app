@@ -4,10 +4,10 @@
         <tr>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                ID</th>
+                Titre</th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Titre</th>
+                points</th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Devoir
@@ -27,10 +27,10 @@
             @foreach ($questions as $question)
                 <tr>
                     <td class="align-middle bg-transparent border-bottom">
-                        {{ $question->id }}
+                        {!! Str::limit($question->question, $limit=20, $end="...") !!}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
-                        {!! Str::limit($question->question, $limit=20, $end="...") !!}
+                        {{ $question->points }}
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $question->devoir->titre_devoir }}

@@ -46,14 +46,23 @@
                     </td>
                     <td
                         class="countdown-timer align-middle bg-transparent border-bottom"
-                        data-start-date="{{ $devoir->dateDeDebut }}"
-                        data-end-date="{{ $devoir->dateDeFin }}"
+                        data-start-date="{{ $devoir->date_debut }}"
+                        data-end-date="{{ $devoir->date_fin }}"
                     >
                     </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $devoir->enseignant->name }}
                     </td>
                     <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
+                        @if ($teacher->typeUser === "eleve")
+                        <a
+                            id="edit-button"
+                            class="btn {{ $devoir->statut === "terminé" ? "disabled" : "" }} btn-primary mt-3 p-2"
+                            href="{{ route('devoirs.start', $devoir) }}"
+                        >
+                            <i class="fa-solid fa-play"></i>
+                        </a>
+                        @else
                         <a
                             data-bs-toggle="modal"
                             id="edit-button"
@@ -74,9 +83,26 @@
                             data-bs-target="#confirmDelete-{{ $devoir->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
+                        @endif
                         <div onclick="showDropdown(this)" id="ddown-menu" class="ddown-menu d-flex btn btn-transparent ml-2 mt-3 p-2">
                             <i class="fa-solid fa-ellipsis-vertical"></i>
                             <div class="ddown-items-container d-none p-2 bg-dark">
+                                @if ($teacher->typeUser === "eleve")
+                                <a
+                                    id="edit-button"
+                                    class="btn text-white p-2"
+                                    href="#"
+                                >
+                                    <i class="fa-solid fa-square-poll-horizontal"></i> résultat
+                                </a>
+                                @else
+                                <a
+                                    id="edit-button"
+                                    class="btn text-white p-2"
+                                    href="{{ route('devoirs.teacher.show', $devoir) }}"
+                                >
+                                    <i class="fa-solid fa-square-poll-horizontal"></i> contrôle
+                                </a>
                                 <button
                                     type="button"
                                     class="mb-0 p-2 btn text-white"
@@ -94,6 +120,7 @@
                                 >
                                     Supprimer pour l'année
                                 </button>
+                                @endif
                             </div>
                         </div>
                         <!-- modal for migrate devoir to annother year -->

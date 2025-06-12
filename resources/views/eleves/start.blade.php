@@ -5,10 +5,10 @@
             <div class="card">
                 <div class="card-header">
                     <h3>{{ $devoir->titre_devoir }}</h3>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar"
-                             style="width: {{ ($currentQuestionNumber / $totalQuestions) * 100 }}%">
-                            Question {{ $currentQuestionNumber }} of {{ $totalQuestions }}
+                    <div class="progress" style="height: 15px">
+                        <div class="progress-bar" style="height: 15px; padding-left: 14px; padding-right: 14px;" role="progressbar"
+                             style="width: {{ ($questionNumber / $totalQuestions) * 100 }}%">
+                            Question {{ $questionNumber }} / {{ $totalQuestions }}
                         </div>
                     </div>
                 </div>
@@ -19,9 +19,10 @@
                         <input type="hidden" name="question_id" value="{{ $question->id }}">
 
                         <div class="question-container">
-                            <h4 class="question-text">{{ $question->question }}</h4>
+                            <div>
+                                {!! $question->question !!}
+                            </div>
                             <p class="text-muted">Points: {{ $question->points }}</p>
-
                             <div class="answers-container">
                                 @foreach($question->reponses as $reponse)
                                 <div class="form-check">
@@ -38,19 +39,28 @@
                         </div>
 
                         <div class="navigation-buttons mt-4">
-                            @if($currentQuestionNumber > 1)
-                                <a href="{{ route('devoirs.take', [$devoir, $currentQuestionNumber - 1]) }}"
+                            @if($questionNumber > 1)
+                                <a href="{{ route('devoirs.take', [$devoir, $questionNumber - 1]) }}"
                                    class="btn btn-secondary">Précédent</a>
                             @endif
 
-                            @if($currentQuestionNumber < $totalQuestions)
+                            @if($questionNumber < $totalQuestions)
                                 <button type="submit" class="btn btn-primary">Suivant</button>
                             @else
                                 <button type="submit" name="finish" value="1" class="btn btn-success">
-                                    Terminer le devoir
+                                    resultat
                                 </button>
                             @endif
                         </div>
+                        @if ($errors->any())
+                            <div class="alert alert-danger text-center success-message">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>

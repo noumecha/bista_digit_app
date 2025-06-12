@@ -134,16 +134,18 @@ Route::middleware(['can:access-admin'])->group(function () {
 });
 
 Route::middleware(['can:access-student-devoir'])->group(function () {
-    Route::get('/education/devoirs/student', [DevoirController::class, 'studentsDevoirs'])->name('devoir.student')->middleware('auth');
-    Route::get('/education/devoirs/student/{devoir}', [DevoirController::class, 'take'])->name('devoirs.take')->middleware('auth');
+    Route::get('/education/devoirs/student/{devoir}', [DevoirController::class, 'start'])->name('devoirs.start')->middleware('auth');
     Route::post('/education/devoirs/student/{devoir}/answer', [DevoirController::class, 'answer'])->name('devoirs.answer')->middleware('auth');
     Route::get('/education/devoirs/student/{devoir}/results', [DevoirController::class, 'results'])->name('devoirs.results')->middleware('auth');
+});
+
+Route::middleware(['can:access-devoirs'])->group(function () {
+    Route::get('/education/devoirs', [DevoirController::class, 'index'])->name('education.devoirs')->middleware('auth');
 });
 
 Route::middleware(['can:access-teacher'])->group(function () {
     # education routes
     Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuves')->middleware('auth');
-    Route::get('/education/devoirs', [DevoirController::class, 'index'])->name('education.devoirs')->middleware('auth');
     Route::get('/education/questions', [QuestionController::class, 'index'])->name('education.questions')->middleware('auth');
     Route::get('/education/reponses', [ReponseController::class, 'index'])->name('education.reponses')->middleware('auth');
 
@@ -168,10 +170,10 @@ Route::middleware(['can:access-teacher'])->group(function () {
     Route::post('/education/devoirs/delete-in-year', [DevoirController::class, 'deleteInCurrentYear'])->name('devoir.deleteInCurrentYear')->middleware('auth');
     Route::get('/education/devoirs/yeardates', [DevoirController::class, 'getCurrentYearDates'])->middleware('auth');
 
-    ## controles devois routes
-    Route::get('/education/devoirs/controles', [DevoirController::class, 'devoirsTrace'])->name('devoir.traces')->middleware('auth');
-    Route::get('/education/devoirs/{devoir}', [DevoirController::class, 'teacherShow'])->name('devoirs.teacher.show')->middleware('auth');
-    Route::get('/education/devoirs/{devoir}/results/{result}', [DevoirController::class, 'teacherResults'])->name('devoirs.teacher.results')->middleware('auth');
+    ## controles devois routes - teacher + admin
+    Route::get('/education/devoirs/teacher/controles', [DevoirController::class, 'devoirsTrace'])->name('devoir.traces')->middleware('auth');
+    Route::get('/education/devoirs/teacher/{devoir}', [DevoirController::class, 'teacherShow'])->name('devoirs.teacher.show')->middleware('auth');
+    Route::get('/education/devoirs/teacher/{devoir}/results/{result}', [DevoirController::class, 'teacherResults'])->name('devoirs.teacher.results')->middleware('auth');
 
     ## education -> questions routes
     Route::post('/education/questions/save', [QuestionController::class, 'store'])->name('question.store')->middleware('auth');

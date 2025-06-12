@@ -21,8 +21,9 @@ class Devoir extends Model
         'matiere_id',
         'annee_scolaire_id',
         'classe_id',
-        'dateDeDebut',
-        'dateDeFin',
+        'date_debut',
+        'date_fin',
+        'duree',
         'statut'
     ];
 

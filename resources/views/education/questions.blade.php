@@ -89,7 +89,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="content" class="form-control-label">
-                                            Ajouter une nouvelle Question :
+                                            Texte de la question :
                                         </label>
                                         <textarea
                                             name="content"
@@ -98,6 +98,21 @@
                                             cols="12"
                                             rows="20">
                                         </textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="points" class="form-control-label">
+                                            Points :
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id="points"
+                                            name="points"
+                                            min="0"
+                                            class="form-control"
+                                            value="{{ old("points") }}"
+                                        >
                                     </div>
                                 </div>
                                 <div class="col-md-12">

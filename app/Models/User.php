@@ -72,13 +72,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * get the user name
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    /**
      * a user can be on many schools years
      */
     public function anneeScolaire() {
@@ -90,25 +83,15 @@ class User extends Authenticatable
     public function fonctionAnneeScolaire() {
         return $this->belongsToMany(FonctionAnneeScolaireUser::class);
     }
-    /**
-     * a user can be student
-     */
-    public function isEleve() {
-        return $this->typeUser === 'eleve';
-    }
 
     /**
-     * a user can be a teacher
+     * get student classe
      */
-    public function isEnseignant() {
-        return $this->typeUser === 'enseignant';
-    }
-
-    /**
-     * a user can be a personnel member
-     */
-    public function isPersonnel() {
-        return $this->typeUser === 'personnel';
+    public function getClasse() {
+        $classeId = ClasseAnneeScolaireStudent::all()->where('user_id', $this->id)
+            ->where('annee_scolaire_id', getCurrentYear()->id)->pluck('classe_id');
+        $classe = Classe::all()->whereIn('id', $classeId)->first();
+        return $classe;
     }
 
     /**
@@ -246,6 +229,18 @@ class User extends Authenticatable
         $ensMatsIds = EnseignantMatiereModel::all()
             ->where('user_id', $this->id)->whereIn('id', $ensMatsYearIds)->pluck('matiere_id');
         $matieres = Matiere::all()->whereIn('id', $ensMatsIds);
+        return $matieres;
+    }
+
+    /**
+     * student classes matieres
+     */
+    public function studentClasseMatiere($activeYearId, $classeId) {
+        $coefYearIds = CoefAnneeScolaire::all()->where('annee_scolaire_id', $activeYearId)
+            ->pluck('coefficient_id');
+        $matsIds = Coefficient::all()
+            ->where('classe_id', $classeId)->whereIn('id', $coefYearIds)->pluck('matiere_id');
+        $matieres = Matiere::all()->whereIn('id', $matsIds);
         return $matieres;
     }
 

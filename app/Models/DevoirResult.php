@@ -15,6 +15,7 @@ class DevoirResult extends Model
     protected $fillable = [
         'devoir_id',
         'user_id',
+        'started_at',
         'score',
         'total_questions',
         'percentage',
