@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\AnneeScolaire;
 use App\Models\Classe;
 use App\Models\ClasseAnneeScolaireStudent;
+use App\Models\ConseilDiscipline;
 use App\Models\Discipline;
 use App\Models\Evaluation;
 use App\Models\Trimestre;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DisciplineController extends Controller
 {
@@ -281,6 +283,52 @@ class DisciplineController extends Controller
         } else {
             return response()->json(['error' => 'Erreur inconue lors de l\'enregistrement des données de discipline']);
         }
+    }
+
+    /**
+     * discipline stats for a student
+     */
+    public function studentDiscipline(Request $request) {
+        $user = User::with(['classeAnneeScolaire'])->findOrFail(Auth::id());
+        // Get current school year and all years for filter dropdown
+        $currentYear = getCurrentYear();
+        $schoolYears = AnneeScolaire::orderBy('id', 'desc')->get();
+        // Get selected year from request or use current
+        $selectedYear = $request->input('year_id', $currentYear->id);
+        // Get selected month from request
+        $selectedMonth = $request->input('month');
+        // Query for Discipline records
+        $disciplineQuery = Discipline::where('user_id', $user->id)
+            ->where('annee_scolaire_id', $selectedYear);
+        if ($selectedMonth) {
+            $disciplineQuery->where('mois', $selectedMonth);
+        }
+        $disciplines = $disciplineQuery->orderBy('mois')->get();
+        // Query for ConseilDiscipline records
+        $conseils = ConseilDiscipline::where('user_id', $user->id)
+            ->where('annee_scolaire_id', $selectedYear)
+            ->orderBy('date_conseil', 'desc')
+            ->get();
+        // Calculate totals
+        $totalAbsences = $disciplines->sum('heures_absence');
+        $totalJustified = $disciplines->sum('heures_justifiees');
+        $totalRetards = $disciplines->sum('heures_retards');
+        $totalConsignes = $disciplines->sum('heures_consignes');
+        $totalExclusions = $disciplines->sum('jours_exclusions');
+        return view('eleves.discipline', compact(
+            'user',
+            'disciplines',
+            'conseils',
+            'schoolYears',
+            'currentYear',
+            'selectedYear',
+            'selectedMonth',
+            'totalAbsences',
+            'totalJustified',
+            'totalRetards',
+            'totalConsignes',
+            'totalExclusions'
+        ));
     }
 
     /**

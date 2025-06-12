@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BoosterNoteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\CoefficientController;
@@ -10,7 +11,9 @@ use App\Http\Controllers\EnseignantMatiereModelController;
 use App\Http\Controllers\EnseignantPrincipalController;
 use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\EpreuveController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\MatiereController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\SectionController;
@@ -138,6 +141,12 @@ Route::middleware(['can:access-student-devoir'])->group(function () {
     Route::get('/education/devoirs/student/{devoir}/previous/{number?}', [DevoirController::class, 'previous'])->name('devoirs.previous')->middleware('auth');
     Route::post('/education/devoirs/student/{devoir}/answer', [DevoirController::class, 'answer'])->name('devoirs.answer')->middleware('auth');
     Route::get('/education/devoirs/result/{id}', [DevoirController::class, 'result'])->name('devoirs.results')->middleware('auth');
+    # student discipline stats
+    Route::get('/education/discipline/stats', [DisciplineController::class, 'studentDiscipline'])->name('student.discipline')->middleware('auth');
+    # student notes evaluations
+    Route::get('/education/notes/student/stats', [NoteController::class, 'studentNotes'])->name('student.notes')->middleware('auth');
+    # student notes booster
+    Route::get('/education/boosternotes/student/stats', [BoosterNoteController::class, 'studentBoosterNotes'])->name('student.boosternotes')->middleware('auth');
 });
 
 Route::middleware(['can:access-devoirs'])->group(function () {

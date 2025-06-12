@@ -7,28 +7,29 @@
                     <div class="card shadow-sm">
                         <div class="card-header bg-primary text-white">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0 text-white">Notes de : {{ $user->name }} {{ $user->surname }}</h4>
+                                <h4 class="mb-0 text-white">Notes booster de : {{ $user->name }} {{ $user->surname }}</h4>
                                 <span class="badge bg-white text-primary">
-                                    Classe : {{ $user->getCurrentYearClasseName(getCurrentYear()->id)->libClasse }}
+                                    Programme Booster - {{ $user->getCurrentYearClasseName(getCurrentYear()->id)->libClasse }}
                                 </span>
                             </div>
                         </div>
+
                         <!-- Filters -->
                         <div class="card-body border-bottom">
-                            <form method="GET" action="{{ route('student.notes') }}" class="row g-3">
+                            <form method="GET" action="{{ route('student.boosternotes') }}" class="row g-3">
                                 <div class="col-md-4">
-                                    <label for="matiere_id" class="form-label">Matière</label>
-                                    <select class="form-select" id="matiere_id" name="matiere_id">
+                                    <label for="booster_matiere_id" class="form-label">Matière Booster</label>
+                                    <select class="form-select" id="booster_matiere_id" name="booster_matiere_id">
                                         <option value="">Toutes les matières</option>
                                         @foreach($matieres as $matiere)
                                             <option value="{{ $matiere->id }}" {{ $selectedMatiere == $matiere->id ? 'selected' : '' }}>
-                                                {{ $matiere->libelleMatiere }}
+                                                {{ $matiere->matiere->libelleMatiere }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="evaluation_id" class="form-label">Évaluation</label>
+                                    <label for="evaluation_id" class="form-label">Évaluation Booster</label>
                                     <select class="form-select" id="evaluation_id" name="evaluation_id">
                                         <option value="">Toutes les évaluations</option>
                                         @foreach($evaluations as $evaluation)
@@ -52,7 +53,7 @@
                                 <div class="col-md-4 d-flex align-items-end">
                                     <button type="submit" class="btn btn-primary">Filtrer</button>
                                     @if($selectedMatiere || $selectedEvaluation || $selectedTrimester)
-                                        <a href="{{ route('student.notes') }}" class="btn btn-outline-secondary ms-2">
+                                        <a href="{{ route('student.boosternotes') }}" class="btn btn-outline-secondary ms-2">
                                             Réinitialiser
                                         </a>
                                     @endif
@@ -83,7 +84,7 @@
                                             </h3>
                                             @if($notes->isNotEmpty())
                                                 <small class="text-muted">
-                                                    en {{ $notes->sortByDesc('note')->first()->matiere->libelleMatiere }}
+                                                    en {{ $notes->sortByDesc('note')->first()->matiere->matiere->libelleMatiere }}
                                                 </small>
                                             @endif
                                         </div>
@@ -98,7 +99,7 @@
                                             </h3>
                                             @if($notes->isNotEmpty())
                                                 <small class="text-muted">
-                                                    en {{ $notes->sortBy('note')->first()->matiere->libelleMatiere }}
+                                                    en {{ $notes->sortBy('note')->first()->matiere->matiere->libelleMatiere }}
                                                 </small>
                                             @endif
                                         </div>
@@ -108,28 +109,28 @@
                         </div>
 
                         <!-- Chart -->
-                        @if($notesBySequence->isNotEmpty())
+                        @if($notesByTrimester->isNotEmpty())
                         <div class="card-body border-top">
                             <h5 class="mb-3">Évolution par trimestre</h5>
                             <div style="height: 300px;">
-                                <canvas id="notesChart"></canvas>
+                                <canvas id="boosterNotesChart"></canvas>
                             </div>
                         </div>
                         @endif
 
                         <!-- Notes Table -->
                         <div class="card-body">
-                            <h5 class="mb-3">Détail des notes</h5>
+                            <h5 class="mb-3">Détail des notes Booster</h5>
 
                             @if($notes->isEmpty())
-                                <div class="alert alert-info">Aucune note trouvée pour les filtres sélectionnés.</div>
+                                <div class="alert alert-info">Aucune note Booster trouvée pour les filtres sélectionnés.</div>
                             @else
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>Date</th>
-                                                <th>Matière</th>
+                                                <th>Matière Booster</th>
                                                 <th>Évaluation</th>
                                                 <th>Trimestre</th>
                                                 <th>Note</th>
@@ -142,7 +143,7 @@
                                             @foreach($notes as $note)
                                             <tr>
                                                 <td>{{ $note->evaluation->dateDeDebut }}</td>
-                                                <td>{{ $note->matiere->libelleMatiere }}</td>
+                                                <td>{{ $note->matiere->matiere->libelleMatiere }}</td>
                                                 <td>{{ $note->evaluation->libelleEvaluation }}</td>
                                                 <td>{{ $note->evaluation->trimestre->libelleTrimestre ?? '-' }}</td>
                                                 <td class="fw-bold {{ $note->note >= 10 ? 'text-success' : 'text-danger' }}">
@@ -167,51 +168,51 @@
         <x-app.footer />
     </main>
     @section('scripts')
-        @if($notesBySequence->isNotEmpty())
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const ctx = document.getElementById('notesChart').getContext('2d');
-                const chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: {!! json_encode($notesBySequence->keys()) !!},
-                        datasets: [{
-                            label: 'Moyenne par trimestre',
-                            data: {!! json_encode($notesBySequence->values()) !!},
-                            backgroundColor: 'rgba(13, 110, 253, 0.2)',
-                            borderColor: 'rgba(13, 110, 253, 1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: false,
-                                max: 20,
-                                title: {
-                                    display: true,
-                                    text: 'Note /20'
-                                }
+    @if($notesByTrimester->isNotEmpty())
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('boosterNotesChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {!! json_encode($notesByTrimester->keys()) !!},
+                    datasets: [{
+                        label: 'Moyenne par trimestre (Booster)',
+                        data: {!! json_encode($notesByTrimester->values()) !!},
+                        backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                        borderColor: 'rgba(255, 193, 7, 1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            max: 20,
+                            title: {
+                                display: true,
+                                text: 'Note /20'
                             }
-                        },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.parsed.y.toFixed(2) + '/20';
-                                    }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y.toFixed(2) + '/20';
                                 }
                             }
                         }
                     }
-                });
+                }
             });
-        </script>
-        @endif
+        });
+    </script>
+    @endif
     @endsection
 </x-app-layout>

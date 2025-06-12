@@ -28,4 +28,11 @@ class BoosterMatiere extends Model
     public function matiere():BelongsTo {
         return $this->belongsTo(Matiere::class, 'matiere_id');
     }
+
+    /**
+     * a boostermatier must be in a boosternote
+     */
+    public function boosterNotes() {
+        return $this->hasOne(BoosterNote::class, $this->id);
+    }
 }

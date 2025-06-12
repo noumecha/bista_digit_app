@@ -162,9 +162,9 @@ class User extends Authenticatable
     /**
      * A user must be in different classes throw years
      */
-    public function classeAnneeScolaire()
+    public function classeAnneeScolaire() : BelongsTo
     {
-        return $this->hasMany(ClasseAnneeScolaireStudent::class, 'user_id');
+        return $this->belongsTo(ClasseAnneeScolaireStudent::class, 'user_id');
     }
 
     /**
@@ -285,6 +285,13 @@ class User extends Authenticatable
      */
     public function club() {
         return $this->hasOne(Club::class, 'president_id');
+    }
+
+    /**
+     * a user could be in booster programme
+     */
+    public function boosterStudent() {
+        return $this->hasOne(BoosterStudent::class, 'user_id');
     }
 
     /**

@@ -14,6 +14,7 @@ use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Coefficient;
 use App\Models\Evaluation;
 use App\Models\Remplissage;
+use App\Models\Trimestre;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -327,6 +328,86 @@ class BoosterNoteController extends Controller
             ]);
         }
         return response()->json($mats);
+    }
+
+    /**
+     * student notes
+     */
+    public function studentBoosterNotes(Request $request) {
+        $user = User::with(['boosterStudent'])->findOrFail(Auth::id());
+        // Verify user has a Booster student profile
+        if (!$user->boosterStudent) {
+            return redirect()->back()->with('error', 'Vous n\'avez pas de profil Booster associé');
+        }
+        // Get current school year
+        $currentYear = getCurrentYear();
+        // Get filter values from request
+        $selectedMatiere = $request->input('booster_matiere_id');
+        $selectedEvaluation = $request->input('evaluation_id');
+        $selectedTrimester = $request->input('trimester');
+        // Base query for Booster notes
+        $notesQuery = BoosterNote::where('booster_student_id', $user->boosterStudent->id)
+            ->where('annee_scolaire_id', $currentYear->id)
+            ->with(['matiere', 'evaluation', 'classe']);
+
+        // Apply filters if they exist
+        if ($selectedMatiere) {
+            $notesQuery->where('booster_matiere_id', $selectedMatiere);
+        }
+        if ($selectedEvaluation) {
+            $notesQuery->where('evaluation_id', $selectedEvaluation);
+        }
+        if ($selectedTrimester) {
+            $notesQuery->whereHas('evaluation', function($q) use ($selectedTrimester) {
+                $q->where('trimestre_id', $selectedTrimester)
+                  ->where('type', 'booster-evaluation');
+            });
+        } else {
+            // Always filter for booster evaluations only
+            $notesQuery->whereHas('evaluation', function($q) {
+                $q->where('type', 'booster-evaluation');
+            });
+        }
+        // Get filtered notes
+        $notes = $notesQuery->orderBy('created_at', 'desc')->get();
+        // Get filter options (only for booster evaluations)
+        $matieres = BoosterMatiere::whereHas('boosterNotes', function($q) use ($user, $currentYear) {
+                $q->where('booster_student_id', $user->boosterStudent->id)
+                  ->where('annee_scolaire_id', $currentYear->id)
+                  ->whereHas('evaluation', function($q) {
+                      $q->where('type', 'booster-evaluation');
+                  });
+            })
+            ->get();
+        $evaluations = Evaluation::whereHas('boosterNotes', function($q) use ($user, $currentYear) {
+                $q->where('booster_student_id', $user->boosterStudent->id)
+                  ->where('annee_scolaire_id', $currentYear->id)
+                  ->where('type', 'booster-evaluation');
+            })
+            ->orderBy('dateDeDebut')
+            ->get();
+        $trimestres = Trimestre::where('annee_scolaire_id', $currentYear->id)
+            ->orderBy('dateDeDebut')->get();
+        // Group notes by trimester for the chart
+        $notesByTrimester = $notesQuery->get()
+            ->groupBy(function($note) {
+                return $note->evaluation->trimestre->libelleTrimestre ?? 'Autre';
+            })
+            ->map(function($notes) {
+                return $notes->avg('note');
+            });
+        return view('eleves.booster_note', compact(
+            'user',
+            'notes',
+            'matieres',
+            'evaluations',
+            'trimestres',
+            'currentYear',
+            'selectedMatiere',
+            'selectedEvaluation',
+            'selectedTrimester',
+            'notesByTrimester'
+        ));
     }
 
     /**

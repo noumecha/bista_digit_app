@@ -158,8 +158,8 @@
                 @endcan
                 @can('access-student-devoir')
                 <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.devoirs') ? 'active' : '' }}"
-                        href="{{ route('education.devoirs') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('student.discipline') ? 'active' : '' }}"
+                        href="{{ route('student.discipline') }}">
                         <span class="nav-link-text ms-1">Etat disciplinaire</span>
                     </a>
                 </li>
@@ -229,8 +229,8 @@
                 @endcan
                 @can('access-student')
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.notes') ? 'active' : '' }}"
-                        href="{{ route('evaluation.notes') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('student.notes') ? 'active' : '' }}"
+                        href="{{ route('student.notes') }}">
                         <span class="nav-link-text ms-1">Mes notes</span>
                     </a>
                 </li>
@@ -335,8 +335,8 @@
                 @endcan
                 @can('access-student-devoir')
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.notes') ? 'active' : '' }}"
-                        href="{{ route('booster.notes') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('student.boosternotes') ? 'active' : '' }}"
+                        href="{{ route('student.boosternotes') }}">
                         <span class="nav-link-text ms-1">Mes notes</span>
                     </a>
                 </li>
@@ -405,7 +405,7 @@
             </ul>
             <!-- Clubs -->
             <ul class="navbar-nav submenu">
-                @can('access-student')
+                @can('access-student-club')
                 <li data-submenu="clubs" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-kaaba"></i>

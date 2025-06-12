@@ -6,8 +6,10 @@ use App\Models\AnneeScolaire;
 use App\Models\Evaluation;
 use App\Models\Remplissage;
 use App\Models\Trimestre;
+use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EvaluationController extends Controller
 {
@@ -245,7 +247,6 @@ class EvaluationController extends Controller
         return response()->json(['success' => 'Evaluation mise à jour avec succès']);
 
     }
-
 
     /**
      * delete specific evaluation

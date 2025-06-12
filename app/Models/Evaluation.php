@@ -50,4 +50,11 @@ class Evaluation extends Model
     public function disciplines(): HasMany {
         return $this->hasMany(Discipline::class);
     }
+
+    /**
+     * an evaluation must be in a boosternote
+     */
+    public function boosterNotes() {
+        return $this->hasOne(BoosterNote::class, $this->id);
+    }
 }

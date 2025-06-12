@@ -35,6 +35,10 @@ class AuthServiceProvider extends ServiceProvider
             $user->isStudent()
         );
 
+        Gate::define('access-student-club', fn($user) =>
+            $user->isClubPresident() || $user->isAdmin()
+        );
+
         Gate::define('access-club', fn($user) =>
             $user->isClubPresident()
         );

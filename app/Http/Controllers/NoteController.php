@@ -16,6 +16,7 @@ use App\Models\Note;
 use App\Models\NoteHistory;
 use App\Models\NoteRemplissageTrace;
 use App\Models\Remplissage;
+use App\Models\Trimestre;
 use App\Models\TrimestreNote;
 use App\Models\User;
 use Exception;
@@ -349,6 +350,72 @@ class NoteController extends Controller
             $matieres = Matiere::whereIn('id', $coefficients)->get();
         }
         return response()->json($matieres->values());
+    }
+
+    /**
+     * student notes
+     */
+    public function studentNotes(Request $request) {
+        $user = User::with(['classeAnneeScolaire'])->findOrFail(Auth::id());
+        // Get current school year
+        $currentYear = getCurrentYear();
+        // Get filter values from request
+        $selectedMatiere = $request->input('matiere_id');
+        $selectedEvaluation = $request->input('evaluation_id');
+        $selectedTrimester = $request->input('trimester');
+        // Base query for notes
+        $notesQuery = Note::where('user_id', $user->id)
+            ->where('annee_scolaire_id', $currentYear->id)
+            ->with(['matiere', 'evaluation', 'classe']);
+        // Apply filters if they exist
+        if ($selectedMatiere) {
+            $notesQuery->where('matiere_id', $selectedMatiere);
+        }
+        if ($selectedEvaluation) {
+            $notesQuery->where('evaluation_id', $selectedEvaluation);
+        }
+        if ($selectedTrimester) {
+            $notesQuery->whereHas('evaluation', function($q) use ($selectedTrimester) {
+                $q->where('trimestre_id', $selectedTrimester);
+            });
+        }
+        // Get filtered notes
+        $notes = $notesQuery->orderBy('created_at', 'desc')->get();
+        // Get filter options
+        $matieres = Matiere::whereHas('notes', function($q) use ($user, $currentYear) {
+                $q->where('user_id', $user->id)
+                  ->where('annee_scolaire_id', $currentYear->id);
+            })
+            ->orderBy('libelleMatiere')
+            ->get();
+        $evaluations = Evaluation::whereHas('notes', function($q) use ($user, $currentYear) {
+                $q->where('user_id', $user->id)
+                  ->where('annee_scolaire_id', $currentYear->id);
+            })
+            ->orderBy('dateDeDebut')
+            ->get();
+        $trimestres = Trimestre::where('annee_scolaire_id', $currentYear->id)
+            ->orderBy('dateDeDebut')->get();
+        // Group notes by sequence/trimester for the chart
+        $notesBySequence = $notesQuery->get()
+            ->groupBy(function($note) {
+                return $note->evaluation->libelleEvaluation ?? 'Autre';
+            })
+            ->map(function($notes) {
+                return $notes->avg('note');
+            });
+        return view('eleves.notes', compact(
+            'user',
+            'notes',
+            'matieres',
+            'evaluations',
+            'trimestres',
+            'currentYear',
+            'selectedMatiere',
+            'selectedEvaluation',
+            'selectedTrimester',
+            'notesBySequence'
+        ));
     }
 
     /**
