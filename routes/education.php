@@ -134,9 +134,10 @@ Route::middleware(['can:access-admin'])->group(function () {
 });
 
 Route::middleware(['can:access-student-devoir'])->group(function () {
-    Route::get('/education/devoirs/student/{devoir}', [DevoirController::class, 'start'])->name('devoirs.start')->middleware('auth');
+    Route::get('/education/devoirs/student/{devoir}/start/{number?}', [DevoirController::class, 'start'])->name('devoirs.start')->middleware('auth');
+    Route::get('/education/devoirs/student/{devoir}/previous/{number?}', [DevoirController::class, 'previous'])->name('devoirs.previous')->middleware('auth');
     Route::post('/education/devoirs/student/{devoir}/answer', [DevoirController::class, 'answer'])->name('devoirs.answer')->middleware('auth');
-    Route::get('/education/devoirs/student/{devoir}/results', [DevoirController::class, 'results'])->name('devoirs.results')->middleware('auth');
+    Route::get('/education/devoirs/result/{id}', [DevoirController::class, 'result'])->name('devoirs.results')->middleware('auth');
 });
 
 Route::middleware(['can:access-devoirs'])->group(function () {
@@ -171,9 +172,8 @@ Route::middleware(['can:access-teacher'])->group(function () {
     Route::get('/education/devoirs/yeardates', [DevoirController::class, 'getCurrentYearDates'])->middleware('auth');
 
     ## controles devois routes - teacher + admin
-    Route::get('/education/devoirs/teacher/controles', [DevoirController::class, 'devoirsTrace'])->name('devoir.traces')->middleware('auth');
-    Route::get('/education/devoirs/teacher/{devoir}', [DevoirController::class, 'teacherShow'])->name('devoirs.teacher.show')->middleware('auth');
-    Route::get('/education/devoirs/teacher/{devoir}/results/{result}', [DevoirController::class, 'teacherResults'])->name('devoirs.teacher.results')->middleware('auth');
+    Route::get('/education/devoirs/controle/{devoir}', [DevoirController::class, 'teacherShow'])->name('devoirs.teacher.show')->middleware('auth');
+    Route::get('/education/devoirs/teacher/result/{devoir}/{userId?}', [DevoirController::class, 'individualResult'])->name('devoirs.teacher.results')->middleware('auth');
 
     ## education -> questions routes
     Route::post('/education/questions/save', [QuestionController::class, 'store'])->name('question.store')->middleware('auth');

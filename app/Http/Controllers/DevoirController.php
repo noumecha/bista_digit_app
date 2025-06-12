@@ -7,10 +7,10 @@ use App\Models\Classe;
 use App\Models\ClasseAnneeScolaireStudent;
 use App\Models\Devoir;
 use App\Models\DevoirAnneeScolaire;
-use App\Models\DevoirAnswer;
 use App\Models\DevoirResult;
 use App\Models\Matiere;
 use App\Models\Question;
+use App\Models\QuestionUserReponse;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
@@ -371,40 +371,63 @@ class DevoirController extends Controller
     /**
      * treating devoir
      */
-    public function start(Devoir $devoir, $questionNumber = 1) {
+    public function start(Devoir $devoir, $number = 1) {
+        // Vérification disponibilité du devoir
         if (now() > $devoir->date_fin) {
             return redirect()->back()->with('error', 'Ce devoir n\'est plus disponible');
         }
-        // Check if student already completed
-        $result = DevoirResult::firstOrCreate([
-            'devoir_id' => $devoir->id,
-            'user_id' => Auth::id(),
-        ]);
-        $totalQuestions = $devoir->questions()->count();
-        $answeredQuestions = $result->answers()->count();
-        $progress = ($answeredQuestions / $totalQuestions) * 100;
-        // If all questions answered but not marked as completed
-        if ($answeredQuestions >= $totalQuestions && !$result->completed_at) {
-            $result->update(['completed_at' => now()]);
-            return redirect()->route('devoirs.results', $devoir);
+        // verification si le devoir à déjà été traité
+        $results = $devoir->studentResult(Auth::id());
+        $hasCompleted = $results->isNotEmpty() && $results->first()->completed_at;
+        if ($hasCompleted) {
+            return redirect()->route('devoirs.results', $devoir->id);
         }
-        // If already completed
-        if ($result->completed_at) {
-            return redirect()->route('devoirs.results', $devoir);
+        $devoir = Devoir::with('questions.reponses')->findOrFail($devoir->id);
+        $currentQuestionIndex = session("devoir_{$devoir->id}_step", 0);
+        $questions = $devoir->questions;
+        //
+        $questionNumber = $currentQuestionIndex + 1;
+        $question = $questions[$currentQuestionIndex];
+        $totalQuestions = count($questions);
+        $progress = ($questionNumber / $totalQuestions) * 100;
+        // init the result
+        $result = DevoirResult::updateOrCreate([
+                'user_id' => Auth::id(),
+                'devoir_id' => $devoir->id,
+            ], [
+                'started_at' => now(),
+                'score' => 0,
+                'percentage' => 0,
+                'total_questions' => $devoir->questions->sum('points')
+            ]);
+        if ($number < 1 || $number > $totalQuestions) {
+            return redirect()->route('devoirs.start', [$devoir, 1]);
         }
-        // Get current question
-        $question = $devoir->questions()
-            ->orderBy('id')
-            ->skip($questionNumber - 1)
-            ->firstOrFail();
-
-        return view(
-            'eleves.start', compact('devoir', 'question', 'progress', 'questionNumber', 'totalQuestions')
-        );
+        if (!isset($questions[$currentQuestionIndex])) {
+            return redirect()->route('devoirs.results', $devoir->id);
+        }
+        return view('eleves.start', compact(
+            'devoir' ,
+            'question',
+            'progress',
+            'questionNumber',
+            'totalQuestions'
+        ));
     }
 
     /**
-     * getting students answers
+     * go back to prec. question
+     */
+    public function previous(Devoir $devoir) {
+        $current = session("devoir_{$devoir->id}_step", 0);
+        if ($current > 0) {
+            session(["devoir_{$devoir->id}_step" => $current - 1]);
+        }
+        return redirect()->route('devoirs.start', [$devoir]);
+    }
+
+    /**
+     * when answer is submited
      */
     public function answer(Request $request, Devoir $devoir) {
         $request->validate([
@@ -416,123 +439,138 @@ class DevoirController extends Controller
             'answers.required' => 'Vous devez sélectionner au moins une réponse',
             'answers.min' => 'Vous devez sélectionner au moins une réponse'
         ]);
-        // Get or create devoir result
-        $result = DevoirResult::firstOrCreate([
-            'devoir_id' => $devoir->id,
-            'user_id' => Auth::id(),
-        ], [
-            'started_at' => now(),
-            'score' => 0,
-            'total_questions' => $devoir->questions()->count(),
-            'percentage' => 0,
-        ]);
-        // Save answer
-        $question = Question::find($request->question_id);
-        $correctAnswers = $question->reponses()->where('status', 1)->pluck('id')->toArray();
-        $selectedAnswers = $request->answers ?? [];
-        $isCorrect = empty(array_diff($correctAnswers, $selectedAnswers)) &&
-                    empty(array_diff($selectedAnswers, $correctAnswers));
-        DevoirAnswer::updateOrCreate([
-            'devoir_result_id' => $result->id,
-            'question_id' => $question->id,
-        ], [
-            'selected_answers' => $selectedAnswers,
-            'is_correct' => $isCorrect,
-            'points_earned' => $isCorrect ? $question->points : 0,
-        ]);
-        // Check if all questions answered
-        $answeredCount = $result->answers()->count();
-        $totalQuestions = $devoir->questions()->count();
-
-        if ($request->finish || $answeredCount >= $totalQuestions) {
-            $totalScore = $result->answers()->sum('points_earned');
-            $maxScore = $devoir->questions()->sum('points');
-            $percentage = $maxScore > 0 ? ($totalScore / $maxScore) * 100 : 0;
-
-            $result->update([
-                'score' => $totalScore,
-                'percentage' => $percentage,
-                'completed_at' => now(),
-            ]);
-
+        // saving reponses
+        $question = Question::findOrFail($request->question_id);
+        foreach ($request->answers ?? [] as $responseId) {
+            QuestionUserReponse::updateOrCreate([
+                'user_id' => Auth::id(),
+                'question_id' => $question->id,
+                'reponse_id' => $responseId,
+            ], []);
+        }
+        // at the end make calculation and save
+        if ($request->finish) {
+            $result = DevoirResult::where('user_id', Auth::id())
+                ->where('devoir_id', $devoir->id)
+                ->first();
+            $result->calculateScore();
+            $result->update(['completed_at' => now()]);
+            session()->forget("devoir_{$devoir->id}_step");
             return redirect()->route('devoirs.results', $devoir);
         }
-        // Go to next question
-        $nextQuestionNumber = $devoir->questions()
-            ->where('id', '>', $question->id)
-            ->orderBy('id')
-            ->first()
-            ?->getQuestionNumber();
-        return redirect()->route('devoirs.start', [
-            'devoir' => $devoir,
-            'questionNumber' => $nextQuestionNumber ?? 1
-        ]);
+
+        $current = session("devoir_{$devoir->id}_step", 0);
+        session(["devoir_{$devoir->id}_step" => $current + 1]);
+
+        return redirect()->route('devoirs.start', $devoir);
     }
 
     /**
-     * showing devoir result for student
+     * gettting devoir result after all done
      */
-    public function results(Devoir $devoir) {
-        $result = $devoir->results()->where('user_id', Auth::id())->firstOrFail();
-        $answers = $result->answers()->with('question')->get();
-
-        return view('eleves.devoir_result', compact('devoir', 'result', 'answers'));
+    public function result($id) {
+        $user = User::findOrFail(Auth::id());
+        $devoir = Devoir::with('questions.reponses')->findOrFail($id);
+        // controls
+        $result = DevoirResult::where('user_id', $user->id)
+        ->where('devoir_id', $devoir->id)
+        ->firstOrFail();
+        if (!$result->completed_at) {
+            return redirect()->route('devoirs.start', $devoir);
+        }
+        session()->forget("devoir_{$id}_step");
+        //
+        $answersByQuestion = [];
+        foreach ($devoir->questions as $question) {
+            $answersByQuestion[$question->id] = [
+                'question' => $question,
+                'user_answers' => $question->reponses()
+                    ->whereIn('id',
+                        QuestionUserReponse::where('user_id', Auth::id())
+                            ->where('question_id', $question->id)
+                            ->pluck('reponse_id')
+                    )->get(),
+                'status' => $this->isQuestionCorrect($question, Auth::id()),
+                'points' => $question->points
+            ];
+        }
+        return view('eleves.devoir_result', compact(
+            'devoir',
+            'result',
+            'answersByQuestion'
+        ));
     }
 
     /**
-     * showing individual devoir
+     * check if a question is correct by the user choice
+     */
+    private function isQuestionCorrect($question, $userId) {
+        $userAnswers = QuestionUserReponse::where('user_id', $userId)
+            ->where('question_id', $question->id)
+            ->pluck('reponse_id')
+            ->toArray();
+        $correctAnswers = $question->reponses()
+            ->where('status', true)
+            ->pluck('id')
+            ->toArray();
+        return empty(array_diff($correctAnswers, $userAnswers)) &&
+            empty(array_diff($userAnswers, $correctAnswers));
+    }
+
+    /**
+     * teacher show devoir stats
      */
     public function teacherShow(Devoir $devoir) {
-        $classeId = $devoir->pluck('classe_id');
+        // getting all students
+        $classeId = $devoir->classe_id;
         $userClasseYearIds = ClasseAnneeScolaireStudent::all()
             ->where('annee_scolaire_id', getCurrentYear()->id)
-            ->whereIn('classe_id', $classeId)->pluck('user_id');
+            ->where('classe_id', $classeId)->pluck('user_id');
         $students = User::where('typeUser', 'eleve')->whereIn('id', $userClasseYearIds)->get();
         $results = DevoirResult::where('devoir_id', $devoir->id)
             ->with('user')->get()->keyBy('user_id');
-         // Calculate statistics
+        // Calculate statistics
         $totalStudents = $students->count();
         $completedCount = $students->filter(fn($s) =>
             $s->devoirResults->isNotEmpty() && $s->devoirResults->first()->completed_at
         )->count();
         $completionRate = $totalStudents > 0 ? ($completedCount / $totalStudents) * 100 : 0;
         return view('enseignant.devoir', compact(
-            'devoir',
-            'students',
-            'results',
-            'totalStudents',
-            'completedCount',
-            'completionRate'
+            'devoir', 'students', 'results','totalStudents',
+            'completedCount','completionRate'
         ));
     }
 
     /**
-     * showing devoir result for teacher
+     * showing devoir result for one student for teacher
      */
-    public function teacherResults(Devoir $devoir, DevoirResult $result) {
-        $answers = $result->answers()
-            ->with(['question', 'question.reponses'])
-            ->get();
-
-        return view('enseignant.devoir_result', compact('devoir', 'result', 'answers'));
-    }
-
-    /**
-     * devoirs traces
-     */
-    public function devoirsTrace(Request $request) {
-        // utils vars
-        $teacher = User::find(Auth::id());
-        $teacher->typeUser === "enseignant" ?
-            $matieres = $teacher->teacherMatieres(getCurrentYear()->id) : $matieres = Matiere::all();
-        $teacher->typeUser === "enseignant" ?
-            $classes = $teacher->teacherClasses(getCurrentYear()->id) : $classes = Classe::all();
-        if($request->ajax()) {
-            return view('partials._controles_devoirs_table', compact('matieres', 'classes'));
-        } else {
-            return view('enseignant.controles_devoirs', compact('matieres', 'classes'));
+    public function individualResult(Devoir $devoir, $id) {
+        $student = User::findOrFail($id);
+        $result = DevoirResult::where('devoir_id', $devoir->id)
+            ->where('user_id', $student->id)
+            ->firstOrFail();
+        $answersByQuestion = [];
+        foreach ($devoir->questions as $question) {
+            $answersByQuestion[$question->id] = [
+                'question' => $question,
+                'user_answers' => $question->reponses()
+                    ->whereIn('id',
+                        QuestionUserReponse::where('user_id', $student->id)
+                            ->where('question_id', $question->id)
+                            ->pluck('reponse_id')
+                    )->get(),
+                'status' => $this->isQuestionCorrect($question, $student->id),
+                'points' => $question->points
+            ];
         }
+        return view('enseignant.devoir_result', [
+            'devoir' => $devoir,
+            'student' => $student,
+            'result' => $result,
+            'answersByQuestion' => $answersByQuestion
+        ]);
     }
+
 
     /**
      * delete a devoir in a current year

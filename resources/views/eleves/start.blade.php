@@ -6,13 +6,13 @@
                 <div class="card-header">
                     <h3>{{ $devoir->titre_devoir }}</h3>
                     <div class="progress" style="height: 15px">
-                        <div class="progress-bar" style="height: 15px; padding-left: 14px; padding-right: 14px;" role="progressbar"
-                             style="width: {{ ($questionNumber / $totalQuestions) * 100 }}%">
+                        <div class="progress-bar"
+                            style="height: 15px; padding-left: 14px; padding-right: 14px; width: {{ (int)round($progress, 0) }}%"
+                            role="progressbar">
                             Question {{ $questionNumber }} / {{ $totalQuestions }}
                         </div>
                     </div>
                 </div>
-
                 <div class="card-body">
                     <form id="qcmForm" action="{{ route('devoirs.answer', $devoir) }}" method="POST">
                         @csrf
@@ -40,7 +40,7 @@
 
                         <div class="navigation-buttons mt-4">
                             @if($questionNumber > 1)
-                                <a href="{{ route('devoirs.take', [$devoir, $questionNumber - 1]) }}"
+                                <a href="{{ route('devoirs.previous', [$devoir]) }}"
                                    class="btn btn-secondary">Précédent</a>
                             @endif
 

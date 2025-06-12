@@ -1,10 +1,13 @@
 <x-app-layout>
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <x-app.navbar />
-            <div class="container">
+            <div class="px-5 py-4 container-fluid">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h3>{{ $devoir->titre_devoir }} - Classe : {{ $devoir->classe->libClasse }}</h3>
+                        <h3>
+                            Devoir : {{ $devoir->titre_devoir }} -
+                            Classe : {{ $devoir->classe->libClasse }}
+                        </h3>
                         <span class="badge bg-{{ $devoir->statut === "terminé" ? 'success' : 'warning' }}">
                             {{ $devoir->statut === "terminé" ? 'terminé' : 'en cours' }}
                         </span>
@@ -102,14 +105,14 @@
                                             @endif
                                         </td>
                                         <td class="align-middle text-center bg-transparent border-bottom">
-                                            {{ $result && $result->started_at ? $result->started_at->format('d/m/Y H:i') : '-' }}
+                                            {{ $result && $result->started_at ? formatDate($result->started_at, 'd/m/Y H:i') : '-' }}
                                         </td>
                                         <td class="align-middle text-center bg-transparent border-bottom">
-                                            {{ $result && $result->completed_at ? $result->completed_at->format('d/m/Y H:i') : '-' }}
+                                            {{ $result && $result->completed_at ? formatDate($result->completed_at, 'd/m/Y H:i') : '-' }}
                                         </td>
-                                        <td class="align-middle text-center bg-transparent border-bottom">
-                                            <a href="{{ $result ? route('devoirs.teacher.results', [$devoir, $result]) : "#" }}"
-                                               class="{{ $result ? "" : "disabled" }}">
+                                        <td class="{{ $result === null ? "disabled" : "" }} align-middle text-center bg-transparent border-bottom">
+                                            <a href="{{ $result ? route('devoirs.teacher.results', [$devoir, $result->user->id]) : "#" }}"
+                                               class="">
                                                <i class="fa-solid fa-circle-info"></i>
                                             </a>
                                         </td>

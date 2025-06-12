@@ -55,9 +55,14 @@
                     </td>
                     <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                         @if ($teacher->typeUser === "eleve")
+                        @php
+                            $results = $devoir->studentResult($teacher->id);
+                            $hasCompleted = $results->isNotEmpty() && $results->first()->completed_at;
+                        @endphp
                         <a
                             id="edit-button"
-                            class="btn {{ $devoir->statut === "terminé" ? "disabled" : "" }} btn-primary mt-3 p-2"
+                            class="btn {{ $hasCompleted || $devoir->statut === "terminé" ? "disabled" : "" }}
+                                btn-primary mt-3 p-2"
                             href="{{ route('devoirs.start', $devoir) }}"
                         >
                             <i class="fa-solid fa-play"></i>
@@ -89,9 +94,8 @@
                             <div class="ddown-items-container d-none p-2 bg-dark">
                                 @if ($teacher->typeUser === "eleve")
                                 <a
-                                    id="edit-button"
                                     class="btn text-white p-2"
-                                    href="#"
+                                    href="{{ route('devoirs.results', $devoir->id) }}"
                                 >
                                     <i class="fa-solid fa-square-poll-horizontal"></i> résultat
                                 </a>

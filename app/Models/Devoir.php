@@ -68,6 +68,16 @@ class Devoir extends Model
     }
 
     /**
+     * un devoir spécifique à un resutltat spécifique pour un élève
+     */
+    public function studentResult($userId) {
+        $devoirIds = DevoirAnneeScolaire::where('annee_scolaire_id', getCurrentYear()->id)
+            ->where('devoir_id', $this->id)->pluck('devoir_id');
+        $result = DevoirResult::where('user_id', $userId)->whereIn('devoir_id', $devoirIds)->get();
+        return $result;
+    }
+
+    /**
      * Un devoir possède plusieurs questions
      */
     public function questions():HasMany
