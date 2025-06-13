@@ -15,6 +15,7 @@ use App\Http\Controllers\BoosterNoteController;
 use App\Http\Controllers\CategorieActualiteController;
 use App\Http\Controllers\ClubConfigurationController;
 use App\Http\Controllers\ClubController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EleveController;
 use App\Http\Controllers\EnseignantController;
 use App\Http\Controllers\FonctionController;
@@ -57,7 +58,7 @@ Route::get('/signup', function () {
 
 // routes for the dashboard
 Route::get('/admin', function () { return redirect('/dashboard');})->middleware('auth');
-Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard')->middleware('auth');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 # configuration routes - club configuration
 Route::middleware(['can:access-club'])->group(function () {
@@ -94,12 +95,13 @@ Route::middleware(['can:access-actus'])->group(function () {
     Route::get('/actualites/{id}/edit', [ActusController::class, 'edit'])->name('actualite.edit')->middleware('auth');
     Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
 });
+# every body can see his notifications
+Route::get('/notifications/index', [NotificationController::class, 'index'])->name('notification.index')->middleware('auth');
 
 Route::middleware(['can:access-admin'])->group(function () {
     // notifications routes :
     Route::get('/notifications/view/{id}', [NotificationController::class, 'view'])->name('notification.view')->middleware('auth');
     Route::get('/notifications/create', [NotificationController::class, 'create'])->name('notification.create')->middleware('auth');
-    Route::get('/notifications/index', [NotificationController::class, 'index'])->name('notification.index')->middleware('auth');
     Route::post('/notifications/save', [NotificationController::class, 'store'])->name('notification.send')->middleware('auth');
     Route::delete('/notifications/delete/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy')->middleware('auth');
     Route::get('/notifications/users/{type}', [NotificationController::class, 'getUsers'])->name('notification.users');

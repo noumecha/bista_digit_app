@@ -175,11 +175,8 @@ class NotificationController extends Controller
      * sending notifications
      */
     public function index(Request $request) {
-        $userYearIds = UserAnneeScolaire::all()->where('annee_scolaire_id', getCurrentYear()->id)
-            ->pluck('user_id');
-        $users = User::all()->whereIn('id', $userYearIds);
-        $classes = Classe::all();
-        return view('notifications.notifications', compact('users', 'classes'));
+        $user = User::findOrFail(Auth::id());
+        return view('notifications.show', compact('user'));
     }
 
     /**

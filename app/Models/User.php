@@ -221,7 +221,7 @@ class User extends Authenticatable
     }
 
     /**
-     * teachers matieres
+     * teachers matieres for currents school years
      */
     public function teacherMatieres($activeYearId) {
         $ensMatsYearIds = EnsMatAnneeScolaire::all()->where('annee_scolaire_id', $activeYearId)

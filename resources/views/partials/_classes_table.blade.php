@@ -3,9 +3,6 @@
         <tr>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                ID</th>
-            <th
-                class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                 Libellé</th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -33,9 +30,6 @@
         @else
             @foreach ($classes as $classe)
                 <tr>
-                    <td class="align-middle bg-transparent border-bottom">
-                        {{ $classe->id }}
-                    </td>
                     <td class="align-middle bg-transparent border-bottom">
                         {{ $classe->libClasse }}
                     </td>
@@ -68,6 +62,12 @@
                             data-bs-target="#confirmDelete-{{ $classe->id }}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
+                        <a
+                            class="btn btn-primary mt-3 p-2"
+                            href="{{ route('classe.show', $classe->id) }}"
+                        >
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
                         <!-- modal for delete confirmation -->
                         <div class="modal fade" id="confirmDelete-{{ $classe->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" >
                             <div class="modal-dialog">

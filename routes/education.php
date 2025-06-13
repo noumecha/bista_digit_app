@@ -154,6 +154,8 @@ Route::middleware(['can:access-devoirs'])->group(function () {
 });
 
 Route::middleware(['can:access-teacher'])->group(function () {
+    # showing class details :
+    Route::get('/education/classe/view/{id}', [ClasseController::class, 'showClasse'])->name('classe.show')->middleware('auth');
     # education routes
     Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuves')->middleware('auth');
     Route::get('/education/questions', [QuestionController::class, 'index'])->name('education.questions')->middleware('auth');

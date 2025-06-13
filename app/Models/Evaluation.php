@@ -21,6 +21,14 @@ class Evaluation extends Model
     ];
 
     /**
+     * An evaluation belongs to a bulletin
+     */
+    public function bulletins(): BelongsTo
+    {
+        return $this->belongsTo(Bulletin::class);
+    }
+
+    /**
      * An evaluation belongs to trimestre
      */
     public function trimestre(): BelongsTo

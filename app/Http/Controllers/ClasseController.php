@@ -96,6 +96,14 @@ class ClasseController extends Controller
     }
 
     /**
+     * showing class details
+     */
+    public function showClasse($id) {
+        $classe = Classe::findOrFail($id);
+        return view('classes.show', compact('classe'));
+    }
+
+    /**
      * update specific class
      */
     public function update(Request $request, $id) {
@@ -131,7 +139,7 @@ class ClasseController extends Controller
                 'annee_scolaire_id' => $year->id,
                 'classe_id' => $id
             ]);
-            dd($classeEffectif);
+            $classeEffectif->delete();
         }
         $classe = Classe::findOrFail($id);
         $classe->delete();

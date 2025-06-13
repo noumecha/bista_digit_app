@@ -43,6 +43,15 @@ class Classe extends Model
     }
 
     /**
+     * A class could have many disciplines
+     */
+    public function disciplines():HasMany
+    {
+        return $this->hasMany(Discipline::class);
+    }
+
+
+    /**
      * a class belongs to many ensMat relations
      */
     public function enseignantMatiere(): BelongsToMany
@@ -73,6 +82,16 @@ class Classe extends Model
         return $this->belongsToMany(User::class, 'classe_annee_scolaire_students')
             ->withPivot('annee_scolaire_id')
             ->withTimestamps();
+    }
+
+    /**
+     * get student of a current years
+     */
+    public function getStudents() {
+        $studentIds = ClasseAnneeScolaireStudent::where('classe_id', $this->id)
+            ->where('annee_scolaire_id', getCurrentYear()->id)
+            ->pluck('user_id');
+        return User::where('typeUser', 'eleve')->whereIn('id', $studentIds)->get();
     }
 
     /**

@@ -181,12 +181,14 @@
             </ul>
             <!-- Evaluation on Dashboard -->
             <ul class="navbar-nav submenu">
+                @can('access-devoirs')
                 <li data-submenu="evaluations" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-user-graduate fa-sm"></i>
                         <span class="font-weight-normal text-md ml-n5">Evaluation</span>
                     </div>
                 </li>
+                @endcan
                 @can('access-admin')
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('evaluation.trimestres') ? 'active' : '' }}"
@@ -305,12 +307,14 @@
             @endcan
             <!-- Programmes on Dashboard -->
             <ul class="navbar-nav submenu">
+                @can('access-devoirs')
                 <li data-submenu="programme-booster" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-graduation-cap"></i>
                         <span class="font-weight-normal text-md ml-n5">Programme Booster</span>
                     </div>
                 </li>
+                @endcan
                 @can('access-admin')
                 <li data-submenu="programme-booster" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('booster.evaluations') ? 'active' : '' }}"
@@ -397,8 +401,8 @@
                 </li>
                 @endcan
                 <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
-                        href="{{ route('page_configuration.booster.index') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('notification.index') ? 'active' : '' }}"
+                        href="{{ route('notification.index') }}">
                         <span class="nav-link-text ms-1">Mes notifications</span>
                     </a>
                 </li>
