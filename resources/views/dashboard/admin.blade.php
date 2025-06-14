@@ -50,7 +50,7 @@
                         <div class="col-12">
                             <div class="card border-danger">
                                 <div class="card-header bg-danger text-white">
-                                    <h5 class="mb-0">Alertes Critiques</h5>
+                                    <h5 class="mb-0 text-white">Alertes Critiques</h5>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">

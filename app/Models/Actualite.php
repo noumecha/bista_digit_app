@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,16 @@ class Actualite extends Model
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * current month actualites
+     */
+    public function thisMonth() {
+        $thisMonthActus = Actualite::where('created_at', '>=', Carbon::now()->startOfMonth())
+        ->where('created_at', '<', Carbon::now()->endOfMonth())
+        ->get();
+        return $thisMonthActus;
     }
 
     /**

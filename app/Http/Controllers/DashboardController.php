@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actualite;
 use App\Models\User;
 use App\Models\Matiere;
 use App\Models\Classe;
@@ -12,7 +13,9 @@ use App\Models\AnneeScolaire;
 use App\Models\Bulletin;
 use App\Models\Club;
 use App\Models\DevoirAnneeScolaire;
+use App\Models\Epreuve;
 use App\Models\Evaluation;
+use App\Models\Notification;
 use App\Models\Remplissage;
 use App\Models\Trimestre;
 use Illuminate\Support\Facades\Auth;
@@ -20,14 +23,23 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    /**
+     * default user dashboard
+     */
     public function index(Request $request)
     {
         $user = User::findOrFail(Auth::id());
         $currentYear = AnneeScolaire::where('statut', true)->first();
+        $recentActualites = Actualite::query()->latest()->paginate(5);
+        $recentEpreuves = Epreuve::query()->latest()->paginate(5);
+        $recentNotifications = Notification::query()->latest()->paginate(5);
         // Données communes à tous les utilisateurs
         $data = [
             'user' => $user,
             'currentYear' => $currentYear,
+            'recentActualites' => $recentActualites,
+            'recentEpreuves' => $recentEpreuves,
+            'recentNotifications' => $recentNotifications
             //'unreadNotifications' => $user->unreadNotifications()
         ];
         // Personnalisation par rôle

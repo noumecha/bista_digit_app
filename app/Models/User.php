@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Sex;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -183,6 +184,52 @@ class User extends Authenticatable
     }
 
     /**
+     * get all actualites create by a user
+     */
+    public function getActualites($currentMonth = false)
+    {
+        $query = Actualite::where('user_id', $this->id);
+
+        if ($currentMonth) {
+            $query->where('created_at', '>=', Carbon::now()->startOfMonth())
+                  ->where('created_at', '<', Carbon::now()->endOfMonth());
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * get all epreuve create by a user
+     */
+    public function getEpreuves($currentMonth = false)
+    {
+        $query = Epreuve::where('user_id', $this->id);
+
+        if ($currentMonth) {
+            $query->where('created_at', '>=', Carbon::now()->startOfMonth())
+                  ->where('created_at', '<', Carbon::now()->endOfMonth());
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * get user created notifications
+     */
+    public function getNotifications($currentMonth = false, $currentWeek = false) {
+        $query = Notification::where('user_id', $this->id);
+        if ($currentMonth) {
+            $query->where('created_at', '>=', Carbon::now()->startOfMonth())
+                ->where('created_at', '<', Carbon::now()->endOfMonth());
+        }
+        if($currentWeek) {
+            $query->where('created_at', '>=', Carbon::now()->startOfWeek())
+                ->where('created_at', '<', Carbon::now()->endOfWeek());
+        }
+        return $query;
+    }
+
+    /**
      * a teacher can upload many subjects
      */
     public function epreuves(): HasMany {
@@ -300,6 +347,7 @@ class User extends Authenticatable
     public function unreadNotifications() {
         return $this->notifications()->whereNull('read_at')->get();
     }
+
 
     /**
      * Manage roles
