@@ -104,6 +104,12 @@
                                 <a href="{{ route('education.discipline') }}" class="btn btn-danger">
                                     <i class="fas fa-gavel"></i> Discipline
                                 </a>
+                                <a href="{{ route('notification.index') }}" class="btn btn-info">
+                                    <i class="fas fa-bell"></i> Notifications
+                                </a>
+                                <a href="{{ route('bulletins.list') }}" class="btn btn-secondary">
+                                    <i class="fas fa-file"></i> Bulletins
+                                </a>
                             </div>
                         </div>
                     </div>

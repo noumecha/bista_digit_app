@@ -11,13 +11,13 @@
                         <i class="text-white fa-solid fa-bars"></i>
                     </div>
                     <div class="logo text-white">
-                        @if (isset(appConfiguration()->school_logo))
-                            <a href="{{ route('home.index') }}">
-                                <img src="{{ asset('storage/'.appConfiguration()->school_logo) }}">
+                        <!--@ if (isset(appConfiguration()->school_logo))
+                            <a href="{ { route('home.index') }}">
+                                <img src="{ { asset('storage/'.appConfiguration()->school_logo) }}">
                             </a>
-                        @else
+                        @ else -->
                             <a class="h4 text-white" href={{ route('home.index') }}>POWEREDUCATION</a>
-                        @endif
+                        <!-- @ endif -->
                     </div>
                     <div class="menu-items">
                         <div class="menu">

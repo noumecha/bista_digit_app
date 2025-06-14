@@ -3,15 +3,15 @@
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-6 col-12">
                 <div class="_kl_de_w">
-                    @if (isset(appConfiguration()->school_logo))
-                        <a href="{{ route('home.index') }}">
-                            <img src="{{ asset('storage/'.appConfiguration()->school_logo) }}">
+                    <!--@ if (isset(appConfiguration()->school_logo))
+                        <a href="{ { route('home.index') }}">
+                            <img src="{ { asset('storage/'.appConfiguration()->school_logo) }}">
                         </a>
-                    @else
+                    @ else -->
                         <h3>
                             <a class="h4 text-white" href={{ route('home.index') }}>POWEREDUCATION</a>
                         </h3>
-                    @endif
+                    <!--@ endif -->
                     @if (appConfiguration() !== null)
                         @if(isset(appConfiguration()->description))
                             <p style="text-align: justify;">

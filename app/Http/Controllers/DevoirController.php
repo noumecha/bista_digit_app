@@ -542,7 +542,7 @@ class DevoirController extends Controller
     }
 
     /**
-     * showing devoir result for one student for teacher
+     * showing devoir result for one student to a teacher
      */
     public function individualResult(Devoir $devoir, $id) {
         $student = User::findOrFail($id);

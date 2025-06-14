@@ -5,8 +5,9 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3>
-                            Devoir : {{ $devoir->titre_devoir }} -
-                            Classe : {{ $devoir->classe->libClasse }}
+                            Devoir : {{ $devoir->titre_devoir }};
+                            Classe : {{ $devoir->classe->libClasse }};
+                            Matière : {{ $devoir->matiere->libelleMatiere }}
                         </h3>
                         <span class="badge bg-{{ $devoir->statut === "terminé" ? 'success' : 'warning' }}">
                             {{ $devoir->statut === "terminé" ? 'terminé' : 'en cours' }}
