@@ -11,7 +11,6 @@ use App\Http\Controllers\EnseignantMatiereModelController;
 use App\Http\Controllers\EnseignantPrincipalController;
 use App\Http\Controllers\EnseignementController;
 use App\Http\Controllers\EpreuveController;
-use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\MatiereController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\QuestionController;
@@ -55,26 +54,12 @@ Route::middleware(['can:access-discipline'])->group(function () {
 });
 
 Route::middleware(['can:access-admin'])->group(function () {
-    Route::get('/education/type_epreuves', [TypeEpreuveController::class, 'index'])->name('education.type_epreuves')->middleware('auth');
     Route::get('/education/matieres', [MatiereController::class, 'index'])->name('education.matiere')->middleware('auth');
     Route::get('/education/classes', [ClasseController::class, 'index'])->name('education.classes')->middleware('auth');
     Route::get('/education/sections', [SectionController::class, 'index'])->name('education.sections')->middleware('auth');
     Route::get('/education/coefficients', [CoefficientController::class, 'index'])->name('education.coefficients')->middleware('auth');
     Route::get('/education/enseignement', [EnseignementController::class, 'index'])->name('education.enseignement')->middleware('auth');
     Route::get('/education/enseignantMatiere', [EnseignantMatiereModelController::class, 'index'])->name('education.enseignantMatiere')->middleware('auth');
-
-    ## education - typeepreuves routes
-    Route::get('/education/epreuves/typeepreuves', [TypeEpreuveController::class, 'index'])->name('epreuves.typeepreuves')->middleware('auth');
-    Route::post('/education/epreuves/typeepreuves/save', [TypeEpreuveController::class, 'store'])->name('epreuves.typeepreuves.store')->middleware('auth');
-    Route::get('/education/epreuves/typeepreuves/{id}/edit', [TypeEpreuveController::class, 'edit'])->name('epreuves.typeepreuves.edit')->middleware('auth');
-    Route::put('/education/epreuves/typeepreuves/update/{id}', [TypeEpreuveController::class, 'update'])->name('epreuves.typeepreuves.update')->middleware('auth');
-    Route::delete('/education/epreuves/typeepreuves/{id}', [TypeEpreuveController::class, 'destroy'])->name('epreuves.typeepreuves.destroy')->middleware('auth');
-
-    ## education -> type epreuves CRUD routes
-    Route::post('/typeEpreuve/save', [TypeEpreuveController::class, 'store'])->name('typeEpreuve.store')->middleware('auth');
-    Route::put('/typeEpreuve/{id}', [TypeEpreuveController::class, 'update'])->name('typeEpreuve.update')->middleware('auth');
-    Route::get('/typeEpreuve/{id}/edit', [TypeEpreuveController::class, 'edit'])->name('typeEpreuve.edit')->middleware('auth');
-    Route::delete('/typeEpreuve/{id}', [TypeEpreuveController::class, 'destroy'])->name('typeEpreuve.destroy')->middleware('auth');
 
     ## education -> attribution_matieres routes
     Route::post('/education/enseignantMatiere/save', [EnseignantMatiereModelController::class, 'store'])->name('enseignantMatiere.store')->middleware('auth');
@@ -153,19 +138,36 @@ Route::middleware(['can:access-devoirs'])->group(function () {
     Route::get('/education/devoirs', [DevoirController::class, 'index'])->name('education.devoirs')->middleware('auth');
 });
 
-Route::middleware(['can:access-teacher'])->group(function () {
-    # showing class details :
-    Route::get('/education/classe/view/{id}', [ClasseController::class, 'showClasse'])->name('classe.show')->middleware('auth');
-    # education routes
-    Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuves')->middleware('auth');
-    Route::get('/education/questions', [QuestionController::class, 'index'])->name('education.questions')->middleware('auth');
-    Route::get('/education/reponses', [ReponseController::class, 'index'])->name('education.reponses')->middleware('auth');
-
+Route::middleware(['can:access-epreuves'])->group(function () {
     ## education - epreuves routes
+    Route::get('/education/epreuves', [EpreuveController::class, 'index'])->name('education.epreuves')->middleware('auth');
     Route::post('/education/epreuves/save', [EpreuveController::class, 'store'])->name('epreuves.store')->middleware('auth');
     Route::get('/education/epreuves/{id}/edit', [EpreuveController::class, 'edit'])->name('epreuves.edit')->middleware('auth');
     Route::put('/education/epreuves/update/{id}', [EpreuveController::class, 'update'])->name('epreuves.update')->middleware('auth');
     Route::delete('/education/epreuves/{id}', [EpreuveController::class, 'destroy'])->name('epreuves.destroy')->middleware('auth');
+
+    ## education - typeepreuves routes
+    Route::get('/education/type_epreuves', [TypeEpreuveController::class, 'index'])->name('education.type_epreuves')->middleware('auth');
+    Route::get('/education/epreuves/typeepreuves', [TypeEpreuveController::class, 'index'])->name('epreuves.typeepreuves')->middleware('auth');
+    Route::post('/education/epreuves/typeepreuves/save', [TypeEpreuveController::class, 'store'])->name('epreuves.typeepreuves.store')->middleware('auth');
+    Route::get('/education/epreuves/typeepreuves/{id}/edit', [TypeEpreuveController::class, 'edit'])->name('epreuves.typeepreuves.edit')->middleware('auth');
+    Route::put('/education/epreuves/typeepreuves/update/{id}', [TypeEpreuveController::class, 'update'])->name('epreuves.typeepreuves.update')->middleware('auth');
+    Route::delete('/education/epreuves/typeepreuves/{id}', [TypeEpreuveController::class, 'destroy'])->name('epreuves.typeepreuves.destroy')->middleware('auth');
+
+    ## education -> type epreuves CRUD routes
+    Route::post('/typeEpreuve/save', [TypeEpreuveController::class, 'store'])->name('typeEpreuve.store')->middleware('auth');
+    Route::put('/typeEpreuve/{id}', [TypeEpreuveController::class, 'update'])->name('typeEpreuve.update')->middleware('auth');
+    Route::get('/typeEpreuve/{id}/edit', [TypeEpreuveController::class, 'edit'])->name('typeEpreuve.edit')->middleware('auth');
+    Route::delete('/typeEpreuve/{id}', [TypeEpreuveController::class, 'destroy'])->name('typeEpreuve.destroy')->middleware('auth');
+
+});
+
+Route::middleware(['can:access-teacher'])->group(function () {
+    # showing class details :
+    Route::get('/education/classe/view/{id}', [ClasseController::class, 'showClasse'])->name('classe.show')->middleware('auth');
+    # education routes
+    Route::get('/education/questions', [QuestionController::class, 'index'])->name('education.questions')->middleware('auth');
+    Route::get('/education/reponses', [ReponseController::class, 'index'])->name('education.reponses')->middleware('auth');
 
     ## education -> epreuves CRUD routes
     Route::post('/epreuve/save', [EpreuveController::class, 'store'])->name('epreuve.store')->middleware('auth');

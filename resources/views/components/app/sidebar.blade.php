@@ -26,7 +26,7 @@
                 </a>
             </li>
             @endcan
-            @can('access-admin')
+            @can('access-personnel')
             <ul class="navbar-nav submenu">
                 <li data-submenu="actualites" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
@@ -90,12 +90,14 @@
             @endcan
             <!-- Education on Dashboard -->
             <ul class="navbar-nav submenu">
+                @can('access-education')
                 <li data-submenu="education" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-book fa-sm"></i>
                         <span class="font-weight-normal text-md ml-n5">Education</span>
                     </div>
                 </li>
+                @endcan
                 @can('access-admin')
                 <li data-submenu="education" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.enseignantMatiere') ? 'active' : '' }}"
@@ -257,23 +259,19 @@
             @endcan
             <!-- Epreuve on Dashboard -->
             <ul class="navbar-nav submenu">
-                @can('access-teacher')
+                @can('access-epreuves')
                 <li data-submenu="epreuves" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
                         <i class="fa-solid fa-book-open"></i>
                         <span class="font-weight-normal text-md ml-n5">Epreuves</span>
                     </div>
                 </li>
-                @endcan
-                @can('access-admin')
                 <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.type_epreuves') ? 'active' : '' }}"
                         href="{{ route('education.type_epreuves') }}">
                         <span class="nav-link-text ms-1">Type d'Epreuve</span>
                     </a>
                 </li>
-                @endcan
-                @can('access-teacher')
                 <li data-submenu="epreuves" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('education.epreuves') ? 'active' : '' }}"
                         href="{{ route('education.epreuves') }}">
@@ -392,11 +390,19 @@
                         <span class="font-weight-normal text-md ml-n5">Notifications</span>
                     </div>
                 </li>
-                @can('access-admin')
+                @can('access-personnel')
                 <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('notification.create') ? 'active' : '' }}"
                         href="{{ route('notification.create') }}">
                         <span class="nav-link-text ms-1">Nouvelle Notification</span>
+                    </a>
+                </li>
+                @endcan
+                @can('access-admin')
+                <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('notification.controles') ? 'active' : '' }}"
+                        href="{{ route('notification.controles') }}">
+                        <span class="nav-link-text ms-1">Contrôles</span>
                     </a>
                 </li>
                 @endcan

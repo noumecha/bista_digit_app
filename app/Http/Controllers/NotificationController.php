@@ -194,6 +194,13 @@ class NotificationController extends Controller
     }
 
     /**
+     * function to controlate who send notifications
+     */
+    public function controles() {
+        return view('notifications.controles');
+    }
+
+    /**
      * destroy notification
      */
     public function destroy($id) {

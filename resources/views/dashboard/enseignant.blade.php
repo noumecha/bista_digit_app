@@ -129,7 +129,7 @@
                                     @else
                                         <div class="list-group">
                                             @foreach($classes as $classe)
-                                            <a href="#"
+                                            <a href="{{ route('classe.show', $classe->id) }}"
                                                class="list-group-item list-group-item-action">
                                                 <div class="d-flex w-100 justify-content-between">
                                                     <h6 class="mb-1">{{ $classe->libClasse }}</h6>

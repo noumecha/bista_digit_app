@@ -85,6 +85,32 @@ class Classe extends Model
     }
 
     /**
+     * get matieres for the classe
+     */
+    public function getMatieres() {
+        $coefIds = CoefAnneeScolaire::where('annee_scolaire_id', getCurrentYear()->id)
+            ->pluck('coefficient_id');
+        $matiereIds = Coefficient::where('classe_id', $this->id)->whereIn('id', $coefIds)
+            ->pluck('matiere_id');
+        $matieres = Matiere::whereIn('id', $matiereIds)->get();
+        return $matieres;
+    }
+
+    /**
+     * get teachers of the classe
+     */
+    public function getTeachers() {
+        $enseignementIds = Enseignement::where('classe_id', $this->id)->pluck('enseignant_matiere_id');
+        $teacherIds = EnseignantMatiereModel::whereIn('id', $enseignementIds)->pluck('user_id');
+        $teacherYearIds = UserAnneeScolaire::where('annee_scolaire_id', getCurrentYear()->id)
+            ->whereIn('user_id', $teacherIds)
+            ->pluck('user_id');
+        $teachers = User::where('typeUser', 'enseignant')->whereIn('id', $teacherYearIds)->get();
+        return $teachers;
+    }
+
+
+    /**
      * get student of a current years
      */
     public function getStudents() {
@@ -101,4 +127,5 @@ class Classe extends Model
     {
         return $this->hasMany(Devoir::class);
     }
+
 }

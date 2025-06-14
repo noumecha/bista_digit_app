@@ -312,6 +312,10 @@ class User extends Authenticatable
         return $this->typeUser === 'enseignant';
     }
 
+    public function isPersonnel() {
+        return $this->typeUser === 'personnel';
+    }
+
     public function isStudent() {
         return $this->typeUser === 'eleve';
     }

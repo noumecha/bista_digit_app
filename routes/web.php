@@ -87,7 +87,7 @@ Route::middleware(['can:access-teacher'])->group(function () {
     Route::get('/programme/booster/notes/matieres/{classId}', [BoosterNoteController::class, 'getBoosterMatieres'])->middleware('auth');
 });
 
-Route::middleware(['can:access-actus'])->group(function () {
+Route::middleware(['can:access-actus'])->middleware(['can:access-personnel'])->group(function () {
     // Actualites CRUD Routes :
     Route::get('/actualites/create', [ActusController::class, 'index'])->name('actualites.index')->middleware('auth');
     Route::post('/actualites/save', [ActusController::class, 'store'])->name('actualite.store')->middleware('auth');
@@ -98,20 +98,25 @@ Route::middleware(['can:access-actus'])->group(function () {
 # every body can see his notifications
 Route::get('/notifications/index', [NotificationController::class, 'index'])->name('notification.index')->middleware('auth');
 
-Route::middleware(['can:access-admin'])->group(function () {
-    // notifications routes :
-    Route::get('/notifications/view/{id}', [NotificationController::class, 'view'])->name('notification.view')->middleware('auth');
-    Route::get('/notifications/create', [NotificationController::class, 'create'])->name('notification.create')->middleware('auth');
-    Route::post('/notifications/save', [NotificationController::class, 'store'])->name('notification.send')->middleware('auth');
-    Route::delete('/notifications/delete/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy')->middleware('auth');
-    Route::get('/notifications/users/{type}', [NotificationController::class, 'getUsers'])->name('notification.users');
-
+Route::middleware(['can:access-personnel'])->group(function () {
     // Categories actualites CRUD Routes :
     Route::get('/categories/actualites', [CategorieActualiteController::class, 'index'])->name('actualites.categories')->middleware('auth');
     Route::post('/categories/actualites/save', [CategorieActualiteController::class, 'store'])->name('categorie.store')->middleware('auth');
     Route::put('/categories/actualites/update/{id}', [CategorieActualiteController::class, 'update'])->name('categorie.update')->middleware('auth');
     Route::get('/categories/actualites/{id}/edit', [CategorieActualiteController::class, 'edit'])->name('categorie.edit')->middleware('auth');
     Route::delete('/categories/actualites/{id}', [CategorieActualiteController::class, 'destroy'])->name('categorie.destroy')->middleware('auth');
+
+    // notifications routes :
+    Route::get('/notifications/view/{id}', [NotificationController::class, 'view'])->name('notification.view')->middleware('auth');
+    Route::get('/notifications/create', [NotificationController::class, 'create'])->name('notification.create')->middleware('auth');
+    Route::post('/notifications/save', [NotificationController::class, 'store'])->name('notification.send')->middleware('auth');
+    Route::delete('/notifications/delete/{id}', [NotificationController::class, 'destroy'])->name('notification.destroy')->middleware('auth');
+    Route::get('/notifications/users/{type}', [NotificationController::class, 'getUsers'])->name('notification.users');
+});
+
+Route::middleware(['can:access-admin'])->group(function () {
+    // notifications controles or traces routes :
+    Route::get('/notifications/controles', [NotificationController::class, 'controles'])->name('notification.controles');
 
     # configuratioun routes - clubs routes
     Route::get('/configurations/clubs', function () {
