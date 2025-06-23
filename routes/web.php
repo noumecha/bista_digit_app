@@ -26,6 +26,7 @@ use App\Http\Controllers\ProgrammeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\SpecialiteController;
+use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -196,6 +197,11 @@ Route::middleware(['can:access-admin'])->group(function () {
     Route::get('/utilisateur/teachers', [EnseignantController::class, 'index'])->name('utilisateur.teachers')->middleware('auth');
     Route::get('/utilisateur/students', [EleveController::class, 'index'])->name('utilisateur.students')->middleware('auth');
     Route::get('/utilisateur/personnels', [PersonnelController::class, 'index'])->name('utilisateur.personnels')->middleware('auth');
+
+    # stats routes
+    Route::get('/statistiques', function () { return redirect('/statistiques/trimestres');})->middleware('auth');
+    Route::get('/statistiques/trimestres', [StatisticsController::class, 'index'])->name('statistics.index')->middleware('auth');
+    Route::post('/statistiques/generate', [StatisticsController::class, 'generate'])->name('statistics.generate')->middleware('auth');
 
     ## users -> teacher routes
     Route::post('/utilisateur/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');

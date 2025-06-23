@@ -74,6 +74,13 @@ class Classe extends Model
     }
 
     /**
+     * A classe must have many bulletins
+     */
+    public function bulletins(): HasMany {
+        return $this->hasMany(Bulletin::class);
+    }
+
+    /**
      * A user belongs to one classe in a year.
      * So then a classe have many students in a year
      */

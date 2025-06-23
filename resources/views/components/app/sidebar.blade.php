@@ -497,14 +497,14 @@
                     </div>
                 </li>
                 <li data-submenu="statistics" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
-                        href="{{ route('page_configuration.booster.index') }}">
-                        <span class="nav-link-text ms-1">Publications</span>
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('statistics.index') ? 'active' : '' }}"
+                        href="{{ route('statistics.index') }}">
+                        <span class="nav-link-text ms-1">Trimestres</span>
                     </a>
                 </li>
                 <li data-submenu="statistics" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('page_configuration.booster.index') ? 'active' : '' }}"
-                        href="{{ route('page_configuration.booster.index') }}">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('statistics.index') ? 'active' : '' }}"
+                        href="{{ route('statistics.index') }}">
                         <span class="nav-link-text ms-1">Classement OBC</span>
                     </a>
                 </li>
