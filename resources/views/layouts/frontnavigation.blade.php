@@ -65,8 +65,20 @@
                                     <a href="{{ route('home.epreuves') }}"
                                         class="{{ request()->routeIs('home.epreuves') ? 'active-menu' : '' }}"
                                         >
-                                        Epreuves
+                                        Evalutions
                                     </a>
+                                    <ul class="submenu">
+                                        <li>
+                                            <a href="{{ route('home.epreuves') }}">
+                                                Epreuves
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('home.stats') }}">
+                                                Statistiques
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li>
                                     <a href="{{ route('home.contact') }}"

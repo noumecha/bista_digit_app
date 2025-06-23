@@ -200,8 +200,14 @@ Route::middleware(['can:access-admin'])->group(function () {
 
     # stats routes
     Route::get('/statistiques', function () { return redirect('/statistiques/trimestres');})->middleware('auth');
+    Route::post('/statistiques/publish', [StatisticsController::class, 'publish'])->name('statistics.publish');
     Route::get('/statistiques/trimestres', [StatisticsController::class, 'index'])->name('statistics.index')->middleware('auth');
     Route::post('/statistiques/generate', [StatisticsController::class, 'generate'])->name('statistics.generate')->middleware('auth');
+    Route::get('/statistiques/obc', [StatisticsController::class, 'obc'])->name('statistics.obc')->middleware('auth');
+    Route::post('/statistiques/obc/save', [StatisticsController::class, 'storeOBC'])->name('statistics.obc.store');
+    Route::get('/configurations/obc/{id}/edit', [SpecialiteController::class, 'editOBC'])->name('statistics.obc.edit')->middleware('auth');
+    Route::put('/statistiques/obc/update/{id}', [SpecialiteController::class, 'updateOBC'])->name('statistics.obc.update')->middleware('auth');
+    Route::delete('/statistiques/obc/delete/{id}', [SpecialiteController::class, 'destroyOBC'])->name('statistics.obc.destroy')->middleware('auth');
 
     ## users -> teacher routes
     Route::post('/utilisateur/teacher/save', [EnseignantController::class, 'store'])->name('teacher.store')->middleware('auth');

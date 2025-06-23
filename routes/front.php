@@ -4,6 +4,7 @@
 
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/acceuil', [HomeController::class, 'index'])->name('home.index');
+# statistics routes
+Route::get('/statistiques', [StatisticsController::class, 'stats'])->name('home.stats');
+Route::get('/statistiques/{id}', [StatisticsController::class, 'showDetails'])->name('front.statistics.details');
+# redirection to home
 Route::get('/', function () { return redirect('/acceuil'); })->middleware('auth');
 Route::get('/programmes', [HomeController::class, 'programmes'])->name('home.programmes');
 Route::get('/programmes/leader', [HomeController::class, 'leaderPage'])->name('home.leaderPage');

@@ -2,7 +2,7 @@
     <section id="carouselExampleFade" class="carousel slide carousel-fade slider">
         <div class="carousel-inner">
             <div class="carousel-item active" style="height: 75vh">
-                <img @if(isset($appconfiguration) && isset($appconfiguration->school_name)) {
+                <img @if(isset($appconfiguration) && isset($appconfiguration->school_image)) {
                         src="{{ asset('storage/' . $appconfiguration->school_image) }}"
                     }
                     @else {

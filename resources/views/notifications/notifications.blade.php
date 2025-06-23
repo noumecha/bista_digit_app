@@ -65,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <!-- modal for creation new actualites -->
+        <!-- modal for creation new notifications -->
         <div class="modal fade" id="create-notification-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-xl">
                 <form enctype="multipart/form-data" role="form" id="notificationForm" class="form row">
