@@ -89,7 +89,9 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-filter me-2"></i>Filtrer
+                                </button>
                             </div>
                         </div>
                     </form>
