@@ -28,13 +28,11 @@ $(function(){
             button.children('span#submit-obcstats-form-button-text').text('Mettre à jour');
             headerText.text('Mettre à jour le classement OBC pour l\'année');
             bulletinIdInput.val(statId);
-            $('#user_id').prop("disabled", true);
-            $('#evaluation_id').prop("disabled", true);
+            $('#annee_scolaire_id').prop("disabled", true);
             $.ajax({
                 url: "obc/"+statId+"/edit",
                 type: "GET",
                 success: function(res) {
-                    // filling form base on the data res
                     fillInputForm(res, form);
                 },
                 error: function(xhr) {
@@ -52,9 +50,8 @@ $(function(){
         var statId = $('#statId').val();
         var form = $(this).closest('form')[0];
         var formData = new FormData(form);
-
         // Kind of action
-        var formAction = buttonText.text() === 'Mettre à jour' ? '/obc/update' + statId : '/statistiques/obc/save';
+        var formAction = buttonText.text() === 'Mettre à jour' ? '/configuration/statistiques/obc/update/' + statId : '/configuration/statistiques/obc/save';
         var modalId = $(this).closest('div.modal').prop('id');
         if (buttonText.text() === 'Mettre à jour') {
             formData.append('_method', 'PUT');
@@ -66,15 +63,17 @@ $(function(){
             processData: false,
             contentType: false,
             success: function(response) {
-                if(response.error)
+                if(response.error) {
                     setSuccessMessage(response.error, '#modal-form-alert-errors');
-                if(response.success)
+                }
+                if(response.success) {
                     setSuccessMessage(response.success, '#modal-form-alert-success');
+                }
                 setTimeout(function() {
                     spinner.addClass('d-none');
                 }, 4000);
                 // reset form after creation
-                if(formAction === '/statistiques/obc/save') {
+                if(formAction === '/configuration/statistiques/obc/save') {
                     resetForm(form);
                 }
                 fetchObcStats();
@@ -106,6 +105,7 @@ $(function(){
         $('#modal-obcstats-header').removeClass('bg-primary bg-success');
         $('#submit-obcstats-form-button').removeClass('btn-outline-primary btn-outline-success');
         $('#submit-obcstats-form-button').children('span#submit-obcstats-form-button-text').text('');
+        $('#annee_scolaire_id').prop("disabled", false);
     });
 
     // fetching obc stats dynamically
@@ -120,7 +120,7 @@ $(function(){
     function fetchObcStats() {
         var formData = $('#filterObcStatsForm').serialize();
         $.ajax({
-            url : "/statistiques/obc",
+            url : "/configuration/statistiques/obc",
             type : 'GET',
             data : formData,
             success : function(data) {

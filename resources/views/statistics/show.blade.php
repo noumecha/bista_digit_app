@@ -30,36 +30,32 @@
                     <h2 class="h5 mb-0">Classement OBC</h2>
                 </div>
                 <div class="card-body">
-                    <form class="mb-4">
+                    <form class="mb-4" id="obcFilterForm">
                         <div class="row">
-                            <div class="col-md-6">
-                                <select name="annee_scolaire_id" class="form-select" onchange="this.form.submit()">
+                            <div class="col-md-12">
+                                <select name="annee_scolaire_id" id="annee_scolaire_id" class="form-select">
                                     @foreach($obcStats as $stat)
-                                        <option value="{{ $stat->annee_scolaire_id }}"
-                                            {{ $selectedOBC && $selectedOBC->annee_scolaire_id == $stat->annee_scolaire_id ? 'selected' : '' }}>
-                                            Année {{ $stat->annee_scolaire_id }}
+                                        <option value="{{ $stat->anneescolaire->id }}"
+                                            {{ $selectedOBC && $selectedOBC->anneescolaire->id == $stat->anneescolaire->id ? 'selected' : '' }}>
+                                            Année scolaire {{ $stat->anneescolaire->libelleAnneeScolaire }}
                                         </option>
                                     @endforeach
                                 </select>
+                                <input type="text" name="obc" value="1" class="d-none">
                             </div>
                         </div>
                     </form>
-                    @if($selectedOBC)
-                        <div class="obc-ranking text-center py-4">
-                            <div class="display-2 text-success fw-bold mb-3">
-                                {{ $selectedOBC->obc_rank }}<sup>ème</sup>
-                            </div>
-                            <p class="lead">sur {{ $selectedOBC->data['total_schools'] ?? '1200' }} établissements au Cameroun</p>
-                            <div class="progress mt-4" style="height: 20px;">
-                                <div class="progress-bar bg-success" role="progressbar"
-                                    style="width: {{ ($selectedOBC->data['total_schools'] - $selectedOBC->obc_rank) / $selectedOBC->data['total_schools'] * 100 }}%"
-                                    aria-valuenow="{{ $selectedOBC->obc_rank }}"
-                                    aria-valuemin="1"
-                                    aria-valuemax="{{ $selectedOBC->data['total_schools'] }}">
+                    <div class="row d-none" id="obcLoader" style="text-align: center;">
+                        <div class="col-12 mt-2">
+                            <div class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    </div>
+                    <div id="obcRanksTable">
+                    </div>
                 </div>
             </div>
             <!-- Trimestrial Stats Section -->
@@ -70,7 +66,7 @@
                     </h2>
                 </div>
                 <div class="card-body">
-                    <form class="mb-4">
+                    <form class="mb-4" id="statsDataSearch">
                         <div class="row g-3">
                             <div class="col-md-5">
                                 <select name="trimestre_id" class="form-select">
@@ -97,40 +93,17 @@
                             </div>
                         </div>
                     </form>
-                    @if($publishedStats->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Trimestre</th>
-                                        <th>Classe</th>
-                                        <th>Date Publication</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($publishedStats as $stat)
-                                    <tr>
-                                        <td>{{ $stat->trimestre->libelleTrimestre }}</td>
-                                        <td>{{ $stat->classe->libClasse }}</td>
-                                        <td>{{ $stat->published_at->format('d/m/Y H:i') }}</td>
-                                        <td>
-                                            <a href="{{ route('front.statistics.details', $stat->id) }}"
-                                            class="btn btn-sm btn-outline-primary">
-                                                Voir les Résultats
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            {{ $publishedStats->links() }}
+                    <div class="row d-none" id="loader" style="text-align: center;">
+                        <div class="col-12 mt-2">
+                            <div class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
                         </div>
-                    @else
-                        <div class="alert alert-info">
-                            Aucune statistique publiée pour ces critères
-                        </div>
-                    @endif
+                    </div>
+                    <div class="row" id="statsDatas">
+                    </div>
                 </div>
             </div>
         </div>

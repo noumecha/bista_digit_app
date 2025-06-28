@@ -44,30 +44,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <select name="trimestreFilter" id="trimestreFilter" class="form-select">
-                                            <option value="">Tous les trimestres</option>
-                                            @foreach ($trimestres as $trimestre)
-                                                <option value="{{ $trimestre->id }}">
-                                                    {{ $trimestre->libelleTrimestre }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <select name="classFilter" id="classFilter" class="form-select">
-                                            <option value="">Toutes les classes</option>
-                                            @foreach ($classes as $classe)
-                                                <option value="{{ $classe->id }}">
-                                                    {{ $classe->libClasse }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
                             </form>
                         </div>
                         <div class="card-body">
@@ -86,7 +62,7 @@
         <!-- modal for creating or updating a obc position data -->
         <div class="modal fade" id="create-obcstats-modal" style="z-index: 30000" tabindex="-1" aria-labelledby="exampleModalLabel">
             <div class="modal-dialog modal-xl">
-                <form enctype="multipart/form-data" role="form" id="bulletinForm" class="form row">
+                <form enctype="multipart/form-data" role="form" id="obcstatsForm" class="form row">
                     @csrf
                     <input type="hidden" name="statId" id="statId" value="">
                     <div class="modal-content p-0">
@@ -103,10 +79,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="year" class="form-control-label">
+                                        <label for="annee_scolaire_id" class="form-control-label">
                                             Année Scolaire :
                                         </label>
-                                        <select name="year" id="year" class="form-select">
+                                        <select name="annee_scolaire_id" id="annee_scolaire_id" class="form-select">
                                             <option value="">Toutes les années</option>
                                             @foreach ($schoolYears as $year)
                                                 <option value="{{ $year->id }}">

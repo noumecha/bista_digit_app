@@ -32,5 +32,6 @@
         <script src="{{ asset('front/js/script.js') }}"></script>
         <script src="{{ asset('js/functions/actualites-search-bar.js') }}"></script>
         <script src="{{ asset('js/functions/epreuves-search-bar.js') }}"></script>
+        <script src="{{ asset('js/functions/obc-search-filter.js') }}"></script>
     </body>
 </html>

@@ -20,8 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/acceuil', [HomeController::class, 'index'])->name('home.index');
 # statistics routes
-Route::get('/statistiques', [StatisticsController::class, 'stats'])->name('home.stats');
-Route::get('/statistiques/{id}', [StatisticsController::class, 'showDetails'])->name('front.statistics.details');
+Route::get('/statistiques/{id}', [HomeController::class, 'showDetails'])->name('front.statistics.details');
 # redirection to home
 Route::get('/', function () { return redirect('/acceuil'); })->middleware('auth');
 Route::get('/programmes', [HomeController::class, 'programmes'])->name('home.programmes');
@@ -32,6 +31,7 @@ Route::get('/epreuves', [HomeController::class, 'epreuves'])->name('home.epreuve
 Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 Route::get('/apropos', [AboutController::class, 'index'])->name('home.about');
 Route::get('/actualites', [HomeController::class, 'actualites'])->name('home.actus');
+Route::get('/statistiques', [HomeController::class, 'stats'])->name('home.stats');
 Route::get('/actualites/categorie/{category}', [HomeController::class, 'showCategorie'])->name('home.showCategorie');
 Route::get('/atouts/atout/{id}', [HomeController::class, 'specialitePage'])->name('home.specialitePage');
 Route::get('/clubs/club/{id}', [HomeController::class, 'clubPage'])->name('home.clubPage');

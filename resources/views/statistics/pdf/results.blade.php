@@ -36,7 +36,12 @@
         <tbody>
             @foreach($bulletins as $bulletin)
             <tr>
-                <td>{{ $bulletin->range }}</td>
+                <td>
+                    {{ $bulletin->range }}
+                    <sup>
+                        {{ $bulletin->range === 1 ? "er" : "ème"  }}
+                    </sup>
+                </td>
                 <td>{{ $bulletin->student->matricule }}</td>
                 <td>{{ $bulletin->student->name }} {{ $bulletin->student->surname }}</td>
                 <td class="{{ $bulletin->average >= 10 ? 'text-success' : 'text-danger' }}">

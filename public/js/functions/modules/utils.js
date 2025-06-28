@@ -73,6 +73,10 @@ function fillInputForm(res, form) {
                 $(this).val(data.classe_id);
             return true;
         }
+        // for stats
+        if($(this).attr('name') === 'total_schools') {
+            $(this).val(data.data.total_schools)
+        }
         // for ckeditor content
         if ($(this).attr('name') === 'content') {
             if(res.content && window.editor)

@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Actualite;
 use App\Models\AppConfiguration;
+use App\Models\Bulletin;
 use App\Models\CategorieActualite;
 use App\Models\Classe;
 use App\Models\Club;
 use App\Models\Epreuve;
 use App\Models\Matiere;
+use App\Models\PublishedStatistic;
 use App\Models\Slider;
 use App\Models\Specialite;
+use App\Models\Trimestre;
 use App\Models\TypeEpreuve;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,7 +21,7 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     /**
-     * index function
+     * home page
      */
     public function index () {
         $appconfiguration = AppConfiguration::all()->last();
@@ -38,7 +41,7 @@ class HomeController extends Controller
     }
 
     /**
-     * index function
+     * all programmes page
      */
     public function programmes () {
         $programmes = Specialite::query()->where("type","booster-page")->orWhere("type","leader-page")
@@ -95,7 +98,7 @@ class HomeController extends Controller
     }
 
     /**
-     * index function
+     * all epreuves pages
      */
     public function epreuves (Request $request) {
         // vars :
@@ -142,7 +145,7 @@ class HomeController extends Controller
     }
 
     /**
-     * index function
+     * epreuve single page
      */
     public function showEpreuve($id) {
         $epreuve = Epreuve::findOrFail($id);
@@ -151,7 +154,7 @@ class HomeController extends Controller
     }
 
     /**
-     * index function
+     * actus on front
      */
     public function actualites (Request $request) {
         $categories = CategorieActualite::all();
@@ -175,6 +178,77 @@ class HomeController extends Controller
                 'actualites', 'categories', 'search', 'categoryFilter','actualitesSliders'
             ));
         }
+    }
+
+    /**
+     * stats datas on front
+     */
+    public function stats(Request $request) {
+        // base datas
+        $trimestres = Trimestre::all();
+        $classes = Classe::all();
+        // For OBC stats
+        $yearFilter = $request->input('annee_scolaire_id');
+        $obcStats = PublishedStatistic::where('type', 'obc')
+            ->orderBy('annee_scolaire_id', 'desc')
+            ->get();
+        $selectedOBC = $yearFilter
+            ? PublishedStatistic::where('type', 'obc')
+                ->where('annee_scolaire_id', $yearFilter)
+                ->first()
+            : $obcStats->first();
+        // for trimestrials stats
+        $query = PublishedStatistic::query()->where('annee_scolaire_id', getCurrentYear()->id)
+            ->where('type', 'trimestriel');
+        // filters
+        $trimestreFilter = $request->input('trimestre_id');
+        $classFilter = $request->input('classe_id');
+        if(!empty($trimestreFilter)) {
+            $query->where('trimestre_id', $trimestreFilter);
+        }
+        if(!empty($classFilter)) {
+            $query->where('classe_id', $classFilter);
+        }
+        $stats = $query->orderBy('created_at', 'desc')->paginate(10);
+        // return
+        if($request->ajax()) {
+            if($request->has('obc')) {
+                /*return response()->json([
+                    'obc_stats' => view('statistics.partials.obc-stats-datas', compact('selectedOBC'))
+                ]);*/
+                return view('statistics.partials.obc-stats-datas', compact('selectedOBC'));
+            } else {
+                /*return response()->json([
+                    'trim_stats' => view('statistics.partials.stats-datas', compact('stats'))
+                ]);*/
+                return view('statistics.partials.stats-datas', compact('stats'));
+            }
+        } else {
+            return view('statistics.show', compact(
+                'stats','trimestres','classes','obcStats','selectedOBC'
+            ));
+        }
+    }
+
+    /**
+     * Show detailed results for a published statistic
+     */
+    public function showDetails($id)
+    {
+        $publishedStat = PublishedStatistic::findOrFail($id);
+        // For trimestrial stats
+        $bulletins = Bulletin::where('trimestre_id', $publishedStat->trimestre_id)
+            ->where('classe_id', $publishedStat->classe_id)
+            ->where('type_bulletin', 'trimestre')
+            ->where('annee_scolaire_id', getCurrentYear()->id)
+            ->orderBy('average', 'desc')->get();
+
+        return view('statistics.details', [
+            'publishedStat' => $publishedStat,
+            'bulletins' => $bulletins,
+            'trimestre' => $publishedStat->trimestre,
+            'classe' => $publishedStat->classe
+        ]);
     }
 
     /**

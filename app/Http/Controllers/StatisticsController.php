@@ -42,13 +42,15 @@ class StatisticsController extends Controller
     }
 
     /**
-     * generate pdf file
+     * export as a pdf
      */
-    public function generate(Request $request)
-    {
-        $request->validate([
+    public function exportPDF(Request $request)
+    {   $request->validate([
             'trimestre_id' => 'required|exists:trimestres,id',
             'classe_id' => 'required|exists:classes,id',
+        ],  [
+            'trimestre_id.required' => 'Veuillez selectionnez un trimestre',
+            'classe_id.required' => 'Veuillez selectionnez une classe'
         ]);
         $trimestre = Trimestre::find($request->trimestre_id);
         $classe = Classe::find($request->classe_id);
@@ -61,22 +63,16 @@ class StatisticsController extends Controller
             $query->where('classe_id', $request->input('classe_id'));
         }
         $bulletins = $query->orderBy('average', 'desc')->get();
+        if($bulletins->isEmpty()) {
+            return redirect()->route('statistics.index')->with(
+                'deleteSuccess', 'Données non disponibles pour la génération du PDF!'
+            );
+        }
         $data = [
             'trimestre' => $trimestre,
             'classe' => $classe,
             'bulletins' => $bulletins,
         ];
-        if ($request->has('export_pdf')) {
-            return $this->exportPDF($data);
-        }
-        return view('statistics.results', $data);
-    }
-
-    /**
-     * export as a pdf
-     */
-    protected function exportPDF($data)
-    {
         $pdf = PDF::loadView('statistics.pdf.results', $data);
         return $pdf->download(
             'statistiques_'.$data['trimestre']->libelleTrimestre.'_'
@@ -88,41 +84,53 @@ class StatisticsController extends Controller
      */
     public function publish(Request $request)
     {
-        $request->validate([
-            'trimestre_id' => 'required|exists:trimestres,id',
-            'classe_id' => 'required|exists:classes,id'
-        ], [
-            'trimestre_id.required' => 'Veuillez selectionnez un trimestre',
-            'classe_id.required' => 'Veuillez selectionnez une classe'
-        ]);
-
-        // Check if already published
-        if (PublishedStatistic::where('trimestre_id', $request->trimestre_id)
-            ->where('classe_id', $request->classe_id)
-            ->where('type', 'trimestriel')
-            ->exists()) {
-            return back()->with('error', 'Ces statistiques sont déjà publiées');
+        try {
+            $request->validate([
+                'trimestre_id' => 'required|exists:trimestres,id',
+                'classe_id' => 'required|exists:classes,id',
+            ],  [
+                'trimestre_id.required' => 'Veuillez selectionnez un trimestre',
+                'classe_id.required' => 'Veuillez selectionnez une classe'
+            ]);
+            // Check if already published
+            if (PublishedStatistic::where('trimestre_id', $request->trimestre_id)
+                ->where('classe_id', $request->classe_id)
+                ->where('type', 'trimestriel')
+                ->exists()) {
+                return response()->json([
+                    'error' => 'Ces statistiques ont déjà été publiées'
+                ]);
+            }
+            // Get the data to publish
+            $bulletins = Bulletin::where('trimestre_id', $request->trimestre_id)
+                ->where('type_bulletin', 'trimestre')
+                ->where('classe_id', $request->classe_id)
+                ->orderBy('average', 'desc')->get();
+            if($bulletins->isEmpty()) {
+                return response()->json([
+                    'error' => 'Aucunes données disponibles pour la publication!'
+                ]);
+            }
+            // Publish
+            $stat = PublishedStatistic::create([
+                'type' => 'trimestriel',
+                'trimestre_id' => $request->trimestre_id,
+                'classe_id' => $request->classe_id,
+                'data' => $bulletins,
+                'is_published' => true,
+                'annee_scolaire_id' => getCurrentYear()->id,
+                'user_id' => Auth::id()
+            ]);
+            if ($stat) {
+                return response()->json([
+                    'success' => 'Statistiques publiées avec succès'
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'Erreur lors de la publication : '.$th->getMessage()
+            ]);
         }
-
-        // Get the data to publish
-        $bulletins = Bulletin::where('trimestre_id', $request->trimestre_id)
-            ->where('type_bulletin', 'trimestre')
-            ->where('classe_id', $request->classe_id)
-            ->orderBy('average', 'desc')
-            ->get();
-
-        // Publish
-        PublishedStatistic::create([
-            'type' => 'trimestriel',
-            'trimestre_id' => $request->trimestre_id,
-            'classe_id' => $request->classe_id,
-            'data' => $bulletins,
-            'is_published' => true,
-            'published_at' => now(),
-            'user_id' => Auth::id()
-        ]);
-
-        return back()->with('success', 'Statistiques publiées avec succès');
     }
 
     /**
@@ -165,31 +173,36 @@ class StatisticsController extends Controller
     public function storeOBC(Request $request)
     {
         $request->validate([
-            'year' => 'required|integer',
+            'annee_scolaire_id' => 'required|integer',
             'obc_rank' => 'required|integer|min:1',
             'total_schools' => 'required|integer|min:1'
         ], [
-            'year.required' => 'Veuillez selectionner une année scolaire',
+            'annee_scolaire_id.required' => 'Veuillez selectionner une année scolaire',
             'obc_rank.required' => 'Veuillez ajouter le rang de l\'établissement',
             'total_schools.required' => 'Veuillez ajouter le nombre total d\'établissements'
         ]);
         try {
-            // Check if already exists
+            if ($request->obc_rank > $request->total_schools) {
+                return response()->json([
+                    'error' => 'Le rang ne peut pas etre supérieur au nombre total d\'établissements'
+                ]);
+            }
             if (PublishedStatistic::where('type', 'obc')
-                ->where('annee_scolaire_id', $request->year)
+                ->where('annee_scolaire_id', $request->annee_scolaire_id)
                 ->exists()) {
-                return back()->with('error', 'Le classement pour cette année existe déjà');
+                return response()->json([
+                    'error' => 'Le classement pour cette année existe déjà'
+                ]);
             }
             PublishedStatistic::create([
                 'type' => 'obc',
-                'annee_scolaire_id' => $request->year,
+                'annee_scolaire_id' => $request->annee_scolaire_id,
                 'obc_rank' => $request->obc_rank,
                 'data' => ['total_schools' => $request->total_schools],
                 'is_published' => true,
-                'published_at' => now(),
-                'published_by' => Auth::id()
+                'user_id' => Auth::id()
             ]);
-            return response()->json(['success' => 'SClassement OBC enregistré avec succès !']);
+            return response()->json(['success' => 'Classement OBC enregistré avec succès !']);
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => 'Erreur lors de l\'enregistrement : '.$th->getMessage()
@@ -218,6 +231,11 @@ class StatisticsController extends Controller
                 'obc_rank.required' => 'Veuillez ajouter le rang de l\'établissement',
                 'total_schools.required' => 'Veuillez ajouter le nombre total d\'établissements'
             ]);
+            if ($request->obc_rank > $request->total_schools) {
+                return response()->json([
+                    'error' => 'Le rang ne peut pas etre supérieur au nombre total d\'établissements'
+                ]);
+            }
             $obcStat = PublishedStatistic::findOrFail($id);
             $obcStat->update([
                 'obc_rank' => $request->obc_rank,
@@ -237,51 +255,5 @@ class StatisticsController extends Controller
         $specialite = PublishedStatistic::findOrFail($id);
         $specialite->delete();
         return redirect()->route('statistics.obc')->with('deleteSuccess', 'Classement supprimé avec succès !');
-    }
-
-    /**
-     * details
-     */
-    public function showDetails() {
-        dd(7);
-    }
-
-    /**
-     * stats on front office
-     */
-    public function stats(Request $request) {
-        $trimestres = Trimestre::all();
-        $classes = Classe::all();
-
-        // For OBC
-        $obcStats = PublishedStatistic::where('type', 'obc')
-            ->orderBy('annee_scolaire_id', 'desc')
-            ->get();
-
-        $selectedOBC = $request->input('annee_scolaire_id')
-            ? PublishedStatistic::where('type', 'obc')
-                ->where('annee_scolaire_id', $request->input('annee_scolaire_id'))
-                ->first()
-            : $obcStats->first();
-
-        // For trimestrial stats
-        $publishedStats = PublishedStatistic::where('type', 'trimestriel')
-            ->with(['trimestre', 'classe'])
-            ->when($request->trimestre_id, function($q) use ($request) {
-                $q->where('trimestre_id', $request->trimestre_id);
-            })
-            ->when($request->classe_id, function($q) use ($request) {
-                $q->where('classe_id', $request->classe_id);
-            })
-            ->orderBy('published_at', 'desc')
-            ->paginate(10);
-
-        return view('statistics.show', compact(
-            'trimestres',
-            'classes',
-            'publishedStats',
-            'obcStats',
-            'selectedOBC'
-        ));
     }
 }
