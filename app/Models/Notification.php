@@ -22,6 +22,7 @@ class Notification extends Model
         'is_mass',
         'sent_at',
         'status',
+        'read_at'
     ];
 
     /**
@@ -29,8 +30,8 @@ class Notification extends Model
      */
     protected $casts = [
         'receivers' => 'array',
-        'status' => 'array',
         'sent_at' => 'datetime',
+        'read_at' => 'datetime'
     ];
 
     /**
@@ -39,5 +40,12 @@ class Notification extends Model
     function sender(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * notifications receivers
+     */
+    public function receivers() {
+        return User::whereIn('id', $this->receivers ? : [])->get();
     }
 }

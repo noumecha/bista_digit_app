@@ -65,7 +65,7 @@
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <div class="se-box">
                         <div class="icon">
-                            <i class="fa-solid fa-graduation-cap"></i>
+                            <i class="fa-solid fa-flask"></i>
                         </div>
                         <div class="content">
                             <h3>Laboratoires de pointes</h3>
@@ -155,9 +155,15 @@
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                     <div class="_lk_bg_cd">
-                        <i class="fa-solid fa-history"></i>
-                      <div class="counting" data-count="0">0</div>
-                      <h5>ANNEES D'EXPERIENCE</h5>
+                        <i class="fa-solid fa-school-circle-check"></i>
+                        <div class="counting" data-count="{{ $classes }}">0</div>
+                        <h5>
+                            @if($students < 2)
+                                CLASSE
+                            @else
+                                CLASSES
+                            @endif
+                        </h5>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
@@ -326,7 +332,7 @@
                     @endforeach
                     <div class="text-center">
                         <a href="{{ route('home.actus') }}">
-                            Voir plus ...
+                            Plus d'actualités ...
                         </a>
                     </div>
                 @endif

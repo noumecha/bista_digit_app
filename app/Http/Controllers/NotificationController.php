@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationSent;
 use App\Mail\GenericNotificationMail;
-use App\Models\Classe;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserAnneeScolaire;
@@ -11,6 +11,7 @@ use App\Services\OrangeSMSService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Notifications\InAppNotification;
 
 class NotificationController extends Controller
 {
@@ -54,8 +55,8 @@ class NotificationController extends Controller
      */
     private function dispatchNotification(Notification $notification)
     {
-        $users = collect();
-        if ($notification->is_mass) {
+        $users = $this->getTargetUsers($notification);
+        /*if ($notification->is_mass) {
             // Envoi groupé selon le type
             switch ($notification->target_group) {
                 case 'students':
@@ -73,9 +74,29 @@ class NotificationController extends Controller
             }
         } else {
             $users = User::whereIn('id', $notification->receivers)->get();
-        }
+        }*/
         foreach ($users as $user) {
-            match($notification->type) {
+            if($notification->type === 'in_app') {
+                $user->notify(new InAppNotification(
+                    $notification->title,
+                    $notification->message,
+                    $notification->id
+                ));
+                // Broadcast notification in real-time
+                event(new NotificationSent($user, $notification));
+            }
+            switch ($notification->type) {
+                case 'email':
+                    return $this->sendEmailNotification($user, $notification);
+                    break;
+                case 'sms':
+                    return $this->sendSMS($user->phone, $notification->message);
+                    break;
+                case 'whatsapp':
+                    return $this->sendWhatsApp($user->phone, $notification->message);
+                    break;
+            }
+            /*match($notification->type) {
                 'in_app' => $user->notify(
                     new \App\Notifications\InAppNotification(
                         $notification->title, $notification->message
@@ -84,10 +105,24 @@ class NotificationController extends Controller
                 'email' => $this->sendEmailNotification($user, $notification),
                 'sms' => $this->sendSMS($user->phone, $notification->message),
                 'whatsapp' => $this->sendWhatsApp($user->phone, $notification->message),
-            };
+            };*/
         }
         // Mise à jour de status si besoin (pour tracking plus tard)
     }
+
+    /**
+     * get target users
+     */
+    protected function getTargetUsers($notification)
+    {
+        if ($notification->is_mass) {
+            return User::when($notification->target_group !== 'all', function($q) use ($notification) {
+                $q->where('typeUser', $notification->target_group);
+            })->get();
+        }
+        return User::whereIn('id', $notification->receivers ?: [])->get();
+    }
+
     /**
      * send mail
      */
@@ -163,20 +198,67 @@ class NotificationController extends Controller
     /**
      * when the notification is open update it before show to the user
      */
-    public function view($id) {
+    public function show($id) {
         $notif = Notification::where('id', $id)
         ->where('user_id', Auth::id())
         ->firstOrFail();
-        //$notif->update(['read_at' => now()]);
-        return view('notifications.show', compact('notif'));
+        return view('notifications.show-notification', compact('notif'));
     }
 
     /**
-     * sending notifications
+     * notifications for current user
      */
     public function index(Request $request) {
         $user = User::findOrFail(Auth::id());
-        return view('notifications.show', compact('user'));
+        $notifications = $user->notifications();
+        $unreadNotifications = $user->unreadNotifications();
+        return view('notifications.show', compact('user', 'notifications','unreadNotifications'));
+    }
+
+    /**
+    * Get latest notifications for current user
+    */
+    public function latest()
+    {
+        $user = User::findOrFail(Auth::id());
+        $notifications = $user->notifications()
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        return response()->json([
+            'notifications' => $notifications,
+            'unreadCount' => $user->unreadNotifications()->count()
+        ]);
+    }
+
+    /**
+     * Mark notification as read
+     */
+    public function markAsRead(Request $request)
+    {
+        $request->validate(['id' => 'required|exists:notifications,id']);
+        $user = User::findOrFail(Auth::id());
+        $notification = $user->notifications()
+            ->where('id', $request->id)
+            ->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => 'Notification non trouvé'], 404);
+    }
+
+    /**
+     * Mark all notifications as read
+     */
+    public function markAllAsRead()
+    {
+        $user = User::findOrFail(Auth::id());
+        $user->unreadNotifications()->update(['read_at' => now()]);
+        return redirect()->back()->with('success', 'Toutes les notifications ont été marquées comme lues');
     }
 
     /**

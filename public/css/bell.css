@@ -1,0 +1,26 @@
+#notification-bell {
+    position: relative;
+    list-style-type: none;
+}
+
+#notification-bell .dropdown-menu {
+    overflow: hidden;
+}
+
+#notification-bell .list-group-item {
+    border-left: 0;
+    border-right: 0;
+}
+
+#notification-bell .list-group-item:first-child {
+    border-top: 0;
+}
+
+#notification-bell .list-group-item:last-child {
+    border-bottom: 0;
+}
+
+#unread-count {
+    font-size: 10px;
+    padding: 3px 6px;
+}

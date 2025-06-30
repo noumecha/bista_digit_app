@@ -53,7 +53,7 @@
             </div>
         </div>
     </section>
-    <!-- ====================== section started====================== -->
+        <!-- ====================== section started====================== -->
     <section class="bg-01">
          <div class="container">
             <div class="row">
@@ -73,11 +73,13 @@
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <div class="se-box">
                         <div class="icon">
-                            <i class="fa-solid fa-graduation-cap"></i>
+                            <i class="fa-solid fa-flask"></i>
                         </div>
                         <div class="content">
                             <h3>Laboratoires de pointes</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                            <p>
+                                Des salles d'informatique spécialisées avec des appareils dernier cri, des laboratoires scientifiques et bien d'autres ...
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -88,7 +90,9 @@
                         </div>
                         <div class="content">
                             <h3>Bourses d'études & programmes de soutien</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                            <p>
+                                Bourses spécialisés, programmes et cours de soutien en anglasi, mathématiques, physique - chimie ...
+                            </p>
                         </div>
                     </div>
                 </div>

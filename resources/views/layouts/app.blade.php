@@ -27,6 +27,7 @@
         <link rel="stylesheet" href="{{ asset('css/toast.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/custom-dropdown.css') }}" />
         <link rel="stylesheet" href="{{ asset('css/dashboard-menu.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/bell.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/ckeditor5.css') }}" />
         <!-- JQuery file -->
         <script src="{{ asset('js/plugins/jquery.js') }}"></script>
@@ -179,6 +180,20 @@
         <script src="{{ asset('js/functions/edit.js') }}"></script>
         <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
         <script src="{{ asset('js/functions/modules/chart.js') }}"></script>
+        <!-- If using real-time notifications -->
+        @if(config('broadcasting.default') === 'pusher')
+            <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+            <script>
+                window.Pusher = Pusher;
+                window.Echo = new Echo({
+                    broadcaster: 'pusher',
+                    key: '{{ config('broadcasting.connections.pusher.key') }}',
+                    cluster: '{{ config('broadcasting.connections.pusher.options.cluster') }}',
+                    encrypted: true
+                });
+            </script>
+        @endif
+        <script src="{{ asset('js/functions/notificatons-bell.js') }}"></script>
         @yield('scripts')
     </body>
 </html>

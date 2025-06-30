@@ -27,6 +27,7 @@ class HomeController extends Controller
         $appconfiguration = AppConfiguration::all()->last();
         $students = User::all()->where('typeUser','=','eleve')->count();
         $teachers = User::all()->where('typeUser','=','enseignant')->count();
+        $classes = Classe::all()->count();
         $sliders = Slider::query()->latest()->paginate(5);
         $actualites = Actualite::query()->latest()->paginate(3);
         $categories = CategorieActualite::all();
@@ -36,7 +37,7 @@ class HomeController extends Controller
         $club = Club::all()->last();
         return view('front.home', compact(
             'students','actualites','teachers','categories','sliders','appconfiguration',
-            'booster', 'leader','atouts','club'
+            'booster', 'leader','atouts','club','classes'
         ));
     }
 

@@ -97,7 +97,12 @@ Route::middleware(['can:access-actus'])->middleware(['can:access-personnel'])->g
     Route::delete('/actualites/{id}', [ActusController::class, 'destroy'])->name('actualite.destroy')->middleware('auth');
 });
 # every body can see his notifications
-Route::get('/notifications/index', [NotificationController::class, 'index'])->name('notification.index')->middleware('auth');
+Route::get('/notifications/show', [NotificationController::class, 'index'])->name('notification.index')->middleware('auth');
+Route::get('/notifications/read/{id}', [NotificationController::class, 'show'])->name('notifications.show');
+Route::get('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-all-read')->middleware('auth');
+Route::group(['prefix' => 'api'], function() {
+    Route::get('/notifications/latest', [NotificationController::class, 'latest'])->middleware('auth');
+});
 
 Route::middleware(['can:access-personnel'])->group(function () {
     // Categories actualites CRUD Routes :

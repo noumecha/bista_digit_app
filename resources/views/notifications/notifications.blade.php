@@ -50,9 +50,9 @@
                                     <div class="form-group mt-3">
                                         <select name="groupFilter" class="form-select" id="groupFilter">
                                             <option value="">Filtrer par groupe</option>
-                                            <option value="students">Élèves</option>
-                                            <option value="teachers">Enseignants</option>
-                                            <option value="staff">Personnel</option>
+                                            <option value="eleve">Élèves</option>
+                                            <option value="enseignant">Enseignants</option>
+                                            <option value="personnel">Personnel</option>
                                             <option value="all">Tout le monde</option>
                                         </select>
                                     </div>
