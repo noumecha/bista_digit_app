@@ -172,6 +172,11 @@
                             </article>
                         </div>
                     @endforeach
+                    <div class="text-center">
+                        <a href="{{ route('home.actus') }}">
+                            Voir plus ...
+                        </a>
+                    </div>
                 @endif
             </div>
         </div>

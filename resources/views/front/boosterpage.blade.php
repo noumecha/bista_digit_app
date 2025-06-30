@@ -71,7 +71,7 @@
             <div class="row">
                <div class="col-12">
                     <div class="heading">
-                        <h2>Actualités du pogramme {{ $booster->specialite_title }}</h2>
+                        <h2>Actualités du pogramme : {{ $booster->specialite_title }}</h2>
                     </div>
                 </div>
             </div>
@@ -121,6 +121,11 @@
                             </article>
                         </div>
                     @endforeach
+                    <div class="text-center">
+                        <a class="" href="{{ route('home.actus') }}">
+                            Plus d'actualités ...
+                        </a>
+                    </div>
                 @endif
             </div>
         </div>

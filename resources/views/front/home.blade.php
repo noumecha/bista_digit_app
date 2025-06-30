@@ -69,7 +69,9 @@
                         </div>
                         <div class="content">
                             <h3>Laboratoires de pointes</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                            <p>
+                                Des salles d'informatique spécialisées avec des appareils dernier cri, des laboratoires scientifiques et bien d'autres ...
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -80,7 +82,9 @@
                         </div>
                         <div class="content">
                             <h3>Bourses d'études & programmes de soutien</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
+                            <p>
+                                Bourses spécialisés, programmes et cours de soutien en anglasi, mathématiques, physique - chimie ...
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -320,6 +324,11 @@
                             </article>
                         </div>
                     @endforeach
+                    <div class="text-center">
+                        <a href="{{ route('home.actus') }}">
+                            Voir plus ...
+                        </a>
+                    </div>
                 @endif
             </div>
         </div>
