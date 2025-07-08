@@ -27,7 +27,6 @@
                                     </thead>
                                     <tbody>
                                         @forelse($notifications as $notification)
-                                        <tr>
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div class="icon icon-shape icon-sm bg-gradient-info text-white rounded-circle me-3">
@@ -35,28 +34,30 @@
                                                     </div>
                                                     <div class="d-flex flex-column">
                                                         <h6 class="mb-0 text-sm">
-                                                            <a href="{{ route('notifications.show', $notification->id) }}">
-                                                                {{ $notification->title }}
+                                                            <a href="{{ isset($notification->id) ?? route('notifications.show', $notification->id) }}">
+                                                                {{ isset($notification->title) ? $notification->title : "-" }}
                                                             </a>
                                                         </h6>
                                                         <p class="text-xs text-secondary mb-0">
-                                                            {{ Str::limit($notification->message, 50) }}
+                                                            {{ isset($notification->message) ?
+                                                            Str::limit($notification->message, 50)
+                                                            : "-" }}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
                                                 <p class="text-xs font-weight-bold mb-0">
-                                                    {{ $notification->sender->name }}
+                                                    {{ isset($notification->sender) ? $notification->sender->name : "-" }}
                                                 </p>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <span class="text-secondary text-xs font-weight-bold">
-                                                    {{ $notification->created_at->format('d/m/Y H:i') }}
+                                                    {{ isset($notification->created_at) ? $notification->created_at->format('d/m/Y H:i') : "-" }}
                                                 </span>
                                             </td>
                                             <td class="align-middle text-center">
-                                                @if($notification->read_at)
+                                                @if(isset($notification->read_at))
                                                 <span class="badge badge-sm bg-gradient-success">Lu</span>
                                                 @else
                                                 <span class="badge badge-sm bg-gradient-danger">Non lu</span>
@@ -72,7 +73,6 @@
                                         @endforelse
                                     </tbody>
                                 </table>
-                                {{ $notifications->links() }}
                             </div>
                         </div>
                     </div>

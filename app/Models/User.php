@@ -214,14 +214,6 @@ class User extends Authenticatable
     }
 
     /**
-     * current user notifications
-     */
-    public function notifications() {
-        $notifications = Notification::whereIn($this->id, $this->receivers ? : [])->get();
-        return $notifications;
-    }
-
-    /**
      * get user created notifications
      */
     public function getNotifications($currentMonth = false, $currentWeek = false) {
@@ -350,10 +342,18 @@ class User extends Authenticatable
     }
 
     /**
+     * current user notifications
+     */
+    public function notifications() {
+        $notifications = Notification::whereIn($this->id, $this->receivers ? : []);//->get();
+        return $notifications;
+    }
+
+    /**
      * to show notifications to the user
      */
     public function unreadNotifications() {
-        return $this->notifications()->whereNull('read_at')->get();
+        return $this->notifications()->whereNull('read_at');//->get();
     }
 
 
