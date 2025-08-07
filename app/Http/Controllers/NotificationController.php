@@ -212,6 +212,7 @@ class NotificationController extends Controller
         $user = User::findOrFail(Auth::id());
         $notifications = $user->notifications();
         $unreadNotifications = $user->unreadNotifications();
+        //dd($unreadNotifications);
         return view('notifications.show', compact('user', 'notifications','unreadNotifications'));
     }
 
@@ -221,14 +222,14 @@ class NotificationController extends Controller
     public function latest()
     {
         $user = User::findOrFail(Auth::id());
-        $notifications = $user->notifications()
-            ->orderBy('created_at', 'desc')
+        $notifications = $user->notifications();
+            /*->orderBy('created_at', 'desc')
             ->take(5)
-            ->get();
+            ->get();*/
 
         return response()->json([
             'notifications' => $notifications,
-            'unreadCount' => $user->unreadNotifications()->count()
+            'unreadCount' => count($user->unreadNotifications())
         ]);
     }
 

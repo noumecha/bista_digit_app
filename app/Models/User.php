@@ -345,7 +345,14 @@ class User extends Authenticatable
      * current user notifications
      */
     public function notifications() {
-        $notifications = Notification::whereIn($this->id, $this->receivers ? : []);//->get();
+        $notifications = [];
+        $receivers = Notification::all()->pluck('receivers');
+        foreach ($receivers as $r) {
+            if(in_array($this->id, $r)) {
+                $notification = Notification::whereJsonContains('receivers', $r)->first();
+                array_push($notifications, $notification);
+            }
+        }
         return $notifications;
     }
 
@@ -353,7 +360,14 @@ class User extends Authenticatable
      * to show notifications to the user
      */
     public function unreadNotifications() {
-        return $this->notifications()->whereNull('read_at');//->get();
+        $notifications = $this->notifications();
+        $unreadNotifications = [];
+        foreach ($notifications as $notif) {
+            if($notif->whereNull('read_at')->exists()) {
+                array_push($unreadNotifications, $notif);
+            }
+        }
+        return $unreadNotifications;
     }
 
 
