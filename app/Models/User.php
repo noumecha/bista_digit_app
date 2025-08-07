@@ -353,6 +353,7 @@ class User extends Authenticatable
                 array_push($notifications, $notification);
             }
         }
+        #dd($notifications);
         return $notifications;
     }
 

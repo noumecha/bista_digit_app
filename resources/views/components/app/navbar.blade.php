@@ -35,15 +35,22 @@
                     </a>
                 </li>
                 <li class="nav-item px-3 d-flex align-items-center">
+                    <a href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown" id="notificationDropdown">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="unread-count">
+                            0
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item px-3 d-flex align-items-center">
                     <a href="{{ route('profile.index') }}" class="nav-link text-body p-0">
                         <i class="fa-solid fa-gear"></i>
                     </a>
                 </li>
                 <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                    @include('components.notification-component')
-                    <!--a href="{ { route('notification.index') }}" class="nav-link text-body p-0">
-                        <i class="fa-solid fa-bell"></i>
-                    </!--a -->
+                    <a href="{ { route('notification.index') }}" class="nav-link text-body p-0">
+                        <i class="fa-solid fa-bell"></i> (0)
+                    </a>
                 </li>
                 <li class="nav-item ps-2 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-body p-0">

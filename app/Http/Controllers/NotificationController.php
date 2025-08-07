@@ -212,7 +212,6 @@ class NotificationController extends Controller
         $user = User::findOrFail(Auth::id());
         $notifications = $user->notifications();
         $unreadNotifications = $user->unreadNotifications();
-        //dd($unreadNotifications);
         return view('notifications.show', compact('user', 'notifications','unreadNotifications'));
     }
 
@@ -246,10 +245,10 @@ class NotificationController extends Controller
 
         if ($notification) {
             $notification->markAsRead();
-            return response()->json(['success' => true]);
+            return response()->json(['success' => 'La notification a été marquée comme lue']);
         }
 
-        return response()->json(['error' => 'Notification non trouvé'], 404);
+        return response()->json(['error' => 'Aucune Notification trouvée'], 404);
     }
 
     /**
@@ -257,9 +256,18 @@ class NotificationController extends Controller
      */
     public function markAllAsRead()
     {
-        $user = User::findOrFail(Auth::id());
-        $user->unreadNotifications()->update(['read_at' => now()]);
-        return redirect()->back()->with('success', 'Toutes les notifications ont été marquées comme lues');
+        try {
+            $user = User::findOrFail(Auth::id());
+            $unreads = $user->unreadNotifications();
+            foreach($unreads as $unread) {
+                $unread->update(['read_at' => now()]);
+            }
+            return response()->json(['success' => 'Toutes les notifications ont été marqués comme lues']);
+        } catch (\Exception $ex) {
+            return response()->json([
+                'error' => 'Erreur inconnue : '.$ex->getMessage()
+            ]);
+        }
     }
 
     /**

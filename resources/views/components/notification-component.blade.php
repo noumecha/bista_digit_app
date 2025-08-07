@@ -22,7 +22,7 @@
             </div>
             <div class="card-footer text-center py-2">
                 <small>
-                    <a href="{{ route('notifications.mark-all-read') }}" class="text-primary" id="mark-all-read">
+                    <a href="#" class="text-primary" id="mark-all-read">
                         Marquer tout comme lu
                     </a>
                 </small>
