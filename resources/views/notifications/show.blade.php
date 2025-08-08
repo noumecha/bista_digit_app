@@ -91,7 +91,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center py-4">
+                                                <td colspan="5" class="text-center py-4">
                                                     <p class="text-sm text-secondary mb-0">Aucune notification trouvée</p>
                                                 </td>
                                             </tr>
