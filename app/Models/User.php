@@ -364,7 +364,7 @@ class User extends Authenticatable
         $notifications = $this->notifications();
         $unreadNotifications = [];
         foreach ($notifications as $notif) {
-            if($notif->whereNull('read_at')->exists()) {
+            if($notif->read_at == null) {
                 array_push($unreadNotifications, $notif);
             }
         }

@@ -15,7 +15,7 @@
                 @endphp
             </h6>
         </nav>
-        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+        <div class="collapse justify-content-end navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
             <div class="mb-0 font-weight-bold breadcrumb-text text-white">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -24,7 +24,7 @@
                     </a>
                 </form>
             </div>
-            <ul class="navbar-nav  justify-content-end">
+            <ul class="navbar-nav">
                 <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                         <div class="sidenav-toggler-inner">
@@ -35,20 +35,12 @@
                     </a>
                 </li>
                 <li class="nav-item px-3 d-flex align-items-center">
-                    <a href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown" id="notificationDropdown">
-                        <i class="fa-solid fa-bell"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="unread-count">
-                            0
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item px-3 d-flex align-items-center">
                     <a href="{{ route('profile.index') }}" class="nav-link text-body p-0">
                         <i class="fa-solid fa-gear"></i>
                     </a>
                 </li>
-                <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                    <a href="{ { route('notification.index') }}" class="nav-link text-body p-0">
+                <li class="nav-item pe-2 d-flex align-items-center">
+                    <a href="{{ route('notification.index') }}" class="nav-link text-body p-0">
                         <i class="fa-solid fa-bell"></i> (0)
                     </a>
                 </li>
