@@ -345,15 +345,14 @@ class User extends Authenticatable
      * current user notifications
      */
     public function notifications() {
-        $notifications = [];
+        $notificationIds = [];
         $receivers = Notification::all()->pluck('receivers');
         foreach ($receivers as $r) {
             if(in_array($this->id, $r)) {
-                $notification = Notification::whereJsonContains('receivers', $r)->first();
-                array_push($notifications, $notification);
+                $notificationIds = Notification::whereJsonContains('receivers', $r)->pluck('id');
             }
         }
-        #dd($notifications);
+        $notifications = Notification::query()->whereIn('id', $notificationIds);
         return $notifications;
     }
 
@@ -361,7 +360,7 @@ class User extends Authenticatable
      * to show notifications to the user
      */
     public function unreadNotifications() {
-        $notifications = $this->notifications();
+        $notifications = $this->notifications()->get();
         $unreadNotifications = [];
         foreach ($notifications as $notif) {
             if($notif->read_at == null) {

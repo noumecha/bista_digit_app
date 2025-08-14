@@ -43,38 +43,26 @@ class NotificationController extends Controller
                 'sent_at' => now(),
             ]);
             $result = $this->dispatchNotification($notification);
-            return response()->json([
-                $result["type"] => $result["message"]
-            ]);
+            if($notification->type === 'in_app') {
+                return response()->json([
+                    'success' => 'Notification envoyé avec succès!'
+                ]);
+            } else {
+                return response()->json([
+                    $result["type"] => $result["message"]
+                ]);
+            }
         } catch (\Throwable $th) {
-            return response()->json(['error' => 'Erreur lors de la sauvegarde : '.$th->getMessage()]);
+            return response()->json(['error' => 'Erreur lors de la sauvegarde : '.$th]);
         }
     }
+
     /**
      * function do dispatch type notifications and for who
      */
     private function dispatchNotification(Notification $notification)
     {
         $users = $this->getTargetUsers($notification);
-        /*if ($notification->is_mass) {
-            // Envoi groupé selon le type
-            switch ($notification->target_group) {
-                case 'students':
-                    $users = User::where('typeUser', 'eleve')->get();
-                    break;
-                case 'teachers':
-                    $users = User::where('typeUser', 'enseignant')->get();
-                    break;
-                case 'personnel':
-                    $users = User::where('typeUser', 'personnel')->get()->get();
-                    break;
-                case 'all':
-                    $users = User::all();
-                    break;
-            }
-        } else {
-            $users = User::whereIn('id', $notification->receivers)->get();
-        }*/
         foreach ($users as $user) {
             if($notification->type === 'in_app') {
                 $user->notify(new InAppNotification(
@@ -96,16 +84,6 @@ class NotificationController extends Controller
                     return $this->sendWhatsApp($user->phone, $notification->message);
                     break;
             }
-            /*match($notification->type) {
-                'in_app' => $user->notify(
-                    new \App\Notifications\InAppNotification(
-                        $notification->title, $notification->message
-                    )
-                ),
-                'email' => $this->sendEmailNotification($user, $notification),
-                'sms' => $this->sendSMS($user->phone, $notification->message),
-                'whatsapp' => $this->sendWhatsApp($user->phone, $notification->message),
-            };*/
         }
         // Mise à jour de status si besoin (pour tracking plus tard)
     }
@@ -210,9 +188,27 @@ class NotificationController extends Controller
      */
     public function index(Request $request) {
         $user = User::findOrFail(Auth::id());
-        $notifications = $user->notifications();
+        $query = $user->notifications();
+        $searchNotification = $request->input('searchNotification');
+        $statutFilter = $request->input('statutFilter');
+        if(!empty($searchNotification)) {
+            $query->where('title', 'LIKE', "%{$searchNotification}%")
+                ->orWhere('message', 'LIKE', "%{$searchNotification}%");
+        }
+        if(!empty($statutFilter)) {
+            if($statutFilter === 0 ) {
+                $query->where('read_at', null);
+            } else {
+                $query->where('read_at', '!=', null);
+            }
+        }
+        $notifications = $query->latest()->paginate(10);
         $unreadNotifications = $user->unreadNotifications();
-        return view('notifications.show', compact('user', 'notifications','unreadNotifications'));
+        if($request->ajax()) {
+            return view('partials._user_notifications_table', compact('notifications'));
+        } else {
+            return view('notifications.show', compact('user', 'notifications','unreadNotifications'));
+        }
     }
 
     /**
@@ -235,20 +231,25 @@ class NotificationController extends Controller
     /**
      * Mark notification as read
      */
-    public function markAsRead(Request $request)
+    public function markAsRead($id)
     {
-        $request->validate(['id' => 'required|exists:notifications,id']);
         $user = User::findOrFail(Auth::id());
-        $notification = $user->notifications()
-            ->where('id', $request->id)
-            ->first();
-
-        if ($notification) {
-            $notification->markAsRead();
-            return response()->json(['success' => 'La notification a été marquée comme lue']);
+        try {
+            $notification = $user->notifications()
+                ->where('id', $id)
+                ->first();
+            if ($notification) {
+                $notification->markAsRead();
+                return response()->json([
+                    'success' => 'Notification marquée comme lue'
+                ]);
+            }
+            return response()->json(['error' => 'Aucune Notification trouvée'], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'Erreur inconnue : '.$th->getMessage()
+            ]);
         }
-
-        return response()->json(['error' => 'Aucune Notification trouvée'], 404);
     }
 
     /**
@@ -260,9 +261,9 @@ class NotificationController extends Controller
             $user = User::findOrFail(Auth::id());
             $unreads = $user->unreadNotifications();
             foreach($unreads as $unread) {
-                $unread->update(['read_at' => now()]);
+                $unread->markAsRead();
             }
-            return response()->json(['success' => 'Toutes les notifications ont été marqués comme lues']);
+            return response()->json(['success' => 'Toutes les notifications ont étées marquées comme lues']);
         } catch (\Exception $ex) {
             return response()->json([
                 'error' => 'Erreur inconnue : '.$ex->getMessage()

@@ -4,101 +4,41 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-header pb-0 d-flex justify-content-between">
-                            <h6>Mes Notifications</h6>
-                            <button id="mark-all-read" class="btn btn-sm btn-primary">
-                                Marquer tout comme lu
-                            </button>
-                        </div>
-                        <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
-                        </div>
-                        <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
-                        </div>
-                        <div class="card-body px-0 pt-0 pb-2">
-                            <div class="table-responsive p-0">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Notification</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Expéditeur</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($notifications as $notification)
-                                            <tr id="{{ $notification->id }}">
-                                                <td>
-                                                    <div class="d-flex px-2 py-1">
-                                                        <div class="d-flex flex-column">
-                                                            <h6 class="mb-0 text-sm">
-                                                                <a href="{{ isset($notification->id) ?? route('notifications.show', $notification->id) }}">
-                                                                    {{ isset($notification->title) ? $notification->title : "-" }}
-                                                                </a>
-                                                            </h6>
-                                                            <p class="text-xs text-secondary mb-0">
-                                                                {{ isset($notification->message) ?
-                                                                Str::limit($notification->message, 50)
-                                                                : "-" }}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <p class="text-xs font-weight-bold mb-0">
-                                                        {{ isset($notification->sender) ? $notification->sender->name : "-" }}
-                                                    </p>
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    <span class="text-secondary text-xs font-weight-bold">
-                                                        {{ isset($notification->created_at) ? $notification->created_at->format('d/m/Y H:i') : "-" }}
-                                                    </span>
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    @if(isset($notification->read_at))
-                                                        <span class="badge badge-sm bg-gradient-success">Lu</span>
-                                                    @else
-                                                        <span class="badge badge-sm bg-gradient-danger">Non lu</span>
-                                                    @endif
-                                                </td>
-                                                <td class="text-center d-flex justify-content-center
-                                                    align-middle bg-transparent border-bottom"
-                                                    style="gap:10px;">
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-danger ml-2 mt-3 p-2"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#show-{{ $notification->id }}">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                    </button>
-                                                    <!-- modal for showing notification -->
-                                                    <div class="modal fade" id="show-{{ $notification->id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header bg-danger">
-                                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Confirmation de suppression</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body text-wrap text-justify">
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="5" class="text-center py-4">
-                                                    <p class="text-sm text-secondary mb-0">Aucune notification trouvée</p>
-                                                </td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-6">
+                                    <h5 class="">Toutes mes notifications</h5>
+                                </div>
+                                <div class="col-md-12 col-lg-6 text-end">
+                                    <button id="mark-all-read" class="btn btn-primary">
+                                        <i class="fa-solid fa-circle-check me-2"></i> Tout marquer comme lu
+                                    </button>
+                                </div>
                             </div>
+                            <div class="alert text-wrap alert-success" style="display: none;" id="modal-form-alert-success">
+                            </div>
+                            <div class="alert text-wrap alert-danger" style="display: none;" id="modal-form-alert-errors">
+                            </div>
+                            <form class="form form-inline row mt-3" id="filterUserNotifsForm">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" name="searchNotification" id="searchNotification"
+                                            class="form-control" placeholder="Rechercher une notification (titre ou message)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select name="statutFilter" class="form-select" id="statutFilter">
+                                            <option value="">Tout les statuts</option>
+                                            <option value="0">Non Lue(s)</option>
+                                            <option value="1">Lue(s)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-responsive" id="userNotificationsTable" style="overflow-x: visible;">
                         </div>
                     </div>
                 </div>

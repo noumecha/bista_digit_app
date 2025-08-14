@@ -48,4 +48,11 @@ class Notification extends Model
     public function receivers() {
         return User::whereIn('id', $this->receivers ? : [])->get();
     }
+
+    /***
+     * mark notification as read
+     */
+    public function markAsRead() {
+        return $this->update(['read_at' => now()]);
+    }
 }

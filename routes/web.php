@@ -101,7 +101,7 @@ Route::get('/notifications/show', [NotificationController::class, 'index'])->nam
 Route::get('/notifications/read/{id}', [NotificationController::class, 'show'])->name('notifications.show');
 Route::group(['prefix' => 'api'], function() {
     Route::get('/notifications/latest', [NotificationController::class, 'latest'])->middleware('auth');
-    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-all-as-read')->middleware('auth');
+    Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.mark-all-as-read')->middleware('auth');
     Route::get('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read')->middleware('auth');
 });
 

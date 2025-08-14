@@ -6,16 +6,62 @@ $(function() {
     $(document).on('click', '#mark-all-read', function(e) {
         e.preventDefault();
         markAllAsRead();
+        fetchNotifications();
+    });
+
+    $(document).on('click', '#notification-show-btn', function(e) {
+        e.preventDefault();
+        notifId = $(this).data('notification-id');
+        markAsRead(id);
+        fetchNotifications();
+    })
+
+    // modal closing
+    console.log("modal id : ", $('#show-notif-modal-'+notifId));
+    $('#show-notif-modal-').on('hidden.bs.modal', function () {
+        markAsRead(id);
+    })
+
+    // fetching actualites dynamically with filters
+    $('#searchNotification, #statutFilter').on('change keyup', function () {
+        fetchNotifications();
     });
 
     // Function to fetch notifications
     function fetchNotifications() {
-        $.get('/api/notifications/latest', function(response) {
-            console.log(response)
+        var formData = $('#filterUserNotifsForm').serialize();
+        $.ajax({
+            url : "/notifications/show",
+            type : 'GET',
+            data : formData,
+            success : function(data) {
+                $('#userNotificationsTable').html(data);
+            },
+            error: function(xhr, status, error) {
+                var datas = Object.entries(xhr.responseJSON.errors);
+                var errors = datas.map(error => error[1][0]);
+                setSuccessMessage(errors, '#modal-form-alert-errors');
+            }
         });
     }
 
-    // Function to mark all as read
+    // Function to mark notification as read
+    // single notification mark
+    function markAsRead(id) {
+        $.ajax({
+            url : "/api/notifications/mark-as-read/" + id,
+            type : "GET",
+            success : function(data) {
+                setSuccessMessage(data.success, '#modal-form-alert-success');
+            },
+            error: function(xhr, status, error) {
+                var datas = Object.entries(xhr.responseJSON.errors);
+                var errors = datas.map(error => error[1][0]);
+                setSuccessMessage(errors, '#modal-form-alert-errors');
+            }
+        });
+    }
+    // for all notification
     function markAllAsRead() {
         $.ajax({
             url : "/api/notifications/mark-all-as-read",
