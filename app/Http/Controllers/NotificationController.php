@@ -42,10 +42,11 @@ class NotificationController extends Controller
                 'is_mass' => $request->has('send_to_all'),
                 'sent_at' => now(),
             ]);
+            dd($notification);
             $result = $this->dispatchNotification($notification);
             if($notification->type === 'in_app') {
                 return response()->json([
-                    'success' => 'Notification envoyé avec succès!'
+                    'success' => 'Notification(s) envoyée(s) avec succès!'
                 ]);
             } else {
                 return response()->json([
@@ -147,7 +148,12 @@ class NotificationController extends Controller
      * all notifications
      */
     public function create(Request $request) {
-        $query = Notification::query();
+        $user = User::findOrFail(Auth::id());
+        if (!$user->isAdmin()) {
+            $query = Notification::query()->where('user_id', $user->id);
+        } else {
+            $query = Notification::query();
+        }
         $userYearIds = UserAnneeScolaire::all()->where('annee_scolaire_id', getCurrentYear()->id)
             ->pluck('user_id');
         $users = User::all()->whereIn('id', $userYearIds);

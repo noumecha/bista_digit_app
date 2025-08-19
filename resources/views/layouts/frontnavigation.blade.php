@@ -92,8 +92,8 @@
                     </div>
                     <div class="login-menu">
                         @if (Auth::check())
-                            <a class="text-white" href="{{ route('dashboard') }}">
-                                <i class="fa-solid fa-gear"></i>
+                            <a class="text-white" title="Administration" href="{{ route('dashboard') }}">
+                                <i class="fa-solid fa-user"></i>
                             </a>
                         @else
                             <a class="text-white" href="{{ route('sign-in') }}">

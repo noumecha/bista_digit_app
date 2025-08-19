@@ -51,11 +51,11 @@
                         data-bs-toggle="modal"
                         id="notification-show-btn"
                         data-notification-id = "{{ $notification->id }}"
-                        data-bs-target="#show-{{ $notification->id }}">
+                        data-bs-target="#show-notification-modal-{{ $notification->id }}">
                         voir
                     </button>
                     <!-- modal for showing notification -->
-                    <div class="modal fade" id="show-notif-modal-{{ $notification->id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
+                    <div class="modal fade show-notification-modal" id="show-notification-modal-{{ $notification->id }}" tabindex="-1" aria-labelledby="exampleModalLabel">
                         <div class="modal-dialog">
                             <div class="modal-content text-justify">
                                 <div class="alert alert-success alert-dismissible fade show mb-0" role="alert">
@@ -66,7 +66,8 @@
                                     <p>
                                         {{ $notification->message }}
                                     </p>
-                                    <button type="button" class="text-dark btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="text-dark btn-close" id="close-show-btn"
+                                        data-bs-dismiss="modal" aria-label="Close">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
                                 </div>

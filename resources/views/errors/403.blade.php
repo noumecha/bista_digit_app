@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Page Not Found</title>
+        <title>Non autorisé</title>
         <link rel="stylesheet" href="{{ asset('css/app.css') }}"> <!-- Link to your CSS file -->
         <style>
             body {
@@ -37,10 +37,10 @@
         </style>
     </head>
     <body>
-        <img src="{{ asset(appConfiguration() != null ? appConfiguration()->school_logo : "") }}"
+        <img src="{{ asset(appConfiguration() != null ? 'storage/'.appConfiguration()->school_logo : "") }}"
             alt="{{ appConfiguration() != null ? appConfiguration()->school_name : "" }}" class="logo">
         <h1>403 - Non autorisé</h1>
-        <p> n'avez pas l'autorisation requise pour accéder à cette page !
+        <p> Il semble que vous n'avez pas l'autorisation requise pour accéder à cette page !
         contacter l'administrateur </p>
         <p>
             <a href="{{ route('dashboard') }}">

@@ -12,14 +12,14 @@ $(function() {
     $(document).on('click', '#notification-show-btn', function(e) {
         e.preventDefault();
         notifId = $(this).data('notification-id');
-        markAsRead(id);
-        fetchNotifications();
+        markAsRead(notifId);
     })
 
-    // modal closing
-    console.log("modal id : ", $('#show-notif-modal-'+notifId));
-    $('#show-notif-modal-').on('hidden.bs.modal', function () {
-        markAsRead(id);
+    // fetching datas when closing show modal
+    $(document).on('click', '#close-show-btn', function(e) {
+        e.preventDefault();
+        console.log("Works !");
+        fetchNotifications();
     })
 
     // fetching actualites dynamically with filters
