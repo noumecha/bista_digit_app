@@ -19,7 +19,7 @@
             </th>
             <th
                 class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                Status
+                Publier par
             </th>
             <th
                 class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
@@ -48,7 +48,7 @@
                         {{ $notification->target_group }}
                     </td>
                     <td class="align-middle bg-transparent borer-bottom">
-                        {{ $notification->status }}
+                        {{ $notification->sender->name }}
                     </td>
                     <td class="text-center d-flex justify-content-center
                         align-middle bg-transparent border-bottom"

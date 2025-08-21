@@ -12,6 +12,7 @@ use App\Models\Coefficient;
 use App\Models\EnseignantPrincipal;
 use App\Models\Note;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
     if(!function_exists('is_current_route')) {
@@ -23,6 +24,14 @@ use Illuminate\Support\Facades\Route;
         function is_current_route($routeName) {
             return Route::currentRouteName() === $routeName;
         }
+    }
+    /***
+     * getting unread notifications
+     */
+    function unreadNotifications() {
+        $user = User::findOrFail(Auth::id());
+        $unreadNotifications = $user->unreadNotifications();
+        return $unreadNotifications;
     }
     /**
      * get global configuration

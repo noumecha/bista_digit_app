@@ -398,14 +398,6 @@
                     </a>
                 </li>
                 @endcan
-                @can('access-admin')
-                <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
-                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('notification.controles') ? 'active' : '' }}"
-                        href="{{ route('notification.controles') }}">
-                        <span class="nav-link-text ms-1">Contrôles</span>
-                    </a>
-                </li>
-                @endcan
                 <li data-submenu="notifications" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('notification.index') ? 'active' : '' }}"
                         href="{{ route('notification.index') }}">

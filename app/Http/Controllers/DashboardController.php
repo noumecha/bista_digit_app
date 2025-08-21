@@ -33,14 +33,14 @@ class DashboardController extends Controller
         $recentActualites = Actualite::query()->latest()->paginate(5);
         $recentEpreuves = Epreuve::query()->latest()->paginate(5);
         $recentNotifications = Notification::query()->latest()->paginate(5);
+        //$unreadNotifications = $user->unreadNotifications();
         // Données communes à tous les utilisateurs
         $data = [
             'user' => $user,
             'currentYear' => $currentYear,
             'recentActualites' => $recentActualites,
             'recentEpreuves' => $recentEpreuves,
-            'recentNotifications' => $recentNotifications
-            //'unreadNotifications' => $user->unreadNotifications()
+            'recentNotifications' => $recentNotifications,
         ];
         // Personnalisation par rôle
         if ($user->isAdmin()) {

@@ -123,7 +123,7 @@ Route::middleware(['can:access-personnel'])->group(function () {
 
 Route::middleware(['can:access-admin'])->group(function () {
     // notifications controles or traces routes :
-    Route::get('/notifications/controles', [NotificationController::class, 'controles'])->name('notification.controles');
+    // Route::get('/notifications/controles', [NotificationController::class, 'controles'])->name('notification.controles');
 
     # configuratioun routes - clubs routes
     Route::get('/configurations/clubs', function () {

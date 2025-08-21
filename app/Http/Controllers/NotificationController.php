@@ -42,7 +42,6 @@ class NotificationController extends Controller
                 'is_mass' => $request->has('send_to_all'),
                 'sent_at' => now(),
             ]);
-            dd($notification);
             $result = $this->dispatchNotification($notification);
             if($notification->type === 'in_app') {
                 return response()->json([
@@ -293,10 +292,9 @@ class NotificationController extends Controller
 
     /**
      * function to controlate who send notifications
-     */
     public function controles() {
         return view('notifications.controles');
-    }
+    }*/
 
     /**
      * destroy notification

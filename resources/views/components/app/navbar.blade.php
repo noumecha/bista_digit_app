@@ -34,45 +34,13 @@
                         </div>
                     </a>
                 </li>
-                <li class="nav-item dropdown notification-ui show">
-                    <a class="nav-link dropdown-toggle notification-ui_icon" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <li class="nav-item px-3 d-flex align-items-center">
+                    <a href="{{ route('notification.index') }}" class="nav-link text-body p-0">
                         <i class="fa fa-bell"></i>
-                        <span class="unread-notification"></span>
+                        <span class="text-sm {{ count(unreadNotifications()) > 0 ? 'text-danger text-bold' : '' }}">
+                            ({{ count(unreadNotifications()) }})
+                        </span>
                     </a>
-                    <div class="dropdown-menu notification-ui_dd show" aria-labelledby="navbarDropdown">
-                        <div class="notification-ui_dd-header">
-                            <h3 class="text-center">Notification</h3>
-                        </div>
-                        <div class="notification-ui_dd-content">
-                            <div class="notification-list notification-list--unread">
-                                <div class="notification-list_detail">
-                                    <p><b>John Doe</b> reacted to your post</p>
-                                    <p><small>10 mins ago</small></p>
-                                </div>
-                            </div>
-                            <div class="notification-list notification-list--unread">
-                                <div class="notification-list_detail">
-                                    <p><b>Richard Miles</b> reacted to your post</p>
-                                    <p><small>1 day ago</small></p>
-                                </div>
-                            </div>
-                            <div class="notification-list">
-                                <div class="notification-list_detail">
-                                    <p><b>Brian Cumin</b> reacted to your post</p>
-                                    <p><small>1 day ago</small></p>
-                                </div>
-                            </div>
-                            <div class="notification-list">
-                                <div class="notification-list_detail">
-                                    <p><b>Lance Bogrol</b> reacted to your post</p>
-                                    <p><small>1 day ago</small></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="notification-ui_dd-footer">
-                            <a href="{{ route('notification.index') }}" class="btn btn-success btn-block">View All</a>
-                        </div>
-                    </div>
                 </li>
                 <li class="nav-item px-3 d-flex align-items-center">
                     <a href="{{ route('profile.index') }}" class="nav-link text-body p-0">
