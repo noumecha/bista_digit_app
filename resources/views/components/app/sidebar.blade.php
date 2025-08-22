@@ -241,7 +241,7 @@
                 @endcan
             </ul>
             <!-- Bulletins on Dashboard -->
-            @can('access-admin')
+            @can('access-student')
             <ul class="navbar-nav submenu">
                 <li data-submenu="bulletins" class="submenu-click-link nav-item mt-2">
                     <div class="d-flex align-items-center nav-link">
@@ -249,12 +249,22 @@
                         <span class="font-weight-normal text-md ml-n5">Bulletins</span>
                     </div>
                 </li>
+                @can('access-admin')
                 <li data-submenu="bulletins" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('bulletins.list') ? 'active' : '' }}"
                         href="{{ route('bulletins.list') }}">
                         <span class="nav-link-text ms-1">Liste des bulletins</span>
                     </a>
                 </li>
+                @endcan
+                @can('access-student-devoir')
+                <li data-submenu="bulletins" class="submenu-click-item nav-item border-start my-0 pt-2">
+                    <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('student.bulletin') ? 'active' : '' }}"
+                        href="{{ route('student.bulletin') }}">
+                        <span class="nav-link-text ms-1">Mon bulletin</span>
+                    </a>
+                </li>
+                @endcan
             </ul>
             @endcan
             <!-- Epreuve on Dashboard -->

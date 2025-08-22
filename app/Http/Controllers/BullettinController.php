@@ -477,4 +477,12 @@ class BullettinController extends Controller
             );
         }
     }
+
+    /**
+     * Student bulletin show 
+     */
+    public function studentBulletin() {
+        $user = User::findOrFail(Auth::id());
+        return view('eleves.bulletin', compact('user'));
+    }
 }

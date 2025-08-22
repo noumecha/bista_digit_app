@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\CategorieActualite;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,5 +23,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+        // 
+        View::composer('*', function ($view) {
+        // Replace dots with hyphens in the view name for use in classes or IDs
+        $viewName = str_replace('.', '-', $view->getName());
+        View::share('view_name', $viewName);
+    });
     }
 }

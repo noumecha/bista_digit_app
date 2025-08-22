@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BoosterNoteController;
+use App\Http\Controllers\BullettinController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\CoefficientController;
@@ -132,6 +133,8 @@ Route::middleware(['can:access-student-devoir'])->group(function () {
     Route::get('/education/notes/student/stats', [NoteController::class, 'studentNotes'])->name('student.notes')->middleware('auth');
     # student notes booster
     Route::get('/education/boosternotes/student/stats', [BoosterNoteController::class, 'studentBoosterNotes'])->name('student.boosternotes')->middleware('auth');
+    # studen bulletin 
+    Route::get('/education/bulletins/student', [BullettinController::class, 'studentBulletin'])->name('student.bulletin')->middleware('auth');
 });
 
 Route::middleware(['can:access-devoirs'])->group(function () {

@@ -3,7 +3,8 @@
         <x-app.navbar />
         <div class="main-content position-relative bg-gray-100 max-height-vh-100 h-100">
             <div class="pt-7 pb-6 bg-cover"
-                style="background-image: url('{{ asset('img/header-blue-purple.jpg') }}'); background-position: bottom;">
+                style="background-image: url('{{ asset('storage/'.appConfiguration()->school_image) }}');
+                background-position: bottom;">
             </div>
             <div class="container">
                 <div class="card card-body py-2 bg-transparent shadow-none">
@@ -70,7 +71,7 @@
             </div>
             <div class="container my-3 py-3">
                 <div class="row">
-                    <div class="col-12 col-xl-8 mb-4">
+                    <div class="col-12 mb-4">
                         <div class="card border shadow-xs h-100">
                             <div class="card-header pb-0 p-3">
                                 <div class="row">
@@ -124,46 +125,6 @@
                                         @else
                                             Non défini
                                         @endif
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-xl-4 mb-4">
-                        <div class="card border shadow-xs h-100">
-                            <div class="card-header pb-0 p-3">
-                                <div class="row mb-sm-0 mb-2">
-                                    <div class="col-md-8 col-9">
-                                        <h6 class="mb-0 font-weight-semibold text-lg">Notifications</h6>
-                                        <p class="text-sm mb-0">espace notifications</p>
-                                    </div>
-                                    <div class="col-md-4 col-3 text-end">
-                                        <button type="button" class="btn btn-white btn-icon px-2 py-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                viewBox="0 0 24 24" fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M10.5 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body p-3 pt-0">
-                                <ul class="list-group">
-                                    <li class="list-group-item border-0 d-flex align-items-center px-0 mb-1">
-                                        <div class="avatar avatar-sm rounded-circle me-2">
-                                            <img src="{{ asset('front/images/logo.png') }}" alt="kal" class="w-100">
-                                        </div>
-                                        <div class="d-flex align-items-start flex-column justify-content-center">
-                                            <h6 class="mb-0 text-sm font-weight-semibold">M. Noumecha</h6>
-                                            <p class="mb-0 text-sm text-secondary">
-                                                en maintennace
-                                            </p>
-                                        </div>
-                                        <span class="p-1 bg-success rounded-circle ms-auto me-3">
-                                            <span class="visually-hidden">Online</span>
-                                        </span>
                                     </li>
                                 </ul>
                             </div>

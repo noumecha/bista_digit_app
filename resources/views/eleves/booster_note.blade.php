@@ -71,7 +71,7 @@
                                             <h3 class="card-title mb-0">
                                                 {{ number_format($notes->avg('note'), 2) }}/20
                                             </h3>
-                                            <small class="text-muted">sur {{ $notes->count() }} notes</small>
+                                            <small class="text-muted">sur {{ $notes->count() }} note(s)</small>
                                         </div>
                                     </div>
                                 </div>

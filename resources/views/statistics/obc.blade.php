@@ -1,8 +1,8 @@
 <x-app-layout>
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <x-app.navbar />
-        <div class="px-5 py-4 container-fluid">
-            <div class="mt-4 row">
+        <div class="py-4 container-fluid">
+            <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
@@ -52,7 +52,7 @@
                                     <h5 class="">Historique des Classements</h5>
                                 </div>
                             </div>
-                            <div class="table-responsive" id="obcStatsTable" style="overflow-x: visible;">
+                            <div class="table-responsive" id="obcStatsTable">
                             </div>
                         </div>
                     </div>

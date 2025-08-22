@@ -38,7 +38,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="userNotificationsTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="userNotificationsTable">
                         </div>
                     </div>
                 </div>

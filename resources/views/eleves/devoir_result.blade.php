@@ -1,12 +1,12 @@
 <x-app-layout>
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <x-app.navbar />
-        <div class="px-5 py-4 container-fluid">
+        <div class="py-4 container-fluid">
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0">Résultats du devoir : {{ $devoir->titre_devoir }}</h4>
+                        <div class="card-header bg-primary">
+                            <h4 class="text-white mb-0">Résultats du devoir : {{ $devoir->titre_devoir }}</h4>
                         </div>
                         <div class="card-body">
                             <!-- Summary Section -->

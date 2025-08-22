@@ -180,19 +180,6 @@
         <script src="{{ asset('js/functions/edit.js') }}"></script>
         <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
         <script src="{{ asset('js/functions/modules/chart.js') }}"></script>
-        <!-- If using real-time notifications -->
-        @if(config('broadcasting.default') === 'pusher')
-            <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-            <script>
-                window.Pusher = Pusher;
-                window.Echo = new Echo({
-                    broadcaster: 'pusher',
-                    key: '{{ config('broadcasting.connections.pusher.key') }}',
-                    cluster: '{{ config('broadcasting.connections.pusher.options.cluster') }}',
-                    encrypted: true
-                });
-            </script>
-        @endif
         <script src="{{ asset('js/functions/notificatons-bell.js') }}"></script>
         @yield('scripts')
     </body>
