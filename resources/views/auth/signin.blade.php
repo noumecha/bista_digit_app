@@ -26,18 +26,6 @@
                                         Portail de connexion
                                     </h4>
                                 </div>
-                                <div class="text-center">
-                                    @if (session('status'))
-                                        <div class="mb-4 font-medium text-sm text-green-600">
-                                            {{ session('status') }}
-                                        </div>
-                                    @endif
-                                    @error('message')
-                                        <div class="alert alert-danger text-sm" role="alert">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
                                 <div class="card-body">
                                     <form role="form" class="text-start" method="POST" action="sign-in">
                                         @csrf
@@ -72,7 +60,26 @@
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-dark w-100 mt-4 mb-3">Connexion</button>
                                         </div>
+                                        <div>
+                                            <a href="{{ route("home.index") }}"
+                                                class="text-sm font-weight-bold ms-auto"
+                                            >
+                                                Retour sur le site >
+                                            </a>
+                                        </div>
                                     </form>
+                                </div>
+                                <div class="text-center">
+                                    @if (session('status'))
+                                        <div class="mb-4 font-medium text-sm text-green-600">
+                                            {{ session('status') }}
+                                        </div>
+                                    @endif
+                                    @error('message')
+                                        <div class="alert alert-danger text-sm" role="alert">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="w-100 top-0 text-center mt-6 end-0 p-4 h-100 d-md-block d-none">

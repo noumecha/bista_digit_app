@@ -24,7 +24,7 @@ class AppConfigurationController extends Controller
         $request->validate([
             'school_name' => 'required|string|min:3|max:255',
             'school_motor' => 'required|string|min:3|max:255',
-            'school_postal_box' => 'required|integer|min:4|max:255',
+            'school_postal_box' => 'required|integer|min:4',
             'school_logo' => 'image|mimes:jpeg,png,gif|max:4096',
             'content' => 'required',
             'school_town' => 'required|min:3|max:255',
@@ -37,6 +37,7 @@ class AppConfigurationController extends Controller
             'school_name.required' => 'Veuillez entrez le nom de l\'établissement',
             'school_motor.required' => 'Veuillez entrez la devise l\'établissement',
             'school_postal_box.required' => 'Veuillez entrez le code postal de l\'établissement',
+            'school_postal_box.min' => 'Le code postal doit avoir minimum 4 caractères',
             'school_logo.required' => 'Veuillez selectionner un logo pour l\'établissement',
             'content.required' => 'Veuillez remplire la description de l\'établissement',
             'school_town.required' => 'Veuillez entrez le nom de la ville ou est situé de l\'établissement',

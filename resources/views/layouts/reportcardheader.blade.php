@@ -83,12 +83,12 @@
                     </div>
                     <div class="pl-0 col-lg-4 align-items-start d-flex">
                         <p class="fs-6 text-center">
-                            Effectif : {{ $bulletin->classe->effectif->getEffectif() }}
+                            Effectif : {{ $effectif }}
                         </p>
                     </div>
                     <div class="pl-0 col-lg-4 align-items-start d-flex">
                         <p class="fs-6 text-center">
-                            Prof. Princ : {{ getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id) }}
+                            Prof. Princ : {{ $principal }}
                         </p>
                     </div>
                 </div>

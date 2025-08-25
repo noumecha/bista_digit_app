@@ -231,7 +231,7 @@
                     </a>
                 </li>
                 @endcan
-                @can('access-student')
+                @can('access-student-devoir')
                 <li data-submenu="evaluations" class="submenu-click-item nav-item border-start my-0 pt-2">
                     <a class="nav-link position-relative ms-0 ps-2 py-2 {{ is_current_route('student.notes') ? 'active' : '' }}"
                         href="{{ route('student.notes') }}">

@@ -17,6 +17,7 @@
     "dependencies": {
         "bootstrap-select": "^1.13.18",
         "html2canvas": "^1.4.1",
-        "jspdf": "^3.0.1"
+        "jspdf": "^3.0.1",
+        "puppeteer": "^24.17.0"
     }
 }

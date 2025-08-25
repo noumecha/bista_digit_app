@@ -1,4 +1,4 @@
-<x-report-card-layout :bulletin="$bulletin">
+<x-report-card-layout :bulletin="$bulletin" :principal="$principal" :effectif="$effectif">
     <!-- bulletin content -->
     <div class="container-flex header-bulletin">
         <div class="row">

@@ -19,6 +19,10 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use function Spatie\LaravelPdf\Support\pdf;
+use Spatie\Browsershot\Browsershot;
+
 
 class BullettinController extends Controller
 {
@@ -341,10 +345,46 @@ class BullettinController extends Controller
             // decode discplines
             $disciplines = json_decode($bulletin->discipline_stats);
             $conseils = $bulletin->conseils_stats;
+            //$pdf = 
+            /*return pdf()->view('bulletin.user-report-card', 
+                [
+                    'bulletin' => $bulletin,
+                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                    'studentNotesSndGroup' => $studentNotesSndGroup,
+                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                    'disciplines' => $disciplines,
+                    'conseils' => $conseils
+                ])->format('a4')->name('bulletin.pdf')->download();*/
+            
+            $html = view('bulletin.evaluation', [
+                'bulletin' => $bulletin,
+                'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                'studentNotesSndGroup' => $studentNotesSndGroup,
+                'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                'disciplines' => $disciplines,
+                'conseils' => $conseils,
+                'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
+                'effectif' => $bulletin->classe->effectif->getEffectif(),
+            ])->render();
+            //dd($html);
+            $start = microtime(true);
+            $pdf = pdf()->html($html)
+                ->withBrowsershot(function (Browsershot $browsershot) {
+                    $browsershot->setChromePath('/usr/bin/chromium')
+                        ->noSandbox()
+                        ->timeout(90)
+                        ->delay(500)
+                        ->disableJavascript();
+                })
+                ->name('bulletin')
+                ->download();
+            Log::info('PDF generated in: ' . (microtime(true) - $start) . ' seconds');
+            return $pdf;
+            /* 
             return view(
                 'bulletin.user-report-card',
                 compact('bulletin','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines','conseils')
-            );
+            );*/
         }
         // for trimestre :
         if($bulletin->type_bulletin === "trimestre") {
@@ -408,7 +448,17 @@ class BullettinController extends Controller
                 ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
             return view(
                 'bulletin.user-report-card',
-                compact('bulletin','bulletinsAvgs','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines','conseils')
+                [
+                    'bulletin' => $bulletin,
+                    'bulletinsAvgs' => $bulletinsAvgs,
+                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                    'studentNotesSndGroup' => $studentNotesSndGroup,
+                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                    'disciplines' => $disciplines,
+                    'conseils' => $conseils,
+                    'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
+                    'effectif' => $bulletin->classe->effectif->getEffectif(),
+                ]
             );
         }
         // for annual :
@@ -473,7 +523,17 @@ class BullettinController extends Controller
                 ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
             return view(
                 'bulletin.user-report-card',
-                compact('bulletin','bulletinsAvgs','studentNotesFirstGroup','studentNotesSndGroup','studentNotesThirdGroup','disciplines','conseils')
+                [
+                    'bulletin' => $bulletin,
+                    'bulletinsAvgs' => $bulletinsAvgs,
+                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                    'studentNotesSndGroup' => $studentNotesSndGroup,
+                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                    'disciplines' => $disciplines,
+                    'conseils' => $conseils,
+                    'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
+                    'effectif' => $bulletin->classe->effectif->getEffectif(),
+                ]
             );
         }
     }
