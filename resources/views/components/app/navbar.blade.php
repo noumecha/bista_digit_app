@@ -22,11 +22,20 @@
             </h6>
         </nav>
         <div class="collapse justify-content-end navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+            <div>
+                <a href="{{ route("home.index") }}"
+                    class="text-sm font-weight-bold ms-auto btn btn-sm btn-outline-primary mb-0 me-1"
+                >
+                    voir le site <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
             <div class="mb-0 font-weight-bold breadcrumb-text text-white">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <a href="login" onclick="event.preventDefault(); this.closest('form').submit();">
-                        <button class="btn btn-sm  btn-white  mb-0 me-1" type="submit">Deconnexion</button>
+                        <button class="btn btn-sm  btn-white  mb-0 me-1" type="submit">
+                            Deconnexion <i class="fa-solid fa-lg fa-arrow-right-from-bracket"></i>
+                        </button>
                     </a>
                 </form>
             </div>

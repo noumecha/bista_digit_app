@@ -2,22 +2,35 @@
     <div class="my-nav">
         <div class="container">
             <div class="row">
-                <div class="nav-items">
-                    <div class="menu-toggle d-flex aligns-center"
-                        style="padding:10px 15px;
-                        margin: 7px;
-                        "
-                    >
-                        <i class="text-white fa-solid fa-bars"></i>
-                    </div>
-                    <div class="logo text-white">
-                        <!--@ if (isset(appConfiguration()->school_logo))
-                            <a href="{ { route('home.index') }}">
-                                <img src="{ { asset('storage/'.appConfiguration()->school_logo) }}">
+                <div class="nav-items d-flex flex-row align-items-center justify-content-between"
+                    style="
+                        display: flex !important;
+                        flex-direction: row;
+                        align-items: center !important;
+                        justify-content: space-between;
+                    "    
+                >
+                    <div class="logo d-flex flex-row justify-content-between align-items-center text-white mt-0">
+                        @if(isset(appConfiguration()->school_logo))
+                            <a class="" href="{ { route('home.index') }}">
+                                <img src="{{ asset('storage/'.appConfiguration()->school_logo) }}"
+                                    style="
+                                        height: 55px;
+                                        width: 55px;
+                                    "
+                                >
                             </a>
-                        @ else -->
+                        @else
                             <a class="h4 text-white" href={{ route('home.index') }}>POWEREDUCATION</a>
-                        <!-- @ endif -->
+                        @endif
+                        <!-- mobile menu toggle -->
+                        <div class="menu-toggle d-flex aligns-center"
+                            style="
+                                position: relative !important;
+                            "
+                        >
+                            <i class="text-white fa-solid fa-bars"></i>
+                        </div>
                     </div>
                     <div class="menu-items">
                         <div class="menu">
@@ -87,19 +100,19 @@
                                         Contact
                                     </a>
                                 </li>
+                                <li>
+                                    @if (Auth::check())
+                                        <a class="text-white" title="Administration" href="{{ route('dashboard') }}">
+                                            <i class="fa-solid fa-lg fa-circle-user"></i>
+                                        </a>
+                                    @else
+                                        <a class="text-white" title="connexion" href="{{ route('sign-in') }}">
+                                            <i class="fa-solid fa-lg fa-right-to-bracket"></i>
+                                        </a>
+                                    @endif
+                                </li>
                             </ul>
                         </div>
-                    </div>
-                    <div class="login-menu">
-                        @if (Auth::check())
-                            <a class="text-white" title="Administration" href="{{ route('dashboard') }}">
-                                <i class="fa-solid fa-user"></i>
-                            </a>
-                        @else
-                            <a class="text-white" href="{{ route('sign-in') }}">
-                                <i class="fa-solid fa-right-to-bracket"></i>
-                            </a>
-                        @endif
                     </div>
                 </div>
             </div>

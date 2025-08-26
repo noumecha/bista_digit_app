@@ -64,7 +64,7 @@
                                             <a href="{{ route("home.index") }}"
                                                 class="text-sm font-weight-bold ms-auto"
                                             >
-                                                Retour sur le site >
+                                                Retour sur le site <i class="fa-solid fa-arrow-right fa-sm"></i>
                                             </a>
                                         </div>
                                     </form>

@@ -59,9 +59,6 @@ a:hover {
       .my-nav .nav-items {
         align-items: center; } }
     .my-nav .nav-items .logo {
-      width: 20%;
-      max-width: 20%;
-      flex: 1 1 30%;
       padding: 10px 15px;
       margin-top: 7px;
     }
@@ -71,9 +68,6 @@ a:hover {
           max-width: 100%;
           flex: 1 1 100%; } }
     .my-nav .nav-items .menu-items {
-      width: 80%;
-      max-width: 80%;
-      flex: 1 1 70%;
       position: relative; }
       @media screen and (max-width: 767.98px) {
         .my-nav .nav-items .menu-items {

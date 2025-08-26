@@ -19,9 +19,6 @@
         }
 
         .logo{
-            width: 30%;
-            max-width:30%;
-            flex:1 1 30%;
             padding:10px 15px;
             @media screen and(max-width:767.98px){
                 width: 100%;
@@ -34,9 +31,6 @@
         }
 
         .menu-items{
-            width:70%;
-            max-width:70%;
-            flex:1 1 70%;
             position: relative;
 
             @media screen and(max-width:767.98px){

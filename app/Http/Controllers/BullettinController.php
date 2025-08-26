@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use function Spatie\LaravelPdf\Support\pdf;
 use Spatie\Browsershot\Browsershot;
-
+use PDF;
 
 class BullettinController extends Controller
 {
@@ -366,8 +366,7 @@ class BullettinController extends Controller
                 'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                 'effectif' => $bulletin->classe->effectif->getEffectif(),
             ])->render();
-            //dd($html);
-            $start = microtime(true);
+            /*dd($html);
             $pdf = pdf()->html($html)
                 ->withBrowsershot(function (Browsershot $browsershot) {
                     $browsershot->setChromePath('/usr/bin/chromium')
@@ -378,8 +377,18 @@ class BullettinController extends Controller
                 })
                 ->name('bulletin')
                 ->download();
-            Log::info('PDF generated in: ' . (microtime(true) - $start) . ' seconds');
-            return $pdf;
+            return $pdf;*/
+            $pdf = PDF::loadView('bulletin.evaluation', [
+                'bulletin' => $bulletin,
+                'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                'studentNotesSndGroup' => $studentNotesSndGroup,
+                'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                'disciplines' => $disciplines,
+                'conseils' => $conseils,
+                'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
+                'effectif' => $bulletin->classe->effectif->getEffectif(),
+            ]);
+            return $pdf->download('bulletin-test.pdf');
             /* 
             return view(
                 'bulletin.user-report-card',
