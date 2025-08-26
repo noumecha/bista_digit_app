@@ -63,7 +63,7 @@
                                         <i class="fa-solid me-2 fa-bell"></i> {{ $notification->title }}
                                     </h4>
                                     <hr>
-                                    <p>
+                                    <p class="text-justify">
                                         {{ $notification->message }}
                                     </p>
                                     <button type="button" class="text-dark btn-close" id="close-show-btn"
