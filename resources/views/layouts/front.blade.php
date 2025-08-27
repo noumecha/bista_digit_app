@@ -28,6 +28,7 @@
         @include('layouts.frontfooter')
         <script src="{{ asset('front/js/jquery-3.2.1.min.js') }}"></script>
         <script src="{{ asset('front/js/popper.min.js') }}"></script>
+        <script src="{{ asset('js/functions/modules/utils.js') }}"></script>
         <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
         <script src="{{ asset('front/js/script.js') }}"></script>
         <script src="{{ asset('js/functions/actualites-search-bar.js') }}"></script>

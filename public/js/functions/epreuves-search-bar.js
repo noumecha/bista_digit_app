@@ -52,4 +52,12 @@ $(function() {
             }
         });
     }
+    
+    // handle pagination :
+    $(document).on('click', '.pagination a', function (event) {
+        event.preventDefault();
+
+        var page = $(this).attr('href').split('page=')[1];
+        fetchPage(page, '#epreuveDatas');
+    });
 })

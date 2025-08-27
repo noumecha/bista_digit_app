@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="{{ asset('css/bulletin-css/header.css') }}">
 </head>
 <body>
-    {{ $bulletin->appconfiguration->school_name }}
+    <h6>
+        {{ $bulletin->appconfiguration->school_name }}
+    </h6>
+    <div class="">
+        <div class="">
+            <img class="" src="{{ public_path('storage/' . $bulletin->appconfiguration->school_logo) }}"/>
+        </div>
+    </div>
 </body>
 </html>

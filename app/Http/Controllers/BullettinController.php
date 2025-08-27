@@ -19,10 +19,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use function Spatie\LaravelPdf\Support\pdf;
-use Spatie\Browsershot\Browsershot;
-use PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BullettinController extends Controller
 {
@@ -345,18 +342,8 @@ class BullettinController extends Controller
             // decode discplines
             $disciplines = json_decode($bulletin->discipline_stats);
             $conseils = $bulletin->conseils_stats;
-            //$pdf = 
-            /*return pdf()->view('bulletin.user-report-card', 
-                [
-                    'bulletin' => $bulletin,
-                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                    'studentNotesSndGroup' => $studentNotesSndGroup,
-                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                    'disciplines' => $disciplines,
-                    'conseils' => $conseils
-                ])->format('a4')->name('bulletin.pdf')->download();
-            
-            $html = view('bulletin.evaluation', [
+            // testing dompddf for pdf generation
+            $pdf = Pdf::loadView('bulletin.test', [
                 'bulletin' => $bulletin,
                 'studentNotesFirstGroup' => $studentNotesFirstGroup,
                 'studentNotesSndGroup' => $studentNotesSndGroup,
@@ -365,20 +352,11 @@ class BullettinController extends Controller
                 'conseils' => $conseils,
                 'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                 'effectif' => $bulletin->classe->effectif->getEffectif(),
-            ])->render();
-            //dd($html);
-            $pdf = pdf()->html($html)
-                ->withBrowsershot(function (Browsershot $browsershot) {
-                    $browsershot->setChromePath('/usr/bin/chromium')
-                        ->noSandbox()
-                        ->timeout(60)
-                        ->delay(500)
-                        ->disableJavascript();
-                })
-                ->name('bulletin')
-                ->download();
-            return $pdf;*/
-            // 
+            ]);
+            //dd(phpinfo());
+            //dd($pdf);
+            return $pdf->download('bulletin.pdf');
+            /* return for evaluation
             return view(
                 'bulletin.user-report-card',
                 [
@@ -391,7 +369,7 @@ class BullettinController extends Controller
                     'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                     'effectif' => $bulletin->classe->effectif->getEffectif(),
                 ]
-            );
+            );*/
         }
         // for trimestre :
         if($bulletin->type_bulletin === "trimestre") {
