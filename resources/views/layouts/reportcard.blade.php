@@ -13,9 +13,9 @@
     <body>
         <!-- @ include('layouts.reportcardheader') -->
         @include('layouts.test-header')
-        <!--main class="d-block">
-            { { $slot }}
-        </main
-        @ include('layouts.reportcardfooter')    -->
+        <main class="d-block">
+            {{ $slot }}
+        </main>
+        <!--@ include('layouts.reportcardfooter')    -->
     </body>
 </html>

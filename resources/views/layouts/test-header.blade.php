@@ -43,9 +43,9 @@
 
 <!-- third row -->
 <!-- Bulletin Title and Info -->
-<div class="clearfix header-bulletin p-rlt">
+<div class="clearfix header-bulletin pb-10 p-rlt">
     <!-- bulletin type -->
-    <div class="info-box text-uppercase text-center">
+    <p class="info-box text-uppercase text-center">
         Bulletin 
         @if ($bulletin->type_bulletin === "trimestre")
             {{ $bulletin->trimestre->libelleTrimestre }}
@@ -54,35 +54,37 @@
         @else
             {{ $bulletin->type_bulletin }}
         @endif
+    </p>
+    <!-- classe information -->
+    <div class="classe-block clearfix">
+        <p class="m-0 p-0 col-20">Classe : {{ $bulletin->classe->libClasse }}</p>
+        <p class="m-0 p-0 col-20">Effectif : {{ $effectif }}</p>
+        <p class="m-0 p-0 col-60">Prof. Princ : {{ $principal }}</p>
     </div>
-    <div class="clearfix">
-        <p>Classe : {{ $bulletin->classe->libClasse }}</p>
-        <p>Effectif : {{ $effectif }}</p>
-        <p>Prof. Princ : {{ $principal }}</p>
-    </div>
-    <div class="clearfix">
-        <p>Matricule : {{ $bulletin->student->matricule }}</p>
-        <p>
-            <strong>Noms & prénoms:</strong><br>
-            <span class="info-box">
-                {{ $bulletin->student->name }} {{ $bulletin->student->surname }}
-            </span>
+    <!-- student information -->
+    <div class="classe-block clearfix">
+        <p class="m-0 p-0 col-20">Matricule : {{ $bulletin->student->matricule }}</p>
+        <h3 class="m-0 p-0 col-20"><b>Noms & prénoms : </b></h3>
+        <p class="m-0 name-box text-uppercase">
+            {{ $bulletin->student->name }} {{ $bulletin->student->surname }}
         </p>
     </div>
-    <div class="clearfix">
-        <p>
-            Née le {{ formatDate($bulletin->student->dateNaiss,'d/m/y') }}
-            à {{ $bulletin->student->lieuNaiss }}
+    <!-- birth information -->
+    <div class="classe-block clearfix">
+        <p class="col-30 m-0 p-0">
+            Né(e) le : {{ formatDate($bulletin->student->dateNaiss,'d/m/y') }}
+            à : <span class="text-uppercase">{{ $bulletin->student->lieuNaiss }}</span>
         </p>
-        <p>Redoublant(e) :
+        <p class="col-70 m-0 p-0">Redoublant :
             @if ($bulletin->student->statutRedoublance === 1)
                 oui
             @else
                 non
             @endif
+            &nbsp; &nbsp; &nbsp; Tel. Père/Mère/Tuteur : {{ $bulletin->student->phone }}
         </p>
-        <p>Tel. Père/Mère/Tuteur(trice) : {{ $bulletin->student->phone }}</p>
     </div>
+    <!-- student image -->
     <div class="p-abs d-block user-image-container">
         <img class="user-image" src="{{ public_path('storage/' . $bulletin->student->profile) }}" />
     </div>

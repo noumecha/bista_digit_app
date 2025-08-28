@@ -24,8 +24,16 @@ body {
     right: 0;
 }
 /** col config **/
+.row {
+    width: 100%;
+    clear: both;
+}
 .col-75 {
     width: 75%;
+    float: left;
+}
+.col-5 {
+    width: 5%;
     float: left;
 }
 .col-25 {
@@ -34,6 +42,26 @@ body {
 }
 .col-80 {
     width: 80%;
+    float: left;
+}
+.col-70 {
+    width: 70%;
+    float: left;
+}
+.col-30 {
+    width: 30%;
+    float: left;
+}
+.col-60 {
+    width: 60%;
+    float: left;
+}
+.col-40 {
+    width: 40%;
+    float: left;
+}
+.col-50 {
+    width: 50%;
     float: left;
 }
 .col-20 {
@@ -53,6 +81,9 @@ body {
 }
 /* content */
 .bulletin-content {
+    width: 100%;
+    margin-top: 2px;
+    border: 2px solid green;
     display: inline-block;
 }
 .report-card {
@@ -101,6 +132,9 @@ body {
 }
 
 /* Bordures */
+.bl-0 {
+    border: none;
+}
 .border-2 {
     border: 1px solid #000;
     border-collapse: collapse;
@@ -113,19 +147,43 @@ table {
 }
 
 th, td {
-    padding: 4px;
+    margin:0;
+    padding:0;
     border: 1px solid #000;
+}
+tr {
+    /*display: inline-block;*/
+    height: 20px;
 }
 
 h5, h6 {
     margin: 0;
-    padding: 2px 0;
-    font-size: 12px;
+    padding: 0;
+    font-size: 11px;
 }
-
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
 /* Espacements */
+.text-center {
+    text-align: center;
+}
+.text-uppercase {
+    text-transform: uppercase;
+}
+.fw-bold {
+    font-weight: bold;
+}
+.border {
+    border: 2px solid black;
+}
 .mt-3 {
-    margin-top: 1rem;
+    margin-top: 3px;
+}
+.mt-2 {
+    margin-top: 2px;
 }
 .mb-0 {
     margin-bottom: 0;
@@ -141,6 +199,9 @@ h5, h6 {
 }
 .p-0 {
     padding: 0;
+}
+.pb-10 {
+    padding-bottom: 10px;
 }
 .p-2 {
     padding: 0.5rem;

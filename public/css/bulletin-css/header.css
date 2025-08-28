@@ -5,10 +5,6 @@
     box-sizing: border-box;
     border: 1px solid red;
 }
-.row {
-    width: 100%;
-    clear: both;
-}
 /** first row **/
 .col-half {
     width: 45%;
@@ -21,9 +17,13 @@
 /** user image block */
 .user-image-container {
     width: 20%;
-    top: 0;
+    height: auto;
+    top: -10;
     right: 0;
-    border: 2px solid blue;
+}
+.classe-block {
+    width: 100%;
+    display: inline-block;
 }
 /** manage image on bulletin */
 .logo-bulletin {
@@ -39,29 +39,22 @@
     display: block;
     margin: auto;
 }
-.text-center {
-    text-align: center;
-}
-.text-uppercase {
-    text-transform: uppercase;
-}
-.fw-bold {
-    font-weight: bold;
-}
-.border {
-    border: 2px solid black;
-}
 .info-box {
     display: block;
-    padding: 8px 20px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 300px;
+    margin-left: 28%;
+    padding: 8px 15px;
     background-color: #f1f1f1;
     border: 2px solid black;
     font-weight: bold;
 }
-.clearfix::after {
-    content: "";
-    display: table;
-    clear: both;
+.name-box {
+    width: 35%;
+    float: left;
+    background-color: #f1f1f1;
+    padding-left: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border: 2px solid black;
+    font-weight: bold;
 }
