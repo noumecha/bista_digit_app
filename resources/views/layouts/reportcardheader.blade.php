@@ -24,7 +24,7 @@
         </div>
         <div class="col-md-2">
             <div class="">
-                <img class="logo-bulletin" src="{{ asset('storage/' . $bulletin->appconfiguration->school_logo) }}"/>
+                <img class="logo-bulletin" src="{{ public_path('storage/' . $bulletin->appconfiguration->school_logo) }}"/>
             </div>
         </div>
         <div class="col-md-5 d-flex flex-column">
@@ -134,7 +134,7 @@
             <div class="p-0 m-0 mb-2">
                 <img
                     class="logo-bulletin"
-                    src="{{ asset('storage/' . $bulletin->student->profile) }}"
+                    src="{{ public_path('storage/' . $bulletin->student->profile) }}"
                 />
             </div>
         </div>

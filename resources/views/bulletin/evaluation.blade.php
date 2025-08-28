@@ -1,6 +1,6 @@
 <x-report-card-layout :bulletin="$bulletin" :principal="$principal" :effectif="$effectif">
     <!-- bulletin content -->
-    <div class="container-flex header-bulletin">
+    <div class="bulletin-content">
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <table class="w-100">

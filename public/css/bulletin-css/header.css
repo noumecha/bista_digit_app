@@ -1,0 +1,67 @@
+/** section code **/
+.header-bulletin {
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+    border: 1px solid red;
+}
+.row {
+    width: 100%;
+    clear: both;
+}
+/** first row **/
+.col-half {
+    width: 45%;
+    float: left;
+}
+.col-middle {
+    width: auto;
+    float: left;
+}
+/** user image block */
+.user-image-container {
+    width: 20%;
+    top: 0;
+    right: 0;
+    border: 2px solid blue;
+}
+/** manage image on bulletin */
+.logo-bulletin {
+    width: 90px;
+    margin-top: 15px;
+    height: auto;
+    display: block;
+}
+.user-image {
+    width: 100%;
+    height: auto;
+    object-fit: fill;
+    display: block;
+    margin: auto;
+}
+.text-center {
+    text-align: center;
+}
+.text-uppercase {
+    text-transform: uppercase;
+}
+.fw-bold {
+    font-weight: bold;
+}
+.border {
+    border: 2px solid black;
+}
+.info-box {
+    display: block;
+    padding: 8px 20px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f1f1f1;
+    border: 2px solid black;
+    font-weight: bold;
+}
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}

@@ -343,7 +343,7 @@ class BullettinController extends Controller
             $disciplines = json_decode($bulletin->discipline_stats);
             $conseils = $bulletin->conseils_stats;
             // testing dompddf for pdf generation
-            $pdf = Pdf::loadView('bulletin.test', [
+            $pdf = Pdf::loadView('bulletin.evaluation', [
                 'bulletin' => $bulletin,
                 'studentNotesFirstGroup' => $studentNotesFirstGroup,
                 'studentNotesSndGroup' => $studentNotesSndGroup,
@@ -355,7 +355,7 @@ class BullettinController extends Controller
             ]);
             //dd(phpinfo());
             //dd($pdf);
-            return $pdf->download('bulletin.pdf');
+            return $pdf->stream('bulletin.pdf');
             /* return for evaluation
             return view(
                 'bulletin.user-report-card',
