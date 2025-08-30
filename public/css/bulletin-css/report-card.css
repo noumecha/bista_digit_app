@@ -40,6 +40,14 @@ body {
     width: 25%;
     float: left;
 }
+.col-33 {
+    width: 33%;
+    float: left;
+}
+.col-34 {
+    width: 34%;
+    float: left;
+}
 .col-80 {
     width: 80%;
     float: left;
@@ -132,6 +140,9 @@ body {
 }
 
 /* Bordures */
+.border-see {
+    border: 1px solid violet;
+}
 .bl-0 {
     border: none;
 }
@@ -159,7 +170,7 @@ tr {
 h5, h6 {
     margin: 0;
     padding: 0;
-    font-size: 11px;
+    font-size: 10.5px;
 }
 .clearfix::after {
     content: "";
@@ -190,6 +201,15 @@ h5, h6 {
 }
 .mb-0 {
     margin-bottom: 0;
+}
+.ml-2 {
+    margin-left: 15px;
+}
+.mt-1 {
+    margin-top: 5px;
+}
+.mt-8 {
+    margin-top: 30px;
 }
 .mt-2 {
     margin-top: 15px;
@@ -247,7 +267,10 @@ h5, h6 {
 }
 
 .text-small {
-    font-size: 10px;
+    font-size: 9px;
+}
+* {
+    font-size: 10.5px;
 }
 
 /* Footer */

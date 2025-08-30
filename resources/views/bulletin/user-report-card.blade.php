@@ -40,16 +40,6 @@
                                     <div class="col-lg-10 col-md-10">
                                         Bulletin {{ $bulletin->type_bulletin }} de : {{ $bulletin->student->name }}
                                     </div>
-                                    <!--div class="col-lg-1 col-md-1">
-                                        <a
-                                            type="button"
-                                            title="télécharger"
-                                            id="download-report"
-                                            class="btn btn-dark mb-0 p-0 text-white"
-                                        >
-                                            <i class="fas fa-print me-2"></i>
-                                        </a>
-                                    </div-->
                                     <div class="col-lg-1 col-md-1">
                                         <a
                                             type="button"
@@ -67,53 +57,7 @@
                 </div>
                 <div class="border border-3 row">
                     <div id="report-card" class="bg-white">
-                        @if ($bulletin->type_bulletin === "sequenciel")
-                            @include(
-                                'bulletin.evaluation',
-                                [
-                                    'bulletin' => $bulletin,
-                                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                                    'studentNotesSndGroup' => $studentNotesSndGroup,
-                                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                                    'disciplines' => $disciplines,
-                                    'conseils' => $conseils,
-                                    'principal' => $principal,
-                                    'effectif' => $effectif
-                                ]
-                            )
-                        @endif
-                        @if ($bulletin->type_bulletin === "trimestre")
-                            @include(
-                                'bulletin.trimestrielle',
-                                [
-                                    'bulletin' => $bulletin,
-                                    'bulletinsAvgs' => $bulletinsAvgs,
-                                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                                    'studentNotesSndGroup' => $studentNotesSndGroup,
-                                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                                    'disciplines' => $disciplines,
-                                    'conseils' => $conseils,
-                                    'principal' => $principal,
-                                    'effectif' => $effectif
-                                ]
-                            )
-                        @endif
-                        @if ($bulletin->type_bulletin === "annuel")
-                            @include(
-                                'bulletin.annual',
-                                [
-                                    'bulletin' => $bulletin,
-                                    'bulletinsAvgs' => $bulletinsAvgs,
-                                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                                    'studentNotesSndGroup' => $studentNotesSndGroup,
-                                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                                    'disciplines' => $disciplines,
-                                    'conseils' => $conseils,
-                                    'principal' => $principal,
-                                    'effectif' => $effectif
-                                ]
-                            )
-                        @endif
+                        <iframe class="h-100 w-100" src="{{ $pdf->stream('bulletin.pdf') }}#page=1" frameborder="0"></iframe>
                     </div>
                 </div>
             </div>

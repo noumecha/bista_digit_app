@@ -43,7 +43,7 @@
 
 <!-- third row -->
 <!-- Bulletin Title and Info -->
-<div class="clearfix header-bulletin pb-10 p-rlt">
+<div class="clearfix header-bulletin p-rlt">
     <!-- bulletin type -->
     <p class="info-box text-uppercase text-center">
         Bulletin 

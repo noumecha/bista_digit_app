@@ -16,6 +16,7 @@
         <main class="d-block">
             {{ $slot }}
         </main>
-        <!--@ include('layouts.reportcardfooter')    -->
+        @include('layouts.reportcardfooter')
+        @include('layouts.reportcardcredit')
     </body>
 </html>

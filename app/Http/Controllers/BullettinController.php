@@ -352,24 +352,12 @@ class BullettinController extends Controller
                 'conseils' => $conseils,
                 'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                 'effectif' => $bulletin->classe->effectif->getEffectif(),
+            ])->setPaper('A4', 'portrait');
+            //return $pdf->stream('bulletin.pdf');
+            return view('bulletin.user-report-card', [
+               'pdf' => $pdf,
+               'bulletin' => $bulletin
             ]);
-            //dd(phpinfo());
-            //dd($pdf);
-            return $pdf->stream('bulletin.pdf');
-            /* return for evaluation
-            return view(
-                'bulletin.user-report-card',
-                [
-                    'bulletin' => $bulletin,
-                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                    'studentNotesSndGroup' => $studentNotesSndGroup,
-                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                    'disciplines' => $disciplines,
-                    'conseils' => $conseils,
-                    'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
-                    'effectif' => $bulletin->classe->effectif->getEffectif(),
-                ]
-            );*/
         }
         // for trimestre :
         if($bulletin->type_bulletin === "trimestre") {
@@ -431,7 +419,19 @@ class BullettinController extends Controller
                 ->where('trimestre_id', $bulletin->trimestre_id)
                 ->where('classe_id', $bulletin->classe_id)
                 ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
-            return view(
+            $pdf = Pdf::loadView('bulletin.trimestrielle', [
+                'bulletin' => $bulletin,
+                'bulletinsAvgs' => $bulletinsAvgs,
+                'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                'studentNotesSndGroup' => $studentNotesSndGroup,
+                'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                'disciplines' => $disciplines,
+                'conseils' => $conseils,
+                'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
+                'effectif' => $bulletin->classe->effectif->getEffectif(),
+            ])->setPaper('A4', 'portrait');
+            return $pdf->stream('bulletin-trimestere.pdf');
+            /*return view(
                 'bulletin.user-report-card',
                 [
                     'bulletin' => $bulletin,
@@ -444,7 +444,7 @@ class BullettinController extends Controller
                     'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                     'effectif' => $bulletin->classe->effectif->getEffectif(),
                 ]
-            );
+            );*/
         }
         // for annual :
         if($bulletin->type_bulletin === "annuel") {
@@ -506,7 +506,19 @@ class BullettinController extends Controller
                 ->where('annee_scolaire_id', getCurrentYear()->id)
                 ->where('classe_id', $bulletin->classe_id)
                 ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
-            return view(
+            $pdf = Pdf::loadView('bulletin.annual', [
+                'bulletin' => $bulletin,
+                'bulletinsAvgs' => $bulletinsAvgs,
+                'studentNotesFirstGroup' => $studentNotesFirstGroup,
+                'studentNotesSndGroup' => $studentNotesSndGroup,
+                'studentNotesThirdGroup' => $studentNotesThirdGroup,
+                'disciplines' => $disciplines,
+                'conseils' => $conseils,
+                'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
+                'effectif' => $bulletin->classe->effectif->getEffectif(),
+            ])->setPaper('A4', 'portrait');
+            return $pdf->stream('bulletin-annuel.pdf');
+            /*return view(
                 'bulletin.user-report-card',
                 [
                     'bulletin' => $bulletin,
@@ -519,7 +531,7 @@ class BullettinController extends Controller
                     'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                     'effectif' => $bulletin->classe->effectif->getEffectif(),
                 ]
-            );
+            );*/
         }
     }
 

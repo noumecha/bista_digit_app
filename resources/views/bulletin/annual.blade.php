@@ -118,42 +118,42 @@
                             @endforeach
                             <!-- group 1 resume -->
                             <tr>
-                                <td colspan="6" class="text-center p-0">
+                                <td colspan="6" class="bl-0 p-0">
                                     <h5 class="fw-bold">
                                         Resumé groupe 1 :
                                     </h5>
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center fw-bold p-0">
+                                <td class="text-center bl-0 fw-bold p-0">
                                     <h5 class="fw-bold">
                                         {{ totalCoefGroup($studentNotesFirstGroup) }}
                                     </h5>
                                 </td>
-                                <td class="text-center fw-bold p-0">
+                                <td class="text-center bl-0 fw-bold p-0">
                                     <h5 class="fw-bold">
                                         {{ totalNoteCoefGroup($studentNotesFirstGroup) }}
                                     </h5>
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td colspan="2" class="text-center p-0">
+                                <td colspan="2" class="text-center bl-0 p-0">
                                     <h5 class="fw-bold">
                                         Moyenne :
                                         @if (!$studentNotesFirstGroup->isEmpty())
@@ -228,42 +228,42 @@
                             @endforeach
                             <!-- group 2 resume -->
                             <tr>
-                                <td colspan="6" class="text-center p-0">
+                                <td colspan="6" class="bl-0 p-0">
                                     <h5 class="fw-bold">
                                         Resumé groupe 2 :
                                     </h5>
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center fw-bold p-0">
+                                <td class="text-center bl-0 fw-bold p-0">
                                     <h5 class="fw-bold">
                                         {{ totalCoefGroup($studentNotesSndGroup) }}
                                     </h5>
                                 </td>
-                                <td class="text-center fw-bold p-0">
+                                <td class="text-center bl-0 fw-bold p-0">
                                     <h5 class="fw-bold">
                                         {{ totalNoteCoefGroup($studentNotesSndGroup) }}
                                     </h5>
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td colspan="2" class="text-center p-0">
+                                <td colspan="2" class="bl-0 text-center p-0">
                                     <h5 class="fw-bold">
                                         Moyenne :
                                         @if (!$studentNotesSndGroup->isEmpty())
@@ -338,42 +338,42 @@
                             @endforeach
                             <!-- group 3 resume -->
                             <tr>
-                                <td colspan="6" class="text-center p-0">
+                                <td colspan="6" class="bl-0 p-0">
                                     <h5 class="fw-bold">
                                         Resumé groupe 2 :
                                     </h5>
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center fw-bold p-0">
+                                <td class="text-center bl-0 fw-bold p-0">
                                     <h5 class="fw-bold">
                                         {{ totalCoefGroup($studentNotesThirdGroup) }}
                                     </h5>
                                 </td>
-                                <td class="text-center fw-bold p-0">
+                                <td class="text-center bl-0 fw-bold p-0">
                                     <h5 class="fw-bold">
                                         {{ totalNoteCoefGroup($studentNotesThirdGroup) }}
                                     </h5>
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td class="text-center p-0">
+                                <td class="text-center bl-0 p-0">
                                 </td>
-                                <td colspan="2" class="text-center p-0">
+                                <td colspan="2" class="bl-0 text-center p-0">
                                     <h5 class="fw-bold">
                                         Moyenne :
                                         @if (!$studentNotesThirdGroup->isEmpty())
@@ -393,7 +393,7 @@
     <!-- bulletin trimestre stats -->
     <div class="container-flex mt-3">
             <div class="row">
-                <div class="col-md-4 col-lg-4">
+                <div class="col-40 p-0 m-0">
                     <table border="2" class="w-100 h-100">
                         <thead>
                             <tr>
@@ -533,7 +533,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-4 col-lg-4 d-flex flex-column">
+                <div class="col-30 ml-2 p-0">
                     <table border="2" class="w-100 h-100">
                         <thead>
                             <tr>
@@ -576,7 +576,7 @@
                         </h5>
                     </div>
                 </div>
-                <div class="col-md-4 col-lg-4">
+                <div class="col-25 ml-2 p-0">
                     <table border="2" class="w-100 h-100">
                         <thead>
                             <tr>
@@ -630,7 +630,7 @@
     <!-- calcul method text -->
     <div class="container-flex mt-3">
         <div class="row">
-            <div class="col-md-4 col-lg-4">
+            <div class="">
                 <h5 class="text-left">
                     - Moy. Annuelle = SOMME(Moy. Trim /3)
                 </h5>

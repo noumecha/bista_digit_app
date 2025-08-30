@@ -317,13 +317,13 @@
         </div>
     </div>
     <!-- bulletin trimestre stats -->
-    <div class="header-bulletin mt-2">
+    <div class="header-bulletin mt-1">
         <div class="row">
-            <div class="col-40">
+            <div class="col-40 p-0 m-0 border-see">
                 <table class="border-2 w-100 h-100">
                     <thead>
                         <tr>
-                            <th colspan="8" class="border-2 bg-light text-center p-0 m-0">
+                            <th colspan="6" class="border-2 bg-light text-center p-0 m-0">
                                 Discipline
                             </th>
                         </tr>
@@ -335,37 +335,37 @@
                             <td class="p-0 m-0 text-center border-2">Total</td>
                         </tr>
                         <tr>
-                            <td class="p-0 m-0 border-2" colspan="4">Abs. non Just. (h)</td>
+                            <td class="p-0 m-0 border-2" colspan="4">Ab.n.Jst(h)</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->absNonJust }}</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->absNonJust }}</td>
                         </tr>
                         <tr>
-                            <td class="p-0 m-0 border-2" colspan="4">Abs. Just. (h)</td>
+                            <td class="p-0 m-0 border-2" colspan="4">Ab.Jst(h)</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->absJust }}</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->absJust }}</td>
                         </tr>
                         <tr>
-                            <td class="p-0 m-0 border-2" colspan="4">Retards (h)</td>
+                            <td class="p-0 m-0 border-2" colspan="4">Rtrds(h)</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->retards }}</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->retards }}</td>
                         </tr>
                         <tr>
-                            <td class="p-0 m-0 border-2" colspan="4">Consignes (h)</td>
+                            <td class="p-0 m-0 border-2" colspan="4">Consgs(h)</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->consignes }}</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->consignes }}</td>
                         </tr>
                         <tr>
-                            <td class="p-0 m-0 border-2" colspan="4">Avert.</td>
+                            <td class="p-0 m-0 border-2" colspan="4">Avrt.</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->avertissements }}</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->avertissements }}</td>
                         </tr>
                         <tr>
-                            <td class="p-0 m-0 border-2" colspan="4">Blâme </td>
+                            <td class="p-0 m-0 border-2" colspan="4">Blâme</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->blames }}</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->blames }}</td>
                         </tr>
                         <tr>
-                            <td class="p-0 m-0 border-2" colspan="4">Excl. (j)</td>
+                            <td class="p-0 m-0 border-2" colspan="4">Ex.(j)</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->exclusions }}</td>
                             <td class="p-0 m-0 text-center border-2">{{ $disciplines->exclusions }}</td>
                         </tr>
@@ -377,7 +377,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-20 d-flex flex-column">
+            <div class="col-30 ml-2 p-0 border-see">
                 <table class="border-2 w-100 h-100">
                     <thead>
                         <tr>
@@ -418,7 +418,7 @@
                     </h5>
                 </div>
             </div>
-            <div class="col-30">
+            <div class="col-25 ml-2 p-0 border-see">
                 <table class="border-2 w-100 h-100">
                     <thead>
                         <tr>
