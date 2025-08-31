@@ -1,5 +1,5 @@
 <!-- bulletin footer -->
-<div class="footer-bulletin mt-2">
+<div class="footer-bulletin mt-1">
     <div class="row">
         <div class="col-33">
             <table class="border-2 w-100 h-100">

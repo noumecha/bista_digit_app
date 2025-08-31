@@ -13,22 +13,10 @@
                             @endif
                             <div class="row">
                                 <div class="col-md-12 col-lg-6">
-                                    <h5 class="">Liste des Bulletins générés dans l'application</h5>
+                                    <h5 class="">Liste des Bulletins de : {{ $user->name }} {{ $user->surname }}</h5>
                                     <p class="text-sm">
-                                        D'ici vous pouvez gérer les bulletins (générer , regénérer[mise à jour] , supprimer)
+                                        D'ici tu peux consulter tes bulletins
                                     </p>
-                                </div>
-                                <div class="col-md-12 col-lg-6 text-end">
-                                    <button
-                                        type="button"
-                                        class="btn btn-lg btn-dark btn-primary text-white"
-                                        data-bs-toggle="modal"
-                                        data-action="create"
-                                        id="add-button"
-                                        data-bs-target="#create-bulletin-modal"
-                                    >
-                                        <i class="fa-solid fa-sheet-plastic me-2"></i> Générer
-                                    </button>
                                 </div>
                             </div>
                             <form class="form form-inline row mt-3" id="filterBulletinForm">

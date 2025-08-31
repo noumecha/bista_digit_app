@@ -31,6 +31,10 @@ class AuthServiceProvider extends ServiceProvider
             $user->isTeacher() || $user->isAdmin()
         );
 
+        Gate::define('access-student-booster', fn($user) =>
+            $user->isBoosterStudent() || $user->isAdmin()
+        );
+
         Gate::define('access-student-devoir', fn($user) =>
             $user->isStudent()
         );

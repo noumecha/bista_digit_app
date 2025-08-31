@@ -328,6 +328,14 @@ class User extends Authenticatable
     }
 
     /**
+     * check if a user is in the booster programme
+     *
+     */
+    public function isBoosterStudent() {
+        return $this->boosterStudent();
+    }
+
+    /**
      * a club must have one president
      */
     public function club() {

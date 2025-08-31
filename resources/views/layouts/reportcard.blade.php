@@ -17,8 +17,21 @@
             {{ $slot }}
         </main>
         @include('layouts.reportcardfooter')
-        @include('layouts.reportcardcredit')
         <!-- qr code -->
-        <img class="d-block p-abs qrcode-container" src="data:image/svg+xml;base64,{{ $qrcode }}" alt="QR Code">
+        <img class="d-block p-abs qrcode-container" src="data:image/svg+xml;base64,{{ $qrcode }}" alt="QR Code"/>
+        <!-- bottom line -->
+        <div class="d-block p-abs footer-bulletin-credit"></div>
+        <!-- date on left -->
+        <p class="d-block p-abs footer-text-left p-0 m-0">
+            &copy; {{ Date('Y') }} - POWEREDUCATION
+        </p>
+        <!-- date on right -->
+        <p class="d-block p-abs footer-text-right p-0 m-0">
+            Imprimé le : {{ Date('d/m/y') }} à {{ Date('h:m:s') }}
+        </p>
+        <!-- date on right -->
+        <p class="d-block p-abs footer-text-left p-0 m-0">
+            &copy; {{ Date('Y') }} - POWEREDUCATION
+        </p>
     </body>
 </html>

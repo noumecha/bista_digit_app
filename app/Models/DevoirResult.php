@@ -76,7 +76,10 @@ class DevoirResult extends Model
                 ->pluck('id')
                 ->toArray();
 
-            if (empty(array_diff($correctAnswers, $userAnswers))) {
+            if (
+                empty(array_diff($correctAnswers, $userAnswers)) &&
+                empty(array_diff($userAnswers, $correctAnswers))
+            ) {
                 $earnedPoints += $question->points;
             }
         }

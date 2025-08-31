@@ -47,7 +47,7 @@ class AnneeScolaireController extends Controller
             'dateDeDebut' => [
                 'required',
                 'max:255',
-                function ($attribute, $value, $fail) use ($request) {
+                /*function ($attribute, $value, $fail) use ($request) {
                     $libelleAnneeScolaire = $request->input('libelleAnneeScolaire');
                     $years = explode('/', $libelleAnneeScolaire);
                     $startDate = new DateTime($value);
@@ -56,29 +56,34 @@ class AnneeScolaireController extends Controller
                     if ($startDate < $yearStart || $startDate > $yearEnd) {
                         $fail('La date de début doit être comprise entre Septembre ' . $years[0] . ' et Juillet ' . $years[1]);
                     }
-                },
+                },*/
             ],
             'dateDeFin' => [
                 'required',
                 'max:255',
-                function ($attribute, $value, $fail) use ($request) {
+                /*function ($attribute, $value, $fail) use ($request) {
                     $libelleAnneeScolaire = $request->input('libelleAnneeScolaire');
                     $years = explode('/', $libelleAnneeScolaire);
                     $endDate = new DateTime($value);
-                    $yearStart = new DateTime($years[0] . '-09-01');
+                    /*$yearStart = new DateTime($years[0] . '-09-01');
                     $yearEnd = new DateTime($years[1] . '-07-31');
                     if ($endDate < $yearStart || $endDate > $yearEnd) {
                         $fail('La date de fin doit être comprise entre Septembre ' . $years[0] . ' et Juillet ' . $years[1]);
                     }
-                },
+                },*/
             ],
         ], [
             'libelleAnneeScolaire.required' => 'Définissez une année scolaire',
             'libelleAnneeScolaire.unique' => 'Cette année scolaire existe déjà',
-            'libelleAnneeScolaire.regex' => 'le libbellé doit être au format XXXX/XXXX -> exemple 2024/2025',
+            'libelleAnneeScolaire.regex' => 'le libellé doit être au format XXXX/XXXX -> exemple 2024/2025',
             'dateDeDebut.required' => 'Définissez une date de debut pour l\'année scolaire',
             'dateDeFin.required' => 'Définissez une date de fin pour l\'année scolaire',
         ]);
+        if($request->dateDeFin < $request->dateDeDebut) {
+            return response()->json([
+                'error' => 'La date de fin ne peut pas être antérieure à la date de debut'
+            ]);
+        }
         $anneeScolaire = AnneeScolaire::create([
             'libelleAnneeScolaire' => $request->libelleAnneeScolaire,
             'dateDeDebut' => $request->dateDeDebut,
@@ -148,7 +153,7 @@ class AnneeScolaireController extends Controller
             'dateDeDebut' => [
                 'required',
                 'max:255',
-                function ($attribute, $value, $fail) use ($request) {
+                /*function ($attribute, $value, $fail) use ($request) {
                     $libelleAnneeScolaire = $request->input('libelleAnneeScolaire');
                     $years = explode('/', $libelleAnneeScolaire);
                     $startDate = new DateTime($value);
@@ -157,12 +162,12 @@ class AnneeScolaireController extends Controller
                     if ($startDate < $yearStart || $startDate > $yearEnd) {
                         $fail('La date de début doit être comprise entre Septembre ' . $years[0] . ' et Juilet ' . $years[1]);
                     }
-                },
+                },*/
             ],
             'dateDeFin' => [
                 'required',
                 'max:255',
-                function ($attribute, $value, $fail) use ($request) {
+                /*function ($attribute, $value, $fail) use ($request) {
                     $libelleAnneeScolaire = $request->input('libelleAnneeScolaire');
                     $years = explode('/', $libelleAnneeScolaire);
                     $endDate = new DateTime($value);
@@ -171,7 +176,7 @@ class AnneeScolaireController extends Controller
                     if ($endDate < $yearStart || $endDate > $yearEnd) {
                         $fail('La date de fin doit être comprise entre Septembre ' . $years[0] . ' et Juillet ' . $years[1]);
                     }
-                },
+                },*/
             ],
         ], [
             'libelleAnneeScolaire.unique' => 'Cette année scolaire existe déjà',
@@ -180,7 +185,11 @@ class AnneeScolaireController extends Controller
             'dateDeDebut.required' => 'Définissez une date de debut pour l\'année scolaire',
             'dateDeFin.required' => 'Définissez une date de fin pour l\'année scolaire',
          ]);
-
+        if($request->dateDeFin < $request->dateDeDebut) {
+            return response()->json([
+                'error' => 'La date de fin ne peut pas être antérieure à la date de debut'
+            ]);
+        }
         $year = AnneeScolaire::findOrFail($id);
         $year->update($request->all());
 
