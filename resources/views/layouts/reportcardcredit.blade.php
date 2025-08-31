@@ -7,5 +7,4 @@
             Imprimé le : {{ Date('d/m/y') }} à {{ Date('h:m:s') }}
         </p>
     </div>
-    
 </div>

@@ -20,6 +20,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class BullettinController extends Controller
 {
@@ -342,6 +343,8 @@ class BullettinController extends Controller
             // decode discplines
             $disciplines = json_decode($bulletin->discipline_stats);
             $conseils = $bulletin->conseils_stats;
+            // generate qr code : 
+            $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate('string'));
             // testing dompddf for pdf generation
             $pdf = Pdf::loadView('bulletin.evaluation', [
                 'bulletin' => $bulletin,
@@ -352,12 +355,9 @@ class BullettinController extends Controller
                 'conseils' => $conseils,
                 'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                 'effectif' => $bulletin->classe->effectif->getEffectif(),
+                'qrcode' => $qrcode
             ])->setPaper('A4', 'portrait');
-            //return $pdf->stream('bulletin.pdf');
-            return view('bulletin.user-report-card', [
-               'pdf' => $pdf,
-               'bulletin' => $bulletin
-            ]);
+            return $pdf->download('bulletin-séquentielle-de-'.$bulletin->student->name.'.pdf');
         }
         // for trimestre :
         if($bulletin->type_bulletin === "trimestre") {
@@ -419,6 +419,8 @@ class BullettinController extends Controller
                 ->where('trimestre_id', $bulletin->trimestre_id)
                 ->where('classe_id', $bulletin->classe_id)
                 ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
+            // generate qr code : 
+            $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate('string'));
             $pdf = Pdf::loadView('bulletin.trimestrielle', [
                 'bulletin' => $bulletin,
                 'bulletinsAvgs' => $bulletinsAvgs,
@@ -429,22 +431,9 @@ class BullettinController extends Controller
                 'conseils' => $conseils,
                 'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                 'effectif' => $bulletin->classe->effectif->getEffectif(),
+                'qrcode' => $qrcode
             ])->setPaper('A4', 'portrait');
-            return $pdf->stream('bulletin-trimestere.pdf');
-            /*return view(
-                'bulletin.user-report-card',
-                [
-                    'bulletin' => $bulletin,
-                    'bulletinsAvgs' => $bulletinsAvgs,
-                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                    'studentNotesSndGroup' => $studentNotesSndGroup,
-                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                    'disciplines' => $disciplines,
-                    'conseils' => $conseils,
-                    'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
-                    'effectif' => $bulletin->classe->effectif->getEffectif(),
-                ]
-            );*/
+            return $pdf->download('bulletin-trimestrielle-de-'.$bulletin->student->name.'.pdf');
         }
         // for annual :
         if($bulletin->type_bulletin === "annuel") {
@@ -506,6 +495,8 @@ class BullettinController extends Controller
                 ->where('annee_scolaire_id', getCurrentYear()->id)
                 ->where('classe_id', $bulletin->classe_id)
                 ->whereIn('matiere_id', $thirdGroupMatiereIds)->get();
+            // generate qr code : 
+            $qrcode = base64_encode(QrCode::format('svg')->size(200)->errorCorrection('H')->generate('string'));
             $pdf = Pdf::loadView('bulletin.annual', [
                 'bulletin' => $bulletin,
                 'bulletinsAvgs' => $bulletinsAvgs,
@@ -516,30 +507,48 @@ class BullettinController extends Controller
                 'conseils' => $conseils,
                 'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
                 'effectif' => $bulletin->classe->effectif->getEffectif(),
+                'qrcode' => $qrcode
             ])->setPaper('A4', 'portrait');
-            return $pdf->stream('bulletin-annuel.pdf');
-            /*return view(
-                'bulletin.user-report-card',
-                [
-                    'bulletin' => $bulletin,
-                    'bulletinsAvgs' => $bulletinsAvgs,
-                    'studentNotesFirstGroup' => $studentNotesFirstGroup,
-                    'studentNotesSndGroup' => $studentNotesSndGroup,
-                    'studentNotesThirdGroup' => $studentNotesThirdGroup,
-                    'disciplines' => $disciplines,
-                    'conseils' => $conseils,
-                    'principal' => getPrincipalClassTeacher($bulletin->classe->id, getCurrentYear()->id),
-                    'effectif' => $bulletin->classe->effectif->getEffectif(),
-                ]
-            );*/
+            return $pdf->download('bulletin-annuel-de'.$bulletin->student->name.'.pdf');
         }
     }
 
     /**
      * Student bulletin show 
      */
-    public function studentBulletin() {
-        $user = User::findOrFail(Auth::id());
-        return view('eleves.bulletin', compact('user'));
+    public function studentBulletin(Request $request) {        
+        $user = User::find(Auth::id());
+        $activeYear = AnneeScolaire::all()->where('statut','=', true)->first();
+        $evaluations = Evaluation::all()->where('type','normal-evaluation');
+        $trimestres = Trimestre::all();
+        $classes = Classe::all();
+        // loading app configuration :
+        $appconfiguration = AppConfiguration::all()->last();
+        // filter vars
+        $evaluationFilter = $request->input('evaluationFilter');
+        $trimestreFilter = $request->input('trimestreFilter');
+        $classFilter = $request->input('classFilter');
+        $searchStudent = $request->input('searchStudent');
+        $typeFilter = $request->input('typeFilter');
+        // querying
+        $query = Bulletin::query()->where('user_id', $user->id);
+        // filtering
+        if(!empty($typeFilter)) {
+            $query->where('type_bulletin', $typeFilter);
+        }
+        if(!empty($evaluationFilter)) {
+            $query->where('evaluation_id', $evaluationFilter);
+        }
+        if(!empty($trimestreFilter)) {
+            $query->where('trimestre_id', $trimestreFilter);
+        }
+
+        $bulletins = $query->paginate(10);
+
+        if($request->ajax()) {
+            return view('partials._user_bulletins_table', compact('bulletins','appconfiguration','trimestres','evaluations','classes','user'));
+        } else {
+            return view('bulletin.user_bulletins', compact('bulletins','appconfiguration','trimestres','evaluations','classes','user'));
+        }
     }
 }

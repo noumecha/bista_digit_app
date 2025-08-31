@@ -2,10 +2,9 @@
 body {
     font-family: DejaVu Sans, sans-serif;
     font-size: 12px;
-    border: 1px solid green;
 }
 @page { 
-    margin: 5px;
+    margin: 5px 10px;
     padding: 0px;
 }
 /** positions **/
@@ -88,10 +87,21 @@ body {
     display: inline-block;
 }
 /* content */
+.qrcode-container {
+    width: 70px;
+    height: 70px;
+    right: 0;
+    bottom: 125;
+}
+.qrcode-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
 .bulletin-content {
     width: 100%;
     margin-top: 2px;
-    border: 2px solid green;
     display: inline-block;
 }
 .report-card {
@@ -140,9 +150,6 @@ body {
 }
 
 /* Bordures */
-.border-see {
-    border: 1px solid violet;
-}
 .bl-0 {
     border: none;
 }
@@ -189,6 +196,9 @@ h5, h6 {
 }
 .border {
     border: 2px solid black;
+}
+.mt-5 {
+    margin-top: 5px;
 }
 .mt-3 {
     margin-top: 3px;

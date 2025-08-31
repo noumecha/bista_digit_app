@@ -17,6 +17,11 @@ Route::middleware(['can:access-teacher'])->group(function () {
     Route::get('/evaluation/notes/matieres/{classId}', [NoteController::class, 'getMatieres'])->middleware('auth');
 });
 
+// student and admin can download bulletin
+Route::middleware(['can:access-student'])->group(function() {
+    Route::get('/bulletins/preview/{id}', [BullettinController::class, 'preview'])->name('bulletins.preview');
+});
+
 Route::middleware(['can:access-admin'])->group(function () {
     Route::get('/evaluation/notes/controles', [NoteController::class, 'remplissageTrace'])->name('evaluation.notes_controles')->middleware('auth');
     Route::get('/evaluation/notes/modifications', [NoteController::class, 'noteHistories'])->name('evaluation.notes_modifications')->middleware('auth');
@@ -31,7 +36,6 @@ Route::middleware(['can:access-admin'])->group(function () {
     Route::put('/bulletins/update/{id}', [BullettinController::class, 'update'])->name('bulletins.update')->middleware('auth');
     Route::post('/bulletins/save', [BullettinController::class, 'generate'])->name('bulletins.generate')->middleware('auth');
     Route::delete('/bulletins/{id}/delete', [BullettinController::class, 'destroy'])->name('bulletins.destroy')->middleware('auth');
-    Route::get('/bulletins/preview/{id}', [BullettinController::class, 'preview'])->name('bulletins.preview');
 
     #evaluation - evaluations routes
     Route::get('/evaluation/evaluations', [EvaluationController::class, 'index'])->name('evaluation.evaluations')->middleware('auth');

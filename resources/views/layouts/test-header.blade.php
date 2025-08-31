@@ -72,7 +72,7 @@
     <!-- birth information -->
     <div class="classe-block clearfix">
         <p class="col-30 m-0 p-0">
-            Né(e) le : {{ formatDate($bulletin->student->dateNaiss,'d/m/y') }}
+            Né(e) le : {{ formatDate($bulletin->student->dateNaiss,'d/m/Y') }}
             à : <span class="text-uppercase">{{ $bulletin->student->lieuNaiss }}</span>
         </p>
         <p class="col-70 m-0 p-0">Redoublant :

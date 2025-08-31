@@ -14,6 +14,7 @@
         "laravel/tinker": "^2.9",
         "league/commonmark": "^2.7",
         "nesbot/carbon": "^3.8",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-ignition": "^2.8",
         "spatie/laravel-pdf": "^1.6",
         "symfony/http-foundation": "7.2.x-dev",

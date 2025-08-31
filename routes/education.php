@@ -133,7 +133,7 @@ Route::middleware(['can:access-student-devoir'])->group(function () {
     Route::get('/education/notes/student/stats', [NoteController::class, 'studentNotes'])->name('student.notes')->middleware('auth');
     # student notes booster
     Route::get('/education/boosternotes/student/stats', [BoosterNoteController::class, 'studentBoosterNotes'])->name('student.boosternotes')->middleware('auth');
-    # studen bulletin 
+    # student bulletin 
     Route::get('/education/bulletins/student', [BullettinController::class, 'studentBulletin'])->name('student.bulletin')->middleware('auth');
 });
 

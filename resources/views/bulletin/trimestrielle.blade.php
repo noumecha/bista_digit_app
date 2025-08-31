@@ -1,4 +1,4 @@
-<x-report-card-layout :bulletin="$bulletin" :principal="$principal" :effectif="$effectif">
+<x-report-card-layout :bulletin="$bulletin" :principal="$principal" :effectif="$effectif" :qrcode="$qrcode">
     <!-- bulletin content -->
     <div class="container-flex header-bulletin">
         <div class="row">
@@ -342,7 +342,7 @@
         </div>
     </div>
     <!-- bulletin trimestre stats -->
-    <div class="mt-1 header-bulletin">
+    <div class="mt-5 header-bulletin">
         <div class="row">
             <div class="col-40 p-0 m-0">
                 <table class="border-2 w-100 h-100">

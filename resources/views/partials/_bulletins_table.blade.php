@@ -66,7 +66,7 @@
                             id="bulletin-preview"
                             href="{{ route('bulletins.preview', $bulletin->id) }}"
                         >
-                            <i class="fa-solid fa-eye"></i>
+                            <i class="fa-solid fa-download"></i>
                         </a>
                         <button
                             type="button"
