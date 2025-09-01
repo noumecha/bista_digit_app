@@ -417,7 +417,16 @@ use Illuminate\Support\Facades\Route;
             ->pluck('user_id')->first();
         $teacher = User::where('id', $teacherId)->first();
         $name = "";
-        $teacher->sex->value === "F" ? $name = "Mme ".$teacher->name : $name = "M. ".$teacher->name;
+        if ($teacher !== null) {
+            if ($teacher->sex->value === "F") {
+                $name = "Mme ".$teacher->name;
+            } else {
+                $name = "M. ".$teacher->name;
+            }
+        } else {
+            $name = "Enseignant(e) principal(e) non défini(e)";
+        }
+        //($teacher !== null && $teacher->sex->value === "F") ? $name = "Mme ".$teacher->name : $name = "M. ".$teacher->name;
         return $name;
     }
 
