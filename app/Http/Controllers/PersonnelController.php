@@ -58,7 +58,7 @@ class PersonnelController extends Controller
                 ->orWhere('phone', 'LIKE', "%{$searchPersonnel}%");
             });
         }
-        $personnels = $query->paginate(10);
+        $personnels = $query->latest()->paginate(10);
         if($request->ajax()) {
             return view('partials._personnels_table', compact('user','personnels','migrateYears','activeYear','searchPersonnel','FonctionFilter','fonctions'));
         } else {

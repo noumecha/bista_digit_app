@@ -32,7 +32,7 @@
                     {{ $role->role }}
                 </td>
                 <td class="align-middle bg-transparent border-bottom">
-                    {{ $role->typeUser }}
+                    {{ $role->typeUser ? $role->typeUser : $role->role }}
                 </td>
                 <td class="text-center d-flex justify-content-center align-middle bg-transparent border-bottom" style="gap:10px;">
                     <a

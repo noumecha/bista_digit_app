@@ -30,7 +30,7 @@ class RoleController extends Controller
         if(!empty($typeFilter)) {
             $query->where('typeUser',$typeFilter);
         }
-        $roles = $query->paginate(10);
+        $roles = $query->latest()->paginate(10);
         if($request->ajax()) {
             return view('partials._roles_table', compact('user', 'roles', 'users'));
         } else {

@@ -57,7 +57,7 @@ class EleveController extends Controller
                 ->orWhere('phone', 'LIKE', "%{$searchStudent}%");
             });
         }
-        $students = $query->paginate(10);
+        $students = $query->latest()->paginate(10);
 
         if($request->ajax()) {
             return view('partials._students_table', compact(
