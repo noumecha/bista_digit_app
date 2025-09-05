@@ -51,7 +51,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="studentsTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="studentsTable">
                         </div>
                     </div>
                 </div>

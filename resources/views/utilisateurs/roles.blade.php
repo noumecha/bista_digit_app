@@ -60,7 +60,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="rolesTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="rolesTable">
                         </div>
                     </div>
                 </div>

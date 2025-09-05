@@ -56,7 +56,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="remplissagesTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="remplissagesTable">
                         </div>
                     </div>
                 </div>

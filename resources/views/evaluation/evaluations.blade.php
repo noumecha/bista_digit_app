@@ -61,7 +61,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="evaluationsTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="evaluationsTable">
                         </div>
                     </div>
                 </div>

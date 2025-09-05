@@ -49,7 +49,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="trimestresTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="trimestresTable">
                         </div>
                     </div>
                 </div>

@@ -69,7 +69,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="table-responsive" id="statsTable" style="overflow-x: visible;">
+                <div class="table-responsive" id="statsTable">
                 </div>
             </div>
             <x-app.footer />

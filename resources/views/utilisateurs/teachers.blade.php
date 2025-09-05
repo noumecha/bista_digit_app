@@ -39,7 +39,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="table-responsive" id="teachersTable" style="overflow-x: visible;">
+                        <div class="table-responsive" id="teachersTable">
                         </div>
                     </div>
                 </div>
